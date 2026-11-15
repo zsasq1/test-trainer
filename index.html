@@ -1165,7 +1165,8 @@ function check() {
 function reveal() {
   const it = currentItem();
   if (!it) return;
-  if (hlVisible(it.id)) { resetItem(it); shuffleQ(it); }
+  // «Подглядеть» works after «Проверить» too: only an open answer is hidden again
+  if (rec(it.id).reveal) { resetItem(it); shuffleQ(it); }
   else mut(it.id, r => { r.reveal = true; });
   checkSeq++;
   save();
@@ -1420,7 +1421,7 @@ function itemHTML(it) {
     });
   } else h += qHTML(it, { scope: it.id });
   const r = rec(it.id);
-  if (r.checked) {
+  if (r.checked && !r.reveal) {
     const ok = isCorrect(it);
     h += `<div class="feedback ${ok ? 'ok' : 'bad'}" role="status">${ok ? I.ok + 'Верно' : I.bad + 'Есть ошибки'}</div>`;
   }
@@ -1438,7 +1439,7 @@ function qHTML(q, { inCase = false, forced = false, scope } = {}) {
   h += `<div class="prompt${inCase ? ' sm' : ''}">${esc(q.prompt)}</div>`;
   if (q.kind === 'single' || q.kind === 'multiple') h += choicesHTML(q, pz);
   else if (q.kind === 'dropdown') h += ddHTML(q, pz);
-  else if (q.kind === 'sortable') h += sortHTML(q, pz);
+  else if (q.kind === 'sortable') h += sortHTML(q, pz, scope);
   else if (q.kind === 'text') h += textHTML(q, pz);
   return `<section class="q" data-qid="${esc(q.id)}" data-hl="${hl ? 1 : 0}">${h}</section>`;
 }
@@ -1463,9 +1464,11 @@ function ddHTML(q, pz) {
     return `<div class="${cls}"><div class="dd-left">${esc(row.left)}</div><div class="dd-right"><button type="button" class="dd-btn" data-act="dd-open" data-qid="${esc(q.id)}" data-row="${i}" aria-label="Выбрать ответ для «${esc(row.left)}»"><span class="${sel ? '' : 'ph'}">${esc(sel || 'Выбрать')}</span>${I.chevD}</button>${sel !== row.value ? `<div class="hint-correct">${esc(row.value)}</div>` : ''}</div></div>`;
   }).join('') + '</div>';
 }
-function sortHTML(q, pz) {
+function sortHTML(q, pz, scope) {
   const r = rec(q.id);
-  const order = r.reveal ? range(q.order.length) : sortOrder(q);
+  // revealed on its own or as part of a case: rows stand in the right order
+  const shown = r.reveal || (scope != null && rec(scope).reveal);
+  const order = shown ? range(q.order.length) : sortOrder(q);
   return `<div class="sort-hint">Тяните за значок справа, чтобы менять порядок</div><div class="sort-list" data-qid="${esc(q.id)}">` + order.map((oi, pos) => {
     const ok = q.order[oi] === q.order[pos];
     return `<div class="sort-row ${ok ? 'st-ok' : 'st-bad'}${pz && ok ? ' pulse' : ''}" data-oi="${oi}"><span class="num">${pos + 1}</span><span class="ico status">${ok ? I.ok : I.bad}</span><span class="stext">${esc(q.order[oi])}</span><span class="handle" data-handle aria-label="Перетащить">${I.updown}</span></div>`;
@@ -1480,7 +1483,7 @@ function autosize(ta) { ta.style.height = 'auto'; ta.style.height = Math.min(ta.
 
 function renderBottom() {
   const items = currentItems(), it = items[S.index], has = !!it;
-  const vis = has && hlVisible(it.id);
+  const vis = has && rec(it.id).reveal;
   const revealOff = !has || (S.test && rec(it.id).checked);
   const lastTest = !!(S.test && items.length && S.index === items.length - 1);
   const rv = vis ? 'Скрыть' : 'Подглядеть';
