@@ -703,7 +703,7 @@ const idbDel = id => idbReq('readwrite', s => s.delete(id)).catch(() => null);
 const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
 
 const Store = {
-  mode: 'local', db: null, assets: null, uid: null, warned: false,
+  mode: 'local', db: null, assets: null, uid: null, warned: false, downloads: null,
   async init() {
     const c = window.claude;
     if (!c || typeof c.use !== 'function') {
@@ -712,7 +712,8 @@ const Store = {
       return;
     }
     try {
-      const [db, user, assets] = await Promise.all([c.use('db'), c.use('user'), c.use('assets')]);
+      const [db, user, assets, downloads] = await Promise.all([c.use('db'), c.use('user'), c.use('assets'), c.use('downloads')]);
+      this.downloads = downloads; // claude.ai: files are handed to the viewer only through this
       const uid = db && user ? await user.id() : null;
       if (db && uid) { this.db = db; this.uid = uid; this.assets = assets; this.mode = 'cloud'; }
     } catch (e) { /* stay local */ }
@@ -1787,6 +1788,17 @@ function answeredCount(id) {
 // iPhone share sheet (Сохранить в «Файлы», AirDrop, Telegram…), or a plain download.
 async function shareSetFile(s, text) {
   const name = setFileName(s);
+  if (Store.downloads) {
+    // Inside claude.ai the page can't download by itself: the viewer confirms the save
+    // (on iPhone the Claude app then opens the share sheet).
+    try { await Store.downloads.save({ filename: name, data: text }); }
+    catch (e) {
+      const code = e && e.code;
+      if (code === 'declined') return;
+      toast(code === 'rate_limited' ? 'Подождите секунду и попробуйте ещё раз' : 'Здесь не получилось сохранить файл');
+    }
+    return;
+  }
   const file = new File([text], name, { type: 'application/json' });
   try {
     if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: setTitle(s) }); return; }
