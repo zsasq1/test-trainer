@@ -25,8 +25,8 @@ HEAD = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#F7FAFA" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0E1113" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F7F4F5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121428" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -42,6 +42,7 @@ TAIL = "\n</body>\n</html>\n"
 
 SW = """// Офлайн-кэш тренажёра. Файл создаётся скриптом собрать.py — не правьте вручную.
 const CACHE = 'trainer-__VERSION__';
+const FONTS = 'trainer-fonts-v1'; // шрифты Google: один раз скачать — дальше работают без сети
 const ASSETS = __ASSETS__;
 
 self.addEventListener('install', e => {
@@ -49,13 +50,25 @@ self.addEventListener('install', e => {
 });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys()
-    .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+    .then(keys => Promise.all(keys.filter(k => k !== CACHE && k !== FONTS).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
 // Сначала сеть (чтобы обновления приходили сразу), без сети — из кэша.
 self.addEventListener('fetch', e => {
   const req = e.request;
-  if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
+  if (req.method !== 'GET') return;
+  const origin = new URL(req.url).origin;
+  if (origin === 'https://fonts.googleapis.com' || origin === 'https://fonts.gstatic.com') {
+    e.respondWith(caches.open(FONTS).then(async cache => {
+      const hit = await cache.match(req);
+      if (hit) return hit;
+      const res = await fetch(req);
+      if (res && (res.ok || res.type === 'opaque')) cache.put(req, res.clone());
+      return res;
+    }));
+    return;
+  }
+  if (origin !== location.origin) return;
   e.respondWith((async () => {
     const cache = await caches.open(CACHE);
     try {

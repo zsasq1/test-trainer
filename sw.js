@@ -1,5 +1,6 @@
 // Офлайн-кэш тренажёра. Файл создаётся скриптом собрать.py — не правьте вручную.
-const CACHE = 'trainer-20261115-121453';
+const CACHE = 'trainer-20261115-131553';
+const FONTS = 'trainer-fonts-v1'; // шрифты Google: один раз скачать — дальше работают без сети
 const ASSETS = ["./", "index.html", "manifest.webmanifest", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png", "data/sets.json", "data/answers_db.json", "data/bot_dlya_tela.json"];
 
 self.addEventListener('install', e => {
@@ -7,13 +8,25 @@ self.addEventListener('install', e => {
 });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys()
-    .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+    .then(keys => Promise.all(keys.filter(k => k !== CACHE && k !== FONTS).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
 // Сначала сеть (чтобы обновления приходили сразу), без сети — из кэша.
 self.addEventListener('fetch', e => {
   const req = e.request;
-  if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
+  if (req.method !== 'GET') return;
+  const origin = new URL(req.url).origin;
+  if (origin === 'https://fonts.googleapis.com' || origin === 'https://fonts.gstatic.com') {
+    e.respondWith(caches.open(FONTS).then(async cache => {
+      const hit = await cache.match(req);
+      if (hit) return hit;
+      const res = await fetch(req);
+      if (res && (res.ok || res.type === 'opaque')) cache.put(req, res.clone());
+      return res;
+    }));
+    return;
+  }
+  if (origin !== location.origin) return;
   e.respondWith((async () => {
     const cache = await caches.open(CACHE);
     try {
