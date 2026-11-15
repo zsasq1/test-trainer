@@ -1,5 +1,5 @@
 // Офлайн-кэш тренажёра. Файл создаётся скриптом собрать.py — не правьте вручную.
-const CACHE = 'trainer-20261115-115727';
+const CACHE = 'trainer-20261115-121317';
 const ASSETS = ["./", "index.html", "manifest.webmanifest", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png", "data/sets.json", "data/answers_db.json", "data/bot_dlya_tela.json"];
 
 self.addEventListener('install', e => {

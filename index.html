@@ -199,60 +199,99 @@ button:disabled{cursor:default}
 /* ---------- drawer ---------- */
 .scrim{position:fixed;inset:0;background:var(--scrim);opacity:0;pointer-events:none;transition:opacity .24s;z-index:30}
 .scrim.on{opacity:1;pointer-events:auto}
-.drawer{position:fixed;top:0;bottom:0;left:0;z-index:40;width:min(86vw,350px);display:flex;flex-direction:column;gap:16px;background:var(--surface);box-shadow:8px 0 24px var(--shadow);transform:translateX(-106%);transition:transform .26s cubic-bezier(.2,.8,.2,1),visibility 0s linear .26s;padding-top:calc(18px + env(safe-area-inset-top,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:16px;padding-bottom:0;visibility:hidden}
+.drawer{position:fixed;top:0;bottom:0;left:0;z-index:40;width:min(88vw,350px);display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto minmax(0,1fr);column-gap:8px;row-gap:10px;background:var(--surface);box-shadow:8px 0 24px var(--shadow);transform:translateX(-106%);transition:transform .26s cubic-bezier(.2,.8,.2,1),visibility 0s linear .26s;padding-top:calc(10px + env(safe-area-inset-top,0px));padding-left:max(var(--dpad),env(safe-area-inset-left,0px));padding-right:var(--dpad);padding-bottom:0;visibility:hidden;--dpad:16px}
 .drawer.open{transform:none;visibility:visible;transition:transform .26s cubic-bezier(.2,.8,.2,1),visibility 0s}
-.d-head{display:flex;align-items:center;gap:12px}
-.d-head>div{flex:1;min-width:0}
-.d-title{font-size:24px;font-weight:600}
-.d-sub{font-size:14px;font-weight:500;color:var(--muted)}
+/* search box and the close button share the first row; the list fills the rest */
+.drawer>.searchbox{grid-column:1;grid-row:1}
+.d-head{grid-column:2;grid-row:1;display:flex;align-items:center}
+.d-head .icon-btn{width:44px;height:44px}
+@media (max-width:360px){.drawer{--dpad:12px}}
 .searchbox{display:flex;align-items:center;gap:10px;height:44px;padding:0 12px;border-radius:8px;background:var(--bg);border:1px solid var(--line);color:var(--muted)}
 .searchbox input{flex:1;min-width:0;height:100%;border:0;background:transparent;outline:none;font-size:16px;color:var(--text)}
 .searchbox input::-webkit-search-cancel-button{display:none}
 .searchbox button{color:var(--muted);font-size:18px;display:inline-flex}
-.menu-body{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;display:flex;flex-direction:column;gap:22px;padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));margin-right:-8px;padding-right:8px}
-.msec{display:flex;flex-direction:column;gap:6px}
-.sec-label{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
-.msec-note{margin:0;padding:6px 0;font-size:15px;color:var(--muted)}
-.mline{display:flex;align-items:center;gap:4px}
-.mrow{width:100%;min-height:46px;display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px;text-align:left;font-size:16px;font-weight:600}
+.menu-body{grid-column:1/-1;grid-row:2;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;display:flex;flex-direction:column;gap:18px;padding-top:2px;padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));margin-right:calc(-1 * var(--dpad));padding-right:var(--dpad)}
+.msec{display:flex;flex-direction:column;gap:2px}
+.sec-label{font-size:12.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:0 2px 4px}
+.sec-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
+.sec-row .sec-label{margin-bottom:0}
+.sec-chip{display:inline-flex;align-items:center;gap:3px;min-width:0;max-width:62%;min-height:28px;padding:3px 6px 3px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--muted)}
+.sec-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sec-chip .i{width:15px;height:15px}
+.sec-chip:active{background:var(--line)}
+.msec-note{margin:0;padding:6px 2px;font-size:15px;color:var(--muted)}
+.m-note{margin:0 2px 4px;font-size:13px;line-height:1.35;color:var(--muted)}
+.m-empty{margin:2px 0 0;padding:4px 10px 0;font-size:13px;line-height:1.35;color:var(--muted)}
+.mline{display:flex;align-items:center;gap:2px}
+.mrow{width:100%;min-height:44px;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;text-align:left;font-size:16px;font-weight:600}
 .mrow:active{background:var(--bg)}
 .mrow.on{background:var(--soft-green)}
 .mrow .mico{width:22px;display:inline-flex;justify-content:center;color:var(--muted);font-size:18px;flex:none}
 .mrow.on .mico{color:var(--green)}
-.mrow .mtxt{flex:1;min-width:0;overflow-wrap:anywhere;line-height:1.3}
+.mrow .mtxt{flex:1;min-width:0;overflow-wrap:anywhere;line-height:1.28}
 .mrow .mtxt small{display:block;font-size:13px;font-weight:500;color:var(--muted);margin-top:2px}
 .mrow .mtick{color:var(--green);font-size:15px}
-.mrow.outline{background:var(--bg);border:1px solid var(--line);color:var(--green);cursor:pointer}
-.mrow.outline .mico{color:var(--green)}
-.mrow.subtle{color:var(--green);font-size:15px;min-height:40px;cursor:pointer}
-.mrow.subtle .mico{color:var(--green)}
 .mrow.static{cursor:default}
 .mrow.static:active{background:none}
 .mrow.star-on{background:var(--soft-star)}
 .mrow.star-on .mico{color:var(--star)}
 .mrow.test-on{background:var(--soft-green);border:1px solid var(--green-line)}
+.mrow.test-on .mico{color:var(--green)}
+.mrow.test-on .mtxt small{color:var(--green);font-variant-numeric:tabular-nums}
 .mrow.box{background:var(--bg);border:1px solid var(--line)}
-.badge{font-size:13px;font-weight:600;color:var(--muted);padding:4px 8px;border-radius:999px;background:var(--bg);font-variant-numeric:tabular-nums}
-.mrow.on .badge{background:var(--surface)}
-.mmore,.mx{width:38px;height:38px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;color:var(--muted);font-size:18px}
+.mrow.box .mico:first-child{color:var(--green)}
+.badge{font-size:13px;font-weight:600;color:var(--muted);padding:3px 8px;border-radius:999px;background:var(--bg);font-variant-numeric:tabular-nums;flex:none}
+.mrow.on .badge,.mrow.star-on .badge{background:var(--surface)}
+.mmore,.mx{width:40px;height:40px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;color:var(--muted);font-size:18px}
 .mmore:active,.mx:active{background:var(--bg)}
 .mx{font-size:16px}
 .mlink{align-self:flex-start;color:var(--green);font-size:14px;font-weight:600;padding:6px 2px}
-.sres{width:100%;display:flex;flex-direction:column;gap:5px;padding:10px;border-radius:8px;background:var(--bg);text-align:left}
-.sres b{font-size:15px;font-weight:600;line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
-.sres span{font-size:13px;font-weight:500;color:var(--muted)}
-.panel-s{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:8px;background:var(--bg);border:1px solid var(--line)}
+.m-imp{display:flex;gap:8px;margin-top:6px}
+.mbtn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 12px;border-radius:10px;background:var(--bg);border:1px solid var(--line);color:var(--green);font-size:15px;font-weight:600;white-space:nowrap;cursor:pointer}
+.mbtn.pri{flex:1;min-width:0}
+.mbtn .i{width:18px;height:18px}
+.mbtn:active{background:var(--line)}
+.mgroup{display:flex;flex-direction:column;border-radius:10px;background:var(--bg);border:1px solid var(--line);overflow:hidden}
+.mgroup>*+*{border-top:1px solid var(--line)}
+.mgroup .mrow{border-radius:0;padding-block:10px;min-height:48px}
+.mgroup .mrow:active{background:transparent}
+.mgroup .mrow .mtxt small{font-size:12.5px}
+@media (max-width:360px){.mrow{font-size:15px;gap:9px}.mbtn{font-size:14px;padding:0 10px}.mbtn:not(.pri) .i{display:none}}
+.sres-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;min-width:0}
+.sres-head .sec-label{flex:none}
+.sres-file{min-width:0;font-size:13px;font-weight:500;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sres{width:100%;display:flex;flex-direction:column;gap:4px;padding:9px 11px 10px;border-radius:8px;background:var(--bg);border:1px solid transparent;text-align:left}
+.sres:active{border-color:var(--line)}
+.sres.cur{border-color:var(--green-line);background:var(--soft-green)}
+.sres-meta{display:flex;align-items:center;gap:6px;min-width:0;font-size:12.5px;font-weight:600;color:var(--muted);line-height:1.2}
+.sres-meta .i{width:15px;height:15px;color:var(--green)}
+.sres-meta .sres-star .i{color:var(--star)}
+.sres-cat{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sres-num{flex:none;font-variant-numeric:tabular-nums;font-weight:500}
+.sres-now{flex:none;margin-left:auto;color:var(--green);font-weight:600}
+.sres-title{font-size:15px;font-weight:600;line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.sres-snip{font-size:13.5px;line-height:1.4;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.sres-snip em{font-style:normal;font-weight:600}
+.sres mark{background:var(--soft-star);background:color-mix(in srgb,var(--star) 34%,transparent);color:var(--text);border-radius:3px;padding:0 1px}
+.sres-empty{display:flex;flex-direction:column;align-items:center;gap:6px;padding:22px 8px 8px;text-align:center;color:var(--muted);font-size:14px;line-height:1.45}
+.sres-empty .i{width:30px;height:30px;margin-bottom:4px}
+.sres-empty b{color:var(--text);font-size:16px}
+.sres-more{font-size:13px;color:var(--muted);text-align:center;padding:6px 0 2px}
+.fs-block{display:flex;flex-direction:column;gap:6px;padding:10px 10px 12px}
+.fs-head{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:28px;font-size:16px;font-weight:600}
+.fs-val{display:inline-flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.fs-val .mlink{padding:2px}
 .fs-row{display:flex;align-items:center;gap:12px}
 .fs-row input{flex:1;min-width:0;accent-color:var(--green-btn)}
-.fs-foot{display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:600;color:var(--muted);min-height:28px}
-.fs-foot .mlink{padding:2px}
+@media (max-width:360px){.fs-head{font-size:15px}}
 .sq-btn{width:36px;height:36px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:var(--bg);border:1px solid var(--line);font-weight:700;font-size:15px}
 .sq-btn:disabled{opacity:.4}
 .sq-btn.a-sm{font-size:13px}
 .sq-btn.a-lg{font-size:20px}
-.store-note{font-size:13px;color:var(--muted);line-height:1.4;padding:2px 2px 0}
+.store-note{font-size:12.5px;color:var(--muted);line-height:1.4;padding:6px 4px 0}
 details.help{border-radius:8px;background:var(--bg);border:1px solid var(--line)}
-details.help summary{list-style:none;cursor:pointer;padding:11px 12px;font-size:15px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.mgroup details.help{border:0;border-radius:0;background:transparent}
+details.help summary{list-style:none;cursor:pointer;min-height:44px;padding:10px 12px;font-size:15px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:8px}
 details.help summary::-webkit-details-marker{display:none}
 details.help summary .i{font-size:14px;color:var(--muted);transition:transform .2s}
 details.help[open] summary .i{transform:rotate(180deg)}
@@ -292,6 +331,27 @@ details.help pre{margin:0 12px 12px;padding:10px;border-radius:6px;background:va
 .dlg-btn{height:46px;border-radius:8px;background:var(--bg);border:1px solid var(--line);font-size:16px;font-weight:600;padding:0 12px}
 .dlg-btn.primary{background:var(--green-btn);border-color:transparent;color:var(--on-accent)}
 .dlg-btn.danger{color:var(--red)}
+/* file «…» actions sheet */
+.fa{display:flex;flex-direction:column;gap:14px}
+.fa-head{display:flex;align-items:center;gap:12px;min-width:0}
+.fa-ico{width:44px;height:44px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;background:var(--soft-green);color:var(--green);font-size:20px}
+.fa-name{display:flex;flex-direction:column;gap:2px;min-width:0}
+.fa-name b{font-size:18px;font-weight:600;line-height:1.25;overflow-wrap:anywhere}
+.fa-name small{font-size:14px;color:var(--muted)}
+.fa-cats{display:flex;flex-wrap:wrap;gap:6px}
+.fa-cats:empty{display:none}
+.fa-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:999px;background:var(--bg);border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--muted)}
+.fa-chip .i{width:15px;height:15px;color:var(--green)}
+.fa-chip b{color:var(--text);font-variant-numeric:tabular-nums}
+.fa-list{display:flex;flex-direction:column;border-radius:10px;border:1px solid var(--line);background:var(--bg);overflow:hidden}
+.fa-row{display:flex;align-items:center;gap:12px;min-height:50px;padding:8px 14px;text-align:left;font-size:16px;font-weight:500}
+.fa-row+.fa-row{border-top:1px solid var(--line)}
+.fa-row:active{background:var(--line)}
+.fa-row .i{color:var(--green);font-size:19px}
+.fa-row span{display:flex;flex-direction:column;gap:1px;min-width:0}
+.fa-row small{font-size:13px;color:var(--muted);font-weight:400}
+.fa-row.danger,.fa-row.danger .i{color:var(--red)}
+.fa-done{width:100%}
 .pick-title{font-size:15px;font-weight:600;color:var(--muted);margin-bottom:10px;overflow-wrap:anywhere}
 .pick-list{display:flex;flex-direction:column;gap:8px}
 .pick{width:100%;min-height:48px;display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--line);text-align:left;font-size:calc(16px * var(--fs));font-weight:600;line-height:1.35}
@@ -392,7 +452,6 @@ textarea.f-in{resize:vertical;min-height:84px}
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" aria-label="Меню" aria-hidden="true">
   <div class="d-head">
-    <div><div class="d-title">Меню</div><div class="d-sub">Файлы, категории и поиск</div></div>
     <button type="button" class="icon-btn" data-act="m-close" aria-label="Закрыть меню" id="closeBtn"></button>
   </div>
   <label class="searchbox" for="searchInput">
@@ -1351,6 +1410,7 @@ function renderBottom() {
 /* ---------- menu ---------- */
 const elDrawer = $('#drawer'), elScrim = $('#scrim'), elMenuBody = $('#menuBody'), elSearch = $('#searchInput');
 function openDrawer() {
+  hideToast();
   drawerOpen = true;
   renderMenuBody();
   elDrawer.classList.add('open');
@@ -1374,65 +1434,193 @@ function renderMenuBody() {
   elMenuBody.innerHTML = q ? searchHTML(q) : menuHTML();
   elMenuBody.scrollTop = q ? 0 : top;
 }
+/* ---------- menu search: results with highlighted matches ---------- */
+const SRES_MAX = 80; // searchBank() returns at most this many
+const isSubseq = (needle, hay) => { let i = 0; for (const ch of hay) { if (ch === needle[i]) i++; if (i === needle.length) return true; } return i === needle.length; };
+// Same normalisation as norm(), but char by char, remembering where each char came from.
+function normMap(text) {
+  let s = '';
+  const map = [];
+  for (let i = 0; i < text.length; i++) {
+    let n = text[i].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    if (n && !/^[\p{L}\p{N}]+$/u.test(n)) n = ' ';
+    for (let k = 0; k < n.length; k++) { s += n[k]; map.push(i); }
+  }
+  return { s, map };
+}
+// Ranges [start, end) of the original text that match the query tokens (typos: the whole word).
+function matchRanges(text, toks) {
+  const { s, map } = normMap(text);
+  const out = [];
+  for (const t of toks) {
+    if (t.length < 2 && toks.length > 1) continue;
+    let found = false;
+    for (let p = s.indexOf(t); p !== -1; p = s.indexOf(t, p + t.length)) { out.push([map[p], map[p + t.length - 1] + 1]); found = true; }
+    if (found || t.length <= 2) continue;
+    for (const m of s.matchAll(/[\p{L}\p{N}]+/gu)) {
+      const w = m[0];
+      if (w.length <= t.length + 4 && isSubseq(t, w)) out.push([map[m.index], map[m.index + w.length - 1] + 1]);
+    }
+  }
+  out.sort((a, b) => a[0] - b[0]);
+  const merged = [];
+  for (const r of out) { const last = merged[merged.length - 1]; if (last && r[0] <= last[1]) last[1] = Math.max(last[1], r[1]); else merged.push(r.slice()); }
+  return merged;
+}
+function markHTML(text, ranges) {
+  let h = '', at = 0;
+  for (const [a, b] of ranges) { h += esc(text.slice(at, a)) + '<mark>' + esc(text.slice(a, b)) + '</mark>'; at = b; }
+  return h + esc(text.slice(at));
+}
+// Tokens of the query that this text contains (exactly, or as a typo of one of its words).
+function tokensIn(text, toks) {
+  const { s } = normMap(text);
+  const words = s.match(/[\p{L}\p{N}]+/gu) || [];
+  return toks.filter(t => s.includes(t) || (t.length > 2 && words.some(w => isSubseq(t, w))));
+}
+// The question with matches marked; for a long question whose match would fall past the 3-line clamp, start near the match.
+function titleHTML(title, toks) {
+  let text = title;
+  let ranges = matchRanges(text, toks);
+  if (ranges.length && text.length > 75 && ranges[0][0] > 50) {
+    let a = ranges[0][0] - 28;
+    const sp = text.indexOf(' ', a);
+    if (sp !== -1 && sp < ranges[0][0]) a = sp + 1;
+    text = '…' + text.slice(a);
+    ranges = matchRanges(text, toks);
+  }
+  return markHTML(text, ranges);
+}
+function searchFields(it) {
+  switch (it.kind) {
+    case 'case': return it.subs.map(s => ({ label: 'Вопрос кейса', text: s.prompt })).concat([{ label: 'Кейс', text: it.mainText }]);
+    case 'dropdown': return it.rows.map(r => ({ label: 'Пара', text: r.left + ' — ' + r.value }));
+    case 'sortable': return it.order.map(t => ({ label: 'Пункт', text: t }));
+    case 'text': return it.accepted.map(t => ({ label: 'Ответ', text: t }));
+    default: return (it.options || []).map(o => ({ label: 'Вариант', text: o.text }));
+  }
+}
+// A short piece of text around the first match, when the match is not in the question itself.
+function snippetHTML(it, toks) {
+  const inTitle = tokensIn(it.title, toks);
+  if (inTitle.length === toks.length) return '';
+  const rest = toks.filter(t => !inTitle.includes(t));
+  let best = null, bestN = 0;
+  for (const f of searchFields(it)) {
+    const n = tokensIn(f.text, rest).length;
+    if (n > bestN) { best = f; bestN = n; if (n === rest.length) break; }
+  }
+  if (!best) return '';
+  let text = best.text.replace(/\s+/g, ' ').trim();
+  const r = matchRanges(text, rest)[0];
+  if (r && text.length > 90) {
+    // Start just before the match so it stays on the first visible line (the snippet is clamped to 2 lines).
+    let a = Math.max(0, r[0] - 18), b = Math.min(text.length, a + 110);
+    if (a > 0) { const sp = text.indexOf(' ', a); if (sp !== -1 && sp < r[0]) a = sp + 1; }
+    if (b < text.length) { const sp = text.lastIndexOf(' ', b); if (sp > r[1]) b = sp; }
+    text = (a > 0 ? '…' : '') + text.slice(a, b) + (b < best.text.length ? '…' : '');
+  }
+  return `<span class="sres-snip"><em>${best.label}:</em> ${markHTML(text, matchRanges(text, rest))}</span>`;
+}
 function searchHTML(q) {
   if (!bankReady()) return '<section class="msec"><p class="msec-note">Сначала выберите файл с вопросами.</p></section>';
   const res = searchBank(bank, q);
-  let h = `<section class="msec"><div class="sec-label">Результаты${res.length ? ' · ' + res.length + (res.length === 80 ? '+' : '') : ''}</div>`;
-  if (!res.length) h += '<p class="msec-note">Ничего не найдено. Попробуйте другое слово.</p>';
-  h += res.map(it => `<button type="button" class="sres" data-act="m-result" data-cat="${it.category}" data-id="${esc(it.id)}"><b>${esc(it.title)}</b><span>${CAT_TITLE[it.category]}</span></button>`).join('');
+  const toks = norm(q).split(' ').filter(Boolean);
+  const set = curSet();
+  const file = set ? `<span class="sres-file">в «${esc(setTitle(set))}»</span>` : '';
+  let h = `<section class="msec"><div class="sres-head"><div class="sec-label">${res.length ? 'Найдено · ' + res.length + (res.length >= SRES_MAX ? '+' : '') : 'Поиск'}</div>${file}</div>`;
+  if (!res.length) {
+    return h + `<div class="sres-empty">${I.search}<b>Ничего не найдено</b><span>Проверьте написание или введите начало слова — например, «сердц» вместо «сердечный».</span><span>Ищу в вопросах и вариантах ответов этого файла.</span></div></section>`;
+  }
+  if (S.test) h += '<p class="m-note">Переход к найденному вопросу завершит текущий тест.</p>';
+  const cur = !S.test ? currentItem() : null;
+  const starred = new Set(S.starred[S.setId] || []);
+  h += res.map(it => {
+    const list = bank.byCat[it.category] || [];
+    const num = list.indexOf(it) + 1;
+    const extra = it.kind === 'case' ? ' · ' + it.subs.length + ' ' + plural(it.subs.length, 'вопрос', 'вопроса', 'вопросов') : '';
+    const now = cur && cur.id === it.id;
+    return `<button type="button" class="sres${now ? ' cur' : ''}" data-act="m-result" data-cat="${it.category}" data-id="${esc(it.id)}"><span class="sres-meta">${I.cat[it.category]}<span class="sres-cat">${CAT_TITLE[it.category]}${extra}</span>${num ? `<span class="sres-num">№ ${num}</span>` : ''}${starred.has(it.id) ? `<span class="sres-star" aria-label="В избранном">${I.starF}</span>` : ''}${now ? '<span class="sres-now">открыт</span>' : ''}</span><span class="sres-title">${titleHTML(it.title, toks)}</span>${snippetHTML(it, toks)}</button>`;
+  }).join('');
+  if (res.length >= SRES_MAX) h += `<div class="sres-more">Показаны первые ${SRES_MAX}. Уточните запрос — добавьте ещё слово.</div>`;
   return h + '</section>';
 }
+/* Menu order: what is used most comes first — categories (or the running test), favourites,
+   test, then files, settings and hints. */
 function menuHTML() {
-  let h = '<section class="msec"><div class="sec-label">Файлы</div>';
+  const ready = bankReady() && curSet();
+  let h = '';
+  if (ready) {
+    if (S.test) h += menuTestHTML();
+    h += menuCatsHTML() + menuStarHTML();
+    if (!S.test) h += menuTestHTML();
+  }
+  h += menuFilesHTML() + menuSettingsHTML() + menuHelpHTML();
+  return h + '<div class="d-foot">Тренажёр тестов · веб-версия</div>';
+}
+function menuCatsHTML() {
+  const cs = curSet();
+  let h = `<section class="msec"><div class="sec-row"><div class="sec-label">Категории</div><button type="button" class="sec-chip" data-jump="m-files" aria-label="Файл «${esc(setTitle(cs))}» — к списку файлов"><span>${esc(setTitle(cs))}</span>${I.chevD}</button></div>`;
+  if (S.test) h += '<p class="m-note">Выбор категории завершит текущий тест.</p>';
+  const empty = [];
+  for (const c of CATS) {
+    const n = (bank.byCat[c] || []).length;
+    const on = !S.test && !S.starOnly && S.category === c;
+    if (!n && !on) { empty.push(CAT_TITLE[c]); continue; }
+    h += `<button type="button" class="mrow${on ? ' on' : ''}" data-act="m-cat" data-cat="${c}"${on ? ' aria-current="true"' : ''}><span class="mico">${I.cat[c]}</span><span class="mtxt">${CAT_TITLE[c]}</span><span class="badge">${n}</span></button>`;
+  }
+  if (empty.length) h += `<p class="m-empty">Нет вопросов: ${empty.join(', ')}</p>`;
+  return h + '</section>';
+}
+function menuStarHTML() {
+  const st = new Set(S.starred[S.setId] || []);
+  const starCats = CATS.map(c => [c, (bank.byCat[c] || []).filter(it => st.has(it.id)).length]).filter(x => x[1] > 0);
+  if (!starCats.length) return '';
+  let h = '<section class="msec"><div class="sec-label">Избранное</div>';
+  for (const [c, n] of starCats) {
+    const on = !S.test && S.starOnly && S.category === c;
+    h += `<div class="mline"><button type="button" class="mrow${on ? ' star-on' : ''}" data-act="m-star-cat" data-cat="${c}"><span class="mico">${on ? I.starF : I.star}</span><span class="mtxt">${CAT_TITLE[c]}</span><span class="badge">${n}</span></button><button type="button" class="mx" data-act="m-star-clear" data-cat="${c}" aria-label="Очистить избранное в категории «${CAT_TITLE[c]}»">${I.x}</button></div>`;
+  }
+  return h + '</section>';
+}
+function menuTestHTML() {
+  let h = '<section class="msec"><div class="sec-label">Тест</div>';
+  if (S.test) {
+    const n = currentItems().length, tot = testTotal();
+    h += `<button type="button" class="mrow test-on" data-act="m-close"><span class="mico">${I.play}</span><span class="mtxt">Продолжить тест<small>Вопрос ${Math.min(S.index + 1, n)} из ${n} · ${testEarned()}/${tot} ${plural(tot, 'балл', 'балла', 'баллов')}</small></span><span class="mico">${I.chevR}</span></button>`;
+    h += `<button type="button" class="mrow" data-act="m-maketest"><span class="mico">${I.test}</span><span class="mtxt">Новый тест<small>Или завершить текущий</small></span><span class="mico">${I.chevR}</span></button>`;
+  } else {
+    h += `<button type="button" class="mrow box" data-act="m-maketest"><span class="mico">${I.test}</span><span class="mtxt">Сделать тест<small>Выбрать вопросы и баллы</small></span><span class="mico">${I.chevR}</span></button>`;
+  }
+  for (const t of S.savedTests) {
+    const n = t.configs.reduce((a, c) => a + c.count, 0), pts = t.configs.reduce((a, c) => a + c.count * c.points, 0);
+    h += `<div class="mline"><button type="button" class="mrow" data-act="m-saved" data-id="${esc(t.id)}"><span class="mico">${I.play}</span><span class="mtxt">${esc(t.title)}<small>${esc(t.setTitle)} • ${n} вопр. • ${pts} ${plural(pts, 'балл', 'балла', 'баллов')}</small></span></button><button type="button" class="mx" data-act="m-saved-del" data-id="${esc(t.id)}" aria-label="Удалить «${esc(t.title)}»">${I.trash}</button></div>`;
+  }
+  return h + '</section>';
+}
+function menuFilesHTML() {
+  let h = '<section class="msec" id="m-files"><div class="sec-label">Файлы</div>';
   if (!SETS.length) h += '<p class="msec-note">Файлов пока нет. Загрузите JSON с вопросами.</p>';
   for (const s of SETS) {
     const on = s.id === S.setId;
-    h += `<div class="mline"><button type="button" class="mrow${on ? ' on' : ''}" data-act="m-set" data-id="${esc(s.id)}"><span class="mico">${I.doc}</span><span class="mtxt">${esc(setTitle(s))}</span>${on ? `<span class="mtick">${I.check}</span>` : ''}</button><button type="button" class="mmore" data-act="m-set-more" data-id="${esc(s.id)}" aria-label="Действия с файлом «${esc(setTitle(s))}»">${I.more}</button></div>`;
+    h += `<div class="mline"><button type="button" class="mrow${on ? ' on' : ''}" data-act="m-set" data-id="${esc(s.id)}"${on ? ' aria-current="true"' : ''}><span class="mico">${I.doc}</span><span class="mtxt">${esc(setTitle(s))}</span>${on ? `<span class="mtick">${I.check}</span>` : ''}</button><button type="button" class="mmore" data-act="m-set-more" data-id="${esc(s.id)}" aria-label="Действия с файлом «${esc(setTitle(s))}»">${I.more}</button></div>`;
   }
-  h += `<label class="mrow outline" for="fileInput" role="button" tabindex="0"><span class="mico">${I.plus}</span><span class="mtxt">Загрузить JSON</span></label>`;
-  h += `<button type="button" class="mrow subtle" data-act="paste-json"><span class="mico">${I.paste}</span><span class="mtxt">Вставить JSON текстом</span></button>`;
+  h += `<div class="m-imp"><label class="mbtn pri" for="fileInput" role="button" tabindex="0">${I.plus}<span>Загрузить JSON</span></label><button type="button" class="mbtn" data-act="paste-json" aria-label="Вставить JSON текстом">${I.paste}<span>Вставить</span></button></div>`;
   const hidden = BUNDLED.filter(b => S.hiddenBundled.includes(b.id)).length;
   if (hidden) h += `<button type="button" class="mlink" data-act="m-unhide">Вернуть скрытые встроенные файлы (${hidden})</button>`;
-  h += '</section>';
-
-  if (bankReady() && curSet()) {
-    const st = new Set(S.starred[S.setId] || []);
-    const starCats = CATS.map(c => [c, (bank.byCat[c] || []).filter(it => st.has(it.id)).length]).filter(x => x[1] > 0);
-    if (starCats.length) {
-      h += '<section class="msec"><div class="sec-label">Избранное</div>';
-      for (const [c, n] of starCats) {
-        const on = !S.test && S.starOnly && S.category === c;
-        h += `<div class="mline"><button type="button" class="mrow${on ? ' star-on' : ''}" data-act="m-star-cat" data-cat="${c}"><span class="mico">${on ? I.starF : I.star}</span><span class="mtxt">${CAT_TITLE[c]}</span><span class="badge">${n}</span></button><button type="button" class="mx" data-act="m-star-clear" data-cat="${c}" aria-label="Очистить избранное в категории «${CAT_TITLE[c]}»">${I.x}</button></div>`;
-      }
-      h += '</section>';
-    }
-
-    h += '<section class="msec"><div class="sec-label">Тест</div>';
-    const sub = S.test ? `Идёт тест: ${testEarned()}/${testTotal()} баллов` : 'Категории, количество и баллы';
-    h += `<button type="button" class="mrow ${S.test ? 'test-on' : 'box'}" data-act="m-maketest"><span class="mico" style="color:var(--green)">${I.test}</span><span class="mtxt">Сделать тест<small>${esc(sub)}</small></span><span class="mico">${I.chevR}</span></button>`;
-    for (const t of S.savedTests) {
-      const n = t.configs.reduce((a, c) => a + c.count, 0), pts = t.configs.reduce((a, c) => a + c.count * c.points, 0);
-      h += `<div class="mline"><button type="button" class="mrow" data-act="m-saved" data-id="${esc(t.id)}"><span class="mico">${I.play}</span><span class="mtxt">${esc(t.title)}<small>${esc(t.setTitle)} • ${n} вопр. • ${pts} ${plural(pts, 'балл', 'балла', 'баллов')}</small></span></button><button type="button" class="mx" data-act="m-saved-del" data-id="${esc(t.id)}" aria-label="Удалить «${esc(t.title)}»">${I.trash}</button></div>`;
-    }
-    h += '</section>';
-
-    h += '<section class="msec"><div class="sec-label">Категории</div>';
-    for (const c of CATS) {
-      const on = !S.test && !S.starOnly && S.category === c;
-      h += `<button type="button" class="mrow${on ? ' on' : ''}" data-act="m-cat" data-cat="${c}"><span class="mico">${I.cat[c]}</span><span class="mtxt">${CAT_TITLE[c]}</span><span class="badge">${(bank.byCat[c] || []).length}</span></button>`;
-    }
-    h += '</section>';
-  }
-
+  return h + '</section>';
+}
+function menuSettingsHTML() {
   const pct = Math.round(S.fontScale * 100);
-  h += `<section class="msec"><div class="sec-label">Масштаб текста</div><div class="panel-s"><div class="fs-row"><button type="button" class="sq-btn a-sm" data-act="m-font-dec" aria-label="Мельче"${S.fontScale <= 0.5 ? ' disabled' : ''}>A</button><input type="range" id="fontRange" min="50" max="160" step="5" value="${pct}" aria-label="Масштаб текста вопросов"><button type="button" class="sq-btn a-lg" data-act="m-font-inc" aria-label="Крупнее"${S.fontScale >= 1.6 ? ' disabled' : ''}>A</button></div><div class="fs-foot"><span id="fontPct">${pct}%</span>${pct !== 100 ? '<button type="button" class="mlink" data-act="m-font-reset">Сбросить</button>' : ''}</div></div></section>`;
-
-  h += `<section class="msec"><div class="sec-label">Режим</div><div class="mrow static"><span class="mtxt">Автопереход<small>После верного ответа сразу открывается следующий вопрос</small></span><button type="button" class="switch" role="switch" aria-checked="${S.autoAdvance}" data-act="toggle-auto" aria-label="Автопереход"><span></span></button></div>`;
-  h += `<div class="store-note">${Store.mode === 'cloud' ? 'Файлы и прогресс хранятся в вашем аккаунте claude.ai и доступны на других устройствах.' : 'Файлы и прогресс хранятся в памяти этого браузера.'}</div></section>`;
-
-  h += `<section class="msec"><div class="sec-label">Подсказки</div>
-<details class="help"><summary>Как перенести JSON на iPhone ${I.chevD}</summary><p>Отправьте файл себе через AirDrop, iCloud Drive или Telegram и сохраните в «Файлы». Потом нажмите «Загрузить JSON» и выберите его. Можно выбрать сразу несколько файлов.</p></details>
-<details class="help"><summary>Значок на экране «Домой» ${I.chevD}</summary><p>В Safari нажмите «Поделиться», затем «На экран „Домой“». Тренажёр откроется отдельным значком, как приложение.</p></details>
+  return `<section class="msec"><div class="sec-label">Настройки</div><div class="mgroup">
+<div class="mrow static"><span class="mtxt">Автопереход<small>После верного ответа — следующий вопрос</small></span><button type="button" class="switch" role="switch" aria-checked="${S.autoAdvance}" data-act="toggle-auto" aria-label="Автопереход"><span></span></button></div>
+<div class="fs-block"><div class="fs-head"><span>Размер текста</span><span class="fs-val"><span id="fontPct">${pct}%</span>${pct !== 100 ? '<button type="button" class="mlink" data-act="m-font-reset">Сбросить</button>' : ''}</span></div><div class="fs-row"><button type="button" class="sq-btn a-sm" data-act="m-font-dec" aria-label="Мельче"${S.fontScale <= 0.5 ? ' disabled' : ''}>A</button><input type="range" id="fontRange" min="50" max="160" step="5" value="${pct}" aria-label="Масштаб текста вопросов"><button type="button" class="sq-btn a-lg" data-act="m-font-inc" aria-label="Крупнее"${S.fontScale >= 1.6 ? ' disabled' : ''}>A</button></div></div>
+</div><div class="store-note">${Store.mode === 'cloud' ? 'Файлы и прогресс хранятся в вашем аккаунте claude.ai и доступны на других устройствах.' : 'Файлы и прогресс хранятся в памяти этого браузера.'}</div></section>`;
+}
+function menuHelpHTML() {
+  return `<section class="msec"><div class="sec-label">Подсказки</div><div class="mgroup">
+<details class="help"><summary>Как перенести JSON ${I.chevD}</summary><p>Отправьте файл себе через AirDrop, iCloud Drive или Telegram и сохраните в «Файлы». Потом нажмите «Загрузить JSON» и выберите его. Можно выбрать сразу несколько файлов.</p></details>
+<details class="help"><summary>Значок на «Домой» ${I.chevD}</summary><p>В Safari нажмите «Поделиться», затем «На экран „Домой“». Тренажёр откроется отдельным значком, как приложение.</p></details>
 <details class="help"><summary>Какой JSON подходит ${I.chevD}</summary><p>Объект, где ключ — текст вопроса. Типы: single, multiple, dropdown, sortable, text_input, drag_and_drop. Вопросы с общим main_text собираются в «Кейсы».</p><pre>{
   "Основной внеклеточный катион:": {
     "type": "single",
@@ -1442,16 +1630,23 @@ function menuHTML() {
     ]
   }
 }</pre></details>
-<details class="help"><summary>Жесты ${I.chevD}</summary><p>Свайп влево или вправо по вопросу — следующий или предыдущий. Удержание стрелок листает быстро. Нажмите на счётчик внизу, чтобы перейти к вопросу по номеру.</p></details>
-</section><div class="d-foot">Тренажёр тестов · веб-версия</div>`;
-  return h;
+<details class="help"><summary>Жесты ${I.chevD}</summary><p>Свайп влево или вправо по вопросу — следующий или предыдущий. Свайп от левого края открывает меню, свайп влево по меню — закрывает. Удержание стрелок листает быстро. Нажмите на название раздела вверху экрана, чтобы перейти к вопросу по номеру.</p></details>
+</div></section>`;
 }
+// The file chip next to «Категории» scrolls the menu down to the file list.
+elMenuBody.addEventListener('click', e => {
+  const j = e.target.closest('[data-jump]');
+  if (!j) return;
+  const t = document.getElementById(j.dataset.jump);
+  if (t) elMenuBody.scrollTo({ top: Math.max(0, t.offsetTop - elMenuBody.offsetTop - 4), behavior: 'smooth' });
+});
 
 /* =========================================================
    Sheets & dialogs
    ========================================================= */
 const anySheet = () => !!document.querySelector('.sheet-wrap:not(.closing)');
 function openSheet({ cls = '', html, onClick, onClose, dismissible = true }) {
+  hideToast();
   const wrap = document.createElement('div');
   wrap.className = 'sheet-wrap';
   wrap.innerHTML = `<div class="sheet-scrim"></div><div class="sheet ${cls}" role="dialog" aria-modal="true">${html}</div>`;
@@ -1505,6 +1700,14 @@ function toast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => { t.classList.remove('show'); setTimeout(() => { t.hidden = true; }, 220); }, 2800);
 }
+// An old message shouldn't cover a menu or sheet that has just been opened.
+function hideToast() {
+  const t = $('#toast');
+  if (t.hidden) return;
+  clearTimeout(toastTimer);
+  t.classList.remove('show');
+  t.hidden = true;
+}
 function busy(msg) {
   const el = document.createElement('div');
   el.className = 'busy';
@@ -1557,23 +1760,106 @@ function openFinish() {
   dialog({ title: 'Тест завершён', message: msg, buttons: [{ id: 'stay', label: 'Остаться' }, { id: 'close', label: 'Закрыть тест', kind: 'primary' }] })
     .then(r => { if (r.id === 'close') { endTest(); renderAll(); } });
 }
+/* ---------- file «…» actions ---------- */
+const FA_ICON = {
+  open: sv('<path d="M5 12h14M13 6l6 6-6 6"/>'),
+  rename: sv('<path d="M4 20h4L19 9l-4-4L4 16Z"/><path d="m13.5 6.5 4 4"/>'),
+  share: sv('<path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>'),
+  reset: sv('<path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/>')
+};
+const FA_SHORT = { multiple: 'Несколько', single: 'Один', dropdown: 'Список', sortable: 'Порядок', text: 'Текст', caseStudy: 'Кейсы' };
+const setFileText = async s => {
+  if (s.rec) return Store.getFile(s.rec);
+  const r = await fetch('data/' + encodeURIComponent(s.file));
+  if (!r.ok) throw new Error('Файл не открылся (код ' + r.status + ').');
+  return r.text();
+};
+const setFileName = s => (setTitle(s).replace(/[\\/:*?"<>|\u0000-\u001f]+/g, ' ').replace(/\s+/g, ' ').trim() || 'вопросы').replace(/\.json$/i, '') + '.json';
+// Questions of this file that have an answer (not just a remembered option order).
+function answeredCount(id) {
+  let n = 0;
+  for (const [k, r] of Object.entries(S.answers)) {
+    if (!k.startsWith(id + '|') || !r) continue;
+    if (r.checked || r.sel != null || (r.multi && r.multi.length) || (r.dd && Object.keys(r.dd).length) || r.order || (r.text && r.text.trim())) n++;
+  }
+  return n;
+}
+// iPhone share sheet (Сохранить в «Файлы», AirDrop, Telegram…), or a plain download.
+async function shareSetFile(s, text) {
+  const name = setFileName(s);
+  const file = new File([text], name, { type: 'application/json' });
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: setTitle(s) }); return; }
+  } catch (e) { if (e && e.name === 'AbortError') return; }
+  const url = URL.createObjectURL(file);
+  const a = document.createElement('a');
+  a.href = url; a.download = name; a.rel = 'noopener';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+  toast('Скачивается «' + name + '»');
+}
 async function openSetActions(id) {
   const s = SETS.find(x => x.id === id);
   if (!s) return;
-  const b = BANKS.get(id);
-  let info = s.bundled ? 'Встроенный файл' : 'Загруженный файл';
-  if (b && !b.error) info += ' • ' + b.total + ' ' + plural(b.total, 'вопрос', 'вопроса', 'вопросов');
-  if (s.rec && s.rec.store === 'cloud') info += ' • в аккаунте';
-  const del = s.bundled && !s.rec ? 'Скрыть' : 'Удалить';
-  const r = await dialog({ title: setTitle(s), message: info, buttons: [{ id: 'rename', label: 'Переименовать' }, { id: 'delete', label: del, kind: 'danger' }, { id: 'cancel', label: 'Отмена' }], vertical: true });
-  if (r.id === 'rename') {
-    const r2 = await dialog({ title: 'Переименовать файл', message: 'Название меняется только в приложении.', input: { value: setTitle(s), placeholder: 'Название' }, buttons: [{ id: 'cancel', label: 'Отмена' }, { id: 'ok', label: 'Сохранить', kind: 'primary' }] });
-    const v = r2.value.trim();
-    if (r2.id === 'ok' && v) { S.titles[id] = v; save(); renderAll(); }
-  } else if (r.id === 'delete') {
-    const msg = s.bundled && !s.rec ? 'Встроенный файл «' + setTitle(s) + '» пропадёт из списка. Вернуть его можно в меню.' : 'Файл «' + setTitle(s) + '», его прогресс, избранное и сохранённые тесты будут удалены.';
-    const r2 = await dialog({ title: del + ' файл?', message: msg, buttons: [{ id: 'cancel', label: 'Отмена' }, { id: 'ok', label: del, kind: 'danger' }] });
-    if (r2.id === 'ok') { await deleteSet(id); toast(s.bundled && !s.rec ? 'Файл скрыт' : 'Файл удалён'); }
+  const hideOnly = s.bundled && !s.rec;
+  const isCur = id === S.setId;
+  const answered = answeredCount(id);
+  // Read the file now, so «Отправить» can open the share sheet right on the tap.
+  let fileText = null;
+  const textP = setFileText(s).then(t => (fileText = t)).catch(() => null);
+  const src = (s.bundled ? 'Встроенный' : 'Загруженный') + (s.rec && s.rec.store === 'cloud' ? ' · в аккаунте' : '');
+  const infoHTML = b => {
+    if (!b) return [src + ' · считаю вопросы…', ''];
+    if (b.error) return [src + ' · не открылся', ''];
+    const chips = CATS.map(c => [c, (b.byCat[c] || []).length]).filter(x => x[1] > 0)
+      .map(([c, n]) => `<span class="fa-chip" title="${CAT_TITLE[c]}">${I.cat[c]}${FA_SHORT[c]} <b>${n}</b></span>`).join('');
+    return [src + ' · ' + b.total + ' ' + plural(b.total, 'вопрос', 'вопроса', 'вопросов'), chips];
+  };
+  const [sub0, chips0] = infoHTML(BANKS.get(id));
+  const row = (act, icon, label, small = '', cls = '') => `<button type="button" class="fa-row${cls}" data-s="${act}">${icon}<span>${label}${small ? `<small>${small}</small>` : ''}</span></button>`;
+  const html = `<div class="fa"><div class="fa-head"><span class="fa-ico">${I.doc}</span><span class="fa-name"><b>${esc(setTitle(s))}</b><small id="faSub">${esc(sub0)}</small></span></div>
+<div class="fa-cats" id="faCats">${chips0}</div>
+<div class="fa-list">${isCur ? '' : row('open', FA_ICON.open, 'Открыть')}${row('rename', FA_ICON.rename, 'Переименовать')}${row('share', FA_ICON.share, 'Отправить JSON', 'В «Файлы», AirDrop, Telegram')}${answered ? row('reset', FA_ICON.reset, 'Сбросить ответы', answered + ' ' + plural(answered, 'вопрос', 'вопроса', 'вопросов') + ' с ответами') : ''}${row('delete', hideOnly ? I.eyeOff : I.trash, hideOnly ? 'Скрыть из списка' : 'Удалить файл', hideOnly ? 'Вернуть можно в меню' : '', ' danger')}</div>
+<button type="button" class="dlg-btn fa-done" data-s="close">Готово</button></div>`;
+  const sh = openSheet({
+    cls: 'dialog', html,
+    onClick: async (act, el, e, close) => {
+      if (act === 'close') return close();
+      if (act === 'share') {
+        if (fileText == null) await textP;
+        if (fileText == null) return alertDlg('Файл не открылся', 'Не получилось прочитать файл. Попробуйте загрузить его заново.');
+        return shareSetFile(s, fileText);
+      }
+      close();
+      if (act === 'open') { selectSet(id); elSearch.value = ''; renderAll(); return; }
+      if (act === 'rename') {
+        const r2 = await dialog({ title: 'Переименовать файл', message: 'Название меняется только в приложении.', input: { value: setTitle(s), placeholder: 'Название' }, buttons: [{ id: 'cancel', label: 'Отмена' }, { id: 'ok', label: 'Сохранить', kind: 'primary' }] });
+        const v = r2.value.trim();
+        if (r2.id === 'ok' && v) { S.titles[id] = v; save(); renderAll(); toast('Название сохранено'); }
+        return;
+      }
+      if (act === 'reset') {
+        const r2 = await dialog({ title: 'Сбросить ответы?', message: 'Отмеченные ответы и проверки в «' + setTitle(s) + '» очистятся — можно решать заново. Избранное и сохранённые тесты останутся.', buttons: [{ id: 'cancel', label: 'Отмена' }, { id: 'ok', label: 'Сбросить', kind: 'danger' }] });
+        if (r2.id !== 'ok') return;
+        for (const k of Object.keys(S.answers)) if (k.startsWith(id + '|')) delete S.answers[k];
+        save(); renderAll(); toast('Ответы сброшены');
+        return;
+      }
+      if (act === 'delete') {
+        const del = hideOnly ? 'Скрыть' : 'Удалить';
+        const msg = hideOnly ? 'Встроенный файл «' + setTitle(s) + '» пропадёт из списка. Вернуть его можно в меню.' : 'Файл «' + setTitle(s) + '», его прогресс, избранное и сохранённые тесты будут удалены.';
+        const r2 = await dialog({ title: del + ' файл?', message: msg, buttons: [{ id: 'cancel', label: 'Отмена' }, { id: 'ok', label: del, kind: 'danger' }] });
+        if (r2.id === 'ok') { await deleteSet(id); toast(hideOnly ? 'Файл скрыт' : 'Файл удалён'); }
+      }
+    }
+  });
+  if (!BANKS.has(id)) {
+    loadBank(s).then(b => {
+      const [sub, chips] = infoHTML(b);
+      const a = sh.panel.querySelector('#faSub'), c = sh.panel.querySelector('#faCats');
+      if (a) a.textContent = sub;
+      if (c) c.innerHTML = chips;
+    });
   }
 }
 function openPaste() {
@@ -1904,6 +2190,8 @@ window.addEventListener('drop', e => {
 
 /* search & font slider in the menu */
 elSearch.addEventListener('input', renderMenuBody);
+// «Найти» on the iPhone keyboard: hide the keyboard, keep the results.
+elSearch.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); elSearch.blur(); } });
 $('#searchClear').addEventListener('click', e => { e.preventDefault(); elSearch.value = ''; renderMenuBody(); elSearch.focus(); });
 elMenuBody.addEventListener('input', e => {
   if (e.target.id !== 'fontRange') return;
