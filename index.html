@@ -68,16 +68,22 @@ button:disabled{cursor:default}
 
 /* ---------- shell ---------- */
 .app{height:100%;display:flex;flex-direction:column;max-width:760px;margin:0 auto;position:relative}
-.topbar{flex:none;display:flex;align-items:center;gap:12px;padding-block:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--line);background:var(--bg)}
+.topbar{flex:none;display:flex;align-items:center;gap:6px;padding-block:4px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--line);background:var(--bg)}
 .icon-btn{width:42px;height:42px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:var(--surface);border:1px solid var(--line);color:var(--text);font-size:17px}
 .icon-btn:active:not(:disabled){opacity:.7}
 .icon-btn:disabled{opacity:.4}
-.titles{flex:1;min-width:0}
-.title{font-size:20px;font-weight:600;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.progress{font-size:13px;font-weight:500;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
-.top-actions{flex:none;display:flex;align-items:center;gap:10px}
-.plain-btn{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;color:var(--green);font-size:19px;border-radius:8px}
-.star-btn{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);font-size:21px;border-radius:8px}
+.titles{flex:1;min-width:0;min-height:44px;display:flex;flex-direction:column;justify-content:center;text-align:left;padding:0 6px;border-radius:8px}
+.titles:active:not(:disabled){background:var(--surface)}
+.topbar .icon-btn{width:40px;height:40px;position:relative}
+.topbar .icon-btn::after{content:'';position:absolute;inset:-3px}
+.title{display:block;font-size:17px;font-weight:600;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.progress-row{display:flex;align-items:center;gap:1px;min-width:0;margin-top:1px;color:var(--muted)}
+.progress-row .i{font-size:11px;stroke-width:2.6}
+.titles:disabled .progress-row .i{display:none}
+.progress{min-width:0;font-size:13px;font-weight:500;line-height:1.25;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.top-actions{flex:none;display:flex;align-items:center;gap:2px}
+.plain-btn{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;color:var(--green);font-size:19px;border-radius:8px}
+.star-btn{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);font-size:21px;border-radius:8px}
 .star-btn.on{color:var(--star)}
 .star-btn.pop .i{animation:pop .35s ease}
 @keyframes pop{40%{transform:scale(1.3)}}
@@ -91,9 +97,18 @@ button:disabled{cursor:default}
 .content.enter{animation:fadein .22s ease}
 @keyframes fadein{from{opacity:.25;transform:translateY(4px)}to{opacity:1;transform:none}}
 
-.bottombar{flex:none;display:flex;flex-direction:column;gap:10px;padding-block:12px 10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));background:var(--bar);border-top:1px solid var(--line);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
-.actions-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.actions-row.last{grid-template-columns:1fr 48px 48px}
+.bottombar{flex:none;display:flex;align-items:center;gap:8px;padding-block:8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));background:var(--bar);border-top:1px solid var(--line);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.actions-row{flex:1;min-width:0;display:flex;gap:6px}
+.bottombar .icon-btn{width:44px;height:44px}
+.bottombar .act{flex:1 1 auto;height:44px;min-width:0;gap:5px;padding:0 10px;border-radius:10px;font-size:15px;white-space:nowrap}
+.bottombar .act .i{font-size:18px}
+.bottombar .act .lbl{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.bottombar .act.icon-only,.actions-row [data-act="finish"]{flex:none;width:52px;padding:0}
+/* labels by width: last test question always shows the eye only; narrow phones too */
+.actions-row.last [data-act="reveal"]{flex:none;width:52px;padding:0}
+.actions-row.last [data-act="reveal"] .lbl{display:none}
+@media (max-width:399px){.bottombar .act{font-size:14px;gap:4px;padding:0 8px}}
+@media (max-width:379px){.bottombar [data-act="reveal"]{flex:none;width:52px;padding:0}.bottombar [data-act="reveal"] .lbl,.actions-row.last [data-act="check"] .lbl{display:none}}
 .act{height:48px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:8px;color:var(--on-accent);font-size:16px;font-weight:600;padding:0 12px}
 .act .i{font-size:19px}
 .act.gray{background:var(--gray-btn)}
@@ -102,9 +117,6 @@ button:disabled{cursor:default}
 .act.wide{width:100%}
 .act:active:not(:disabled){filter:brightness(.88)}
 .act:disabled{opacity:.45}
-.nav-row{display:flex;align-items:center;gap:12px}
-.counter{flex:1;height:42px;font-size:15px;font-weight:600;text-align:center;font-variant-numeric:tabular-nums;border-radius:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.counter:active{background:var(--surface)}
 
 /* ---------- question ---------- */
 .q{display:flex;flex-direction:column;gap:16px}
@@ -314,23 +326,40 @@ textarea.f-in{resize:vertical;min-height:84px}
 .exist-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
 .exist-txt b{font-size:15px;line-height:1.35;overflow-wrap:anywhere}
 .exist-txt span{font-size:13px;font-weight:500;color:var(--green);overflow-wrap:anywhere}
-.metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.metric{display:flex;flex-direction:column;gap:4px;padding:14px;border-radius:8px;background:var(--surface);border:1px solid var(--line)}
-.metric b{font-size:24px;font-weight:600;font-variant-numeric:tabular-nums}
-.metric span{font-size:13px;font-weight:600;color:var(--muted)}
-.mt-card{display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:8px;background:var(--surface);border:1px solid var(--line)}
-.mt-head{display:flex;align-items:center;gap:12px}
-.mt-ico{color:var(--green);font-size:20px;display:inline-flex}
-.mt-title{font-size:16px;font-weight:600;line-height:1.3}
-.mt-title small{display:block;font-size:13px;font-weight:500;color:var(--muted);margin-top:2px}
-.mt-line{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:15px;font-weight:500}
-.mt-line.dis>span:first-child{color:var(--muted)}
-.mt-ctrls{display:flex;align-items:center;gap:8px;flex:none}
+.sheet.mt .sheet-head{padding-block:6px;gap:6px}
+.mt-x{justify-self:start;width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--bg);border:1px solid var(--line);color:var(--text);font-size:16px}
+.mt-x:active{filter:brightness(.92)}
+.mt-htitle{min-width:0;text-align:center;font-size:16px;font-weight:600;line-height:1.2;white-space:nowrap}
+.mt-htitle small{display:block;margin-top:2px;font-size:12px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis}
+.mt-htitle small.on{color:var(--green);font-weight:600}
+.mt-go{justify-self:end;height:38px;display:inline-flex;align-items:center;gap:6px;padding:0 14px 0 12px;border-radius:19px;background:var(--green-btn);color:var(--on-accent);font-size:15px;font-weight:600;white-space:nowrap}
+.mt-go .i{font-size:13px}
+.mt-go:disabled{background:var(--line);color:var(--muted)}
+.mt-go:active:not(:disabled){filter:brightness(.88)}
+.sheet.mt .sheet-body{gap:8px;padding-block:10px calc(16px + env(safe-area-inset-bottom,0px))}
+.mt-hint{font-size:13px;line-height:1.35;color:var(--muted);padding:0 2px 2px}
+.mt-card{display:flex;flex-direction:column;gap:8px;padding:8px 10px 10px 12px;border-radius:10px;background:var(--surface);border:1px solid var(--line);transition:border-color .15s}
+.mt-card.on{border-color:var(--green-line)}
+.mt-top{display:flex;align-items:center;gap:10px;min-height:40px}
+.mt-ico{color:var(--green);font-size:18px;display:inline-flex;flex:none}
+.mt-title{flex:1;min-width:0;font-size:16px;font-weight:600;line-height:1.25;overflow-wrap:anywhere}
+.mt-title small{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-top:1px}
+.mt-ord{display:flex;gap:6px;flex:none}
+.mt-ord .sq-btn,.mt-ctrls .sq-btn{width:40px;height:40px}
+.mt-steps{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mt-step{display:flex;flex-direction:column;gap:4px;min-width:0}
+.mt-lbl{font-size:12.5px;font-weight:600;color:var(--muted);white-space:nowrap}
+.mt-ctrls{display:flex;align-items:center;gap:4px}
+.mt-ctrls .num-in{flex:1;min-width:0;width:auto;height:40px}
+.mt-card.off{flex-direction:row;align-items:center;gap:10px;padding:8px 12px;min-height:0}
+.mt-card.off .mt-ico,.mt-card.off .mt-title{color:var(--muted)}
+.mt-card.off .mt-title{font-size:15px;font-weight:500}
+@media (max-width:340px){.mt-ctrls .sq-btn{width:34px}.mt-ctrls{gap:3px}.mt-steps{gap:8px}.mt-title{font-size:15px}.mt-top{gap:8px}.mt-ord{gap:4px}.mt-ord .sq-btn{width:38px}.mt-card{padding-left:10px}.mt-go{padding:0 12px 0 10px}}
 .num-in{width:58px;height:36px;text-align:center;border-radius:8px;background:var(--bg);border:1px solid var(--line);font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
 .num-in:focus{outline:none;border-color:var(--green-line)}
 .num-in:disabled{opacity:.5}
 
-.toast{position:fixed;left:50%;bottom:calc(132px + env(safe-area-inset-bottom,0px));transform:translate(-50%,8px);z-index:80;max-width:calc(100% - 32px);width:max-content;padding:10px 14px;border-radius:10px;background:var(--toast-bg);color:var(--toast-fg);font-size:14px;font-weight:600;line-height:1.35;text-align:center;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;box-shadow:0 6px 20px var(--shadow)}
+.toast{position:fixed;left:50%;bottom:calc(72px + env(safe-area-inset-bottom,0px));transform:translate(-50%,8px);z-index:80;max-width:calc(100% - 32px);width:max-content;padding:10px 14px;border-radius:10px;background:var(--toast-bg);color:var(--toast-fg);font-size:14px;font-weight:600;line-height:1.35;text-align:center;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;box-shadow:0 6px 20px var(--shadow)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .busy{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;background:var(--scrim)}
 .busy>div{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:12px;background:var(--surface);font-weight:600;box-shadow:0 8px 30px var(--shadow)}
@@ -344,22 +373,19 @@ textarea.f-in{resize:vertical;min-height:84px}
 <div class="app" id="app">
   <header class="topbar">
     <button type="button" class="icon-btn" data-act="menu" aria-label="Открыть меню" id="menuBtn"></button>
-    <div class="titles">
-      <div class="title" id="title">Тренажёр тестов</div>
-      <div class="progress" id="progress">Загрузка…</div>
-    </div>
+    <button type="button" class="titles" id="counter" title="Перейти к вопросу по номеру">
+      <span class="title" id="title">Тренажёр тестов</span>
+      <span class="progress-row"><span class="progress" id="progress">Загрузка…</span></span>
+    </button>
     <div class="top-actions" id="topActions"></div>
   </header>
   <main class="scroller" id="scroller">
     <div class="content" id="content"></div>
   </main>
   <footer class="bottombar">
+    <button type="button" class="icon-btn" id="prevBtn" aria-label="Предыдущий вопрос"></button>
     <div class="actions-row" id="actionsRow"></div>
-    <div class="nav-row">
-      <button type="button" class="icon-btn" id="prevBtn" aria-label="Предыдущий вопрос"></button>
-      <button type="button" class="counter" id="counter" title="Перейти к вопросу по номеру">—</button>
-      <button type="button" class="icon-btn" id="nextBtn" aria-label="Следующий вопрос"></button>
-    </div>
+    <button type="button" class="icon-btn" id="nextBtn" aria-label="Следующий вопрос"></button>
   </footer>
 </div>
 
@@ -1184,8 +1210,9 @@ function renderTop() {
   else if (!s) p = 'Нет файлов';
   else if (bankStatus === 'loading') p = setTitle(s) + ' • загрузка…';
   else {
-    p = setTitle(s) + ' • ' + (items.length ? (S.index + 1) + ' из ' + items.length : '0 из 0');
-    if (S.test && items.length) p += ' • ' + testEarned() + '/' + testTotal() + ' баллов';
+    p = items.length ? (S.index + 1) + ' из ' + items.length : '0 из 0';
+    if (S.test && items.length) p += ' • ' + testEarned() + '/' + testTotal() + ' б.';
+    p += ' • ' + setTitle(s);
   }
   $('#progress').textContent = p;
   let h = '';
@@ -1309,16 +1336,16 @@ function renderBottom() {
   const vis = has && hlVisible(it.id);
   const revealOff = !has || (S.test && rec(it.id).checked);
   const lastTest = !!(S.test && items.length && S.index === items.length - 1);
-  let a = `<button type="button" class="act gray" data-act="reveal"${revealOff ? ' disabled' : ''}>${vis ? I.eyeOff + 'Скрыть' : I.eye + 'Подглядеть'}</button>`;
-  if (lastTest) a += `<button type="button" class="act green" data-act="check" aria-label="Проверить"${has ? '' : ' disabled'}>${I.check}</button><button type="button" class="act green" data-act="finish" aria-label="Закончить тест"${has ? '' : ' disabled'}>${I.flag}</button>`;
-  else a += `<button type="button" class="act green" data-act="check"${has ? '' : ' disabled'}>${I.check}Проверить</button>`;
+  const rv = vis ? 'Скрыть' : 'Подглядеть';
+  let a = `<button type="button" class="act gray" data-act="reveal" aria-label="${rv} ответ" title="${rv} ответ"${revealOff ? ' disabled' : ''}>${vis ? I.eyeOff : I.eye}<span class="lbl">${rv}</span></button>`;
+  a += `<button type="button" class="act green" data-act="check" aria-label="Проверить"${has ? '' : ' disabled'}>${I.check}<span class="lbl">Проверить</span></button>`;
+  if (lastTest) a += `<button type="button" class="act green" data-act="finish" aria-label="Закончить тест" title="Закончить тест"${has ? '' : ' disabled'}>${I.flag}</button>`;
   const row = $('#actionsRow');
   row.className = 'actions-row' + (lastTest ? ' last' : '');
   row.innerHTML = a;
   $('#prevBtn').disabled = !items.length || S.index === 0;
   $('#nextBtn').disabled = !items.length;
   $('#counter').disabled = !items.length;
-  $('#counter').textContent = items.length ? (S.test ? `${S.index + 1} / ${items.length} • ${testEarned()}/${testTotal()} б.` : `${S.index + 1} / ${items.length}`) : '0 из 0';
 }
 
 /* ---------- menu ---------- */
@@ -1569,28 +1596,29 @@ function openPaste() {
 /* ---------- make test ---------- */
 function openMakeTest() {
   if (!bankReady() || !curSet()) return toast('Сначала выберите файл с вопросами');
-  const cfg = { order: CATS.slice(), counts: {}, points: {} };
-  CATS.forEach(c => { cfg.counts[c] = 0; cfg.points[c] = 0; });
   const avail = c => (bank.byCat[c] || []).length;
+  // Categories with questions first (their order is the order in the test), empty ones last.
+  const cfg = { order: CATS.filter(c => avail(c) > 0).concat(CATS.filter(c => avail(c) <= 0)), counts: {}, points: {} };
+  CATS.forEach(c => { cfg.counts[c] = 0; cfg.points[c] = 0; });
+  const active = () => cfg.order.filter(c => avail(c) > 0);
   const totals = () => [cfg.order.reduce((a, c) => a + cfg.counts[c], 0), cfg.order.reduce((a, c) => a + cfg.counts[c] * cfg.points[c], 0)];
-  const stepper = (label, kind, c, v, max) => {
-    const dis = max <= 0;
-    return `<div class="mt-line${dis ? ' dis' : ''}"><span>${label}</span><span class="mt-ctrls"><button type="button" class="sq-btn" data-s="${kind}-" data-cat="${c}" aria-label="Уменьшить"${dis || v <= 0 ? ' disabled' : ''}>${I.minus}</button><input class="num-in" data-num="${kind}" data-cat="${c}" inputmode="numeric" pattern="[0-9]*" value="${v || ''}" placeholder="0" aria-label="${label}: ${CAT_TITLE[c]}"${dis ? ' disabled' : ''}><button type="button" class="sq-btn" data-s="${kind}+" data-cat="${c}" aria-label="Увеличить"${dis || v >= max ? ' disabled' : ''}>${I.plus}</button></span></div>`;
-  };
+  const stepper = (label, kind, c, v, max) => `<div class="mt-step"><span class="mt-lbl">${label}</span><span class="mt-ctrls"><button type="button" class="sq-btn" data-s="${kind}-" data-cat="${c}" aria-label="${label}: меньше"${v <= 0 ? ' disabled' : ''}>${I.minus}</button><input class="num-in" data-num="${kind}" data-cat="${c}" inputmode="numeric" pattern="[0-9]*" value="${v || ''}" placeholder="0" aria-label="${label}: ${CAT_TITLE[c]}"><button type="button" class="sq-btn" data-s="${kind}+" data-cat="${c}" aria-label="${label}: больше"${v >= max ? ' disabled' : ''}>${I.plus}</button></span></div>`;
   const bodyHTML = () => {
-    const [q, p] = totals();
-    let h = `<div class="sec-label">Итого</div><div class="metrics"><div class="metric"><b id="mtQ">${q}</b><span>заданий</span></div><div class="metric"><b id="mtP">${p}</b><span>баллов</span></div></div><div class="sec-label">Категории</div>`;
-    cfg.order.forEach((c, k) => {
-      h += `<div class="mt-card"><div class="mt-head"><span class="mt-ico">${I.cat[c]}</span><span class="mt-title">${CAT_TITLE[c]}<small>Доступно: ${avail(c)}</small></span></div>
-<div class="mt-line"><span>Порядок: ${k + 1}</span><span class="mt-ctrls"><button type="button" class="sq-btn" data-s="up" data-cat="${c}" aria-label="Поднять категорию"${k === 0 ? ' disabled' : ''}>${I.up}</button><button type="button" class="sq-btn" data-s="down" data-cat="${c}" aria-label="Опустить категорию"${k === cfg.order.length - 1 ? ' disabled' : ''}>${I.down}</button></span></div>
-${stepper('Вопросов в тесте', 'cnt', c, cfg.counts[c], avail(c))}${stepper('Баллов за вопрос', 'pts', c, cfg.points[c], 100)}</div>`;
+    const act = active();
+    let h = act.length > 1 ? '<div class="mt-hint">Порядок разделов в тесте — стрелками ↑↓</div>' : '';
+    act.forEach((c, k) => {
+      h += `<div class="mt-card${cfg.counts[c] ? ' on' : ''}" data-card="${c}"><div class="mt-top"><span class="mt-ico">${I.cat[c]}</span><span class="mt-title">${CAT_TITLE[c]}<small>Доступно: ${avail(c)}</small></span>${act.length > 1 ? `<span class="mt-ord"><button type="button" class="sq-btn" data-s="up" data-cat="${c}" aria-label="Поднять «${CAT_TITLE[c]}»"${k === 0 ? ' disabled' : ''}>${I.up}</button><button type="button" class="sq-btn" data-s="down" data-cat="${c}" aria-label="Опустить «${CAT_TITLE[c]}»"${k === act.length - 1 ? ' disabled' : ''}>${I.down}</button></span>` : ''}</div>
+<div class="mt-steps">${stepper('Вопросов', 'cnt', c, cfg.counts[c], avail(c))}${stepper('Баллов за вопрос', 'pts', c, cfg.points[c], 100)}</div></div>`;
+    });
+    cfg.order.filter(c => avail(c) <= 0).forEach(c => {
+      h += `<div class="mt-card off"><span class="mt-ico">${I.cat[c]}</span><span class="mt-title">${CAT_TITLE[c]} — нет вопросов</span></div>`;
     });
     if (S.test) h += `<button type="button" class="act red wide" data-s="end">${I.x}Завершить текущий тест</button>`;
     return h;
   };
-  const html = `<div class="sheet-head"><button type="button" class="head-btn" data-s="close">Закрыть</button><div class="head-title">Сделать тест</div><button type="button" class="head-btn end" data-s="start" id="mtStartTop">Начать</button></div><div class="sheet-body" id="mtBody"></div><div class="sheet-foot"><button type="button" class="act green wide" data-s="start" id="mtStart">${I.play}Начать тест</button></div>`;
+  const html = `<div class="sheet-head"><button type="button" class="mt-x" data-s="close" aria-label="Закрыть">${I.x}</button><div class="mt-htitle">Сделать тест<small id="mtSum" aria-live="polite"></small></div><button type="button" class="mt-go" data-s="start" id="mtStart">${I.play}Начать</button></div><div class="sheet-body" id="mtBody"></div>`;
   const sh = openSheet({
-    cls: 'full', html,
+    cls: 'full mt', html,
     onClick: (id, el, e, close) => {
       const c = el.dataset.cat;
       if (id === 'close') return close();
@@ -1601,24 +1629,41 @@ ${stepper('Вопросов в тесте', 'cnt', c, cfg.counts[c], avail(c))}$
         return;
       }
       if (id === 'up' || id === 'down') {
-        const i = cfg.order.indexOf(c), j = i + (id === 'up' ? -1 : 1);
-        if (j >= 0 && j < cfg.order.length) [cfg.order[i], cfg.order[j]] = [cfg.order[j], cfg.order[i]];
+        const act = active(), i = act.indexOf(c), j = i + (id === 'up' ? -1 : 1);
+        if (i >= 0 && j >= 0 && j < act.length) {
+          [act[i], act[j]] = [act[j], act[i]];
+          cfg.order = act.concat(cfg.order.filter(x => avail(x) <= 0));
+        }
       }
       if (id === 'cnt-') cfg.counts[c] = Math.max(0, cfg.counts[c] - 1);
       if (id === 'cnt+') cfg.counts[c] = Math.min(avail(c), cfg.counts[c] + 1);
       if (id === 'pts-') cfg.points[c] = Math.max(0, cfg.points[c] - 1);
       if (id === 'pts+') cfg.points[c] = Math.min(100, cfg.points[c] + 1);
       draw();
+      if (id === 'up' || id === 'down') {
+        // keep the moved card in view and the finger on the same arrow when possible
+        const card = body.querySelector(`[data-card="${c}"]`);
+        if (card) card.scrollIntoView({ block: 'nearest' });
+      }
     }
   });
   const body = sh.panel.querySelector('#mtBody');
+  const sum = sh.panel.querySelector('#mtSum');
   const sync = () => {
     const [q, p] = totals();
-    const a = body.querySelector('#mtQ'), b = body.querySelector('#mtP');
-    if (a) a.textContent = q;
-    if (b) b.textContent = p;
+    sum.textContent = q ? q + ' ' + plural(q, 'вопрос', 'вопроса', 'вопросов') + ' · ' + p + ' ' + plural(p, 'балл', 'балла', 'баллов') : 'выберите вопросы';
+    sum.classList.toggle('on', q > 0);
     sh.panel.querySelector('#mtStart').disabled = !q;
-    sh.panel.querySelector('#mtStartTop').disabled = !q;
+    body.querySelectorAll('[data-card]').forEach(el => {
+      const c = el.dataset.card;
+      el.classList.toggle('on', cfg.counts[c] > 0);
+      // update −/+ in place (no re-render, so a tap right after typing is not lost)
+      [['cnt', cfg.counts[c], avail(c)], ['pts', cfg.points[c], 100]].forEach(([k, v, max]) => {
+        const minus = el.querySelector(`[data-s="${k}-"]`), plus = el.querySelector(`[data-s="${k}+"]`);
+        if (minus) minus.disabled = v <= 0;
+        if (plus) plus.disabled = v >= max;
+      });
+    });
   };
   function draw() { const t = body.scrollTop; body.innerHTML = bodyHTML(); body.scrollTop = t; sync(); }
   body.addEventListener('input', e => {
@@ -1631,7 +1676,13 @@ ${stepper('Вопросов в тесте', 'cnt', c, cfg.counts[c], avail(c))}$
     if (digits && String(v) !== inp.value) inp.value = String(v);
     sync();
   });
-  body.addEventListener('change', e => { if (e.target.closest('.num-in')) draw(); });
+  body.addEventListener('change', e => {
+    const inp = e.target.closest('.num-in');
+    if (!inp) return;
+    const v = inp.dataset.num === 'cnt' ? cfg.counts[inp.dataset.cat] : cfg.points[inp.dataset.cat];
+    inp.value = v ? String(v) : '';
+    sync();
+  });
   draw();
 }
 
@@ -1947,9 +1998,14 @@ function layoutDrag() {
   const d = drag;
   const dy = (d.y - d.startY) + (elScroller.scrollTop - d.startScroll);
   const r0 = d.rects[d.from];
-  const center = r0.top + r0.height / 2 + dy;
+  // A neighbour gives way once the dragged row's leading edge passes its middle (as on iOS).
+  const top = r0.top + dy, bottom = r0.bottom + dy;
   let to = 0;
-  d.rects.forEach((r, i) => { if (i !== d.from && r.top + r.height / 2 < center) to++; });
+  d.rects.forEach((r, i) => {
+    if (i === d.from) return;
+    const mid = r.top + r.height / 2;
+    if (i < d.from ? mid < top : mid < bottom) to++;
+  });
   d.to = to;
   d.rows.forEach((el, i) => {
     if (i === d.from) { el.style.transform = `translateY(${dy}px)`; return; }
@@ -1992,6 +2048,7 @@ $('#menuBtn').innerHTML = I.menu;
 $('#closeBtn').innerHTML = I.x;
 $('#prevBtn').innerHTML = I.chevL;
 $('#nextBtn').innerHTML = I.chevR;
+$('#counter .progress-row').insertAdjacentHTML('beforeend', I.chevD);
 $('#searchIco').innerHTML = I.search;
 $('#searchClear').innerHTML = I.xCircle;
 
