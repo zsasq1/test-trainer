@@ -883,7 +883,7 @@ function flush() {
 }
 function pruneAnswers() {
   for (const [k, r] of Object.entries(S.answers)) {
-    if (!r.checked && !r.reveal && r.sel == null && !(r.multi && r.multi.length) && !(r.text) && !(r.dd && Object.keys(r.dd).length)) delete S.answers[k];
+    if (!r.checked && !r.reveal && !r.moved && r.sel == null && !(r.multi && r.multi.length) && !(r.text) && !(r.dd && Object.keys(r.dd).length)) delete S.answers[k];
   }
 }
 window.addEventListener('pagehide', flush);
@@ -1017,7 +1017,7 @@ function shuffleQ(q) {
   switch (q.kind) {
     case 'single': case 'multiple': mut(q.id, r => { r.shuf = shuffledDifferent(range(q.options.length)); r.checked = false; r.reveal = false; }); break;
     case 'dropdown': mut(q.id, r => { r.shuf = shuffledDifferent(range(q.choices.length)); r.checked = false; r.reveal = false; }); break;
-    case 'sortable': mut(q.id, r => { r.order = shuffledDifferent(range(q.order.length)); r.checked = false; r.reveal = false; }); break;
+    case 'sortable': mut(q.id, r => { r.order = shuffledDifferent(range(q.order.length)); r.moved = false; r.checked = false; r.reveal = false; }); break;
     case 'case': subsOfCase(q).forEach(shuffleQ); break;
   }
 }
@@ -1114,7 +1114,7 @@ function setDD(qid, row, value) {
   answerChanged(qid);
 }
 function setOrder(qid, order) {
-  mut(qid, r => { r.order = order; r.checked = false; r.reveal = false; });
+  mut(qid, r => { r.order = order; r.moved = true; r.checked = false; r.reveal = false; });
   answerChanged(qid);
 }
 function setText(qid, text) {
@@ -1124,7 +1124,7 @@ function setText(qid, text) {
 function check() {
   const it = currentItem();
   if (!it) return;
-  mut(it.id, r => { r.checked = true; });
+  mut(it.id, r => { r.checked = true; r.reveal = false; });
   const ok = isCorrect(it);
   const seq = ++checkSeq;
   haptic();
@@ -1150,7 +1150,7 @@ function reveal() {
   if (!it) return;
   // «Подглядеть» works after «Проверить» too: only an open answer is hidden again
   if (rec(it.id).reveal) { resetItem(it); shuffleQ(it); }
-  else mut(it.id, r => { r.reveal = true; });
+  else mut(it.id, r => { r.reveal = true; if (!S.test) r.checked = false; });
   checkSeq++;
   save();
 }
@@ -1404,7 +1404,7 @@ function itemHTML(it) {
     });
   } else h += qHTML(it, { scope: it.id });
   const r = rec(it.id);
-  if (r.checked && !r.reveal) {
+  if (r.checked) {
     const ok = isCorrect(it);
     h += `<div class="feedback ${ok ? 'ok' : 'bad'}" role="status">${ok ? I.ok + 'Верно' : I.bad + 'Есть ошибки'}</div>`;
   }
@@ -1516,10 +1516,24 @@ function closeDrawer() {
 function renderMenuBody() {
   const top = elMenuBody.scrollTop;
   const q = elSearch.value.trim();
+  // On a computer the menu is redrawn after every answer: keep the hints that are open and the focused button.
+  const openHelp = [...elMenuBody.querySelectorAll('details[open] > summary')].map(x => x.textContent);
+  const fKey = menuFocusKey(document.activeElement);
   $('#searchClear').hidden = !elSearch.value;
   elMenuBody.innerHTML = q ? searchHTML(q) : menuHTML();
+  if (openHelp.length) elMenuBody.querySelectorAll('details > summary').forEach(x => { if (openHelp.includes(x.textContent)) x.parentElement.open = true; });
   elMenuBody.scrollTop = q && q !== lastMenuQ ? 0 : top;
+  if (fKey) { const f = elMenuBody.querySelector(fKey); if (f) f.focus({ preventScroll: true }); }
   lastMenuQ = q;
+}
+function menuFocusKey(el) {
+  if (!el || el === document.body || !elMenuBody.contains(el)) return '';
+  // only for keyboard users: after a mouse click Enter should still check the answer
+  try { if (!el.matches(':focus-visible')) return ''; } catch (e) { return ''; }
+  if (el.id) return '#' + CSS.escape(el.id);
+  if (el.matches('summary')) return '';
+  if (!el.dataset.act) return '';
+  return ['act', 'cat', 'id'].filter(k => el.dataset[k] != null).map(k => `[data-${k}="${CSS.escape(el.dataset[k])}"]`).join('');
 }
 let lastMenuQ = '';
 /* ---------- menu search: results with highlighted matches ---------- */
@@ -1876,7 +1890,7 @@ function answeredCount(id) {
   let n = 0;
   for (const [k, r] of Object.entries(S.answers)) {
     if (!k.startsWith(id + '|') || !r) continue;
-    if (r.checked || r.sel != null || (r.multi && r.multi.length) || (r.dd && Object.keys(r.dd).length) || r.order || (r.text && r.text.trim())) n++;
+    if (r.checked || r.sel != null || (r.multi && r.multi.length) || (r.dd && Object.keys(r.dd).length) || r.moved || (r.text && r.text.trim())) n++;
   }
   for (const k of Object.keys(S.results)) if (k.startsWith(id + '|') && !S.answers[k]) n++;
   return n;
