@@ -33,6 +33,7 @@
   --switch-off:#DAD6CB; --knob:#FFFFFF; --on-accent:#FFFFFF;
   --scrim:rgba(31,30,29,.32); --shadow:rgba(31,30,29,.13); --bar:rgba(245,244,237,.92);
   --toast-bg:#1F1E1D; --toast-fg:#F5F4ED; --glow:rgba(62,122,53,.3);
+  --side:#EDEBE2; --side-sel:rgba(31,30,29,.075); --side-hover:rgba(31,30,29,.045);
   --font:"Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --serif:"Literata",Georgia,"Times New Roman",serif;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
@@ -49,6 +50,7 @@
     --switch-off:#4A4945; --knob:#FFFFFF; --on-accent:#FFFFFF;
     --scrim:rgba(0,0,0,.55); --shadow:rgba(0,0,0,.45); --bar:rgba(38,38,36,.92);
     --toast-bg:#F2F0E8; --toast-fg:#262624; --glow:rgba(141,197,124,.3);
+    --side:#1F1E1D; --side-sel:rgba(255,255,255,.075); --side-hover:rgba(255,255,255,.045);
     color-scheme:dark;
   }
 }
@@ -62,6 +64,7 @@
   --switch-off:#4A4945; --knob:#FFFFFF; --on-accent:#FFFFFF;
   --scrim:rgba(0,0,0,.55); --shadow:rgba(0,0,0,.45); --bar:rgba(38,38,36,.92);
   --toast-bg:#F2F0E8; --toast-fg:#262624; --glow:rgba(141,197,124,.3);
+  --side:#1F1E1D; --side-sel:rgba(255,255,255,.075); --side-hover:rgba(255,255,255,.045);
   color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
@@ -453,6 +456,46 @@ textarea.f-in{resize:vertical;min-height:84px}
 .busy{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;background:var(--scrim)}
 .busy>div{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:14px;background:var(--surface);font-weight:600;box-shadow:0 8px 30px var(--shadow)}
 .dropzone{position:fixed;inset:12px;z-index:95;border:3px dashed var(--accent);border-radius:18px;background:var(--soft-accent);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:var(--accent);pointer-events:none}
+
+/* ---------- computer: menu docked as a left sidebar (like Claude), reading column centred ---------- */
+.kbd{display:none}
+details.help.only-kb{display:none}
+@media (min-width:960px){
+  body{display:flex}
+  .app{flex:1;min-width:0;max-width:none;margin:0}
+  .drawer{position:relative;order:-1;flex:none;width:320px;height:100%;z-index:1;transform:none;visibility:visible;transition:none;box-shadow:none;border-right:1px solid var(--line);background:var(--side);padding-top:16px;--dpad:14px}
+  .scrim,#menuBtn,.d-head,.state .ghost-btn[data-act="menu"]{display:none}
+  .drawer>.searchbox{grid-column:1/-1;background:var(--surface)}
+  .menu-body{padding-bottom:24px}
+  .mrow.on{background:var(--side-sel)}
+  .topbar,.content,.bottombar{padding-left:max(28px,calc((100% - 760px) / 2));padding-right:max(28px,calc((100% - 760px) / 2))}
+  .topbar{padding-block:10px}
+  .content{padding-block:32px 48px}
+  .prompt{font-size:calc(22px * var(--fs))}
+  .prompt.sm{font-size:calc(19px * var(--fs))}
+  .bottombar{padding-block:12px;gap:10px}
+  .actions-row{justify-content:center;gap:10px}
+  .bottombar .act{flex:0 1 230px}
+  .toast{left:calc(50% + 160px);bottom:96px}
+}
+@media (hover:hover) and (pointer:fine){
+  .choice:hover:not(.is-sel){border-color:var(--ink-line)}
+  .icon-btn:hover:not(:disabled),.titles:hover:not(:disabled),.star-btn:hover,.plain-btn:hover,.handle:hover,.mt-x:hover,.sq-btn:hover:not(:disabled){background:var(--ink-soft)}
+  .act.green:hover:not(:disabled),.dlg-btn.primary:hover,.mt-go:hover:not(:disabled){filter:brightness(1.08)}
+  .act.gray:hover:not(:disabled),.dlg-btn:not(.primary):hover,.pick:hover:not(.on){background:var(--ink-soft)}
+  .mrow:not(.static):not(.on):not(.star-on):not(.test-on):hover,.mmore:hover,.mx:hover,.sec-chip:hover{background:var(--side-hover)}
+  .dd-btn:hover,.sres:hover{border-color:var(--ink-line)}
+  .mbtn:hover,.fa-row:hover{background:var(--ink-soft)}
+  .mlink:hover,.ghost-btn:hover,.head-btn:hover,.f-add:hover{text-decoration:underline;text-underline-offset:3px}
+  details.help summary:hover{color:var(--accent)}
+}
+/* keyboard hints, only where there is a keyboard and a mouse */
+@media (min-width:960px) and (hover:hover) and (pointer:fine){
+  .kbd{display:inline-flex;align-items:center;height:20px;padding:0 6px;margin-left:4px;border-radius:6px;font:600 11.5px/1 var(--font);background:rgba(255,255,255,.2)}
+  .act.gray .kbd{background:var(--ink-soft);color:var(--muted)}
+  .choice[data-key]::after{content:attr(data-key);flex:none;align-self:center;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--muted)}
+  details.help.only-kb{display:block}
+}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
@@ -1295,12 +1338,13 @@ async function deleteSet(id) {
    ========================================================= */
 const elContent = $('#content'), elScroller = $('#scroller');
 
-function renderAll() { render(); if (drawerOpen) renderMenuBody(); }
+function renderAll() { render(); if (drawerOpen && !docked()) renderMenuBody(); }
 function render() {
   document.documentElement.style.setProperty('--fs', String(S.fontScale));
   renderTop();
   renderContent();
   renderBottom();
+  if (docked()) renderMenuBody();
 }
 
 function renderTop() {
@@ -1344,7 +1388,7 @@ function renderContent() {
     html = stateHTML({ icon: I.xCircle, title: 'Файл не открылся', text: bankError, actions: loadBtn('Загрузить заново') + `<button type="button" class="ghost-btn" data-act="m-set-more" data-id="${esc(s.id)}">${I.more}Действия с файлом</button>` });
     key = 'error';
   } else if (!it) {
-    const txt = S.starOnly ? 'В избранном этой категории пусто.' : 'В этом файле нет вопросов такого типа. Откройте меню и выберите другую категорию.';
+    const txt = S.starOnly ? 'В избранном этой категории пусто.' : 'В этом файле нет вопросов такого типа. Выберите другую категорию в меню.';
     html = stateHTML({ icon: I.search, title: 'В этой категории нет вопросов', text: txt, actions: `<button type="button" class="ghost-btn" data-act="menu">${I.menu}Открыть меню</button>` });
     key = 'empty|' + S.category;
   } else {
@@ -1361,6 +1405,8 @@ function renderContent() {
     lastItemKey = key;
   }
   elContent.querySelectorAll('textarea.txt').forEach(autosize);
+  // keys 1–9 pick these options on a computer
+  elContent.querySelectorAll('.choice').forEach((b, i) => { if (i < 9) b.dataset.key = String(i + 1); });
 }
 
 function itemHTML(it) {
@@ -1438,8 +1484,8 @@ function renderBottom() {
   const revealOff = !has || (S.test && rec(it.id).checked);
   const lastTest = !!(S.test && items.length && S.index === items.length - 1);
   const rv = vis ? 'Скрыть' : 'Подглядеть';
-  let a = `<button type="button" class="act gray" data-act="reveal" aria-label="${rv} ответ" title="${rv} ответ"${revealOff ? ' disabled' : ''}>${vis ? I.eyeOff : I.eye}<span class="lbl">${rv}</span></button>`;
-  a += `<button type="button" class="act green" data-act="check" aria-label="Проверить"${has ? '' : ' disabled'}>${I.check}<span class="lbl">Проверить</span></button>`;
+  let a = `<button type="button" class="act gray" data-act="reveal" aria-label="${rv} ответ" title="${rv} ответ"${revealOff ? ' disabled' : ''}>${vis ? I.eyeOff : I.eye}<span class="lbl">${rv}</span><kbd class="kbd">П</kbd></button>`;
+  a += `<button type="button" class="act green" data-act="check" aria-label="Проверить"${has ? '' : ' disabled'}>${I.check}<span class="lbl">Проверить</span><kbd class="kbd">Enter</kbd></button>`;
   if (lastTest) a += `<button type="button" class="act green" data-act="finish" aria-label="Закончить тест" title="Закончить тест"${has ? '' : ' disabled'}>${I.flag}</button>`;
   const row = $('#actionsRow');
   row.className = 'actions-row' + (lastTest ? ' last' : '');
@@ -1451,7 +1497,19 @@ function renderBottom() {
 
 /* ---------- menu ---------- */
 const elDrawer = $('#drawer'), elScrim = $('#scrim'), elMenuBody = $('#menuBody'), elSearch = $('#searchInput');
+// On a wide screen the menu is always shown as a sidebar; the slide-in drawer is for phones.
+const mqDock = window.matchMedia('(min-width: 960px)');
+const docked = () => mqDock.matches;
+function applyDock() {
+  if (docked()) {
+    if (drawerOpen) { drawerOpen = false; elDrawer.classList.remove('open'); elScrim.classList.remove('on'); $('#app').removeAttribute('inert'); }
+    elDrawer.setAttribute('aria-hidden', 'false');
+    renderMenuBody();
+  } else elDrawer.setAttribute('aria-hidden', drawerOpen ? 'false' : 'true');
+}
+if (mqDock.addEventListener) mqDock.addEventListener('change', applyDock); else if (mqDock.addListener) mqDock.addListener(applyDock);
 function openDrawer() {
+  if (docked()) return;
   hideToast();
   drawerOpen = true;
   renderMenuBody();
@@ -1474,8 +1532,10 @@ function renderMenuBody() {
   const q = elSearch.value.trim();
   $('#searchClear').hidden = !elSearch.value;
   elMenuBody.innerHTML = q ? searchHTML(q) : menuHTML();
-  elMenuBody.scrollTop = q ? 0 : top;
+  elMenuBody.scrollTop = q && q !== lastMenuQ ? 0 : top;
+  lastMenuQ = q;
 }
+let lastMenuQ = '';
 /* ---------- menu search: results with highlighted matches ---------- */
 const SRES_MAX = 80; // searchBank() returns at most this many
 const isSubseq = (needle, hay) => { let i = 0; for (const ch of hay) { if (ch === needle[i]) i++; if (i === needle.length) return true; } return i === needle.length; };
@@ -1679,6 +1739,7 @@ function menuHelpHTML() {
     ]
   }
 }</pre></details>
+<details class="help only-kb"><summary>Клавиши ${I.chevD}</summary><p>1–9 — выбрать вариант, Enter — проверить, П — подглядеть или скрыть ответ, ← → — предыдущий и следующий вопрос, / — поиск по вопросам, Esc — выйти из поиска.</p></details>
 <details class="help"><summary>Жесты ${I.chevD}</summary><p>Свайп влево или вправо по вопросу — следующий или предыдущий. Свайп от левого края открывает меню, свайп влево по меню — закрывает. Удержание стрелок листает быстро. Нажмите на название раздела вверху экрана, чтобы перейти к вопросу по номеру.</p></details>
 </div></section>`;
 }
@@ -2223,9 +2284,17 @@ document.addEventListener('keydown', e => {
   const lbl = e.target.closest && e.target.closest('label[role="button"]');
   if (lbl && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); lbl.click(); return; }
   if (anySheet() || drawerOpen) { if (drawerOpen && e.key === 'Escape') closeDrawer(); return; }
+  if (e.key === 'Escape' && e.target === elSearch) { elSearch.blur(); return; }
   if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const press = sel => { const b = document.querySelector(sel); if (b && !b.disabled) { e.preventDefault(); b.click(); } };
   if (e.key === 'ArrowRight') { goNext(); render(); }
   else if (e.key === 'ArrowLeft') { goPrev(); render(); }
+  else if (/^[1-9]$/.test(e.key)) press(`#content .choice[data-key="${e.key}"]`);
+  // Enter checks — unless focus is on some other button, which Enter should press as usual.
+  else if (e.key === 'Enter') { const t = e.target.closest && e.target.closest('button, a, label, summary, [role="button"]'); if (!t || t.classList.contains('choice')) press('[data-act="check"]'); }
+  else if (e.code === 'KeyG') press('[data-act="reveal"]');
+  else if (e.code === 'Slash' && docked()) { e.preventDefault(); elSearch.focus(); }
 });
 elScrim.addEventListener('click', closeDrawer);
 
@@ -2420,6 +2489,7 @@ function normalizeState(st) {
   if (S.test && (!Array.isArray(S.test.ids) || !S.test.points)) S.test = null;
 }
 async function boot() {
+  applyDock();
   render();
   const [list] = await Promise.all([loadBundledList(), Store.init()]);
   BUNDLED = list;
