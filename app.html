@@ -230,7 +230,6 @@ button:disabled{cursor:default}
 .sec-chip:active{background:var(--line)}
 .msec-note{margin:0;padding:6px 4px;font-size:15px;color:var(--muted)}
 .m-note{margin:0 4px 4px;font-size:13px;line-height:1.35;color:var(--muted)}
-.m-empty{margin:2px 0 0;padding:4px 10px 0;font-size:13px;line-height:1.35;color:var(--muted)}
 .mline{display:flex;align-items:center;gap:2px}
 .mrow{width:100%;min-height:46px;display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:12px;text-align:left;font-size:16px;font-weight:600}
 .mrow:active{background:var(--bg)}
@@ -300,16 +299,8 @@ button:disabled{cursor:default}
 .sq-btn:disabled{opacity:.4}
 .sq-btn.a-sm{font-size:13px}
 .sq-btn.a-lg{font-size:20px}
-.store-note{font-size:12.5px;color:var(--muted);line-height:1.4;padding:6px 4px 0}
-details.help{border-radius:10px;background:var(--bg);border:1px solid var(--line)}
-.mgroup details.help{border:0;border-radius:0;background:transparent}
-details.help summary{list-style:none;cursor:pointer;min-height:44px;padding:10px 12px;font-size:15px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:8px}
-details.help summary::-webkit-details-marker{display:none}
-details.help summary .i{font-size:14px;color:var(--muted);transition:transform .2s}
-details.help[open] summary .i{transform:rotate(180deg)}
-details.help p{margin:0;padding:0 12px 12px;font-size:14px;line-height:1.45;color:var(--muted)}
-details.help pre{margin:0 12px 12px;padding:10px;border-radius:8px;background:var(--surface);border:1px solid var(--line);font:12px/1.45 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;color:var(--text)}
 .d-foot{font-size:12px;color:var(--muted);text-align:center;padding-top:4px}
+.d-foot a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 
 /* ---------- sheets & dialogs ---------- */
 .sheet-wrap{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center}
@@ -442,7 +433,6 @@ textarea.f-in{resize:vertical;min-height:84px}
 
 /* ---------- computer: menu docked as a left sidebar (like Claude), reading column centred ---------- */
 .kbd{display:none}
-details.help.only-kb{display:none}
 @media (min-width:960px){
   body{display:flex}
   .app{flex:1;min-width:0;max-width:none;margin:0}
@@ -470,14 +460,12 @@ details.help.only-kb{display:none}
   .dd-btn:hover,.sres:hover{border-color:var(--ink-line)}
   .mbtn:hover,.fa-row:hover{background:var(--ink-soft)}
   .mlink:hover,.ghost-btn:hover,.head-btn:hover,.f-add:hover{text-decoration:underline;text-underline-offset:3px}
-  details.help summary:hover{color:var(--accent)}
 }
 /* keyboard hints, only where there is a keyboard and a mouse */
 @media (min-width:960px) and (hover:hover) and (pointer:fine){
   .kbd{display:inline-flex;align-items:center;height:20px;padding:0 6px;margin-left:4px;border-radius:6px;font:600 11.5px/1 var(--font);background:rgba(255,255,255,.2)}
   .act.gray .kbd{background:var(--ink-soft);color:var(--muted)}
   .choice[data-key]::after{content:attr(data-key);flex:none;align-self:center;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--muted)}
-  details.help.only-kb{display:block}
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -1657,21 +1645,19 @@ function menuHTML() {
     h += menuCatsHTML() + menuStarHTML();
     if (!S.test) h += menuTestHTML();
   }
-  h += menuFilesHTML() + menuSettingsHTML() + menuHelpHTML();
-  return h + '<div class="d-foot">Тренажёр тестов, веб-версия</div>';
+  h += menuFilesHTML() + menuSettingsHTML();
+  return h + '<div class="d-foot">Made by <a href="https://t.me/ziplogo" target="_blank" rel="noopener">tg @ziplogo</a></div>';
 }
 function menuCatsHTML() {
   const cs = curSet();
   let h = `<section class="msec"><div class="sec-row"><div class="sec-label">Категории</div><button type="button" class="sec-chip" data-jump="m-files" aria-label="Файл «${esc(setTitle(cs))}» — к списку файлов"><span>${esc(setTitle(cs))}</span>${I.chevD}</button></div>`;
   if (S.test) h += '<p class="m-note">Выбор категории завершит текущий тест.</p>';
-  const empty = [];
   for (const c of CATS) {
     const n = (bank.byCat[c] || []).length;
     const on = !S.test && !S.starOnly && S.category === c;
-    if (!n && !on) { empty.push(CAT_TITLE[c]); continue; }
+    if (!n && !on) continue;
     h += `<button type="button" class="mrow${on ? ' on' : ''}" data-act="m-cat" data-cat="${c}"${on ? ' aria-current="true"' : ''}><span class="mico">${I.cat[c]}</span><span class="mtxt">${CAT_TITLE[c]}${catResultsHTML(c)}</span><span class="badge">${n}</span></button>`;
   }
-  if (empty.length) h += `<p class="m-empty">Нет вопросов: ${empty.join(', ')}</p>`;
   return h + '</section>';
 }
 // «12 верно, 3 с ошибкой» under a category: last check of each question.
@@ -1724,23 +1710,6 @@ function menuSettingsHTML() {
   return `<section class="msec"><div class="sec-label">Настройки</div><div class="mgroup">
 <div class="mrow static"><span class="mtxt">Автопереход<small>После верного ответа — следующий вопрос</small></span><button type="button" class="switch" role="switch" aria-checked="${S.autoAdvance}" data-act="toggle-auto" aria-label="Автопереход"><span></span></button></div>
 <div class="fs-block"><div class="fs-head"><span>Размер текста</span><span class="fs-val"><span id="fontPct">${pct}%</span>${pct !== 100 ? '<button type="button" class="mlink" data-act="m-font-reset">Сбросить</button>' : ''}</span></div><div class="fs-row"><button type="button" class="sq-btn a-sm" data-act="m-font-dec" aria-label="Мельче"${S.fontScale <= 0.5 ? ' disabled' : ''}>A</button><input type="range" id="fontRange" min="50" max="160" step="5" value="${pct}" aria-label="Масштаб текста вопросов"><button type="button" class="sq-btn a-lg" data-act="m-font-inc" aria-label="Крупнее"${S.fontScale >= 1.6 ? ' disabled' : ''}>A</button></div></div>
-</div><div class="store-note">${Store.mode === 'cloud' ? 'Файлы и прогресс хранятся в вашем аккаунте claude.ai и доступны на других устройствах.' : 'Файлы и прогресс хранятся в памяти этого браузера.'}</div></section>`;
-}
-function menuHelpHTML() {
-  return `<section class="msec"><div class="sec-label">Подсказки</div><div class="mgroup">
-<details class="help"><summary>Как перенести JSON ${I.chevD}</summary><p>Отправьте файл себе через AirDrop, iCloud Drive или Telegram и сохраните в «Файлы». Потом нажмите «Загрузить JSON» и выберите его. Можно выбрать сразу несколько файлов.</p></details>
-<details class="help"><summary>Значок на «Домой» ${I.chevD}</summary><p>В Safari нажмите «Поделиться», затем «На экран „Домой“». Тренажёр откроется отдельным значком, как приложение.</p></details>
-<details class="help"><summary>Какой JSON подходит ${I.chevD}</summary><p>Объект, где ключ — текст вопроса. Типы: single, multiple, dropdown, sortable, text_input, drag_and_drop. Вопросы с общим main_text собираются в «Кейсы».</p><pre>{
-  "Основной внеклеточный катион:": {
-    "type": "single",
-    "all_options": [
-      {"text": "Натрий", "correct": true},
-      {"text": "Калий", "correct": false}
-    ]
-  }
-}</pre></details>
-<details class="help only-kb"><summary>Клавиши ${I.chevD}</summary><p>1–9 — выбрать вариант, Enter — проверить, П — подглядеть или скрыть ответ, ← → — предыдущий и следующий вопрос, / — поиск по вопросам, Esc — выйти из поиска.</p></details>
-<details class="help"><summary>Жесты ${I.chevD}</summary><p>Свайп влево или вправо по вопросу — следующий или предыдущий. Свайп от левого края открывает меню, свайп влево по меню — закрывает. Удержание стрелок листает быстро. Нажмите на название раздела вверху экрана, чтобы перейти к вопросу по номеру.</p></details>
 </div></section>`;
 }
 // The file chip next to «Категории» scrolls the menu down to the file list.
