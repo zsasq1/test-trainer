@@ -524,16 +524,43 @@ a.mrow{color:inherit;text-decoration:none}
 .fa-course>span{font-size:15px;font-weight:600;color:var(--muted)}
 .fa-course .courses{margin:0;flex:1;justify-content:flex-end;gap:6px}
 .fa-course .course{max-width:36px;font-size:14px}
-/* light sign-up */
-.su{gap:14px}
+/* accounts: sign-up / sign-in, profile, block screen */
+.su{gap:12px}
 .su-ico{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--soft-accent);color:var(--accent);font-size:26px}
 .su .f-in{min-height:50px;font-size:17px;border-radius:12px}
-.su .f-in.bad{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.f-in.bad{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.su-seg{display:grid;grid-template-columns:1fr 1fr;padding:3px;border-radius:11px;background:var(--ink-soft)}
+.su-seg button{height:36px;border-radius:9px;font-size:15px;font-weight:600;color:var(--muted);transition:background-color .2s ease,color .2s ease,box-shadow .2s ease}
+.su-seg button[aria-selected="true"]{background:var(--surface);color:var(--text);box-shadow:0 1px 3px var(--shadow)}
+.su-field{display:flex;flex-direction:column;gap:5px}
+.su-pass{position:relative}
+.su-pass .f-in{padding-right:50px}
+.su-eye{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:42px;height:42px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:20px;border-radius:10px}
+.su-eye:active{background:var(--ink-soft)}
+.su-hint{font-size:13px;line-height:1.35;color:var(--muted);padding:0 4px}
+.su-hint:empty{display:none}
+.su-hint.ok{color:var(--green)}
+.su-hint.bad{color:var(--red)}
+.su-err{font-size:14.5px;line-height:1.4;color:var(--red);text-align:center;overflow-wrap:anywhere}
+.su-err:empty{display:none}
 .su-course{display:flex;align-items:center;gap:10px}
+.su-course[hidden]{display:none}
 .su-course>span{font-size:15px;font-weight:600;color:var(--muted)}
 .su-course .courses{margin:0;flex:1;justify-content:flex-end;gap:6px}
 .su-course .course{max-width:40px;font-size:15px}
 .su-note{font-size:12.5px;line-height:1.4;color:var(--muted);text-align:center}
+.dlg-btn:disabled{opacity:.6}
+.pf-head{display:flex;align-items:center;gap:12px}
+.pf-av{width:52px;height:52px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--text);color:var(--bg);font-size:19px;font-weight:700}
+.pf-id{min-width:0}
+.pf-sub{font-size:13.5px;color:var(--muted);margin-top:2px}
+.pf .mgroup .mrow:active{background:var(--ink-soft)}
+.blocked{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px max(24px,env(safe-area-inset-right,0px)) 24px max(24px,env(safe-area-inset-left,0px));background:var(--bg);animation:fade .3s ease}
+.blk-card{max-width:340px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.blk-ico{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--soft-red);color:var(--red);font-size:30px;margin-bottom:6px}
+.blk-card h2{margin:0;font-family:var(--serif);font-size:24px;font-weight:600}
+.blk-card p{margin:0;font-size:16px;line-height:1.45;color:var(--muted);overflow-wrap:anywhere}
+.blk-card .blk-note{font-size:14px}
 /* settings folded behind the gear */
 .set-toggle .mico{color:var(--text)}
 .set-toggle .mico .i{transition:transform .4s var(--ease-out)}
@@ -612,8 +639,10 @@ const SUB_TYPES = [
 ];
 const SUB_TITLE = Object.fromEntries(SUB_TYPES.map(t => [t[0], t[2]]));
 const LS_KEY = 'TestTrainer.web.v1';
-/* Online counter: Firebase Realtime Database over plain REST — an anonymous random id, no names. Empty = off. */
+/* Online counter and accounts: Firebase Realtime Database over plain REST. Empty = off. */
 const FIREBASE_DB = 'https://reclama-kgu-default-rtdb.europe-west1.firebasedatabase.app';
+// Firebase → Project settings → Web API Key. It is public by design; until it is set, accounts stay switched off.
+const FB_API_KEY = '';
 const ADMIN_KEY = 'TestTrainer.admin'; // the site owner's GitHub token: present only on their own devices
 const isAdmin = () => { try { return !!localStorage.getItem(ADMIN_KEY); } catch (e) { return false; } };
 const TEXT_PLACEHOLDERS = new Set(['текстовая строка (без учета регистра)', 'текстовая строка']);
@@ -674,6 +703,7 @@ const I = {
   trash: sv('<path d="M4 7h16M10 11v6M14 11v6M9 7V4.5h6V7M6 7l1 13h10l1-13"/>'),
   flag: sv('<path d="M5 21V4h11l-2 4 2 4H5"/>'),
   play: sv('<path d="M8 5v14l11-7Z"/>', true),
+  lock: sv('<rect x="5" y="10.5" width="14" height="10.5" rx="2.5"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/>'),
   user: sv('<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/>'),
   gear: sv('<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>'),
   doc: sv('<path d="M7 3h7l5 5v13H7Z"/><path d="M14 3v5h5"/>'),
@@ -1214,7 +1244,7 @@ function check() {
   const ok = isCorrect(it);
   const seq = ++checkSeq;
   S.checks++;
-  if (S.checks === SIGNUP_AFTER && needsSignup()) setTimeout(() => openSignup(), 1300); // after the answer has been seen
+  if (S.checks === SIGNUP_AFTER && needsSignup()) setTimeout(() => { if (needsSignup()) openAuth(); }, 1300); // after the answer has been seen
   haptic();
   setResult(it.id, ok);
   if (ok) pulse = { scope: it.id };
@@ -1806,11 +1836,18 @@ function fileRowHTML(s) {
   const on = s.id === S.setId;
   return `<div class="mline"><button type="button" class="mrow${on ? ' on' : ''}" data-act="m-set" data-id="${esc(s.id)}"${on ? ' aria-current="true"' : ''}><span class="mico">${I.doc}</span><span class="mtxt">${esc(setTitle(s))}</span>${on ? `<span class="mtick">${I.check}</span>` : ''}</button><button type="button" class="mmore" data-act="m-set-more" data-id="${esc(s.id)}" aria-label="Действия с файлом «${esc(setTitle(s))}»">${I.more}</button></div>`;
 }
+function accountRowHTML() {
+  if (!Account.ready()) return '';
+  const u = Account.user;
+  return u
+    ? `<button type="button" class="mrow" data-act="m-profile"><span class="mtxt">${esc(u.name)}<small>${u.course ? u.course + ' курс · ' : ''}аккаунт</small></span><span class="go">${I.chevR}</span></button>`
+    : `<button type="button" class="mrow" data-act="m-profile"><span class="mtxt">Войти<small>Или зарегистрироваться</small></span><span class="go">${I.chevR}</span></button>`;
+}
 function menuSettingsHTML() {
   const pct = Math.round(S.fontScale * 100);
   return `<section class="msec m-set${settingsOpen ? ' open' : ''}"><button type="button" class="mrow set-toggle" data-act="m-settings" aria-expanded="${settingsOpen}" aria-controls="setBody"><span class="mico">${I.gear}</span><span class="mtxt">Настройки</span><span class="go">${I.chevD}</span></button>
 <div class="set-body" id="setBody"><div class="set-inner"><div class="mgroup">
-${S.profile ? `<button type="button" class="mrow" data-act="m-profile"><span class="mtxt">${esc(S.profile.name)}<small>${S.profile.course ? S.profile.course + ' курс · ' : ''}изменить</small></span><span class="go">${I.chevR}</span></button>` : ''}${isAdmin() ? `<a class="mrow" href="admin.html"><span class="mtxt">Админка<small>Онлайн и файлы курсов</small></span><span class="go">${I.chevR}</span></a>` : ''}<button type="button" class="mrow" data-act="m-tour"><span class="mtxt">Обучение<small>Показать подсказки ещё раз</small></span><span class="go">${I.chevR}</span></button>
+${accountRowHTML()}${isAdmin() ? `<a class="mrow" href="admin.html"><span class="mtxt">Админка<small>Онлайн и файлы курсов</small></span><span class="go">${I.chevR}</span></a>` : ''}<button type="button" class="mrow" data-act="m-tour"><span class="mtxt">Обучение<small>Показать подсказки ещё раз</small></span><span class="go">${I.chevR}</span></button>
 <div class="mrow static"><span class="mtxt">Автопереход<small>После верного ответа — следующий вопрос</small></span><button type="button" class="switch" role="switch" aria-checked="${S.autoAdvance}" data-act="toggle-auto" aria-label="Автопереход"><span></span></button></div>
 <div class="fs-block"><div class="fs-head"><span>Размер текста</span><span class="fs-val"><span id="fontPct">${pct}%</span>${pct !== 100 ? '<button type="button" class="mlink" data-act="m-font-reset">Сбросить</button>' : ''}</span></div><div class="fs-row"><button type="button" class="sq-btn a-sm" data-act="m-font-dec" aria-label="Мельче"${S.fontScale <= 0.5 ? ' disabled' : ''}>A</button><input type="range" id="fontRange" min="50" max="160" step="5" value="${pct}" aria-label="Масштаб текста вопросов"><button type="button" class="sq-btn a-lg" data-act="m-font-inc" aria-label="Крупнее"${S.fontScale >= 1.6 ? ' disabled' : ''}>A</button></div></div>
 </div></div></div></section>`;
@@ -2285,9 +2322,9 @@ const ACT = {
   'm-close': () => closeDrawer(),
   'pick': el => { pick(el.dataset.qid, +el.dataset.i); render(); },
   'dd-open': el => openDDPicker(el.dataset.qid, +el.dataset.row),
-  'check': () => { if (needsSignup()) return openSignup(); check(); },
-  'reveal': () => { if (needsSignup()) return openSignup(); reveal(); render(); },
-  'm-profile': () => { closeDrawer(); setTimeout(() => openSignup(true), drawerOpen ? 300 : 0); },
+  'check': () => { if (needsSignup()) return openAuth(); check(); },
+  'reveal': () => { if (needsSignup()) return openAuth(); reveal(); render(); },
+  'm-profile': () => { const was = drawerOpen; closeDrawer(); setTimeout(() => (Account.user ? openProfile() : openAuth({ dismissible: true, mode: 'in' })), was ? 300 : 0); },
   'finish': () => openFinish(),
   'star': () => {
     const it = currentItem(); if (!it) return;
@@ -2595,7 +2632,7 @@ let tour = null, tourTimer = 0;
 const tourFree = () => !tour && !drawerOpen && !anySheet() && !document.querySelector('.busy') && document.visibilityState === 'visible';
 // Called after every render: start a tour the person hasn't seen yet, once the screen has settled.
 function tourSoon() {
-  if (tour || tourTimer || bankStatus === 'boot') return;
+  if (tour || tourTimer || bankStatus === 'boot' || Account.blocked()) return;
   const name = !S.tour.intro && TOURS.intro.when() ? 'intro' : !S.tour.main && TOURS.main.when() ? 'main' : '';
   if (!name) return;
   tourTimer = setTimeout(() => { tourTimer = 0; if (!S.tour[name] && TOURS[name].when() && tourFree()) startTour(name); }, 700);
@@ -2751,45 +2788,393 @@ window.addEventListener('keydown', e => {
   }
 }, true);
 
-/* ---------- light sign-up: after a few answers, just a name (kept in this browser) ---------- */
+/* ---------- accounts: Firebase Authentication keeps the passwords; the database keeps one owner per name ---------- */
 const SIGNUP_AFTER = 5;
-const needsSignup = () => !S.profile && S.checks >= SIGNUP_AFTER && !isAdmin();
-function openSignup(edit = false) {
-  if (anySheet() || tour) return;
-  let course = (S.profile && S.profile.course) || curCourse();
+const USER_KEY = 'TestTrainer.user';
+const MAIL = '@users.example.com'; // sign-in ids are random strings; no mail is ever sent there
+const SV = { '.sv': 'timestamp' };
+const cleanName = s => String(s || '').normalize('NFC').replace(/\s+/g, ' ').trim();
+const nameKey = s => cleanName(s).toLowerCase().replace(/ё/g, 'е'); // «Иван», «иван» and «Иван » are one name
+const initials = n => cleanName(n).split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+function nameProblem(n) {
+  if (n.length < 3) return 'Имя — минимум 3 символа';
+  if (n.length > 24) return 'Имя — не длиннее 24 символов';
+  if (!/^[\p{L}\p{N}](?:[\p{L}\p{N} _-]*[\p{L}\p{N}_-])?$/u.test(n)) return 'Только буквы, цифры, пробел, «-» и «_»';
+  return '';
+}
+const rid = n => [...crypto.getRandomValues(new Uint8Array(n))].map(x => 'abcdefghijklmnopqrstuvwxyz0123456789'[x % 36]).join('');
+// Firebase error code → what to tell the person, and which field it is about
+function authError(e) {
+  const c = String((e && e.message) || '');
+  if (c === 'TAKEN') return { msg: 'Это имя уже занято — выберите другое', f: 'name' };
+  if (c === 'NO_USER') return { msg: 'Нет пользователя с таким именем', f: 'name' };
+  if (c === 'RENAMED') return { msg: 'Имя уже менялось — второй раз его не поменять' };
+  if (/INVALID_LOGIN_CREDENTIALS|INVALID_PASSWORD|EMAIL_NOT_FOUND/.test(c)) return { msg: 'Неверный пароль', f: 'pass' };
+  if (/TOO_MANY_ATTEMPTS/.test(c)) return { msg: 'Слишком много попыток. Подождите пару минут' };
+  if (/WEAK_PASSWORD/.test(c)) return { msg: 'Пароль — минимум 6 символов', f: 'pass' };
+  if (/USER_DISABLED/.test(c)) return { msg: 'Этот аккаунт отключён' };
+  if (c === 'NETWORK') return { msg: 'Нет связи с интернетом. Попробуйте ещё раз' };
+  return { msg: 'Не получилось (' + (c || 'ошибка') + '). Попробуйте позже' };
+}
+const Account = {
+  user: null, // { uid, rt, login, name, key, course, renamed, blocked } — rt is the Firebase refresh token
+  idt: '', exp: 0, syncAt: 0, seen: false,
+  ready: () => !!(FIREBASE_DB && FB_API_KEY),
+  blocked() { return !!(this.user && this.user.blocked); },
+  load() {
+    try {
+      const u = JSON.parse(localStorage.getItem(USER_KEY) || 'null');
+      if (u && typeof u.uid === 'string' && typeof u.rt === 'string' && typeof u.name === 'string' && typeof u.login === 'string') this.user = u;
+    } catch (e) {}
+  },
+  save() { try { this.user ? localStorage.setItem(USER_KEY, JSON.stringify(this.user)) : localStorage.removeItem(USER_KEY); } catch (e) {} },
+  keep(idToken, expiresIn) { this.idt = idToken; this.exp = Date.now() + (+expiresIn || 3600) * 1000; },
+  async idp(method, body) {
+    let r;
+    try { r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:' + method + '?key=' + FB_API_KEY, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); }
+    catch (e) { throw new Error('NETWORK'); }
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(String((j.error && j.error.message) || r.status).split(/[ :]/)[0]);
+    return j;
+  },
+  async token() {
+    const u = this.user;
+    if (!u) return '';
+    if (this.idt && Date.now() < this.exp - 60000) return this.idt;
+    let r;
+    try { r = await fetch('https://securetoken.googleapis.com/v1/token?key=' + FB_API_KEY, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(u.rt) }); }
+    catch (e) { throw new Error('NETWORK'); }
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) {
+      const e = new Error(String((j.error && j.error.message) || r.status));
+      e.gone = /TOKEN_EXPIRED|USER_DISABLED|USER_NOT_FOUND|INVALID_REFRESH_TOKEN/.test(e.message);
+      throw e;
+    }
+    if (this.user !== u) return '';
+    this.keep(j.id_token, j.expires_in);
+    if (j.refresh_token && j.refresh_token !== u.rt) { u.rt = j.refresh_token; this.save(); }
+    return this.idt;
+  },
+  async req(path, method = 'GET', body, auth = '') {
+    let r;
+    try { r = await fetch(FIREBASE_DB.replace(/\/+$/, '') + '/' + path + '.json' + (auth ? '?auth=' + auth : ''), { method, cache: 'no-store', body: body === undefined ? undefined : JSON.stringify(body) }); }
+    catch (e) { throw new Error('NETWORK'); }
+    const j = await r.json().catch(() => null);
+    if (!r.ok) { const e = new Error(r.status === 401 ? 'DENIED' : 'HTTP_' + r.status); e.status = r.status; throw e; }
+    return j;
+  },
+  // who holds a name: the sign-in id, or null when the name is free
+  owner: key => Account.req('logins/' + encodeURIComponent(key)),
+  async signUp(name, pass, course) {
+    const key = nameKey(name);
+    if (await this.owner(key)) throw new Error('TAKEN');
+    const login = rid(20);
+    const a = await this.idp('signUp', { email: login + MAIL, password: pass, returnSecureToken: true });
+    const p = 'users/' + a.localId + '/';
+    try {
+      await this.req('', 'PATCH', { ['logins/' + key]: login, [p + 'name']: name, [p + 'key']: key, [p + 'login']: login, [p + 'renamed']: false, [p + 'course']: course, [p + 'created']: SV, [p + 'last']: SV, [p + 'd']: Presence.device() }, a.idToken);
+    } catch (e) {
+      this.idp('delete', { idToken: a.idToken }).catch(() => {}); // the name was not claimed: drop the half-made account
+      if (e.message === 'DENIED' && await this.owner(key).catch(() => null)) throw new Error('TAKEN');
+      throw e;
+    }
+    this.keep(a.idToken, a.expiresIn);
+    this.user = { uid: a.localId, rt: a.refreshToken, login, name, key, course, renamed: false, blocked: false };
+    this.seen = true;
+    this.save();
+  },
+  async signIn(name, pass) {
+    const login = await this.owner(nameKey(name));
+    if (typeof login !== 'string') throw new Error('NO_USER');
+    const a = await this.idp('signInWithPassword', { email: login + MAIL, password: pass, returnSecureToken: true });
+    const rec = await this.req('users/' + a.localId, 'GET', undefined, a.idToken);
+    if (!rec || typeof rec.name !== 'string') throw new Error('NO_USER');
+    this.keep(a.idToken, a.expiresIn);
+    this.user = { uid: a.localId, rt: a.refreshToken, login, name: rec.name, key: rec.key, course: +rec.course || 0, renamed: !!rec.renamed, blocked: !!rec.blocked };
+    this.seen = false; this.syncAt = 0;
+    this.save();
+  },
+  async rename(name) {
+    const u = this.user, key = nameKey(name), t = await this.token();
+    const p = 'users/' + u.uid + '/';
+    const up = { [p + 'name']: name, [p + 'renamed']: true };
+    if (key !== u.key) {
+      if (await this.owner(key)) throw new Error('TAKEN');
+      Object.assign(up, { ['logins/' + key]: u.login, ['logins/' + u.key]: null, [p + 'key']: key });
+    }
+    try { await this.req('', 'PATCH', up, t); }
+    catch (e) {
+      if (e.message !== 'DENIED') throw e;
+      const rec = await this.req('users/' + u.uid, 'GET', undefined, t).catch(() => null);
+      if (rec && rec.renamed) { u.renamed = true; this.save(); throw new Error('RENAMED'); }
+      if (key !== u.key && await this.owner(key).catch(() => null)) throw new Error('TAKEN');
+      throw e;
+    }
+    Object.assign(u, { name, key, renamed: true });
+    this.save();
+  },
+  async password(oldPass, newPass) {
+    const u = this.user;
+    const a = await this.idp('signInWithPassword', { email: u.login + MAIL, password: oldPass, returnSecureToken: true });
+    const b = await this.idp('update', { idToken: a.idToken, password: newPass, returnSecureToken: true });
+    this.keep(b.idToken, b.expiresIn);
+    if (b.refreshToken) { u.rt = b.refreshToken; this.save(); }
+  },
+  async setCourse(c) {
+    const u = this.user;
+    await this.req('users/' + u.uid, 'PATCH', { course: c }, await this.token());
+    u.course = c; this.save();
+  },
+  signOut() { this.user = null; this.idt = ''; this.exp = 0; this.seen = false; this.save(); },
+  // Is the account still there and not blocked? Runs on start, when the tab comes back, and every few minutes.
+  async sync(force = false) {
+    const u = this.user;
+    if (!u || !this.ready() || (!force && Date.now() - this.syncAt < 60000)) return;
+    this.syncAt = Date.now();
+    let t, rec;
+    try { t = await this.token(); rec = await this.req('users/' + u.uid, 'GET', undefined, t); }
+    catch (e) { if (e.gone && this.user === u) this.lost('Вы вышли из аккаунта — войдите снова'); return; } // offline: keep what we know
+    if (this.user !== u) return;
+    if (!rec) return this.lost('Аккаунт удалён автором сайта');
+    const before = JSON.stringify([u.name, u.course, u.renamed, u.blocked]);
+    Object.assign(u, { name: String(rec.name || u.name), key: String(rec.key || u.key), course: +rec.course || 0, renamed: !!rec.renamed, blocked: !!rec.blocked });
+    this.save();
+    applyBlock();
+    if (!u.blocked && !this.seen) { this.seen = true; this.req('users/' + u.uid, 'PATCH', { last: SV, d: Presence.device() }, t).catch(() => {}); }
+    if (JSON.stringify([u.name, u.course, u.renamed, u.blocked]) !== before) { renderAll(); Presence.live(); }
+  },
+  lost(msg) { this.signOut(); applyBlock(); renderAll(); Presence.live(); toast(msg); }
+};
+const needsSignup = () => Account.ready() && !Account.user && S.checks >= SIGNUP_AFTER && !isAdmin() && navigator.onLine !== false;
+
+// Full-screen «доступ закрыт» while the account is blocked; everything under it is inert.
+function applyBlock() {
+  const on = Account.blocked();
+  let el = document.getElementById('blockScreen');
+  if (!!el === on) return;
+  if (!on) {
+    el.remove();
+    [...document.body.children].forEach(c => { c.inert = false; });
+    Presence.on();
+    return;
+  }
+  document.querySelectorAll('.sheet-wrap').forEach(w => w.remove());
+  if (tour) endTour();
+  if (drawerOpen && !docked()) closeDrawer();
+  [...document.body.children].forEach(c => { c.inert = true; });
+  el = document.createElement('div');
+  el.className = 'blocked'; el.id = 'blockScreen';
+  el.setAttribute('role', 'alertdialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'blkT');
+  el.innerHTML = `<div class="blk-card"><div class="blk-ico">${I.lock}</div><h2 id="blkT">Доступ закрыт</h2><p>Автор сайта закрыл доступ для аккаунта «${esc(Account.user.name)}».</p><p class="blk-note">Если это ошибка, напишите: tg @ziplogo</p></div>`;
+  document.body.appendChild(el);
+  Presence.off();
+}
+window.addEventListener('keydown', e => { if (Account.blocked()) e.stopImmediatePropagation(); }, true);
+
+// Sign-up and sign-in in one sheet. As a gate (after a few answers) it cannot be dismissed.
+function openAuth({ dismissible = false, mode = 'up' } = {}) {
+  if (anySheet() || tour || Account.blocked()) return;
+  let course = curCourse() || S.course || 0, busy = false, checkT = 0, checkN = 0;
+  const legacy = S.profile && S.profile.name ? cleanName(S.profile.name).slice(0, 24) : '';
   const html = `<div class="dlg su">
 <div class="su-ico">${I.user}</div>
-<div class="dlg-title">${edit ? 'Ваш профиль' : 'Лёгкая регистрация'}</div>
-${edit ? '' : '<div class="dlg-msg">Все функции откроются сразу после лёгкой регистрации — это 5 секунд.</div>'}
-<input id="suName" class="f-in" placeholder="Как вас зовут?" maxlength="40" autocomplete="given-name" enterkeyhint="done" value="${esc(S.profile ? S.profile.name : '')}" aria-label="Имя">
-<div class="su-course"><span>Курс</span>${coursePills(course, 'data-s="su-c" data-c', null)}</div>
-<button type="button" class="dlg-btn primary" data-s="go">${edit ? 'Сохранить' : 'Продолжить'}</button>
-<div class="su-note">Хранится в этом браузере. Имя видит только автор сайта.</div>
+<div class="dlg-title" id="suTitle"></div>
+${dismissible ? '' : '<div class="dlg-msg">Все функции откроются сразу после лёгкой регистрации.</div>'}
+<div class="su-seg" role="tablist" aria-label="Регистрация или вход"><button type="button" role="tab" data-s="m-up">Регистрация</button><button type="button" role="tab" data-s="m-in">Вход</button></div>
+<div class="su-field"><input id="suName" class="f-in" placeholder="Имя пользователя" maxlength="24" autocomplete="username" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" value="${esc(legacy)}" aria-label="Имя пользователя" aria-describedby="suNameHint"><div class="su-hint" id="suNameHint" aria-live="polite"></div></div>
+<div class="su-field"><div class="su-pass"><input id="suPass" class="f-in" type="password" placeholder="Пароль" maxlength="128" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="Пароль" aria-describedby="suPassHint"><button type="button" class="su-eye" data-s="eye" aria-label="Показать пароль" aria-pressed="false">${I.eye}</button></div><div class="su-hint" id="suPassHint"></div></div>
+<div class="su-course" id="suCourse"><span>Курс</span>${coursePills(course, 'data-s="su-c" data-c', null)}</div>
+<div class="su-err" id="suErr" role="alert"></div>
+<button type="button" class="dlg-btn primary" data-s="go"></button>
+<div class="su-note" id="suNote"></div>
 </div>`;
   const sh = openSheet({
-    cls: 'dialog', html, dismissible: edit,
-    onClick: (act, el, e, close) => {
+    cls: 'dialog', html, dismissible,
+    onClick: (act, el) => {
+      if (act === 'm-up' || act === 'm-in') return setMode(act.slice(2));
+      if (act === 'eye') {
+        const show = passInp.type === 'password';
+        passInp.type = show ? 'text' : 'password';
+        el.innerHTML = show ? I.eyeOff : I.eye;
+        el.setAttribute('aria-pressed', String(show));
+        el.setAttribute('aria-label', show ? 'Скрыть пароль' : 'Показать пароль');
+        return;
+      }
       if (act === 'su-c') {
         course = +el.dataset.c;
         el.parentElement.querySelectorAll('.course').forEach(b => { const on = b === el; b.classList.toggle('on', on); b.setAttribute('aria-checked', String(on)); });
         return;
       }
-      if (act !== 'go') return;
-      const inp = sh.panel.querySelector('#suName');
-      const name = inp.value.replace(/\s+/g, ' ').trim().slice(0, 40);
-      if (name.length < 2) { inp.classList.add('bad'); inp.focus(); return; }
-      const first = !S.profile;
-      S.profile = { name, course, at: (S.profile && S.profile.at) || Date.now() };
-      S.course = course;
-      save(); close(); renderAll();
-      Presence.profile(first);
-      toast(edit ? 'Сохранено' : 'Готово, ' + name + '! Всё открыто');
+      if (act === 'go') go();
     }
   });
-  const inp = sh.panel.querySelector('#suName');
-  inp.addEventListener('input', () => inp.classList.remove('bad'));
-  inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); sh.panel.querySelector('[data-s="go"]').click(); } });
-  setTimeout(() => inp.focus({ preventScroll: true }), 250);
+  const $p = s => sh.panel.querySelector(s);
+  const nameInp = $p('#suName'), passInp = $p('#suPass'), btn = $p('[data-s="go"]'), err = $p('#suErr');
+  const hint = (el, text, kind = '') => { el.textContent = text; el.className = 'su-hint' + (kind ? ' ' + kind : ''); };
+  function setMode(m) {
+    mode = m;
+    sh.panel.querySelectorAll('.su-seg button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.s === 'm-' + m)));
+    $p('#suTitle').textContent = m === 'up' ? (dismissible ? 'Регистрация' : 'Лёгкая регистрация') : 'Вход в аккаунт';
+    btn.textContent = m === 'up' ? 'Зарегистрироваться' : 'Войти';
+    passInp.setAttribute('autocomplete', m === 'up' ? 'new-password' : 'current-password');
+    $p('#suCourse').hidden = m !== 'up';
+    $p('#suNote').textContent = m === 'up' ? 'Пароль хранится у Google — даже автор сайта его не видит.' : 'Забыли пароль? Напишите автору сайта: tg @ziplogo';
+    hint($p('#suPassHint'), m === 'up' ? 'Минимум 6 символов' : '');
+    err.textContent = '';
+    nameInp.classList.remove('bad'); passInp.classList.remove('bad');
+    checkName();
+  }
+  // live «имя свободно / занято» while signing up
+  function checkName() {
+    clearTimeout(checkT);
+    const h = $p('#suNameHint'), n = cleanName(nameInp.value);
+    if (mode !== 'up' || n.length < 3) return hint(h, '');
+    const p = nameProblem(n);
+    if (p) return hint(h, p, 'bad');
+    const my = ++checkN;
+    hint(h, '');
+    checkT = setTimeout(() => {
+      Account.owner(nameKey(n)).then(o => { if (my === checkN && mode === 'up') hint(h, o ? 'Это имя уже занято' : 'Имя свободно', o ? 'bad' : 'ok'); }, () => {});
+    }, 450);
+  }
+  function fail(r) {
+    err.textContent = r.msg;
+    const el = r.f === 'name' ? nameInp : r.f === 'pass' ? passInp : null;
+    if (el) { el.classList.add('bad'); el.focus(); }
+  }
+  async function go() {
+    if (busy) return;
+    err.textContent = '';
+    const name = cleanName(nameInp.value), pass = passInp.value;
+    const np = nameProblem(name);
+    if (np) return fail({ msg: np, f: 'name' });
+    if (pass.length < 6) return fail({ msg: mode === 'up' ? 'Пароль — минимум 6 символов' : 'Неверный пароль', f: 'pass' });
+    busy = true; btn.disabled = true;
+    const label = btn.textContent;
+    btn.textContent = mode === 'up' ? 'Регистрирую…' : 'Вхожу…';
+    try {
+      if (mode === 'up') await Account.signUp(name, pass, course);
+      else await Account.signIn(name, pass);
+    } catch (e) {
+      busy = false; btn.disabled = false; btn.textContent = label;
+      return fail(authError(e));
+    }
+    const u = Account.user;
+    S.profile = null;
+    if (u.course) S.course = u.course;
+    save(); sh.close(); renderAll(); applyBlock(); Presence.live();
+    if (!u.blocked) toast(mode === 'up' ? 'Готово, ' + u.name + '! Всё открыто' : 'С возвращением, ' + u.name + '!');
+  }
+  nameInp.addEventListener('input', () => { nameInp.classList.remove('bad'); err.textContent = ''; checkName(); });
+  passInp.addEventListener('input', () => { passInp.classList.remove('bad'); err.textContent = ''; });
+  nameInp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); passInp.focus(); } });
+  passInp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } });
+  setMode(mode);
+  setTimeout(() => (legacy && mode === 'up' ? passInp : nameInp).focus({ preventScroll: true }), 250);
+}
+
+// A small sheet with fields; submit() resolves to null when done, or { msg, f } to show an error and stay.
+function formSheet({ title, msg = '', fields, ok, submit }) {
+  const html = `<div class="dlg su">
+<div class="dlg-title">${esc(title)}</div>${msg ? `<div class="dlg-msg">${esc(msg)}</div>` : ''}
+${fields.map((f, i) => `<input class="f-in" data-f="${i}" type="${f.type || 'text'}" placeholder="${esc(f.ph)}" value="${esc(f.value || '')}" maxlength="${f.max || 128}" autocomplete="${f.ac || 'off'}" autocapitalize="${f.type === 'password' ? 'off' : 'words'}" autocorrect="off" spellcheck="false" enterkeyhint="${i === fields.length - 1 ? 'done' : 'next'}" aria-label="${esc(f.ph)}">`).join('\n')}
+<div class="su-err" role="alert"></div>
+<div class="dlg-btns"><button type="button" class="dlg-btn" data-s="cancel">Отмена</button><button type="button" class="dlg-btn primary" data-s="ok">${esc(ok)}</button></div>
+</div>`;
+  let busy = false;
+  const sh = openSheet({
+    cls: 'dialog', html,
+    onClick: async (act, el, e, close) => {
+      if (act === 'cancel') return close();
+      if (act !== 'ok' || busy) return;
+      busy = true; el.disabled = true;
+      const label = el.textContent;
+      el.textContent = 'Подождите…';
+      let r;
+      try { r = await submit(inputs.map(i => i.value)); } catch (x) { r = authError(x); }
+      busy = false; el.disabled = false; el.textContent = label;
+      if (!r) return close();
+      sh.panel.querySelector('.su-err').textContent = r.msg;
+      const bad = inputs[fields.findIndex(f => f.id === r.f)] || inputs[0];
+      bad.classList.add('bad'); bad.focus();
+    }
+  });
+  const inputs = [...sh.panel.querySelectorAll('[data-f]')];
+  inputs.forEach((inp, i) => {
+    inp.addEventListener('input', () => { inp.classList.remove('bad'); sh.panel.querySelector('.su-err').textContent = ''; });
+    inp.addEventListener('keydown', e => {
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      if (inputs[i + 1]) inputs[i + 1].focus(); else sh.panel.querySelector('[data-s="ok"]').click();
+    });
+  });
+  setTimeout(() => inputs[0].focus({ preventScroll: true }), 250);
+}
+
+function openProfile() {
+  const u = Account.user;
+  if (!u || anySheet()) return;
+  const html = `<div class="dlg pf">
+<div class="pf-head"><span class="pf-av" aria-hidden="true">${esc(initials(u.name))}</span><div class="pf-id"><div class="dlg-title">${esc(u.name)}</div><div class="pf-sub">Ваш аккаунт</div></div></div>
+<div class="su-course"><span>Курс</span>${coursePills(u.course || 0, 'data-s="pf-c" data-c', null)}</div>
+<div class="mgroup">
+${u.renamed ? '<div class="mrow static"><span class="mtxt">Имя уже менялось<small>Изменить его можно только один раз</small></span></div>' : `<button type="button" class="mrow" data-s="rename"><span class="mtxt">Изменить имя<small>Можно только один раз</small></span><span class="go">${I.chevR}</span></button>`}
+<button type="button" class="mrow" data-s="pass"><span class="mtxt">Сменить пароль</span><span class="go">${I.chevR}</span></button>
+</div>
+<button type="button" class="dlg-btn danger" data-s="out">Выйти из аккаунта</button>
+</div>`;
+  openSheet({
+    cls: 'dialog', html,
+    onClick: (act, el, e, close) => {
+      if (act === 'pf-c') {
+        const c = +el.dataset.c, was = u.course;
+        if (c === was) return;
+        el.parentElement.querySelectorAll('.course').forEach(b => { const on = b === el; b.classList.toggle('on', on); b.setAttribute('aria-checked', String(on)); });
+        Account.setCourse(c).then(() => { S.course = c; save(); renderAll(); Presence.live(); }, x => { toast(authError(x).msg); close(); });
+        return;
+      }
+      close();
+      if (act === 'rename') setTimeout(openRename, 200);
+      else if (act === 'pass') setTimeout(openPassword, 200);
+      else if (act === 'out') setTimeout(async () => {
+        const r = await dialog({ title: 'Выйти из аккаунта?', message: 'Чтобы снова отвечать на вопросы, понадобится войти: имя и пароль.', buttons: [{ id: 'cancel', label: 'Отмена' }, { id: 'out', label: 'Выйти', kind: 'danger' }] });
+        if (r.id !== 'out') return;
+        Account.signOut(); renderAll(); Presence.live(); toast('Вы вышли из аккаунта');
+      }, 200);
+    }
+  });
+}
+function openRename() {
+  const u = Account.user;
+  if (!u || u.renamed) return;
+  formSheet({
+    title: 'Новое имя', msg: 'Имя можно изменить только один раз — потом поменять его уже не получится.',
+    fields: [{ id: 'name', ph: 'Имя пользователя', value: u.name, max: 24, ac: 'username' }], ok: 'Изменить',
+    submit: async ([v]) => {
+      const n = cleanName(v);
+      if (n === u.name) return { msg: 'Это ваше текущее имя', f: 'name' };
+      const p = nameProblem(n);
+      if (p) return { msg: p, f: 'name' };
+      try { await Account.rename(n); } catch (e) { const r = authError(e); if (e.message === 'RENAMED') renderAll(); return r; }
+      renderAll(); Presence.live(); toast('Теперь вы — ' + n);
+      return null;
+    }
+  });
+}
+function openPassword() {
+  if (!Account.user) return;
+  formSheet({
+    title: 'Сменить пароль',
+    fields: [{ id: 'old', type: 'password', ph: 'Текущий пароль', ac: 'current-password' }, { id: 'pass', type: 'password', ph: 'Новый пароль — от 6 символов', ac: 'new-password' }], ok: 'Сменить',
+    submit: async ([oldP, newP]) => {
+      if (!oldP) return { msg: 'Введите текущий пароль', f: 'old' };
+      if (newP.length < 6) return { msg: 'Новый пароль — минимум 6 символов', f: 'pass' };
+      try { await Account.password(oldP, newP); }
+      catch (e) { const r = authError(e); return /INVALID_LOGIN|INVALID_PASSWORD/.test(e.message) ? { msg: 'Текущий пароль неверный', f: 'old' } : r; }
+      toast('Пароль изменён');
+      return null;
+    }
+  });
 }
 
 /* ---------- presence: «сейчас в сети» and «сегодня» for the admin page ---------- */
@@ -2815,29 +3200,25 @@ const Presence = {
     if (!s || bankStatus !== 'ready') return '';
     return (setTitle(s) + ' · ' + (S.test ? 'тест' : (S.starOnly ? '★ ' : '') + CAT_TITLE[S.category])).slice(0, 120);
   },
-  // who and where: readable only by the site owner (Firebase rules)
+  // where the person is; with an account also who (u = uid, checked by the rules). Readable only by the site owner.
   live() {
-    const d = { t: { '.sv': 'timestamp' }, s: this.started, v: this.vid(), d: this.device(), w: this.where() };
-    if (S.profile) { d.n = S.profile.name; d.c = S.profile.course || 0; }
+    if (!FIREBASE_DB || !this.timer) return;
+    const d = { t: SV, s: this.started, v: this.vid(), d: this.device(), w: this.where() };
     this.lastWhere = d.w;
-    fetch(this.url('live/' + this.sid), { method: 'PUT', body: JSON.stringify(d) }).catch(() => {});
-  },
-  profile(first) {
-    if (!FIREBASE_DB || !S.profile) return;
-    const d = { n: S.profile.name, c: S.profile.course || 0, d: this.device(), last: { '.sv': 'timestamp' } };
-    if (first) d.first = { '.sv': 'timestamp' };
-    fetch(this.url('people/' + this.vid()), { method: 'PATCH', body: JSON.stringify(d) }).catch(() => {});
-    if (this.timer) this.live();
+    const put = auth => fetch(this.url('live/' + this.sid) + (auth ? '?auth=' + auth : ''), { method: 'PUT', body: JSON.stringify(d) }).catch(() => {});
+    const u = Account.user;
+    if (!u || !Account.ready()) return put('');
+    Account.token().then(t => { if (t && Account.user === u) d.u = u.uid; put(t); }, () => put(''));
   },
   // after a render: tell where the person is now, if that changed (at most every 3 s)
   touch() {
     if (!this.timer || this.touchT || this.where() === this.lastWhere) return;
-    this.touchT = setTimeout(() => { this.touchT = 0; if (this.timer) this.live(); }, 3000);
+    this.touchT = setTimeout(() => { this.touchT = 0; this.live(); }, 3000);
   },
   beat() {
     fetch(this.url('online/' + this.sid), { method: 'PUT', body: '{".sv":"timestamp"}' }).catch(() => {});
     this.live();
-    if (S.profile && !this.seen) { this.seen = true; this.profile(false); } // «был на сайте» once per visit
+    if (Account.user && Date.now() - Account.syncAt > 300000) Account.sync(true);
     const day = new Date().toLocaleDateString('sv'); // 2026-11-23
     let seen = '';
     try { seen = localStorage.getItem('TestTrainer.day') || ''; } catch (e) {}
@@ -2846,7 +3227,11 @@ const Presence = {
         .then(r => { if (r.ok) try { localStorage.setItem('TestTrainer.day', day); } catch (e) {} }).catch(() => {});
     }
   },
-  on() { if (this.timer) return; this.beat(); this.timer = setInterval(() => this.beat(), 60000); },
+  on() {
+    if (this.timer || !FIREBASE_DB || Account.blocked() || document.visibilityState !== 'visible') return;
+    this.timer = setInterval(() => this.beat(), 60000);
+    this.beat();
+  },
   off() {
     if (!this.timer) return;
     clearInterval(this.timer); this.timer = 0;
@@ -2855,7 +3240,9 @@ const Presence = {
   },
   start() {
     if (!FIREBASE_DB) return;
-    const sync = () => (document.visibilityState === 'visible' ? this.on() : this.off());
+    const sync = () => {
+      if (document.visibilityState === 'visible') { this.on(); Account.sync(); } else this.off();
+    };
     document.addEventListener('visibilitychange', sync);
     window.addEventListener('pagehide', () => this.off());
     sync();
@@ -2885,6 +3272,8 @@ function normalizeState(st) {
 async function boot() {
   applyDock();
   render();
+  Account.load();
+  applyBlock(); // a blocked account sees the block screen at once, even offline
   const [list] = await Promise.all([loadBundledList(), Store.init()]);
   BUNDLED = list;
   const { state, fresh } = await Store.loadState();

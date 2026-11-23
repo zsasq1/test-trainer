@@ -72,6 +72,10 @@ main{max-width:620px;margin:0 auto;padding:18px max(16px,env(safe-area-inset-lef
 .fbin{margin-top:12px}
 .fbin .field{margin:8px 0}
 .more{margin-top:10px}
+.field.find{margin:0 0 8px;background:var(--surface)}
+.row.off .av{background:var(--soft-red);color:var(--red)}
+.row.off .t small b{display:inline;font-size:inherit;color:var(--red)}
+.who .row.acc{padding-right:6px}
 
 /* courses */
 .courses{display:flex;gap:8px;margin:0 2px 10px}
@@ -176,9 +180,11 @@ details.how a{color:var(--accent)}
   </section>
 
   <section id="peopleSec" hidden>
-    <div class="label" id="peopleLbl">Зарегистрированные</div>
+    <div class="label" id="peopleLbl">Аккаунты</div>
+    <input class="field find" id="peopleFind" type="search" placeholder="Найти по имени" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Найти аккаунт по имени" hidden>
     <div class="list who" id="peopleList" style="margin-top:0"></div>
     <button class="btn gray more" id="peopleMore" type="button" hidden>Показать всех</button>
+    <p class="note" style="margin:10px 4px 0">Заблокированный видит «Доступ закрыт» на всех своих устройствах, его имя остаётся занятым. Удаление освобождает имя: человек сможет зарегистрироваться заново.</p>
   </section>
 
   <section id="files" hidden>
@@ -214,7 +220,9 @@ const kb = n => n >= 1048576 ? (n / 1048576).toFixed(1).replace('.', ',') + ' М
 const ls = { get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} } };
 const ICON = {
   edit: '<svg class="i" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16Z"/></svg>',
-  trash: '<svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M9 7V4.5h6V7M6 7l1 13h10l1-13"/></svg>'
+  trash: '<svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M9 7V4.5h6V7M6 7l1 13h10l1-13"/></svg>',
+  lock: '<svg class="i" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10.5" rx="2.5"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg>',
+  unlock: '<svg class="i" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10.5" rx="2.5"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 6.9-.9"/></svg>'
 };
 
 let token = ls.get(ADMIN_KEY) || '';
@@ -371,7 +379,7 @@ async function renameFile(file) {
 /* ---------- online: Firebase Realtime Database over REST ---------- */
 const fb = path => FIREBASE_DB.replace(/\/+$/, '') + '/' + path + '.json';
 const FB_REFRESH = 'TestTrainer.fbRefresh';
-let fbId = { token: '', exp: 0 }, onlineT = 0, people = null, peopleAt = 0, showAll = false;
+let fbId = { token: '', exp: 0 }, onlineT = 0, users = null, usersAt = 0, showAll = false, find = '';
 // Firebase sign-in for the owner: names are readable only with this token (see the database rules).
 async function fbToken() {
   const rt = ls.get(FB_REFRESH);
@@ -408,14 +416,56 @@ function ago(ts) {
   return d === 1 ? 'вчера' : d < 7 ? d + ' ' + plural(d, 'день', 'дня', 'дней') + ' назад' : new Date(ts).toLocaleDateString('ru', { day: 'numeric', month: 'short' });
 }
 const rowHTML = (name, named, meta) => `<div class="row"><span class="av${named ? ' named' : ''}">${esc(named ? initials(name) : '?')}</span><div class="t"><b>${esc(name)}</b><small>${esc(meta)}</small></div></div>`;
+const fold = s => String(s || '').toLowerCase().replace(/ё/g, 'е');
 function renderPeople() {
-  if (!people) { $('#peopleSec').hidden = true; return; }
-  const list = Object.values(people).filter(p => p && p.n).sort((a, b) => (b.last || 0) - (a.last || 0));
+  if (!users) { $('#peopleSec').hidden = true; return; }
+  const all = Object.entries(users).filter(([, u]) => u && typeof u.name === 'string').map(([uid, u]) => ({ uid, ...u }))
+    .sort((a, b) => (b.last || 0) - (a.last || 0));
+  const list = find ? all.filter(u => fold(u.name).includes(fold(find))) : all;
+  const nBlocked = all.filter(u => u.blocked).length;
   $('#peopleSec').hidden = false;
-  $('#peopleLbl').textContent = 'Зарегистрированные · ' + list.length;
-  const shown = showAll ? list : list.slice(0, 30);
-  $('#peopleList').innerHTML = shown.length ? shown.map(p => rowHTML(p.n, true, [p.c ? p.c + ' курс' : '', p.d, 'заходил(а) ' + ago(p.last || 0)].filter(Boolean).join(' · '))).join('') : '<div class="empty-row">Пока никто не зарегистрировался.</div>';
-  $('#peopleMore').hidden = showAll || list.length <= 30;
+  $('#peopleLbl').textContent = 'Аккаунты · ' + all.length + (nBlocked ? ' · заблокировано ' + nBlocked : '');
+  $('#peopleFind').hidden = all.length <= 8 && !find;
+  const shown = showAll || find ? list : list.slice(0, 30);
+  $('#peopleList').innerHTML = shown.length ? shown.map(u => {
+    const meta = [u.course ? u.course + ' курс' : '', u.d, 'заходил(а) ' + ago(u.last || u.created || 0)].filter(Boolean).map(esc).join(' · ');
+    return `<div class="row acc${u.blocked ? ' off' : ''}"><span class="av named">${esc(initials(u.name))}</span><div class="t"><b>${esc(u.name)}</b><small>${u.blocked ? '<b>заблокирован</b> · ' : ''}${meta}</small></div>`
+      + `<button class="ib" type="button" data-block="${esc(u.uid)}" aria-label="${u.blocked ? 'Разблокировать' : 'Заблокировать'} «${esc(u.name)}»">${u.blocked ? ICON.unlock : ICON.lock}</button>`
+      + `<button class="ib del" type="button" data-udel="${esc(u.uid)}" aria-label="Удалить «${esc(u.name)}»">${ICON.trash}</button></div>`;
+  }).join('') : `<div class="empty-row">${find ? 'Никого с таким именем.' : 'Пока никто не зарегистрировался.'}</div>`;
+  $('#peopleMore').hidden = showAll || !!find || list.length <= 30;
+}
+async function fbWrite(path, method, body, tok) {
+  const r = await fetch(fb(path) + '?auth=' + tok, { method, body: JSON.stringify(body) }).catch(() => null);
+  if (!r) throw new Error('Нет связи с Firebase.');
+  if (!r.ok) throw new Error(r.status === 401 ? 'Нет прав: обновите правила базы в Firebase.' : 'Firebase ответил ошибкой ' + r.status + '.');
+}
+async function userAction(uid, kind) {
+  const u = users && users[uid];
+  if (!u) return;
+  const tok = await fbToken().catch(() => '');
+  if (!tok) { toast('Войдите в Firebase ещё раз'); return; }
+  try {
+    if (kind === 'block') {
+      const on = !u.blocked;
+      const r = await dialog(on
+        ? { title: 'Заблокировать «' + u.name + '»?', text: 'Человек увидит «Доступ закрыт» и не сможет пользоваться сайтом. Имя останется занятым. Разблокировать можно здесь же.', ok: 'Заблокировать', danger: true }
+        : { title: 'Разблокировать «' + u.name + '»?', text: 'Сайт снова откроется для этого аккаунта.', ok: 'Разблокировать' });
+      if (!r.ok) return;
+      await fbWrite('users/' + uid, 'PATCH', { blocked: on ? true : null }, tok);
+      if (on) u.blocked = true; else delete u.blocked;
+      toast(on ? 'Заблокирован: ' + u.name : 'Разблокирован: ' + u.name);
+    } else {
+      const r = await dialog({ title: 'Удалить «' + u.name + '»?', text: 'Аккаунт удалится, а имя освободится. Человек сможет зарегистрироваться заново — чтобы закрыть ему доступ, лучше заблокировать.', ok: 'Удалить', danger: true });
+      if (!r.ok) return;
+      const up = { ['users/' + uid]: null };
+      if (u.key) up['logins/' + u.key] = null;
+      await fbWrite('', 'PATCH', up, tok);
+      delete users[uid];
+      toast('Удалён: ' + u.name);
+    }
+    renderPeople();
+  } catch (e) { toast(e.message); }
 }
 function setCounts(n, today, week) {
   $('#nowN').textContent = n;
@@ -441,18 +491,18 @@ async function refreshOnline() {
     let note = '';
     if (tok) {
       try {
+        if (!users || now - usersAt > 60000) { users = (await getJSON(fb('users') + '?auth=' + tok)) || {}; usersAt = now; renderPeople(); }
         const live = (await getJSON(fb('live') + '?auth=' + tok)) || {};
         const fresh = [];
         for (const [sid, x] of Object.entries(live)) {
           const age = now - (+(x && x.t) || 0);
-          if (age < 150000) fresh.push(x);
+          if (age < 150000) fresh.push({ ...x, who: x.u && users[x.u] });
           else if (age > 600000) fetch(fb('live/' + sid), { method: 'DELETE' }).catch(() => {});
         }
-        fresh.sort((a, b) => (!!b.n - !!a.n) || (a.s || 0) - (b.s || 0));
+        fresh.sort((a, b) => (!!b.who - !!a.who) || (a.s || 0) - (b.s || 0));
         setCounts(fresh.length, today, week.size);
         $('#liveList').hidden = !fresh.length;
-        $('#liveList').innerHTML = fresh.map(x => rowHTML(x.n || guest(x.v), !!x.n, [x.c ? x.c + ' курс' : '', x.d, x.w, dur(now - (x.s || now))].filter(Boolean).join(' · '))).join('');
-        if (!people || now - peopleAt > 60000) { people = (await getJSON(fb('people') + '?auth=' + tok)) || {}; peopleAt = now; renderPeople(); }
+        $('#liveList').innerHTML = fresh.map(x => rowHTML(x.who ? x.who.name : guest(x.v), !!x.who, [x.who && x.who.course ? x.who.course + ' курс' : '', x.d, x.w, dur(now - (x.s || now))].filter(Boolean).join(' · '))).join('');
       } catch (e) {
         $('#liveList').hidden = true;
         note = e.status === 401 ? ' · имена закрыты правилами Firebase — обновите правила' : '';
@@ -481,12 +531,17 @@ $('#fbBtn').addEventListener('click', async () => {
   const email = $('#fbEmail').value.trim(), pass = $('#fbPass').value;
   if (!email || !pass) return;
   const btn = $('#fbBtn'); btn.disabled = true;
-  try { await fbSignIn(email, pass); $('#fbPass').value = ''; $('#fbErr').hidden = true; people = null; await refreshOnline(); }
+  try { await fbSignIn(email, pass); $('#fbPass').value = ''; $('#fbErr').hidden = true; users = null; await refreshOnline(); }
   catch (e) { $('#fbErr').textContent = e.message; $('#fbErr').hidden = false; }
   btn.disabled = false;
 });
 $('#fbPass').addEventListener('keydown', e => { if (e.key === 'Enter') $('#fbBtn').click(); });
 $('#peopleMore').addEventListener('click', () => { showAll = true; renderPeople(); });
+$('#peopleFind').addEventListener('input', () => { find = $('#peopleFind').value.trim(); renderPeople(); });
+$('#peopleList').addEventListener('click', e => {
+  const b = e.target.closest('[data-block],[data-udel]');
+  if (b) userAction(b.dataset.block || b.dataset.udel, b.dataset.block ? 'block' : 'delete');
+});
 function watchOnline() {
   clearInterval(onlineT);
   if (document.visibilityState !== 'visible') return;
@@ -502,7 +557,7 @@ function show(signedIn) {
   if (signedIn) { watchOnline(); refreshFiles(); } else clearInterval(onlineT);
 }
 function logout(msg) {
-  token = ''; ls.set(ADMIN_KEY, null); ls.set(FB_REFRESH, null); fbId = { token: '', exp: 0 }; people = null; repo = null;
+  token = ''; ls.set(ADMIN_KEY, null); ls.set(FB_REFRESH, null); fbId = { token: '', exp: 0 }; users = null; repo = null;
   show(false);
   if (msg) { $('#loginErr').textContent = msg; $('#loginErr').hidden = false; }
 }
