@@ -64,6 +64,14 @@ main{max-width:620px;margin:0 auto;padding:18px max(16px,env(safe-area-inset-lef
 .stat b{display:block;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
 .stat small{font-size:12.5px;color:var(--muted)}
 .upd{margin-top:10px;font-size:12.5px;color:var(--muted)}
+.who{margin-top:12px}
+.who .row{min-height:52px;padding:8px 14px}
+.who .t small{display:block;overflow-wrap:anywhere}
+.av{width:34px;height:34px;flex:none;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--ink-soft);font-size:14px;font-weight:700;color:var(--muted)}
+.av.named{background:var(--text);color:var(--bg)}
+.fbin{margin-top:12px}
+.fbin .field{margin:8px 0}
+.more{margin-top:10px}
 
 /* courses */
 .courses{display:flex;gap:8px;margin:0 2px 10px}
@@ -157,6 +165,20 @@ details.how a{color:var(--accent)}
       </div>
       <div class="upd" id="upd"></div>
     </div>
+    <div class="list who" id="liveList" hidden></div>
+    <div class="card fbin" id="fbLogin" hidden>
+      <p class="note">Имена и кто чем занят — после входа администратора Firebase.</p>
+      <input class="field" id="fbEmail" type="email" placeholder="Почта" autocomplete="username" autocapitalize="off">
+      <input class="field" id="fbPass" type="password" placeholder="Пароль" autocomplete="current-password">
+      <p class="err" id="fbErr" hidden></p>
+      <button class="btn" id="fbBtn" type="button">Войти</button>
+    </div>
+  </section>
+
+  <section id="peopleSec" hidden>
+    <div class="label" id="peopleLbl">Зарегистрированные</div>
+    <div class="list who" id="peopleList" style="margin-top:0"></div>
+    <button class="btn gray more" id="peopleMore" type="button" hidden>Показать всех</button>
   </section>
 
   <section id="files" hidden>
@@ -179,6 +201,7 @@ details.how a{color:var(--accent)}
 'use strict';
 /* Settings. FIREBASE_DB must match the one in app.html. */
 const FIREBASE_DB = 'https://reclama-kgu-default-rtdb.europe-west1.firebasedatabase.app';
+const FB_API_KEY = ''; // Firebase → Project settings → Web API Key (it is public by design)
 const REPO = 'zsasq1/test-trainer', BRANCH = 'main';
 const ADMIN_KEY = 'TestTrainer.admin';
 const COURSES = [1, 2, 3, 4, 5, 6];
@@ -347,36 +370,123 @@ async function renameFile(file) {
 
 /* ---------- online: Firebase Realtime Database over REST ---------- */
 const fb = path => FIREBASE_DB.replace(/\/+$/, '') + '/' + path + '.json';
-let onlineT = 0;
+const FB_REFRESH = 'TestTrainer.fbRefresh';
+let fbId = { token: '', exp: 0 }, onlineT = 0, people = null, peopleAt = 0, showAll = false;
+// Firebase sign-in for the owner: names are readable only with this token (see the database rules).
+async function fbToken() {
+  const rt = ls.get(FB_REFRESH);
+  if (!rt || !FB_API_KEY) return '';
+  if (fbId.token && Date.now() < fbId.exp - 60000) return fbId.token;
+  const r = await fetch('https://securetoken.googleapis.com/v1/token?key=' + FB_API_KEY, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(rt) });
+  if (!r.ok) { if (r.status === 400) ls.set(FB_REFRESH, null); return ''; }
+  const j = await r.json();
+  fbId = { token: j.id_token, exp: Date.now() + (+j.expires_in || 3600) * 1000 };
+  if (j.refresh_token) ls.set(FB_REFRESH, j.refresh_token);
+  return fbId.token;
+}
+async function fbSignIn(email, password) {
+  const r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + FB_API_KEY, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password, returnSecureToken: true }) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) {
+    const m = (j.error && j.error.message) || String(r.status);
+    throw new Error(/INVALID|NOT_FOUND|PASSWORD/.test(m) ? 'Неверная почта или пароль.' : /OPERATION_NOT_ALLOWED/.test(m) ? 'В Firebase не включён вход по почте и паролю.' : /TOO_MANY/.test(m) ? 'Слишком много попыток — подождите пару минут.' : 'Firebase: ' + m);
+  }
+  ls.set(FB_REFRESH, j.refreshToken);
+  fbId = { token: j.idToken, exp: Date.now() + (+j.expiresIn || 3600) * 1000 };
+}
+const getJSON = async url => { const r = await fetch(url, { cache: 'no-store' }); const j = await r.json(); if (!r.ok) { const e = new Error((j && j.error) || r.status); e.status = r.status; throw e; } return j; };
+const guest = v => 'Гость ' + String(v || '????').slice(-4).toUpperCase();
+const initials = n => n.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+function dur(ms) { const m = Math.floor(ms / 60000); return m < 1 ? 'меньше минуты' : m < 60 ? m + ' мин' : Math.floor(m / 60) + ' ч ' + (m % 60) + ' мин'; }
+function ago(ts) {
+  const m = Math.floor((Date.now() - ts) / 60000);
+  if (m < 2) return 'только что';
+  if (m < 60) return m + ' мин назад';
+  const h = Math.floor(m / 60);
+  if (h < 24) return h + ' ' + plural(h, 'час', 'часа', 'часов') + ' назад';
+  const d = Math.floor(h / 24);
+  return d === 1 ? 'вчера' : d < 7 ? d + ' ' + plural(d, 'день', 'дня', 'дней') + ' назад' : new Date(ts).toLocaleDateString('ru', { day: 'numeric', month: 'short' });
+}
+const rowHTML = (name, named, meta) => `<div class="row"><span class="av${named ? ' named' : ''}">${esc(named ? initials(name) : '?')}</span><div class="t"><b>${esc(name)}</b><small>${esc(meta)}</small></div></div>`;
+function renderPeople() {
+  if (!people) { $('#peopleSec').hidden = true; return; }
+  const list = Object.values(people).filter(p => p && p.n).sort((a, b) => (b.last || 0) - (a.last || 0));
+  $('#peopleSec').hidden = false;
+  $('#peopleLbl').textContent = 'Зарегистрированные · ' + list.length;
+  const shown = showAll ? list : list.slice(0, 30);
+  $('#peopleList').innerHTML = shown.length ? shown.map(p => rowHTML(p.n, true, [p.c ? p.c + ' курс' : '', p.d, 'заходил(а) ' + ago(p.last || 0)].filter(Boolean).join(' · '))).join('') : '<div class="empty-row">Пока никто не зарегистрировался.</div>';
+  $('#peopleMore').hidden = showAll || list.length <= 30;
+}
+function setCounts(n, today, week) {
+  $('#nowN').textContent = n;
+  $('#nowW').textContent = plural(n, 'человек', 'человека', 'человек') + ' в сети';
+  $('#dot').classList.toggle('on', n > 0);
+  $('#todayN').textContent = today;
+  $('#weekN').textContent = week;
+}
 async function refreshOnline() {
   if (!FIREBASE_DB) {
-    $('#nowN').textContent = '—'; $('#todayN').textContent = '—'; $('#weekN').textContent = '—';
     $('#upd').textContent = 'Счётчик ещё не подключён к Firebase.';
     return;
   }
   try {
     const now = Date.now();
-    const online = (await (await fetch(fb('online'), { cache: 'no-store' })).json()) || {};
-    let n = 0;
-    for (const [sid, ts] of Object.entries(online)) {
-      const age = now - (+ts || 0);
-      if (age < 150000) n++;
-      else if (age > 600000) fetch(fb('online/' + sid), { method: 'DELETE' }).catch(() => {}); // left without saying goodbye
-    }
     const days = [...Array(7)].map((_, i) => new Date(now - i * 864e5).toLocaleDateString('sv'));
-    const lists = await Promise.all(days.map(d => fetch(fb('days/' + d) + '?shallow=true', { cache: 'no-store' }).then(r => r.json()).catch(() => null)));
+    const lists = await Promise.all(days.map(d => getJSON(fb('days/' + d) + '?shallow=true').catch(() => null)));
     const week = new Set();
     lists.forEach(l => Object.keys(l || {}).forEach(k => week.add(k)));
-    $('#nowN').textContent = n;
-    $('#nowW').textContent = plural(n, 'человек', 'человека', 'человек') + ' в сети';
-    $('#dot').classList.toggle('on', n > 0);
-    $('#todayN').textContent = Object.keys(lists[0] || {}).length;
-    $('#weekN').textContent = week.size;
-    $('#upd').textContent = 'Обновлено в ' + new Date().toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' · включая вас, если тренажёр открыт';
+    const today = Object.keys(lists[0] || {}).length;
+    const tok = await fbToken().catch(() => '');
+    $('#fbLogin').hidden = !!tok || !FB_API_KEY;
+    let note = '';
+    if (tok) {
+      try {
+        const live = (await getJSON(fb('live') + '?auth=' + tok)) || {};
+        const fresh = [];
+        for (const [sid, x] of Object.entries(live)) {
+          const age = now - (+(x && x.t) || 0);
+          if (age < 150000) fresh.push(x);
+          else if (age > 600000) fetch(fb('live/' + sid), { method: 'DELETE' }).catch(() => {});
+        }
+        fresh.sort((a, b) => (!!b.n - !!a.n) || (a.s || 0) - (b.s || 0));
+        setCounts(fresh.length, today, week.size);
+        $('#liveList').hidden = !fresh.length;
+        $('#liveList').innerHTML = fresh.map(x => rowHTML(x.n || guest(x.v), !!x.n, [x.c ? x.c + ' курс' : '', x.d, x.w, dur(now - (x.s || now))].filter(Boolean).join(' · '))).join('');
+        if (!people || now - peopleAt > 60000) { people = (await getJSON(fb('people') + '?auth=' + tok)) || {}; peopleAt = now; renderPeople(); }
+      } catch (e) {
+        $('#liveList').hidden = true;
+        note = e.status === 401 ? ' · имена закрыты правилами Firebase — обновите правила' : '';
+        tok && e.status !== 401 && (note = ' · имена не загрузились');
+        const online = (await getJSON(fb('online'))) || {};
+        setCounts(Object.values(online).filter(ts => now - (+ts || 0) < 150000).length, today, week.size);
+      }
+    } else {
+      $('#liveList').hidden = true; $('#peopleSec').hidden = true;
+      const online = (await getJSON(fb('online'))) || {};
+      let n = 0;
+      for (const [sid, ts] of Object.entries(online)) {
+        const age = now - (+ts || 0);
+        if (age < 150000) n++;
+        else if (age > 600000) fetch(fb('online/' + sid), { method: 'DELETE' }).catch(() => {});
+      }
+      setCounts(n, today, week.size);
+      if (!FB_API_KEY) note = ' · вход для имён ещё не настроен';
+    }
+    $('#upd').textContent = 'Обновлено в ' + new Date().toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + note;
   } catch (e) {
     $('#upd').textContent = 'Нет связи с Firebase. Повторю через 15 секунд.';
   }
 }
+$('#fbBtn').addEventListener('click', async () => {
+  const email = $('#fbEmail').value.trim(), pass = $('#fbPass').value;
+  if (!email || !pass) return;
+  const btn = $('#fbBtn'); btn.disabled = true;
+  try { await fbSignIn(email, pass); $('#fbPass').value = ''; $('#fbErr').hidden = true; people = null; await refreshOnline(); }
+  catch (e) { $('#fbErr').textContent = e.message; $('#fbErr').hidden = false; }
+  btn.disabled = false;
+});
+$('#fbPass').addEventListener('keydown', e => { if (e.key === 'Enter') $('#fbBtn').click(); });
+$('#peopleMore').addEventListener('click', () => { showAll = true; renderPeople(); });
 function watchOnline() {
   clearInterval(onlineT);
   if (document.visibilityState !== 'visible') return;
@@ -388,10 +498,11 @@ function watchOnline() {
 function show(signedIn) {
   $('#login').hidden = signedIn;
   ['#panel', '#files', '#out'].forEach(s => { $(s).hidden = !signedIn; });
+  if (!signedIn) $('#peopleSec').hidden = true;
   if (signedIn) { watchOnline(); refreshFiles(); } else clearInterval(onlineT);
 }
 function logout(msg) {
-  token = ''; ls.set(ADMIN_KEY, null); repo = null;
+  token = ''; ls.set(ADMIN_KEY, null); ls.set(FB_REFRESH, null); fbId = { token: '', exp: 0 }; people = null; repo = null;
   show(false);
   if (msg) { $('#loginErr').textContent = msg; $('#loginErr').hidden = false; }
 }
