@@ -603,7 +603,7 @@ const SUB_TYPES = [
 const SUB_TITLE = Object.fromEntries(SUB_TYPES.map(t => [t[0], t[2]]));
 const LS_KEY = 'TestTrainer.web.v1';
 /* Online counter: Firebase Realtime Database over plain REST — an anonymous random id, no names. Empty = off. */
-const FIREBASE_DB = '';
+const FIREBASE_DB = 'https://reclama-kgu-default-rtdb.europe-west1.firebasedatabase.app';
 const ADMIN_KEY = 'TestTrainer.admin'; // the site owner's GitHub token: present only on their own devices
 const isAdmin = () => { try { return !!localStorage.getItem(ADMIN_KEY); } catch (e) { return false; } };
 const TEXT_PLACEHOLDERS = new Set(['текстовая строка (без учета регистра)', 'текстовая строка']);
