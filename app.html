@@ -553,9 +553,6 @@ a.tg-btn{text-decoration:none}
 .shine::after{content:"";position:absolute;top:0;bottom:0;left:0;width:42%;z-index:1;pointer-events:none;background:linear-gradient(100deg,transparent,rgba(255,255,255,.38),transparent);transform:translateX(-140%) skewX(-18deg);animation:tg-shine 4.5s ease-in-out 1s infinite}
 @keyframes tg-shine{0%{transform:translateX(-140%) skewX(-18deg)}26%,100%{transform:translateX(340%) skewX(-18deg)}}
 @media (prefers-reduced-motion:reduce){.shine::after{display:none}}
-.tg-perks{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;font-size:13px;font-weight:600;color:var(--muted)}
-.tg-perks span{display:inline-flex;align-items:center;gap:4px}
-.tg-perks svg{width:15px;height:15px;color:#2AABEE;stroke-width:2.6}
 .su-more{align-self:center;display:inline-flex;align-items:center;gap:4px;padding:6px 10px;font-size:14.5px;font-weight:600;color:var(--muted)}
 .su-more svg{width:16px;height:16px}
 .su-more[hidden]{display:none}
@@ -3306,13 +3303,12 @@ function openAuth({ dismissible = false, mode = 'up', g = null } = {}) {
   // (they stay open for someone who used them last time on this device)
   const hero = tOn && !!tgCode;
   let folded = hero && lastVia() !== 'pass' && lastVia() !== 'g';
-  const tgPerk = t => `<span>${I.check}${t}</span>`;
   const legacy = g ? suggestName(g.name) : S.profile && S.profile.name ? cleanName(S.profile.name).slice(0, 24) : '';
   const html = `<div class="dlg su">
 <div class="su-ico">${I.user}</div>
 <div class="dlg-title" id="suTitle"></div>
 <div class="dlg-msg" id="suMsg">${dismissible ? '' : 'Все функции откроются сразу после входа.'}</div>
-${hero ? `<div class="su-tg" id="suTg"><span class="tg-badge">Быстрее всего</span><a class="tg-btn big shine" data-s="tg-tap" href="${tgLink(tgCode)}" target="_blank" rel="noopener">${TG_LOGO}<span>Войти через Telegram</span></a><div class="tg-perks">${tgPerk('Без пароля')}${tgPerk('Без номера')}${tgPerk('За 5 секунд')}</div></div>
+${hero ? `<div class="su-tg" id="suTg"><span class="tg-badge">Быстрее всего</span><a class="tg-btn big shine" data-s="tg-tap" href="${tgLink(tgCode)}" target="_blank" rel="noopener">${TG_LOGO}<span>Войти через Telegram</span></a></div>
 <button type="button" class="su-more" id="suMore" data-s="more" aria-expanded="false">Другие способы входа${I.chevD}</button>` : ''}
 ${(tOn && !hero) || gOn ? `<div class="su-ext su-x" id="suExt">${tOn && !hero ? `<button type="button" class="tg-btn" data-s="telegram">${TG_LOGO}<span>Продолжить с Telegram</span></button>` : ''}${gOn ? `<button type="button" class="g-btn" data-s="google">${G_LOGO}<span>Продолжить с Google</span></button>` : ''}</div>` : ''}${extOn ? '<div class="su-or su-x" id="suOr">или по имени и паролю</div>' : ''}
 <div class="su-seg su-x" id="suSeg" role="tablist" aria-label="Регистрация или вход"><button type="button" role="tab" data-s="m-up">Регистрация</button><button type="button" role="tab" data-s="m-in">Вход</button></div>
