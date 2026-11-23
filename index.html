@@ -39,6 +39,7 @@
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   --fs:1;
   --ease-out:cubic-bezier(0.23,1,0.32,1);  /* strong ease-out for things that appear */
+  --ease-in-out:cubic-bezier(0.77,0,0.175,1);  /* strong ease-in-out for things moving on screen */
   --ease-ios:cubic-bezier(0.32,0.72,0,1);  /* iOS sheet curve for things that glide */
 }
 @media (prefers-color-scheme: dark){
@@ -313,7 +314,14 @@ button:disabled{cursor:default}
 .sq-btn:disabled{opacity:.4}
 .sq-btn.a-sm{font-size:13px}
 .sq-btn.a-lg{font-size:20px}
-.d-foot{font-size:12px;color:var(--muted);text-align:center;padding-top:4px}
+.d-foot{font-size:12px;color:var(--muted);text-align:center;padding-top:4px;display:flex;align-items:center;justify-content:center;gap:4px}
+/* sticker arrows pointing at the credit: two taps toward it, then a rest */
+.st{flex:none;width:39px;height:33px;filter:drop-shadow(0 1.5px 1.5px rgba(0,0,0,.28));animation:st-poke-l 2s var(--ease-in-out) infinite}
+.st svg{width:100%;height:100%;overflow:visible;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.st.r{animation-name:st-poke-r}
+.st.r svg{transform:scaleX(-1)}
+@keyframes st-poke-l{0%,48%,100%{transform:translateX(0) rotate(-8deg)}12%,36%{transform:translateX(6px) rotate(0deg)}24%{transform:translateX(1px) rotate(-5deg)}}
+@keyframes st-poke-r{0%,48%,100%{transform:translateX(0) rotate(8deg)}12%,36%{transform:translateX(-6px) rotate(0deg)}24%{transform:translateX(-1px) rotate(5deg)}}
 .d-foot a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 
 /* ---------- sheets & dialogs ---------- */
@@ -1828,8 +1836,11 @@ function menuHTML() {
     if (!S.test) h += menuTestHTML();
   }
   h += menuFilesHTML() + menuSettingsHTML();
-  return tgPromoHTML() + h + '<div class="d-foot">Made by <a href="https://t.me/ziplogo" target="_blank" rel="noopener">tg @ziplogo</a></div>';
+  return tgPromoHTML() + h + `<div class="d-foot">${stArrow('l')}<span>Made by <a href="https://t.me/ziplogo" target="_blank" rel="noopener">tg @ziplogo</a></span>${stArrow('r')}</div>`;
 }
+// the menu is redrawn often: a delay from the clock keeps the arrows' rhythm going instead of restarting it
+const ST_PATH = 'M5 25C12 25 20 22 31 13M22.1 13.7 31 13 28.6 21.6';
+const stArrow = side => `<span class="st ${side}" aria-hidden="true" style="animation-delay:${(side === 'r' ? 70 : 0) - Date.now() % 2000}ms"><svg viewBox="0 0 36 31"><path d="${ST_PATH}" stroke="#FFFFFF" stroke-width="8.5"/><path d="${ST_PATH}" stroke="#2AABEE" stroke-width="4.5"/></svg></span>`;
 function menuCatsHTML() {
   const cs = curSet();
   let h = `<section class="msec"><div class="sec-row"><div class="sec-label">Категории</div><button type="button" class="sec-chip" data-jump="m-files" aria-label="Файл «${esc(setTitle(cs))}» — к списку файлов"><span>${esc(setTitle(cs))}</span>${I.chevD}</button></div>`;
