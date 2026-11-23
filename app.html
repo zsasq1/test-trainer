@@ -541,6 +541,14 @@ a.mrow{color:inherit;text-decoration:none}
 .tg-btn svg{width:21px;height:19px;flex:none;margin-left:-2px}
 .tg-btn:active{filter:brightness(.92);transform:scale(.98)}
 .tg-btn[hidden]{display:none}
+a.tg-btn{text-decoration:none}
+.su-ico.tg{background:#2AABEE;color:#FFFFFF}
+.su-ico.tg svg{width:27px;height:24px;margin-left:-3px}
+.tw-wait{display:flex;align-items:center;justify-content:center;gap:10px;min-height:28px;font-size:15px;color:var(--muted);text-align:center}
+.tw-wait .spinner{width:20px;height:20px;border-width:2.5px;flex:none}
+.tw-wait.stop .spinner{display:none}
+.tw-wait.bad{color:var(--red)}
+.su-link{align-self:center;padding:6px 8px;font-size:13.5px;color:var(--muted);text-decoration:underline;text-underline-offset:2px;text-align:center}
 .su-ext{display:flex;flex-direction:column;gap:8px}
 .su-ext[hidden]{display:none}
 @media (hover:hover) and (pointer:fine){ .tg-btn:hover{filter:brightness(1.06)} }
@@ -647,9 +655,11 @@ const FIREBASE_DB = 'https://reclama-kgu-default-rtdb.europe-west1.firebasedatab
 const FB_API_KEY = 'AIzaSyAGDxn2z6l4MzgkR8mV1_vuIfJIu7vyc2U';
 // «Продолжить с Google»: Web client ID from Firebase → Authentication → Google → Web SDK configuration. Empty = no button.
 const GOOGLE_CLIENT_ID = '866024625038-9ivgkk2tnj2mbg88g44o11cmtuk2rdj7.apps.googleusercontent.com';
-// «Продолжить с Telegram»: the bot's number (the digits before «:» in its token — never the token itself)
-// and the address of the Cloudflare worker (telegram-worker/) that checks Telegram's signature. Empty = no button.
-const TG_BOT_ID = '9064717499'; // @trainer_login_bot
+// «Продолжить с Telegram»: the bot's @name (sign-in in one tap: «Запустить» in the bot), the bot's number
+// (the digits before «:» in its token — never the token itself; the spare way, by phone number)
+// and the address of the Cloudflare worker (telegram-worker/). Empty worker = no button.
+const TG_BOT = 'trainer_login_bot';
+const TG_BOT_ID = '9064717499';
 const TG_WORKER = 'https://trainer-telegram.zsasqzsasq.workers.dev';
 const ADMIN_KEY = 'TestTrainer.admin'; // the site owner's GitHub token: present only on their own devices
 const isAdmin = () => { try { return !!localStorage.getItem(ADMIN_KEY); } catch (e) { return false; } };
@@ -2814,7 +2824,20 @@ function nameProblem(n) {
 const rid = n => [...crypto.getRandomValues(new Uint8Array(n))].map(x => 'abcdefghijklmnopqrstuvwxyz0123456789'[x % 36]).join('');
 const G_KEY = 'TestTrainer.gauth'; // state + nonce while the person is away at Google
 const isGoogle = u => !!u && String(u.login).startsWith('g:');
-const TG_KEY = 'TestTrainer.tgauth'; // when the person left for Telegram
+const TG_KEY = 'TestTrainer.tgauth'; // when the person left for Telegram's page (by phone number)
+// One tap: t.me/<bot>?start=<code> opens the bot, «Запустить» there confirms the code, and this page
+// asks the worker until it is. The code waits in TG_WAIT, so a page reloaded meanwhile picks it up again.
+const TG_WAIT = 'TestTrainer.tgwait', TG_TTL = 600000;
+const tgLink = code => 'https://t.me/' + TG_BOT + '?start=' + code;
+function tgPending(code) {
+  try {
+    if (code !== undefined) { if (code) localStorage.setItem(TG_WAIT, JSON.stringify({ code, at: Date.now() })); else localStorage.removeItem(TG_WAIT); return null; }
+    const p = JSON.parse(localStorage.getItem(TG_WAIT) || 'null');
+    if (p && typeof p.code === 'string' && /^[a-z0-9]{24}$/.test(p.code) && Date.now() - p.at < TG_TTL) return p;
+    if (p) localStorage.removeItem(TG_WAIT);
+  } catch (e) {}
+  return null;
+}
 const isTelegram = u => !!u && String(u.login).startsWith('tg-'); // password logins never contain «-»
 const TG_LOGO = '<svg viewBox="44 64 140 124" aria-hidden="true"><path fill="currentColor" d="M54.3 118.8c35-15.2 58.3-25.3 70-30.2 33.3-13.9 40.3-16.3 44.8-16.4 1 0 3.2.2 4.7 1.4 1.2 1 1.5 2.3 1.7 3.3s.4 3.1.2 4.7c-1.8 19-9.6 65.1-13.6 86.3-1.7 9-5 12-8.2 12.3-7 .6-12.3-4.6-19-9-10.6-6.9-16.5-11.2-26.8-18-11.9-7.8-4.2-12.1 2.6-19.1 1.8-1.8 32.5-29.8 33.1-32.3.1-.3.1-1.5-.6-2.1-.7-.6-1.7-.4-2.5-.2-1.1.2-17.9 11.4-50.6 33.5-4.8 3.3-9.1 4.9-13 4.8-4.3-.1-12.5-2.4-18.7-4.4-7.5-2.4-13.5-3.7-13-7.9.3-2.2 3.3-4.4 8.9-6.7z"/></svg>';
 const G_LOGO = '<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
@@ -2997,7 +3020,7 @@ const Account = {
     }
     return { uid: a.localId, rt: a.refreshToken, idt: a.idToken, exp: a.expiresIn };
   },
-  tgOn() { return this.ready() && !!TG_BOT_ID && !!TG_WORKER; },
+  tgOn() { return this.ready() && !!TG_WORKER && !!(TG_BOT || TG_BOT_ID); },
   // off to Telegram's own page; it comes back to this page with #tgAuthResult=…
   telegram() {
     try { localStorage.setItem(TG_KEY, String(Date.now())); } catch (e) {}
@@ -3018,13 +3041,20 @@ const Account = {
       return data && typeof data === 'object' && data.hash ? { data } : { error: 'cancel' };
     } catch (e) { return { error: 'cancel' }; }
   },
-  // The worker checks Telegram's signature and gives this person's own sign-in for Firebase.
-  async telegramSignIn(data) {
+  // The worker checks Telegram's signature (or the code confirmed in the bot) and gives this person's
+  // own sign-in for Firebase. → { login, pass, name, username } | null while the code still waits
+  async tgAsk(path, body) {
     let r;
-    try { r = await fetch(TG_WORKER, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); }
+    // sent as plain text: a «simple» request, so the browser doesn't ask permission before each one
+    try { r = await fetch(TG_WORKER + path, { method: 'POST', body: JSON.stringify(body), cache: 'no-store' }); }
     catch (e) { throw new Error('NETWORK'); }
     const j = await r.json().catch(() => ({}));
+    if (r.ok && j.wait === true) return null;
     if (!r.ok || typeof j.login !== 'string' || !/^tg-[0-9a-f]{24}$/.test(j.login) || !j.pass) throw new Error('TG_' + (j.error || r.status));
+    return j;
+  },
+  async telegramSignIn(data) { return this.tgEnter(await this.tgAsk('', data)); },
+  async tgEnter(j) {
     const email = j.login + MAIL;
     let a;
     try { a = await this.idp('signInWithPassword', { email, password: j.pass, returnSecureToken: true }); }
@@ -3093,6 +3123,10 @@ async function finishGoogle(back, done) {
   try { g = await Account.googleSignIn(back.tok); }
   catch (e) { if (done) done(); toast(authError(e).msg); return; }
   if (done) done();
+  externalDone(g && { ...g, name: back.name, who: back.email, via: 'Google' });
+}
+// signed in (g = null), or a new person who still has to pick a name
+function externalDone(g) {
   if (!g) {
     const u = Account.user;
     if (u.course) S.course = u.course;
@@ -3101,7 +3135,7 @@ async function finishGoogle(back, done) {
     return;
   }
   if (tour) endTour();
-  openAuth({ mode: 'g', g: { ...g, name: back.name, who: back.email, via: 'Google' } });
+  openAuth({ mode: 'g', g });
 }
 async function finishTelegram(back, done) {
   if (back.error) {
@@ -3113,15 +3147,88 @@ async function finishTelegram(back, done) {
   try { g = await Account.telegramSignIn(back.data); }
   catch (e) { if (done) done(); toast(authError(e).msg); return; }
   if (done) done();
-  if (!g) {
-    const u = Account.user;
-    if (u.course) S.course = u.course;
-    S.profile = null; save(); renderAll(); applyBlock(); Presence.live();
-    if (!u.blocked) toast('С возвращением, ' + u.name + '!');
-    return;
+  externalDone(g);
+}
+// «Подтвердите вход в Telegram»: waits for «Запустить» in the bot. back() reopens what was there before.
+function tgWait({ code, at = Date.now(), back = null }) {
+  if (anySheet() || Account.blocked()) return;
+  let timer = 0, done = false, asking = false, again = false, fails = 0;
+  const html = `<div class="dlg su tgw">
+<div class="su-ico tg">${TG_LOGO}</div>
+<div class="dlg-title">Подтвердите вход в Telegram</div>
+<div class="dlg-msg">Нажмите в Telegram «Запустить» и вернитесь сюда — вход произойдёт сам.</div>
+<div class="tw-wait" id="twWait" aria-live="polite"><span class="spinner"></span><span id="twState">Ждём подтверждения…</span></div>
+<a class="tg-btn" data-s="tw-open" href="${tgLink(code)}" target="_blank" rel="noopener">${TG_LOGO}<span>Открыть Telegram</span></a>
+<button type="button" class="dlg-btn" data-s="tw-cancel">Отмена</button>
+${TG_BOT_ID ? '<button type="button" class="su-link" data-s="tw-phone">Нет Telegram на этом устройстве? Войти по номеру</button>' : ''}
+</div>`;
+  const sh = openSheet({
+    cls: 'dialog', html,
+    onClick: (act, el, e, close) => {
+      if (act === 'tw-open') {
+        if (navigator.onLine === false) { e.preventDefault(); return state('Нет связи с интернетом', 'bad stop'); }
+        if (!at) { at = Date.now(); fails = 0; } // after «время вышло»: a fresh code is already in the link
+        tgPending(code);
+        state('Ждём подтверждения…');
+        if (!timer && !asking) timer = setTimeout(poll, 2500);
+        return;
+      }
+      if (act === 'tw-cancel') return close();
+      if (act === 'tw-phone') {
+        if (navigator.onLine === false) return state('Нет связи с интернетом', 'bad stop');
+        finish(); close();
+        Account.telegram();
+      }
+    },
+    onClose: () => { if (!done) { finish(); if (back) back(); } }
+  });
+  const $w = sh.panel.querySelector('#twWait'), $s = sh.panel.querySelector('#twState'), link = sh.panel.querySelector('[data-s="tw-open"]');
+  function state(text, kind = '') { $s.textContent = text; $w.className = 'tw-wait' + (kind ? ' ' + kind : ''); }
+  function finish() {
+    done = true; clearTimeout(timer); timer = 0;
+    tgPending(null);
+    document.removeEventListener('visibilitychange', wake);
+    window.removeEventListener('pageshow', wake);
   }
-  if (tour) endTour();
-  openAuth({ mode: 'g', g });
+  // back from Telegram: ask at once
+  function wake() { if (!done && at && document.visibilityState === 'visible') poll(); }
+  async function poll() {
+    clearTimeout(timer); timer = 0;
+    if (done || !at) return;
+    if (asking) { again = true; return; }
+    if (Date.now() - at > TG_TTL) {
+      // the code is old: the link gets a new one, and waiting starts again only after a tap
+      at = 0; tgPending(null);
+      code = rid(24); link.href = tgLink(code);
+      return state('Время вышло. Нажмите «Открыть Telegram» ещё раз', 'stop');
+    }
+    if (document.visibilityState !== 'visible') return; // nothing to do in the background; wake() goes on
+    asking = true;
+    let j = null, err = null;
+    try { j = await Account.tgAsk('/tg/poll', { code }); } catch (x) { err = x; }
+    asking = false;
+    if (done) return;
+    if (j) return enter(j);
+    if (err) {
+      if (err.message !== 'NETWORK' && ++fails >= 3) { at = 0; return state(authError(err).msg, 'bad stop'); }
+      state(err.message === 'NETWORK' ? 'Нет связи — пробуем ещё раз…' : 'Ждём подтверждения…');
+    } else { fails = 0; state('Ждём подтверждения…'); }
+    if (again) { again = false; return poll(); }
+    timer = setTimeout(poll, Date.now() - at < 60000 ? 2500 : 5000);
+  }
+  async function enter(j) {
+    finish(); sh.close();
+    const end = busy('Вход через Telegram…');
+    let g;
+    try { g = await Account.tgEnter(j); }
+    catch (e) { end(); toast(authError(e).msg); if (back) back(); return; }
+    end();
+    externalDone(g);
+  }
+  document.addEventListener('visibilitychange', wake);
+  window.addEventListener('pageshow', wake);
+  timer = setTimeout(poll, 600);
+  return sh;
 }
 function applyBlock() {
   const on = Account.blocked();
@@ -3151,12 +3258,13 @@ function openAuth({ dismissible = false, mode = 'up', g = null } = {}) {
   if (anySheet() || tour || Account.blocked()) return;
   const gOn = Account.googleOn(), tOn = Account.tgOn(), extOn = gOn || tOn;
   let course = curCourse() || S.course || 0, busy = false, checkT = 0, checkN = 0, skip = false;
+  const tgCode = TG_BOT ? rid(24) : ''; // ready before the tap: the link must open straight away
   const legacy = g ? suggestName(g.name) : S.profile && S.profile.name ? cleanName(S.profile.name).slice(0, 24) : '';
   const html = `<div class="dlg su">
 <div class="su-ico">${I.user}</div>
 <div class="dlg-title" id="suTitle"></div>
 <div class="dlg-msg" id="suMsg">${dismissible ? '' : 'Все функции откроются сразу после лёгкой регистрации.'}</div>
-${extOn ? `<div class="su-ext" id="suExt">${tOn ? `<button type="button" class="tg-btn" data-s="telegram">${TG_LOGO}<span>Продолжить с Telegram</span></button>` : ''}${gOn ? `<button type="button" class="g-btn" data-s="google">${G_LOGO}<span>Продолжить с Google</span></button>` : ''}</div><div class="su-or" id="suOr">или по имени и паролю</div>` : ''}
+${extOn ? `<div class="su-ext" id="suExt">${tOn ? (tgCode ? `<a class="tg-btn" data-s="tg-tap" href="${tgLink(tgCode)}" target="_blank" rel="noopener">${TG_LOGO}<span>Продолжить с Telegram</span></a>` : `<button type="button" class="tg-btn" data-s="telegram">${TG_LOGO}<span>Продолжить с Telegram</span></button>`) : ''}${gOn ? `<button type="button" class="g-btn" data-s="google">${G_LOGO}<span>Продолжить с Google</span></button>` : ''}</div><div class="su-or" id="suOr">или по имени и паролю</div>` : ''}
 <div class="su-seg" id="suSeg" role="tablist" aria-label="Регистрация или вход"><button type="button" role="tab" data-s="m-up">Регистрация</button><button type="button" role="tab" data-s="m-in">Вход</button></div>
 <div class="su-field"><input id="suName" class="f-in" placeholder="Имя пользователя" maxlength="24" autocomplete="username" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" value="${esc(legacy)}" aria-label="Имя пользователя" aria-describedby="suNameHint"><div class="su-hint" id="suNameHint" aria-live="polite"></div></div>
 <div class="su-field" id="suPassF"><div class="su-pass"><input id="suPass" class="f-in" type="password" placeholder="Пароль" maxlength="128" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="Пароль" aria-describedby="suPassHint"><button type="button" class="su-eye" data-s="eye" aria-label="Показать пароль" aria-pressed="false">${I.eye}</button></div><div class="su-hint" id="suPassHint"></div></div>
@@ -3167,7 +3275,7 @@ ${extOn ? `<div class="su-ext" id="suExt">${tOn ? `<button type="button" class="
 </div>`;
   const sh = openSheet({
     cls: 'dialog', html, dismissible,
-    onClick: (act, el) => {
+    onClick: (act, el, e) => {
       if (act === 'm-up' || act === 'm-in') { if (skip) { skip = false; Account.works = true; } return setMode(act.slice(2)); }
       if (act === 'eye') {
         const show = passInp.type === 'password';
@@ -3183,6 +3291,16 @@ ${extOn ? `<div class="su-ext" id="suExt">${tOn ? `<button type="button" class="
         return;
       }
       if (act === 'go') go();
+      if (act === 'tg-tap') {
+        // the link itself opens Telegram; this page waits for «Запустить»
+        if (navigator.onLine === false) { e.preventDefault(); return fail({ msg: 'Нет связи с интернетом. Попробуйте ещё раз' }); }
+        if (busy) { e.preventDefault(); return; }
+        tgPending(tgCode);
+        const m = mode;
+        sh.close();
+        tgWait({ code: tgCode, back: () => { if (dismissible || needsSignup()) openAuth({ dismissible, mode: m }); } });
+        return;
+      }
       if (act === 'google' || act === 'telegram') {
         if (navigator.onLine === false) return fail({ msg: 'Нет связи с интернетом. Попробуйте ещё раз' });
         el.disabled = true;
@@ -3493,6 +3611,8 @@ async function boot() {
   if (!Account.user && !isAdmin()) Account.probe();
   if (gBack) finishGoogle(gBack, gDone);
   if (tBack) finishTelegram(tBack, tDone);
+  const tWait = TG_BOT && !gBack && !tBack && !Account.user && !isAdmin() && Account.tgOn() ? tgPending() : null;
+  if (tWait) tgWait({ code: tWait.code, at: tWait.at, back: () => { if (needsSignup()) openAuth(); } });
   if ('serviceWorker' in navigator && document.querySelector('link[rel="manifest"]') && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     const hadSW = !!navigator.serviceWorker.controller;
     navigator.serviceWorker.register('sw.js').then(reg => {

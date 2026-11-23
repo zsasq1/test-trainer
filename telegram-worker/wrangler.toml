@@ -5,3 +5,12 @@ workers_dev = true
 
 [vars]
 ALLOWED_ORIGIN = "https://zsasq1.github.io"
+
+# one-time login codes (sign-in in one tap through the bot)
+[[durable_objects.bindings]]
+name = "CODES"
+class_name = "Codes"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Codes"]
