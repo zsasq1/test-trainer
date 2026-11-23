@@ -531,7 +531,19 @@ a.mrow{color:inherit;text-decoration:none}
 .su-course>span{font-size:15px;font-weight:600;color:var(--muted)}
 .su-course .courses{margin:0;flex:1;justify-content:flex-end;gap:6px}
 .su-course .course{max-width:40px;font-size:15px}
+.dlg-msg:empty{display:none}
 .su-note{font-size:12.5px;line-height:1.4;color:var(--muted);text-align:center}
+.g-btn{height:50px;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:12px;background:#FFFFFF;border:1px solid #747775;color:#1F1F1F;font-size:16px;font-weight:600;transition:background-color .15s ease,transform .12s var(--ease-out)}
+.g-btn svg{width:20px;height:20px;flex:none}
+.g-btn:active{background:#F1F3F4;transform:scale(.98)}
+.g-btn[hidden],.su-or[hidden],.su-seg[hidden],.su-field[hidden]{display:none}
+.su-or{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.su-or::before,.su-or::after{content:"";flex:1;height:1px;background:var(--line)}
+.su-who{font-size:14px;color:var(--muted);overflow-wrap:anywhere}
+.su-who b{color:var(--text);font-weight:600}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .g-btn{background:#131314;border-color:#8E918F;color:#E3E3E3}:root:not([data-theme="light"]) .g-btn:active{background:#2A2A2C}}
+:root[data-theme="dark"] .g-btn{background:#131314;border-color:#8E918F;color:#E3E3E3}
+@media (hover:hover) and (pointer:fine){ .g-btn:hover{background:#F8F9FA} }
 .dlg-btn:disabled{opacity:.6}
 .pf-head{display:flex;align-items:center;gap:12px}
 .pf-av{width:52px;height:52px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--text);color:var(--bg);font-size:19px;font-weight:700}
@@ -626,6 +638,8 @@ const LS_KEY = 'TestTrainer.web.v1';
 const FIREBASE_DB = 'https://reclama-kgu-default-rtdb.europe-west1.firebasedatabase.app';
 // Firebase → Project settings → Web API Key. It is public by design; until it is set, accounts stay switched off.
 const FB_API_KEY = 'AIzaSyAGDxn2z6l4MzgkR8mV1_vuIfJIu7vyc2U';
+// «Продолжить с Google»: Web client ID from Firebase → Authentication → Google → Web SDK configuration. Empty = no button.
+const GOOGLE_CLIENT_ID = '';
 const ADMIN_KEY = 'TestTrainer.admin'; // the site owner's GitHub token: present only on their own devices
 const isAdmin = () => { try { return !!localStorage.getItem(ADMIN_KEY); } catch (e) { return false; } };
 const TEXT_PLACEHOLDERS = new Set(['текстовая строка (без учета регистра)', 'текстовая строка']);
@@ -2787,11 +2801,17 @@ function nameProblem(n) {
   return '';
 }
 const rid = n => [...crypto.getRandomValues(new Uint8Array(n))].map(x => 'abcdefghijklmnopqrstuvwxyz0123456789'[x % 36]).join('');
+const G_KEY = 'TestTrainer.gauth'; // state + nonce while the person is away at Google
+const isGoogle = u => !!u && String(u.login).startsWith('g:');
+const G_LOGO = '<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
+// a Google name as a username suggestion: allowed characters only, up to 24
+const suggestName = n => cleanName(String(n || '').replace(/[^\p{L}\p{N} _-]+/gu, ' ')).slice(0, 24).trim();
 // Firebase error code → what to tell the person, and which field it is about
 function authError(e) {
   const c = String((e && e.message) || '');
   if (c === 'TAKEN') return { msg: 'Это имя уже занято — выберите другое', f: 'name' };
   if (c === 'NO_USER') return { msg: 'Нет пользователя с таким именем', f: 'name' };
+  if (c === 'GOOGLE') return { msg: 'Этот аккаунт входит через Google — нажмите «Продолжить с Google»' };
   if (c === 'RENAMED') return { msg: 'Имя уже менялось — второй раз его не поменять' };
   if (/INVALID_LOGIN_CREDENTIALS|INVALID_PASSWORD|EMAIL_NOT_FOUND/.test(c)) return { msg: 'Неверный пароль', f: 'pass' };
   if (/TOO_MANY_ATTEMPTS/.test(c)) return { msg: 'Слишком много попыток. Подождите пару минут' };
@@ -2878,6 +2898,7 @@ const Account = {
   async signIn(name, pass) {
     const login = await this.owner(nameKey(name));
     if (typeof login !== 'string') throw new Error('NO_USER');
+    if (login.startsWith('g:')) throw new Error('GOOGLE');
     const a = await this.idp('signInWithPassword', { email: login + MAIL, password: pass, returnSecureToken: true });
     const rec = await this.req('users/' + a.localId, 'GET', undefined, a.idToken);
     if (!rec || typeof rec.name !== 'string') throw new Error('NO_USER');
@@ -2918,6 +2939,59 @@ const Account = {
     u.course = c; this.save();
   },
   signOut() { this.user = null; this.idt = ''; this.exp = 0; this.seen = false; this.save(); },
+  googleOn() { return this.ready() && !!GOOGLE_CLIENT_ID; },
+  back: () => new URL('./', location.href).href, // the app's own address: Google sends the person back here
+  // off to Google's own sign-in page; it comes back to this page with #id_token=…
+  google() {
+    const state = rid(16), nonce = rid(16);
+    try { localStorage.setItem(G_KEY, JSON.stringify({ state, nonce, at: Date.now() })); } catch (e) {}
+    flush();
+    location.href = 'https://accounts.google.com/o/oauth2/v2/auth?' + new URLSearchParams({ client_id: GOOGLE_CLIENT_ID, redirect_uri: this.back(), response_type: 'id_token', scope: 'openid email profile', nonce, state, prompt: 'select_account' });
+  },
+  // back from Google: read and clean the address. → null | { error } | { tok, name, email }
+  takeGoogle() {
+    if (!/[#&](id_token|error)=/.test(location.hash)) return null;
+    const q = new URLSearchParams(location.hash.slice(1));
+    history.replaceState(null, '', location.pathname + location.search);
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(G_KEY) || 'null'); localStorage.removeItem(G_KEY); } catch (e) {}
+    if (q.get('error')) return { error: q.get('error') };
+    const tok = q.get('id_token') || '';
+    if (!saved || q.get('state') !== saved.state || Date.now() - saved.at > 900000) return { error: 'state' };
+    try {
+      const b = atob(tok.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'));
+      const pl = JSON.parse(new TextDecoder().decode(Uint8Array.from(b, c => c.charCodeAt(0))));
+      if (pl.nonce !== saved.nonce) return { error: 'state' };
+      return { tok, name: pl.name || pl.given_name || '', email: pl.email || '' };
+    } catch (e) { return { error: 'state' }; }
+  },
+  // Firebase checks the Google token. Known person → signed in (null). New one → a session that still needs a name.
+  async googleSignIn(tok) {
+    const a = await this.idp('signInWithIdp', { postBody: 'id_token=' + encodeURIComponent(tok) + '&providerId=google.com', requestUri: this.back(), returnSecureToken: true });
+    const rec = await this.req('users/' + a.localId, 'GET', undefined, a.idToken);
+    if (rec && typeof rec.name === 'string') {
+      this.keep(a.idToken, a.expiresIn);
+      this.user = { uid: a.localId, rt: a.refreshToken, login: String(rec.login || 'g:' + a.localId), name: rec.name, key: rec.key, course: +rec.course || 0, renamed: !!rec.renamed, blocked: !!rec.blocked };
+      this.seen = false; this.syncAt = 0;
+      this.save();
+      return null;
+    }
+    return { uid: a.localId, rt: a.refreshToken, idt: a.idToken, exp: a.expiresIn };
+  },
+  async claimGoogle(g, name, course) {
+    const key = nameKey(name), login = 'g:' + g.uid, p = 'users/' + g.uid + '/';
+    if (await this.owner(key)) throw new Error('TAKEN');
+    try {
+      await this.req('', 'PATCH', { ['logins/' + key]: login, [p + 'name']: name, [p + 'key']: key, [p + 'login']: login, [p + 'renamed']: false, [p + 'course']: course, [p + 'created']: SV, [p + 'last']: SV, [p + 'd']: Presence.device() }, g.idt);
+    } catch (e) {
+      if (e.message === 'DENIED' && await this.owner(key).catch(() => null)) throw new Error('TAKEN');
+      throw e;
+    }
+    this.keep(g.idt, g.exp);
+    this.user = { uid: g.uid, rt: g.rt, login, name, key, course, renamed: false, blocked: false };
+    this.seen = true;
+    this.save();
+  },
   // Is the account still there and not blocked? Runs on start, when the tab comes back, and every few minutes.
   async sync(force = false) {
     const u = this.user;
@@ -2940,6 +3014,26 @@ const Account = {
 const needsSignup = () => Account.ready() && Account.works === true && !Account.user && S.checks >= SIGNUP_AFTER && !isAdmin() && navigator.onLine !== false;
 
 // Full-screen «доступ закрыт» while the account is blocked; everything under it is inert.
+async function finishGoogle(back, done) {
+  if (back.error) {
+    if (done) done();
+    if (back.error !== 'access_denied') toast('Не получилось войти через Google. Попробуйте ещё раз');
+    return;
+  }
+  let g = null;
+  try { g = await Account.googleSignIn(back.tok); }
+  catch (e) { if (done) done(); toast(authError(e).msg); return; }
+  if (done) done();
+  if (!g) {
+    const u = Account.user;
+    if (u.course) S.course = u.course;
+    S.profile = null; save(); renderAll(); applyBlock(); Presence.live();
+    if (!u.blocked) toast('С возвращением, ' + u.name + '!');
+    return;
+  }
+  if (tour) endTour();
+  openAuth({ mode: 'g', g: { ...g, name: back.name, email: back.email } });
+}
 function applyBlock() {
   const on = Account.blocked();
   let el = document.getElementById('blockScreen');
@@ -2964,17 +3058,19 @@ function applyBlock() {
 window.addEventListener('keydown', e => { if (Account.blocked()) e.stopImmediatePropagation(); }, true);
 
 // Sign-up and sign-in in one sheet. As a gate (after a few answers) it cannot be dismissed.
-function openAuth({ dismissible = false, mode = 'up' } = {}) {
+function openAuth({ dismissible = false, mode = 'up', g = null } = {}) {
   if (anySheet() || tour || Account.blocked()) return;
+  const gOn = Account.googleOn();
   let course = curCourse() || S.course || 0, busy = false, checkT = 0, checkN = 0, skip = false;
-  const legacy = S.profile && S.profile.name ? cleanName(S.profile.name).slice(0, 24) : '';
+  const legacy = g ? suggestName(g.name) : S.profile && S.profile.name ? cleanName(S.profile.name).slice(0, 24) : '';
   const html = `<div class="dlg su">
 <div class="su-ico">${I.user}</div>
 <div class="dlg-title" id="suTitle"></div>
-${dismissible ? '' : '<div class="dlg-msg">Все функции откроются сразу после лёгкой регистрации.</div>'}
-<div class="su-seg" role="tablist" aria-label="Регистрация или вход"><button type="button" role="tab" data-s="m-up">Регистрация</button><button type="button" role="tab" data-s="m-in">Вход</button></div>
+<div class="dlg-msg" id="suMsg">${dismissible ? '' : 'Все функции откроются сразу после лёгкой регистрации.'}</div>
+${gOn ? `<button type="button" class="g-btn" data-s="google" id="suG">${G_LOGO}<span>Продолжить с Google</span></button><div class="su-or" id="suOr">или по имени и паролю</div>` : ''}
+<div class="su-seg" id="suSeg" role="tablist" aria-label="Регистрация или вход"><button type="button" role="tab" data-s="m-up">Регистрация</button><button type="button" role="tab" data-s="m-in">Вход</button></div>
 <div class="su-field"><input id="suName" class="f-in" placeholder="Имя пользователя" maxlength="24" autocomplete="username" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" value="${esc(legacy)}" aria-label="Имя пользователя" aria-describedby="suNameHint"><div class="su-hint" id="suNameHint" aria-live="polite"></div></div>
-<div class="su-field"><div class="su-pass"><input id="suPass" class="f-in" type="password" placeholder="Пароль" maxlength="128" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="Пароль" aria-describedby="suPassHint"><button type="button" class="su-eye" data-s="eye" aria-label="Показать пароль" aria-pressed="false">${I.eye}</button></div><div class="su-hint" id="suPassHint"></div></div>
+<div class="su-field" id="suPassF"><div class="su-pass"><input id="suPass" class="f-in" type="password" placeholder="Пароль" maxlength="128" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="Пароль" aria-describedby="suPassHint"><button type="button" class="su-eye" data-s="eye" aria-label="Показать пароль" aria-pressed="false">${I.eye}</button></div><div class="su-hint" id="suPassHint"></div></div>
 <div class="su-course" id="suCourse"><span>Курс</span>${coursePills(course, 'data-s="su-c" data-c', null)}</div>
 <div class="su-err" id="suErr" role="alert"></div>
 <button type="button" class="dlg-btn primary" data-s="go"></button>
@@ -2998,6 +3094,10 @@ ${dismissible ? '' : '<div class="dlg-msg">Все функции откроют�
         return;
       }
       if (act === 'go') go();
+      if (act === 'google') {
+        if (navigator.onLine === false) return fail({ msg: 'Нет связи с интернетом. Попробуйте ещё раз' });
+        el.disabled = true; Account.google();
+      }
     }
   });
   const $p = s => sh.panel.querySelector(s);
@@ -3005,12 +3105,18 @@ ${dismissible ? '' : '<div class="dlg-msg">Все функции откроют�
   const hint = (el, text, kind = '') => { el.textContent = text; el.className = 'su-hint' + (kind ? ' ' + kind : ''); };
   function setMode(m) {
     mode = m;
+    const gm = m === 'g'; // back from Google: only a name and a course are left
     sh.panel.querySelectorAll('.su-seg button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.s === 'm-' + m)));
-    $p('#suTitle').textContent = m === 'up' ? (dismissible ? 'Регистрация' : 'Лёгкая регистрация') : 'Вход в аккаунт';
-    btn.textContent = m === 'up' ? 'Зарегистрироваться' : 'Войти';
+    $p('#suTitle').textContent = gm ? 'Почти готово' : m === 'up' ? (dismissible ? 'Регистрация' : 'Лёгкая регистрация') : 'Вход в аккаунт';
+    if (gm) $p('#suMsg').innerHTML = 'Придумайте имя пользователя — так вас будет видеть автор сайта.' + (g.email ? `<div class="su-who">Google: <b>${esc(g.email)}</b></div>` : '');
+    btn.textContent = gm ? 'Готово' : m === 'up' ? 'Зарегистрироваться' : 'Войти';
     passInp.setAttribute('autocomplete', m === 'up' ? 'new-password' : 'current-password');
-    $p('#suCourse').hidden = m !== 'up';
-    $p('#suNote').textContent = m === 'up' ? 'Пароль хранится у Google — даже автор сайта его не видит.' : 'Забыли пароль? Напишите автору сайта: tg @ziplogo';
+    $p('#suSeg').hidden = gm; $p('#suPassF').hidden = gm;
+    if (gOn) { $p('#suG').hidden = gm; $p('#suOr').hidden = gm; }
+    $p('#suCourse').hidden = m === 'in';
+    $p('#suNote').textContent = gm ? 'Сменить имя потом можно один раз — в настройках.'
+      : m === 'up' ? 'Пароль хранится у Google — даже автор сайта его не видит.' + (gOn ? ' При входе через Google автор видит вашу почту.' : '')
+      : 'Забыли пароль? Напишите автору сайта: tg @ziplogo';
     hint($p('#suPassHint'), m === 'up' ? 'Минимум 6 символов' : '');
     err.textContent = '';
     nameInp.classList.remove('bad'); passInp.classList.remove('bad');
@@ -3020,13 +3126,13 @@ ${dismissible ? '' : '<div class="dlg-msg">Все функции откроют�
   function checkName() {
     clearTimeout(checkT);
     const h = $p('#suNameHint'), n = cleanName(nameInp.value);
-    if (mode !== 'up' || n.length < 3) return hint(h, '');
+    if (mode === 'in' || n.length < 3) return hint(h, '');
     const p = nameProblem(n);
     if (p) return hint(h, p, 'bad');
     const my = ++checkN;
     hint(h, '');
     checkT = setTimeout(() => {
-      Account.owner(nameKey(n)).then(o => { if (my === checkN && mode === 'up') hint(h, o ? 'Это имя уже занято' : 'Имя свободно', o ? 'bad' : 'ok'); }, () => {});
+      Account.owner(nameKey(n)).then(o => { if (my === checkN && mode !== 'in') hint(h, o ? 'Это имя уже занято' : 'Имя свободно', o ? 'bad' : 'ok'); }, () => {});
     }, 450);
   }
   function fail(r) {
@@ -3041,12 +3147,13 @@ ${dismissible ? '' : '<div class="dlg-msg">Все функции откроют�
     const name = cleanName(nameInp.value), pass = passInp.value;
     const np = nameProblem(name);
     if (np) return fail({ msg: np, f: 'name' });
-    if (pass.length < 6) return fail({ msg: mode === 'up' ? 'Пароль — минимум 6 символов' : 'Неверный пароль', f: 'pass' });
+    if (mode !== 'g' && pass.length < 6) return fail({ msg: mode === 'up' ? 'Пароль — минимум 6 символов' : 'Неверный пароль', f: 'pass' });
     busy = true; btn.disabled = true;
     const label = btn.textContent;
-    btn.textContent = mode === 'up' ? 'Регистрирую…' : 'Вхожу…';
+    btn.textContent = mode === 'in' ? 'Вхожу…' : 'Регистрирую…';
     try {
-      if (mode === 'up') await Account.signUp(name, pass, course);
+      if (mode === 'g') await Account.claimGoogle(g, name, course);
+      else if (mode === 'up') await Account.signUp(name, pass, course);
       else await Account.signIn(name, pass);
     } catch (e) {
       busy = false; btn.disabled = false; btn.textContent = label;
@@ -3064,7 +3171,7 @@ ${dismissible ? '' : '<div class="dlg-msg">Все функции откроют�
     S.profile = null;
     if (u.course) S.course = u.course;
     save(); sh.close(); renderAll(); applyBlock(); Presence.live();
-    if (!u.blocked) toast(mode === 'up' ? 'Готово, ' + u.name + '! Всё открыто' : 'С возвращением, ' + u.name + '!');
+    if (!u.blocked) toast(mode === 'in' ? 'С возвращением, ' + u.name + '!' : 'Готово, ' + u.name + '! Всё открыто');
   }
   nameInp.addEventListener('input', () => { nameInp.classList.remove('bad'); err.textContent = ''; checkName(); });
   passInp.addEventListener('input', () => { passInp.classList.remove('bad'); err.textContent = ''; });
@@ -3072,6 +3179,7 @@ ${dismissible ? '' : '<div class="dlg-msg">Все функции откроют�
   passInp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } });
   setMode(mode);
   setTimeout(() => (legacy && mode === 'up' ? passInp : nameInp).focus({ preventScroll: true }), 250);
+  return sh;
 }
 
 // A small sheet with fields; submit() resolves to null when done, or { msg, f } to show an error and stay.
@@ -3120,7 +3228,7 @@ function openProfile() {
 <div class="su-course"><span>Курс</span>${coursePills(u.course || 0, 'data-s="pf-c" data-c', null)}</div>
 <div class="mgroup">
 ${u.renamed ? '<div class="mrow static"><span class="mtxt">Имя уже менялось<small>Изменить его можно только один раз</small></span></div>' : `<button type="button" class="mrow" data-s="rename"><span class="mtxt">Изменить имя<small>Можно только один раз</small></span><span class="go">${I.chevR}</span></button>`}
-<button type="button" class="mrow" data-s="pass"><span class="mtxt">Сменить пароль</span><span class="go">${I.chevR}</span></button>
+${isGoogle(u) ? '<div class="mrow static"><span class="mtxt">Вход через Google<small>Пароль не нужен</small></span></div>' : `<button type="button" class="mrow" data-s="pass"><span class="mtxt">Сменить пароль</span><span class="go">${I.chevR}</span></button>`}
 </div>
 <button type="button" class="dlg-btn danger" data-s="out">Выйти из аккаунта</button>
 </div>`;
@@ -3271,6 +3379,8 @@ function normalizeState(st) {
   S.checks = Math.max(0, Math.floor(+S.checks || 0));
 }
 async function boot() {
+  const gBack = Account.takeGoogle(); // back from Google's sign-in page
+  const gDone = gBack && !gBack.error ? busy('Вход через Google…') : null;
   applyDock();
   render();
   Account.load();
@@ -3289,6 +3399,7 @@ async function boot() {
   if (Store.cloudDown) toast('Нет связи с аккаунтом — прогресс сохраняется в этом браузере');
   Presence.start();
   if (!Account.user && !isAdmin()) Account.probe();
+  if (gBack) finishGoogle(gBack, gDone);
   if ('serviceWorker' in navigator && document.querySelector('link[rel="manifest"]') && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     const hadSW = !!navigator.serviceWorker.controller;
     navigator.serviceWorker.register('sw.js').then(reg => {

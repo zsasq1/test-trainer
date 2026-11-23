@@ -428,7 +428,7 @@ function renderPeople() {
   $('#peopleFind').hidden = all.length <= 8 && !find;
   const shown = showAll || find ? list : list.slice(0, 30);
   $('#peopleList').innerHTML = shown.length ? shown.map(u => {
-    const meta = [u.course ? u.course + ' курс' : '', u.d, 'заходил(а) ' + ago(u.last || u.created || 0)].filter(Boolean).map(esc).join(' · ');
+    const meta = [u.course ? u.course + ' курс' : '', String(u.login || '').startsWith('g:') ? 'Google' : '', u.d, 'заходил(а) ' + ago(u.last || u.created || 0)].filter(Boolean).map(esc).join(' · ');
     return `<div class="row acc${u.blocked ? ' off' : ''}"><span class="av named">${esc(initials(u.name))}</span><div class="t"><b>${esc(u.name)}</b><small>${u.blocked ? '<b>заблокирован</b> · ' : ''}${meta}</small></div>`
       + `<button class="ib" type="button" data-block="${esc(u.uid)}" aria-label="${u.blocked ? 'Разблокировать' : 'Заблокировать'} «${esc(u.name)}»">${u.blocked ? ICON.unlock : ICON.lock}</button>`
       + `<button class="ib del" type="button" data-udel="${esc(u.uid)}" aria-label="Удалить «${esc(u.name)}»">${ICON.trash}</button></div>`;

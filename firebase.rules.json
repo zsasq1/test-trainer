@@ -36,8 +36,8 @@
     "logins": {
       "$key": {
         ".read": true,
-        ".write": "auth != null && (auth.uid === '9PzGNx8jvqYVoQri3ZaoRrPlyQC3' || (!data.exists() && newData.parent().parent().child('users').child(auth.uid).child('key').val() === $key) || (data.exists() && !newData.exists() && data.val() + '@users.example.com' === auth.token.email && newData.parent().parent().child('users').child(auth.uid).child('key').val() !== $key))",
-        ".validate": "newData.isString() && newData.val() + '@users.example.com' === auth.token.email && $key.length >= 3 && $key.length <= 24"
+        ".write": "auth != null && (auth.uid === '9PzGNx8jvqYVoQri3ZaoRrPlyQC3' || (!data.exists() && newData.parent().parent().child('users').child(auth.uid).child('key').val() === $key) || (data.exists() && !newData.exists() && (data.val() + '@users.example.com' === auth.token.email || data.val() === 'g:' + auth.uid) && newData.parent().parent().child('users').child(auth.uid).child('key').val() !== $key))",
+        ".validate": "newData.isString() && (newData.val() + '@users.example.com' === auth.token.email || newData.val() === 'g:' + auth.uid) && $key.length >= 3 && $key.length <= 24"
       }
     },
     "users": {
@@ -56,7 +56,7 @@
         },
         "login": {
           ".write": "auth != null && auth.uid === $uid && !data.exists()",
-          ".validate": "newData.isString() && newData.val() + '@users.example.com' === auth.token.email"
+          ".validate": "newData.isString() && (newData.val() + '@users.example.com' === auth.token.email || newData.val() === 'g:' + auth.uid)"
         },
         "renamed": {
           ".write": "auth != null && auth.uid === $uid && newData.exists() && data.parent().child('blocked').val() !== true && (!data.exists() || data.val() === false)",
