@@ -78,6 +78,10 @@
           ".write": "auth != null && auth.uid === $uid && data.parent().child('blocked').val() !== true",
           ".validate": "newData.isString() && newData.val().length <= 20"
         },
+        "tg": {
+          ".write": "auth != null && auth.uid === $uid && data.parent().child('blocked').val() !== true && newData.parent().child('login').val().beginsWith('tg-')",
+          ".validate": "newData.isString() && newData.val().matches(/^[A-Za-z0-9_]{1,40}$/)"
+        },
         "blocked": { ".validate": "newData.isBoolean()" },
         "$other": { ".validate": false }
       }

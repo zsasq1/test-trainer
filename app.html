@@ -537,6 +537,13 @@ a.mrow{color:inherit;text-decoration:none}
 .g-btn svg{width:20px;height:20px;flex:none}
 .g-btn:active{background:#F1F3F4;transform:scale(.98)}
 .g-btn[hidden],.su-or[hidden],.su-seg[hidden],.su-field[hidden]{display:none}
+.tg-btn{height:50px;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:12px;background:#2AABEE;color:#FFFFFF;font-size:16px;font-weight:600;transition:filter .15s ease,transform .12s var(--ease-out)}
+.tg-btn svg{width:21px;height:19px;flex:none;margin-left:-2px}
+.tg-btn:active{filter:brightness(.92);transform:scale(.98)}
+.tg-btn[hidden]{display:none}
+.su-ext{display:flex;flex-direction:column;gap:8px}
+.su-ext[hidden]{display:none}
+@media (hover:hover) and (pointer:fine){ .tg-btn:hover{filter:brightness(1.06)} }
 .su-or{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
 .su-or::before,.su-or::after{content:"";flex:1;height:1px;background:var(--line)}
 .su-who{font-size:14px;color:var(--muted);overflow-wrap:anywhere}
@@ -640,6 +647,10 @@ const FIREBASE_DB = 'https://reclama-kgu-default-rtdb.europe-west1.firebasedatab
 const FB_API_KEY = 'AIzaSyAGDxn2z6l4MzgkR8mV1_vuIfJIu7vyc2U';
 // «Продолжить с Google»: Web client ID from Firebase → Authentication → Google → Web SDK configuration. Empty = no button.
 const GOOGLE_CLIENT_ID = '866024625038-9ivgkk2tnj2mbg88g44o11cmtuk2rdj7.apps.googleusercontent.com';
+// «Продолжить с Telegram»: the bot's number (the digits before «:» in its token — never the token itself)
+// and the address of the Cloudflare worker (telegram-worker/) that checks Telegram's signature. Empty = no button.
+const TG_BOT_ID = '';
+const TG_WORKER = '';
 const ADMIN_KEY = 'TestTrainer.admin'; // the site owner's GitHub token: present only on their own devices
 const isAdmin = () => { try { return !!localStorage.getItem(ADMIN_KEY); } catch (e) { return false; } };
 const TEXT_PLACEHOLDERS = new Set(['текстовая строка (без учета регистра)', 'текстовая строка']);
@@ -2803,6 +2814,9 @@ function nameProblem(n) {
 const rid = n => [...crypto.getRandomValues(new Uint8Array(n))].map(x => 'abcdefghijklmnopqrstuvwxyz0123456789'[x % 36]).join('');
 const G_KEY = 'TestTrainer.gauth'; // state + nonce while the person is away at Google
 const isGoogle = u => !!u && String(u.login).startsWith('g:');
+const TG_KEY = 'TestTrainer.tgauth'; // when the person left for Telegram
+const isTelegram = u => !!u && String(u.login).startsWith('tg-'); // password logins never contain «-»
+const TG_LOGO = '<svg viewBox="44 64 140 124" aria-hidden="true"><path fill="currentColor" d="M54.3 118.8c35-15.2 58.3-25.3 70-30.2 33.3-13.9 40.3-16.3 44.8-16.4 1 0 3.2.2 4.7 1.4 1.2 1 1.5 2.3 1.7 3.3s.4 3.1.2 4.7c-1.8 19-9.6 65.1-13.6 86.3-1.7 9-5 12-8.2 12.3-7 .6-12.3-4.6-19-9-10.6-6.9-16.5-11.2-26.8-18-11.9-7.8-4.2-12.1 2.6-19.1 1.8-1.8 32.5-29.8 33.1-32.3.1-.3.1-1.5-.6-2.1-.7-.6-1.7-.4-2.5-.2-1.1.2-17.9 11.4-50.6 33.5-4.8 3.3-9.1 4.9-13 4.8-4.3-.1-12.5-2.4-18.7-4.4-7.5-2.4-13.5-3.7-13-7.9.3-2.2 3.3-4.4 8.9-6.7z"/></svg>';
 const G_LOGO = '<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
 // a Google name as a username suggestion: allowed characters only, up to 24
 const suggestName = n => cleanName(String(n || '').replace(/[^\p{L}\p{N} _-]+/gu, ' ')).slice(0, 24).trim();
@@ -2812,6 +2826,9 @@ function authError(e) {
   if (c === 'TAKEN') return { msg: 'Это имя уже занято — выберите другое', f: 'name' };
   if (c === 'NO_USER') return { msg: 'Нет пользователя с таким именем', f: 'name' };
   if (c === 'GOOGLE') return { msg: 'Этот аккаунт входит через Google — нажмите «Продолжить с Google»' };
+  if (c === 'TELEGRAM') return { msg: 'Этот аккаунт входит через Telegram — нажмите «Продолжить с Telegram»' };
+  if (/^TG_(BAD_HASH|EXPIRED|BAD_DATA)/.test(c)) return { msg: 'Telegram не подтвердил вход. Попробуйте ещё раз' };
+  if (c.startsWith('TG_')) return { msg: 'Вход через Telegram сейчас не работает (' + c.slice(3) + '). Войдите по имени или через Google' };
   if (c === 'RENAMED') return { msg: 'Имя уже менялось — второй раз его не поменять' };
   if (/INVALID_LOGIN_CREDENTIALS|INVALID_PASSWORD|EMAIL_NOT_FOUND/.test(c)) return { msg: 'Неверный пароль', f: 'pass' };
   if (/TOO_MANY_ATTEMPTS/.test(c)) return { msg: 'Слишком много попыток. Подождите пару минут' };
@@ -2899,6 +2916,7 @@ const Account = {
     const login = await this.owner(nameKey(name));
     if (typeof login !== 'string') throw new Error('NO_USER');
     if (login.startsWith('g:')) throw new Error('GOOGLE');
+    if (login.startsWith('tg-')) throw new Error('TELEGRAM');
     const a = await this.idp('signInWithPassword', { email: login + MAIL, password: pass, returnSecureToken: true });
     const rec = await this.req('users/' + a.localId, 'GET', undefined, a.idToken);
     if (!rec || typeof rec.name !== 'string') throw new Error('NO_USER');
@@ -2979,11 +2997,61 @@ const Account = {
     }
     return { uid: a.localId, rt: a.refreshToken, idt: a.idToken, exp: a.expiresIn };
   },
-  async claimGoogle(g, name, course) {
-    const key = nameKey(name), login = 'g:' + g.uid, p = 'users/' + g.uid + '/';
-    if (await this.owner(key)) throw new Error('TAKEN');
+  tgOn() { return this.ready() && !!TG_BOT_ID && !!TG_WORKER; },
+  // off to Telegram's own page; it comes back to this page with #tgAuthResult=…
+  telegram() {
+    try { localStorage.setItem(TG_KEY, String(Date.now())); } catch (e) {}
+    flush();
+    location.href = 'https://oauth.telegram.org/auth?' + new URLSearchParams({ bot_id: TG_BOT_ID, origin: location.origin, return_to: new URL('./', location.href).href });
+  },
+  // back from Telegram: read and clean the address. → null | { error } | { data }
+  takeTelegram() {
+    const m = location.hash.match(/[#&?]tgAuthResult=([A-Za-z0-9\-_=]*)/);
+    if (!m) return null;
+    history.replaceState(null, '', location.pathname + location.search);
+    let at = 0;
+    try { at = +localStorage.getItem(TG_KEY) || 0; localStorage.removeItem(TG_KEY); } catch (e) {}
+    if (!at || Date.now() - at > 900000) return { error: 'state' }; // only a sign-in this page started itself
     try {
-      await this.req('', 'PATCH', { ['logins/' + key]: login, [p + 'name']: name, [p + 'key']: key, [p + 'login']: login, [p + 'renamed']: false, [p + 'course']: course, [p + 'created']: SV, [p + 'last']: SV, [p + 'd']: Presence.device() }, g.idt);
+      const b = atob(m[1].replace(/-/g, '+').replace(/_/g, '/'));
+      const data = JSON.parse(new TextDecoder().decode(Uint8Array.from(b, c => c.charCodeAt(0))));
+      return data && typeof data === 'object' && data.hash ? { data } : { error: 'cancel' };
+    } catch (e) { return { error: 'cancel' }; }
+  },
+  // The worker checks Telegram's signature and gives this person's own sign-in for Firebase.
+  async telegramSignIn(data) {
+    let r;
+    try { r = await fetch(TG_WORKER, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); }
+    catch (e) { throw new Error('NETWORK'); }
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || typeof j.login !== 'string' || !/^tg-[0-9a-f]{24}$/.test(j.login) || !j.pass) throw new Error('TG_' + (j.error || r.status));
+    const email = j.login + MAIL;
+    let a;
+    try { a = await this.idp('signInWithPassword', { email, password: j.pass, returnSecureToken: true }); }
+    catch (e) {
+      if (!/INVALID_LOGIN_CREDENTIALS|EMAIL_NOT_FOUND/.test(e.message)) throw e;
+      a = await this.idp('signUp', { email, password: j.pass, returnSecureToken: true }); // the first time with Telegram
+    }
+    const tg = /^[A-Za-z0-9_]{1,40}$/.test(j.username) ? j.username : '';
+    const rec = await this.req('users/' + a.localId, 'GET', undefined, a.idToken);
+    if (rec && typeof rec.name === 'string') {
+      this.keep(a.idToken, a.expiresIn);
+      this.user = { uid: a.localId, rt: a.refreshToken, login: j.login, name: rec.name, key: rec.key, course: +rec.course || 0, renamed: !!rec.renamed, blocked: !!rec.blocked };
+      this.seen = false; this.syncAt = 0;
+      this.save();
+      if (tg && rec.tg !== tg && !rec.blocked) this.req('users/' + a.localId, 'PATCH', { tg }, a.idToken).catch(() => {});
+      return null;
+    }
+    return { uid: a.localId, rt: a.refreshToken, idt: a.idToken, exp: a.expiresIn, login: j.login, tg, name: j.name, who: tg ? '@' + tg : j.name, via: 'Telegram' };
+  },
+  // a person back from Google or Telegram picks a name: g = { uid, rt, idt, exp, login?, tg? }
+  async claimExternal(g, name, course) {
+    const key = nameKey(name), login = g.login || 'g:' + g.uid, p = 'users/' + g.uid + '/';
+    if (await this.owner(key)) throw new Error('TAKEN');
+    const up = { ['logins/' + key]: login, [p + 'name']: name, [p + 'key']: key, [p + 'login']: login, [p + 'renamed']: false, [p + 'course']: course, [p + 'created']: SV, [p + 'last']: SV, [p + 'd']: Presence.device() };
+    if (g.tg) up[p + 'tg'] = g.tg;
+    try {
+      await this.req('', 'PATCH', up, g.idt);
     } catch (e) {
       if (e.message === 'DENIED' && await this.owner(key).catch(() => null)) throw new Error('TAKEN');
       throw e;
@@ -3033,7 +3101,27 @@ async function finishGoogle(back, done) {
     return;
   }
   if (tour) endTour();
-  openAuth({ mode: 'g', g: { ...g, name: back.name, email: back.email } });
+  openAuth({ mode: 'g', g: { ...g, name: back.name, who: back.email, via: 'Google' } });
+}
+async function finishTelegram(back, done) {
+  if (back.error) {
+    if (done) done();
+    if (back.error === 'state') toast('Не получилось войти через Telegram. Попробуйте ещё раз');
+    return;
+  }
+  let g = null;
+  try { g = await Account.telegramSignIn(back.data); }
+  catch (e) { if (done) done(); toast(authError(e).msg); return; }
+  if (done) done();
+  if (!g) {
+    const u = Account.user;
+    if (u.course) S.course = u.course;
+    S.profile = null; save(); renderAll(); applyBlock(); Presence.live();
+    if (!u.blocked) toast('С возвращением, ' + u.name + '!');
+    return;
+  }
+  if (tour) endTour();
+  openAuth({ mode: 'g', g });
 }
 function applyBlock() {
   const on = Account.blocked();
@@ -3061,14 +3149,14 @@ window.addEventListener('keydown', e => { if (Account.blocked()) e.stopImmediate
 // Sign-up and sign-in in one sheet. As a gate (after a few answers) it cannot be dismissed.
 function openAuth({ dismissible = false, mode = 'up', g = null } = {}) {
   if (anySheet() || tour || Account.blocked()) return;
-  const gOn = Account.googleOn();
+  const gOn = Account.googleOn(), tOn = Account.tgOn(), extOn = gOn || tOn;
   let course = curCourse() || S.course || 0, busy = false, checkT = 0, checkN = 0, skip = false;
   const legacy = g ? suggestName(g.name) : S.profile && S.profile.name ? cleanName(S.profile.name).slice(0, 24) : '';
   const html = `<div class="dlg su">
 <div class="su-ico">${I.user}</div>
 <div class="dlg-title" id="suTitle"></div>
 <div class="dlg-msg" id="suMsg">${dismissible ? '' : 'Все функции откроются сразу после лёгкой регистрации.'}</div>
-${gOn ? `<button type="button" class="g-btn" data-s="google" id="suG">${G_LOGO}<span>Продолжить с Google</span></button><div class="su-or" id="suOr">или по имени и паролю</div>` : ''}
+${extOn ? `<div class="su-ext" id="suExt">${tOn ? `<button type="button" class="tg-btn" data-s="telegram">${TG_LOGO}<span>Продолжить с Telegram</span></button>` : ''}${gOn ? `<button type="button" class="g-btn" data-s="google">${G_LOGO}<span>Продолжить с Google</span></button>` : ''}</div><div class="su-or" id="suOr">или по имени и паролю</div>` : ''}
 <div class="su-seg" id="suSeg" role="tablist" aria-label="Регистрация или вход"><button type="button" role="tab" data-s="m-up">Регистрация</button><button type="button" role="tab" data-s="m-in">Вход</button></div>
 <div class="su-field"><input id="suName" class="f-in" placeholder="Имя пользователя" maxlength="24" autocomplete="username" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" value="${esc(legacy)}" aria-label="Имя пользователя" aria-describedby="suNameHint"><div class="su-hint" id="suNameHint" aria-live="polite"></div></div>
 <div class="su-field" id="suPassF"><div class="su-pass"><input id="suPass" class="f-in" type="password" placeholder="Пароль" maxlength="128" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="Пароль" aria-describedby="suPassHint"><button type="button" class="su-eye" data-s="eye" aria-label="Показать пароль" aria-pressed="false">${I.eye}</button></div><div class="su-hint" id="suPassHint"></div></div>
@@ -3095,9 +3183,10 @@ ${gOn ? `<button type="button" class="g-btn" data-s="google" id="suG">${G_LOGO}<
         return;
       }
       if (act === 'go') go();
-      if (act === 'google') {
+      if (act === 'google' || act === 'telegram') {
         if (navigator.onLine === false) return fail({ msg: 'Нет связи с интернетом. Попробуйте ещё раз' });
-        el.disabled = true; Account.google();
+        el.disabled = true;
+        if (act === 'google') Account.google(); else Account.telegram();
       }
     }
   });
@@ -3109,14 +3198,14 @@ ${gOn ? `<button type="button" class="g-btn" data-s="google" id="suG">${G_LOGO}<
     const gm = m === 'g'; // back from Google: only a name and a course are left
     sh.panel.querySelectorAll('.su-seg button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.s === 'm-' + m)));
     $p('#suTitle').textContent = gm ? 'Почти готово' : m === 'up' ? (dismissible ? 'Регистрация' : 'Лёгкая регистрация') : 'Вход в аккаунт';
-    if (gm) $p('#suMsg').innerHTML = 'Придумайте имя пользователя — так вас будет видеть автор сайта.' + (g.email ? `<div class="su-who">Google: <b>${esc(g.email)}</b></div>` : '');
+    if (gm) $p('#suMsg').innerHTML = 'Придумайте имя пользователя — так вас будет видеть автор сайта.' + (g.who ? `<div class="su-who">${esc(g.via)}: <b>${esc(g.who)}</b></div>` : '');
     btn.textContent = gm ? 'Готово' : m === 'up' ? 'Зарегистрироваться' : 'Войти';
     passInp.setAttribute('autocomplete', m === 'up' ? 'new-password' : 'current-password');
     $p('#suSeg').hidden = gm; $p('#suPassF').hidden = gm;
-    if (gOn) { $p('#suG').hidden = gm; $p('#suOr').hidden = gm; }
+    if (extOn) { $p('#suExt').hidden = gm; $p('#suOr').hidden = gm; }
     $p('#suCourse').hidden = m === 'in';
     $p('#suNote').textContent = gm ? 'Сменить имя потом можно один раз — в настройках.'
-      : m === 'up' ? 'Пароль хранится у Google — даже автор сайта его не видит.' + (gOn ? ' При входе через Google автор видит вашу почту.' : '')
+      : m === 'up' ? 'Пароль хранится у Google — даже автор сайта его не видит.' + (gOn ? ' При входе через Google автор видит вашу почту' + (tOn ? ', через Telegram — ваш @username.' : '.') : tOn ? ' При входе через Telegram автор видит ваш @username.' : '')
       : 'Забыли пароль? Напишите автору сайта: tg @ziplogo';
     hint($p('#suPassHint'), m === 'up' ? 'Минимум 6 символов' : '');
     err.textContent = '';
@@ -3153,7 +3242,7 @@ ${gOn ? `<button type="button" class="g-btn" data-s="google" id="suG">${G_LOGO}<
     const label = btn.textContent;
     btn.textContent = mode === 'in' ? 'Вхожу…' : 'Регистрирую…';
     try {
-      if (mode === 'g') await Account.claimGoogle(g, name, course);
+      if (mode === 'g') await Account.claimExternal(g, name, course);
       else if (mode === 'up') await Account.signUp(name, pass, course);
       else await Account.signIn(name, pass);
     } catch (e) {
@@ -3229,7 +3318,7 @@ function openProfile() {
 <div class="su-course"><span>Курс</span>${coursePills(u.course || 0, 'data-s="pf-c" data-c', null)}</div>
 <div class="mgroup">
 ${u.renamed ? '<div class="mrow static"><span class="mtxt">Имя уже менялось<small>Изменить его можно только один раз</small></span></div>' : `<button type="button" class="mrow" data-s="rename"><span class="mtxt">Изменить имя<small>Можно только один раз</small></span><span class="go">${I.chevR}</span></button>`}
-${isGoogle(u) ? '<div class="mrow static"><span class="mtxt">Вход через Google<small>Пароль не нужен</small></span></div>' : `<button type="button" class="mrow" data-s="pass"><span class="mtxt">Сменить пароль</span><span class="go">${I.chevR}</span></button>`}
+${isGoogle(u) || isTelegram(u) ? `<div class="mrow static"><span class="mtxt">Вход через ${isGoogle(u) ? 'Google' : 'Telegram'}<small>Пароль не нужен</small></span></div>` : `<button type="button" class="mrow" data-s="pass"><span class="mtxt">Сменить пароль</span><span class="go">${I.chevR}</span></button>`}
 </div>
 <button type="button" class="dlg-btn danger" data-s="out">Выйти из аккаунта</button>
 </div>`;
@@ -3382,6 +3471,8 @@ function normalizeState(st) {
 async function boot() {
   const gBack = Account.takeGoogle(); // back from Google's sign-in page
   const gDone = gBack && !gBack.error ? busy('Вход через Google…') : null;
+  const tBack = Account.takeTelegram(); // back from Telegram's
+  const tDone = tBack && !tBack.error ? busy('Вход через Telegram…') : null;
   applyDock();
   render();
   Account.load();
@@ -3401,6 +3492,7 @@ async function boot() {
   Presence.start();
   if (!Account.user && !isAdmin()) Account.probe();
   if (gBack) finishGoogle(gBack, gDone);
+  if (tBack) finishTelegram(tBack, tDone);
   if ('serviceWorker' in navigator && document.querySelector('link[rel="manifest"]') && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     const hadSW = !!navigator.serviceWorker.controller;
     navigator.serviceWorker.register('sw.js').then(reg => {
