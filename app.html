@@ -126,9 +126,7 @@ button:disabled{cursor:default}
 .prompt.sm{font-size:calc(18px * var(--fs))}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
 .label{font-size:13px;font-weight:600;color:var(--muted)}
-.reveal-box{background:var(--soft-green);border-color:var(--green-line)}
-.reveal-box .label{color:var(--green)}
-.ctx,.reveal-text{font-size:calc(16px * var(--fs));line-height:1.48;white-space:pre-wrap;overflow-wrap:anywhere}
+.ctx{font-size:calc(16px * var(--fs));line-height:1.48;white-space:pre-wrap;overflow-wrap:anywhere}
 .choices,.dd-list{display:flex;flex-direction:column;gap:10px}
 .choice{width:100%;display:flex;align-items:flex-start;gap:12px;padding:13px 14px;text-align:left;border-radius:14px;background:var(--surface);border:1px solid var(--line);font-size:calc(16px * var(--fs));line-height:1.42;transition:background-color .15s,border-color .15s,box-shadow .15s,transform .12s}
 .choice:active{transform:scale(.99)}
@@ -156,6 +154,7 @@ button:disabled{cursor:default}
 .dd-btn .i{font-size:13px;color:var(--muted);margin-top:3px}
 .hint-correct{display:none;color:var(--green);font-size:calc(15px * var(--fs));font-weight:600;line-height:1.35;overflow-wrap:anywhere}
 .q[data-hl="1"] .hint-correct{display:block}
+.field .hint-correct{margin-top:8px;white-space:pre-wrap}
 .q[data-hl="1"] .dd-row.st-ok{background:var(--soft-green);border-color:var(--green-line)}
 .q[data-hl="1"] .dd-row.st-bad{background:var(--soft-red);border-color:var(--red-line)}
 
@@ -189,7 +188,6 @@ button:disabled{cursor:default}
 .feedback{display:flex;align-items:center;gap:8px;padding:11px 14px;border-radius:12px;font-size:15px;font-weight:600}
 .feedback .i{font-size:20px}
 .feedback.ok{background:var(--soft-green);color:var(--green)}
-.feedback.bad{background:var(--soft-red);color:var(--red)}
 .pulse{animation:pulse .5s ease-out}
 @keyframes pulse{0%{transform:scale(1);box-shadow:0 0 0 0 transparent}35%{transform:scale(1.03);box-shadow:0 0 14px 2px var(--glow)}100%{transform:scale(1);box-shadow:0 0 0 0 transparent}}
 
@@ -1392,11 +1390,7 @@ function itemHTML(it) {
     });
   } else h += qHTML(it, { scope: it.id });
   const r = rec(it.id);
-  if (r.checked) {
-    const ok = isCorrect(it);
-    h += `<div class="feedback ${ok ? 'ok' : 'bad'}" role="status">${ok ? I.ok + 'Верно' : I.bad + 'Есть ошибки'}</div>`;
-  }
-  if (r.reveal) h += `<div class="panel reveal-box"><div class="label">Правильный ответ</div><div class="reveal-text">${esc(answerText(it))}</div></div>`;
+  if (r.checked && isCorrect(it)) h += `<div class="feedback ok" role="status">${I.ok}Верно</div>`;
   return h;
 }
 const contextHTML = t => `<div class="panel"><div class="label">Условие</div><div class="ctx">${esc(t)}</div></div>`;
@@ -1448,7 +1442,7 @@ function sortHTML(q, pz, scope) {
 function textHTML(q, pz) {
   const r = rec(q.id), ok = isCorrect(q);
   const id = 't-' + q.id;
-  return `<div class="field"><label class="label" for="${esc(id)}">Ваш ответ</label><textarea id="${esc(id)}" class="txt ${ok ? 'st-ok' : 'st-bad'}${pz && ok ? ' pulse' : ''}" data-text="${esc(q.id)}" rows="1" placeholder="Введите ответ" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="done">${esc(r.text)}</textarea></div>`;
+  return `<div class="field"><label class="label" for="${esc(id)}">Ваш ответ</label><textarea id="${esc(id)}" class="txt ${ok ? 'st-ok' : 'st-bad'}${pz && ok ? ' pulse' : ''}" data-text="${esc(q.id)}" rows="1" placeholder="Введите ответ" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="done">${esc(r.text)}</textarea>${ok ? '' : `<div class="hint-correct">${esc(answerText(q))}</div>`}</div>`;
 }
 function autosize(ta) { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight + 2, 220) + 'px'; }
 
@@ -2312,7 +2306,7 @@ elContent.addEventListener('input', e => {
   setText(qid, ta.value);
   if (was) {
     elContent.querySelectorAll('.q').forEach(q => { q.dataset.hl = '0'; });
-    elContent.querySelectorAll('.feedback, .reveal-box').forEach(n => n.remove());
+    elContent.querySelectorAll('.feedback').forEach(n => n.remove());
     renderTop();
     renderBottom();
   }
