@@ -639,7 +639,7 @@ const FIREBASE_DB = 'https://reclama-kgu-default-rtdb.europe-west1.firebasedatab
 // Firebase → Project settings → Web API Key. It is public by design; until it is set, accounts stay switched off.
 const FB_API_KEY = 'AIzaSyAGDxn2z6l4MzgkR8mV1_vuIfJIu7vyc2U';
 // «Продолжить с Google»: Web client ID from Firebase → Authentication → Google → Web SDK configuration. Empty = no button.
-const GOOGLE_CLIENT_ID = '';
+const GOOGLE_CLIENT_ID = '866024625038-9ivgkk2tnj2mbg88g44o11cmtuk2rdj7.apps.googleusercontent.com';
 const ADMIN_KEY = 'TestTrainer.admin'; // the site owner's GitHub token: present only on their own devices
 const isAdmin = () => { try { return !!localStorage.getItem(ADMIN_KEY); } catch (e) { return false; } };
 const TEXT_PLACEHOLDERS = new Set(['текстовая строка (без учета регистра)', 'текстовая строка']);
@@ -2940,7 +2940,8 @@ const Account = {
   },
   signOut() { this.user = null; this.idt = ''; this.exp = 0; this.seen = false; this.save(); },
   googleOn() { return this.ready() && !!GOOGLE_CLIENT_ID; },
-  back: () => new URL('./', location.href).href, // the app's own address: Google sends the person back here
+  // the app's own address without the last «/», exactly as registered for Google; GitHub Pages adds the «/» and keeps the #token
+  back: () => new URL('./', location.href).href.replace(/\/$/, ''),
   // off to Google's own sign-in page; it comes back to this page with #id_token=…
   google() {
     const state = rid(16), nonce = rid(16);
