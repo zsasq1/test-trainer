@@ -21,6 +21,8 @@
   --serif:"Literata",Georgia,"Times New Roman",serif;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   --fs:1;
+  --ease-out:cubic-bezier(0.23,1,0.32,1);  /* strong ease-out for things that appear */
+  --ease-ios:cubic-bezier(0.32,0.72,0,1);  /* iOS sheet curve for things that glide */
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -463,8 +465,44 @@ textarea.f-in{resize:vertical;min-height:84px}
   .choice[data-key]::after{content:attr(data-key);flex:none;align-self:center;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--muted)}
 }
 
+/* ---------- guided tour: dimmed screen, a spotlight gliding between controls, a hint card ---------- */
+.tour{position:fixed;inset:0;z-index:100;opacity:0;transition:opacity .3s var(--ease-out);touch-action:none;-webkit-user-select:none;user-select:none}
+.tour.on{opacity:1}
+.tour.out{opacity:0;transition-duration:.2s;pointer-events:none}
+.tour-safe{position:absolute;visibility:hidden;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tour-hole{position:absolute;left:0;top:0;width:0;height:0;border-radius:14px;box-shadow:0 0 0 200vmax rgba(15,14,12,.58);pointer-events:none}
+.tour-hole::after{content:'';position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 0 1.5px rgba(255,255,255,.6);transition:opacity .2s ease}
+.tour-hole.none::after{opacity:0}
+.tour.ready .tour-hole{transition:transform .42s var(--ease-ios),width .42s var(--ease-ios),height .42s var(--ease-ios),border-radius .42s var(--ease-ios)}
+.tour-card{position:absolute;left:0;top:0;width:min(340px,calc(100vw - 24px))}
+.tour.ready .tour-card{transition:transform .42s var(--ease-ios)}
+.tour-pop{position:relative;background:var(--surface);border-radius:20px;padding:18px 18px 14px;box-shadow:0 14px 44px rgba(0,0,0,.24),0 0 0 1px var(--line);opacity:0;transform:scale(.96);transition:opacity .3s var(--ease-out),transform .3s var(--ease-out)}
+.tour.on .tour-pop{opacity:1;transform:none}
+.tour.out .tour-pop{opacity:0;transform:scale(.98);transition-duration:.2s}
+.tour-x{position:absolute;top:9px;right:9px;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:var(--muted);font-size:15px}
+.tour-x:active{background:var(--ink-soft)}
+.tour-body h2{margin:0 34px 6px 0;font-size:17px;font-weight:650;line-height:1.3;letter-spacing:-.01em}
+.tour-body p{margin:0;font-size:15px;line-height:1.45;color:var(--muted);text-wrap:pretty}
+.tour-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
+.tour-dots{display:flex;gap:6px}
+.tour-dots span{width:6px;height:6px;border-radius:50%;background:var(--line);transition:background-color .2s ease}
+.tour-dots span.on{background:var(--text)}
+.tour-btns{display:flex;gap:8px}
+.tour-btn{height:38px;padding:0 15px;border-radius:12px;font-size:15px;font-weight:600;color:var(--text);background:var(--ink-soft);transition:transform .12s var(--ease-out)}
+.tour-btn.pri{background:var(--accent-btn);color:var(--on-accent)}
+.tour-btn:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){
+  .tour-btn:hover{filter:brightness(.95)}
+  .tour-x:hover{background:var(--ink-soft)}
+}
+.mrow .go{color:var(--muted);font-size:15px}
+
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  /* tour: keep the gentle fades, drop the movement */
+  .tour,.tour-pop{transition-duration:.2s!important}
+  .tour-pop,.tour.out .tour-pop{transform:none}
+  .tour.ready .tour-hole,.tour.ready .tour-card{transition:none}
 }
 </style>
 
@@ -842,7 +880,7 @@ const Store = {
 const defaults = () => ({
   setId: '', category: 'multiple', starOnly: false, index: 0, indexByScope: {}, answers: {},
   starred: {}, savedTests: [], test: null, autoAdvance: true, fontScale: 1, customSubs: {},
-  sets: [], hiddenBundled: [], titles: {}, results: {}
+  sets: [], hiddenBundled: [], titles: {}, results: {}, tour: {}
 });
 let S = defaults();
 let BUNDLED = [];          // [{id, file, title}] from data/sets.json
@@ -1312,6 +1350,7 @@ function render() {
   renderContent();
   renderBottom();
   if (docked()) renderMenuBody();
+  tourSoon();
 }
 
 function renderTop() {
@@ -1697,6 +1736,7 @@ function menuFilesHTML() {
 function menuSettingsHTML() {
   const pct = Math.round(S.fontScale * 100);
   return `<section class="msec"><div class="sec-label">Настройки</div><div class="mgroup">
+<button type="button" class="mrow" data-act="m-tour"><span class="mtxt">Обучение<small>Показать подсказки ещё раз</small></span><span class="go">${I.chevR}</span></button>
 <div class="mrow static"><span class="mtxt">Автопереход<small>После верного ответа — следующий вопрос</small></span><button type="button" class="switch" role="switch" aria-checked="${S.autoAdvance}" data-act="toggle-auto" aria-label="Автопереход"><span></span></button></div>
 <div class="fs-block"><div class="fs-head"><span>Размер текста</span><span class="fs-val"><span id="fontPct">${pct}%</span>${pct !== 100 ? '<button type="button" class="mlink" data-act="m-font-reset">Сбросить</button>' : ''}</span></div><div class="fs-row"><button type="button" class="sq-btn a-sm" data-act="m-font-dec" aria-label="Мельче"${S.fontScale <= 0.5 ? ' disabled' : ''}>A</button><input type="range" id="fontRange" min="50" max="160" step="5" value="${pct}" aria-label="Масштаб текста вопросов"><button type="button" class="sq-btn a-lg" data-act="m-font-inc" aria-label="Крупнее"${S.fontScale >= 1.6 ? ' disabled' : ''}>A</button></div></div>
 </div></section>`;
@@ -2228,7 +2268,14 @@ const ACT = {
   'm-result': el => { selectItem(el.dataset.cat, el.dataset.id); elSearch.value = ''; closeDrawer(); render(); },
   'm-font-dec': () => setFont(S.fontScale - 0.1),
   'm-font-inc': () => setFont(S.fontScale + 0.1),
-  'm-font-reset': () => setFont(1)
+  'm-font-reset': () => setFont(1),
+  'm-tour': () => {
+    const name = TOURS.main.when() ? 'main' : TOURS.intro.when() ? 'intro' : '';
+    if (!name) return toast('Откройте любой вопрос — и обучение покажет, как заниматься');
+    const wasOpen = drawerOpen;
+    closeDrawer();
+    setTimeout(() => startTour(name), wasOpen ? 300 : 0); // let the menu slide away first
+  }
 };
 function setFont(v) { S.fontScale = Math.round(clamp(v, 0.5, 1.6) * 100) / 100; save(); render(); renderMenuBody(); }
 
@@ -2428,6 +2475,203 @@ $('#counter .progress-row').insertAdjacentHTML('beforeend', I.chevD);
 $('#searchIco').innerHTML = I.search;
 $('#searchClear').innerHTML = I.xCircle;
 
+/* =========================================================
+   Guided tour: the screen dims, a spotlight glides from control to control, a card explains it.
+   Shown once by itself (before the first file and on the first question); again from Settings.
+   ========================================================= */
+const KB = window.matchMedia('(hover: hover) and (pointer: fine)');
+const RM = window.matchMedia('(prefers-reduced-motion: reduce)');
+const questionHint = () => {
+  const it = currentItem(), k = it && it.kind;
+  if (k === 'multiple') return 'Здесь правильных ответов несколько — отметьте все. Попробуйте прямо сейчас.';
+  if (k === 'text') return 'Впишите ответ в поле. Заглавные буквы и лишние пробелы не важны.';
+  if (k === 'dropdown') return 'Для каждой строки выберите ответ из списка.';
+  if (k === 'sortable') return 'Расставьте пункты по порядку: тяните за значок справа.';
+  if (k === 'case') return 'Кейс: общее условие и несколько вопросов к нему. Ответьте на каждый.';
+  return 'Нажмите на вариант, чтобы выбрать. Попробуйте прямо сейчас.';
+};
+const TOURS = {
+  intro: {
+    when: () => bankStatus !== 'boot' && !SETS.length,
+    steps: [
+      { title: 'Тренажёр тестов', text: 'Учите вопросы из своих JSON-файлов: с подсветкой ответов, избранным и тестами. Сначала загрузим файл.', go: 'Начать' },
+      { el: '#content .state label.act', title: 'Загрузите файл', text: 'Выберите JSON в «Файлах», iCloud Drive или сохранённый из Telegram. Можно сразу несколько.', allow: 'label', end: true },
+      { el: '#content .state [data-act="paste-json"]', title: 'Или вставьте текстом', text: 'Если JSON скопирован как текст, вставьте его сюда.', allow: 'button', end: true }
+    ]
+  },
+  main: {
+    when: () => bankReady() && !!currentItem(),
+    steps: [
+      { title: 'Как заниматься', text: 'Покажу главное за полминуты. Обучение всегда можно открыть снова в настройках.', go: 'Показать' },
+      { el: () => (currentItem() || {}).kind === 'case' ? '#content' : '#content .q', clip: '#scroller', title: 'Вопрос', text: questionHint, allow: '.choice, textarea' },
+      { el: '#actionsRow', title: 'Проверить и подглядеть', text: () => '«Проверить» подсветит верные ответы зелёным, ошибки — красным. Глаз покажет ответ без проверки.' + (KB.matches ? ' Клавиши: Enter и П.' : ''), allow: '[data-act="check"], [data-act="reveal"]' },
+      { el: '#nextBtn', title: 'Дальше', text: () => KB.matches ? 'Листайте стрелками здесь или клавишами ← и →. Если держать кнопку, вопросы листаются быстро.' : 'Листайте стрелками или свайпом по вопросу. Если держать кнопку, вопросы листаются быстро.', allow: '#nextBtn' },
+      { el: '#counter', title: 'Номер вопроса', text: 'Здесь видно, какой это вопрос и из какого файла. Нажмите, чтобы перейти к вопросу по номеру.' },
+      { el: '#topActions', title: 'Автопереход и избранное', text: 'Переключатель после верного ответа сразу открывает следующий вопрос. Звёздочка добавляет вопрос в избранное.', allow: '[data-act="toggle-auto"], [data-act="star"]' },
+      { el: () => docked() ? '#drawer' : '#menuBtn', title: 'Меню', text: () => docked() ? 'Слева — категории, поиск, избранное, тесты, файлы и настройки. Клавиша / сразу открывает поиск.' : 'Категории, поиск, избранное, тесты, файлы и настройки. Меню открывается и свайпом от левого края.', allow: '#menuBtn', end: true }
+    ]
+  }
+};
+let tour = null, tourTimer = 0;
+const tourFree = () => !tour && !drawerOpen && !anySheet() && !document.querySelector('.busy') && document.visibilityState === 'visible';
+// Called after every render: start a tour the person hasn't seen yet, once the screen has settled.
+function tourSoon() {
+  if (tour || tourTimer || bankStatus === 'boot') return;
+  const name = !S.tour.intro && TOURS.intro.when() ? 'intro' : !S.tour.main && TOURS.main.when() ? 'main' : '';
+  if (!name) return;
+  tourTimer = setTimeout(() => { tourTimer = 0; if (!S.tour[name] && TOURS[name].when() && tourFree()) startTour(name); }, 700);
+}
+function startTour(name) {
+  if (tour || !TOURS[name].when()) return;
+  hideToast();
+  const steps = TOURS[name].steps;
+  const root = document.createElement('div');
+  root.className = 'tour';
+  root.setAttribute('role', 'dialog');
+  root.setAttribute('aria-modal', 'true');
+  root.setAttribute('aria-labelledby', 'tourTitle');
+  root.innerHTML = `<div class="tour-safe"></div><div class="tour-hole none"></div><div class="tour-card"><div class="tour-pop">
+<button type="button" class="tour-x" data-tour="skip" aria-label="Закрыть обучение">${I.x}</button>
+<div class="tour-body" aria-live="polite"><h2 id="tourTitle"></h2><p></p></div>
+<div class="tour-foot"><div class="tour-dots" aria-hidden="true">${steps.map(() => '<span></span>').join('')}</div><div class="tour-btns"><button type="button" class="tour-btn" data-tour="back"></button><button type="button" class="tour-btn pri" data-tour="next"></button></div></div>
+</div></div>`;
+  document.body.appendChild(root);
+  tour = {
+    name, steps, i: 0, root, last: '', raf: 0, back: document.activeElement,
+    safe: root.querySelector('.tour-safe'), hole: root.querySelector('.tour-hole'), card: root.querySelector('.tour-card'), body: root.querySelector('.tour-body')
+  };
+  root.addEventListener('click', tourClick);
+  tourShow(0, 0);
+  // first frame lands in place without gliding; then fade in and let later steps glide
+  requestAnimationFrame(() => requestAnimationFrame(() => { if (tour && tour.root === root) root.classList.add('ready', 'on'); }));
+  const loop = () => {
+    if (!tour || tour.root !== root) return;
+    if (!TOURS[name].when() || anySheet()) { endTour(); return; } // e.g. the first file has just been loaded
+    tourLayout();
+    tour.raf = requestAnimationFrame(loop);
+  };
+  tour.raf = requestAnimationFrame(loop);
+}
+function tourShow(i, dir) {
+  const t = tour, st = t.steps[i], n = t.steps.length;
+  t.i = i;
+  t.root.querySelector('h2').textContent = st.title;
+  t.root.querySelector('.tour-body p').textContent = typeof st.text === 'function' ? st.text() : st.text;
+  const back = t.root.querySelector('[data-tour="back"]'), next = t.root.querySelector('[data-tour="next"]');
+  back.textContent = i ? 'Назад' : 'Пропустить';
+  next.textContent = i === n - 1 ? 'Готово' : (st.go || 'Далее');
+  t.root.querySelector('.tour-x').hidden = i === 0;
+  t.root.querySelectorAll('.tour-dots span').forEach((d, k) => d.classList.toggle('on', k === i));
+  if (dir && t.body.animate) {
+    const from = RM.matches ? { opacity: 0 } : { opacity: 0, transform: `translateX(${dir * 16}px)` };
+    t.body.animate([from, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' });
+  }
+  t.last = '';
+  tourLayout();
+  next.focus({ preventScroll: true, focusVisible: false });
+}
+function tourEl(st) {
+  const sel = typeof st.el === 'function' ? st.el() : st.el;
+  const el = sel && document.querySelector(sel);
+  return el && el.getClientRects().length ? el : null;
+}
+// Where the spotlight and the card go: card below the control, else above, beside, or — if nothing fits — at the bottom with the spotlight trimmed.
+function tourLayout() {
+  const t = tour;
+  if (!t) return;
+  const st = t.steps[t.i];
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const sc = getComputedStyle(t.safe), sT = parseFloat(sc.paddingTop) || 0, sB = parseFloat(sc.paddingBottom) || 0;
+  const M = 12, G = 12, P = 6;
+  const cw = t.card.offsetWidth, ch = t.card.offsetHeight;
+  const el = tourEl(st);
+  let h = null, x, y, origin = 'center';
+  if (el) {
+    const r = el.getBoundingClientRect();
+    h = { L: r.left - P, T: r.top - P, R: r.right + P, B: r.bottom + P };
+    const c = st.clip && document.querySelector(st.clip);
+    if (c) { const k = c.getBoundingClientRect(); h.L = Math.max(h.L, k.left); h.T = Math.max(h.T, k.top); h.R = Math.min(h.R, k.right); h.B = Math.min(h.B, k.bottom); }
+    h.L = Math.max(h.L, 4); h.T = Math.max(h.T, sT + 4); h.R = Math.min(h.R, vw - 4); h.B = Math.min(h.B, vh - sB - 4);
+    if (h.R - h.L < 8 || h.B - h.T < 8) h = null;
+  }
+  if (h) {
+    const fit = { below: h.B + G + ch <= vh - sB - M, above: h.T - G - ch >= sT + M, right: h.R + G + cw <= vw - M, left: h.L - G - cw >= M };
+    const side = ['below', 'above', 'right', 'left'].find(k => fit[k]);
+    const hx = clamp((h.L + h.R - cw) / 2, M, vw - M - cw), hy = clamp((h.T + h.B - ch) / 2, sT + M, vh - sB - M - ch);
+    if (side === 'below') { x = hx; y = h.B + G; origin = 'top center'; }
+    else if (side === 'above') { x = hx; y = h.T - G - ch; origin = 'bottom center'; }
+    else if (side === 'right') { x = h.R + G; y = hy; origin = 'center left'; }
+    else if (side === 'left') { x = h.L - G - cw; y = hy; origin = 'center right'; }
+    else {
+      x = (vw - cw) / 2; y = vh - sB - M - ch; origin = 'bottom center';
+      h.B = Math.min(h.B, y - G);
+      if (h.B - h.T < 40) h = null;
+    }
+  }
+  if (!h) { x = (vw - cw) / 2; y = (vh - ch) / 2; origin = 'center'; }
+  const rad = h ? Math.min(Math.max((parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0) + P, 12), (h.B - h.T) / 2) : 14;
+  const key = [x, y, h && h.L, h && h.T, h && h.R, h && h.B, rad].map(v => v == null ? '-' : Math.round(v)).join(',');
+  if (key === t.last) return;
+  t.last = key;
+  const hs = t.hole.style;
+  if (h) { hs.width = (h.R - h.L) + 'px'; hs.height = (h.B - h.T) + 'px'; hs.transform = `translate(${h.L}px,${h.T}px)`; hs.borderRadius = rad + 'px'; }
+  else { hs.width = '0px'; hs.height = '0px'; hs.transform = `translate(${vw / 2}px,${vh / 2}px)`; }
+  t.hole.classList.toggle('none', !h);
+  t.card.style.transform = `translate(${Math.round(x)}px,${Math.round(y)}px)`;
+  t.card.firstElementChild.style.transformOrigin = origin;
+}
+function tourGo(i, dir) { if (tour && i >= 0 && i < tour.steps.length) tourShow(i, dir); }
+function tourNext() { if (!tour) return; if (tour.i < tour.steps.length - 1) tourGo(tour.i + 1, 1); else endTour(); }
+function tourBack() { if (!tour) return; if (tour.i) tourGo(tour.i - 1, -1); else endTour(); }
+function tourClick(e) {
+  const b = e.target.closest('[data-tour]');
+  if (b) { ({ next: tourNext, back: tourBack, skip: endTour })[b.dataset.tour](); return; }
+  if (!tour || e.target.closest('.tour-card')) return;
+  // a tap inside the spotlight reaches the control underneath — the tour is to be tried, not only read
+  const st = tour.steps[tour.i], target = tourEl(st);
+  if (!st.allow || !target) return;
+  tour.root.style.pointerEvents = 'none';
+  const under = document.elementFromPoint(e.clientX, e.clientY);
+  tour.root.style.pointerEvents = '';
+  const hit = under && under.closest(st.allow);
+  if (!hit || !target.contains(hit) && hit !== target) return;
+  if (st.end) endTour();
+  if (hit.matches('textarea, input')) hit.focus(); else hit.click();
+}
+function endTour() {
+  const t = tour;
+  if (!t) return;
+  tour = null;
+  cancelAnimationFrame(t.raf);
+  S.tour[t.name] = 1;
+  save();
+  t.root.classList.remove('on');
+  t.root.classList.add('out');
+  let gone = false;
+  const rm = () => { if (!gone) { gone = true; t.root.remove(); } };
+  t.root.addEventListener('transitionend', e => { if (e.target === t.root) rm(); });
+  setTimeout(rm, 400);
+  setTimeout(tourSoon, 0); // the intro ends when the first file arrives: the main tour follows
+  if (t.back && t.back.focus && document.contains(t.back) && !t.back.closest('.tour')) t.back.focus({ preventScroll: true });
+}
+// While the tour is open, keys drive the tour: → / Enter forward, ← back, Esc closes; Tab stays inside the card.
+window.addEventListener('keydown', e => {
+  if (!tour) return;
+  const inTour = !!(e.target.closest && e.target.closest('.tour'));
+  if (e.key === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); endTour(); return; }
+  if (!inTour && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return; // typing an answer during the tour
+  e.stopImmediatePropagation();
+  if (e.key === 'ArrowRight') { e.preventDefault(); tourNext(); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); if (tour.i) tourBack(); }
+  else if (e.key === 'Enter' && !inTour) { e.preventDefault(); tourNext(); }
+  else if (e.key === 'Tab') {
+    e.preventDefault();
+    const f = [...tour.root.querySelectorAll('button:not([hidden])')];
+    const k = f.indexOf(document.activeElement);
+    f[(k + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
+  }
+}, true);
+
 async function loadBundledList() {
   try {
     const r = await fetch('data/sets.json', { cache: 'no-cache' });
@@ -2441,7 +2685,7 @@ function normalizeState(st) {
   S = Object.assign(defaults(), st && typeof st === 'object' ? st : {});
   if (!CATS.includes(S.category)) S.category = 'multiple';
   S.fontScale = clamp(+S.fontScale || 1, 0.5, 1.6);
-  ['indexByScope', 'answers', 'starred', 'customSubs', 'titles', 'results'].forEach(k => { if (!S[k] || typeof S[k] !== 'object' || Array.isArray(S[k])) S[k] = {}; });
+  ['indexByScope', 'answers', 'starred', 'customSubs', 'titles', 'results', 'tour'].forEach(k => { if (!S[k] || typeof S[k] !== 'object' || Array.isArray(S[k])) S[k] = {}; });
   ['savedTests', 'sets', 'hiddenBundled'].forEach(k => { if (!Array.isArray(S[k])) S[k] = []; });
   if (S.test && (!Array.isArray(S.test.ids) || !S.test.points)) S.test = null;
 }
