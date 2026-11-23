@@ -513,6 +513,7 @@ textarea.f-in{resize:vertical;min-height:84px}
   .tour-x:hover{background:var(--ink-soft)}
 }
 .mrow .go{color:var(--muted);font-size:15px}
+a.mrow{color:inherit;text-decoration:none}
 /* courses: six round buttons above the file list */
 .courses{display:flex;gap:8px;margin:0 2px 8px}
 .course{flex:1 1 0;max-width:44px;aspect-ratio:1;min-width:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--bg);border:1px solid var(--line);font-size:16px;font-weight:650;font-variant-numeric:tabular-nums;color:var(--text);transition:background-color .2s ease,color .2s ease,border-color .2s ease,transform .12s var(--ease-out)}
@@ -601,6 +602,10 @@ const SUB_TYPES = [
 ];
 const SUB_TITLE = Object.fromEntries(SUB_TYPES.map(t => [t[0], t[2]]));
 const LS_KEY = 'TestTrainer.web.v1';
+/* Online counter: Firebase Realtime Database over plain REST — an anonymous random id, no names. Empty = off. */
+const FIREBASE_DB = '';
+const ADMIN_KEY = 'TestTrainer.admin'; // the site owner's GitHub token: present only on their own devices
+const isAdmin = () => { try { return !!localStorage.getItem(ADMIN_KEY); } catch (e) { return false; } };
 const TEXT_PLACEHOLDERS = new Set(['текстовая строка (без учета регистра)', 'текстовая строка']);
 const coll = new Intl.Collator('ru', { numeric: true, sensitivity: 'base' });
 
@@ -950,7 +955,7 @@ function pruneAnswers() {
 window.addEventListener('pagehide', flush);
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flush(); });
 
-const setTitle = s => (s && (S.titles[s.id] || s.title)) || '';
+const setTitle = s => (s && ((!s.bundled && S.titles[s.id]) || s.title)) || '';
 const curSet = () => SETS.find(s => s.id === S.setId) || null;
 const scopeKey = (cat = S.category) => S.setId + '|' + cat;
 const akey = id => S.setId + '|' + id;
@@ -959,10 +964,7 @@ const bankReady = () => bankStatus === 'ready';
 function rebuildSets() {
   const recs = new Map(S.sets.map(r => [r.id, r]));
   const list = [];
-  for (const b of BUNDLED) {
-    if (S.hiddenBundled.includes(b.id)) continue;
-    list.push({ id: b.id, title: b.title, bundled: true, file: b.file, course: b.course, rec: recs.get(b.id) || null });
-  }
+  for (const b of BUNDLED) list.push({ id: b.id, title: b.title, bundled: true, file: b.file, course: b.course, rec: null });
   for (const r of S.sets) if (!list.some(s => s.id === r.id)) list.push({ id: r.id, title: r.title, bundled: false, course: r.course, rec: r });
   SETS = list;
 }
@@ -1098,8 +1100,8 @@ function selectSet(id) {
   S.setId = id;
   S.starOnly = false;
   S.index = S.indexByScope[scopeKey()] || 0;
-  const c = (SETS.find(s => s.id === id) || {}).course;
-  if (c) S.course = c;
+  const t = SETS.find(s => s.id === id);
+  if (t && t.bundled && t.course) S.course = t.course;
   activateSet();
   save();
 }
@@ -1107,8 +1109,8 @@ function selectSet(id) {
 function curCourse() {
   if (S.course) return S.course;
   const s = curSet();
-  if (s && s.course) return s.course;
-  const any = SETS.find(x => x.course);
+  if (s && s.bundled && s.course) return s.course;
+  const any = SETS.find(x => x.bundled && x.course);
   return any ? any.course : 1;
 }
 const COURSES = [1, 2, 3, 4, 5, 6];
@@ -1337,7 +1339,7 @@ async function importText(text, title) {
     return toast('«' + setTitle(same) + '» уже загружен — открыл его');
   }
   let targetId = null;
-  const twin = SETS.find(s => setTitle(s).toLowerCase() === title.toLowerCase());
+  const twin = SETS.find(s => !s.bundled && setTitle(s).toLowerCase() === title.toLowerCase());
   if (twin) {
     const r = await dialog({
       title: 'Файл «' + title + '» уже есть',
@@ -1355,7 +1357,7 @@ async function importText(text, title) {
   done();
   const id = targetId || ('imp-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6));
   const old = S.sets.find(r => r.id === id);
-  const entry = { id, title: targetId ? ((old && old.title) || twin.title) : title, store: ref.store, ref: ref.ref, addedAt: Date.now(), hash, count: b.total, course: (old && old.course) || (twin && twin.course) || curCourse() };
+  const entry = { id, title: targetId ? ((old && old.title) || twin.title) : title, store: ref.store, ref: ref.ref, addedAt: Date.now(), hash, count: b.total, };
   if (old) { Store.delFile(old); S.sets = S.sets.map(r => r.id === id ? entry : r); } else S.sets.push(entry);
   BANKS.set(id, b);
   rebuildSets();
@@ -1364,14 +1366,13 @@ async function importText(text, title) {
   closeDrawer();
   renderAll();
   const extra = b.skipped ? ', пропущено ' + b.skipped : '';
-  toast((targetId ? 'Обновлено' : 'Загружено в ' + entry.course + ' курс') + ': «' + setTitle(SETS.find(s => s.id === id)) + '» — ' + b.total + ' ' + plural(b.total, 'вопрос', 'вопроса', 'вопросов') + extra);
+  toast((targetId ? 'Обновлено' : 'Загружено в «Мои файлы»') + ': «' + setTitle(SETS.find(s => s.id === id)) + '» — ' + b.total + ' ' + plural(b.total, 'вопрос', 'вопроса', 'вопросов') + extra);
 }
 async function deleteSet(id) {
   const s = SETS.find(x => x.id === id);
   if (!s) return;
   if (S.test && S.test.setId === id) S.test = null;
   if (s.rec) { S.sets = S.sets.filter(r => r.id !== id); Store.delFile(s.rec); }
-  if (s.bundled && !S.hiddenBundled.includes(id)) S.hiddenBundled.push(id);
   for (const k of Object.keys(S.answers)) if (k.startsWith(id + '|')) delete S.answers[k];
   for (const k of Object.keys(S.indexByScope)) if (k.startsWith(id + '|')) delete S.indexByScope[k];
   dropResults(id);
@@ -1693,6 +1694,7 @@ function snippetHTML(it, toks) {
   return `<span class="sres-snip"><em>${best.label}:</em> ${markHTML(text, matchRanges(text, rest))}</span>`;
 }
 function searchHTML(q) {
+  if (/^(admin|админ|админка)$/i.test(q.trim())) return `<section class="msec"><a class="mrow" href="admin.html"><span class="mico">${I.gear}</span><span class="mtxt">Админка<small>Только для владельца сайта</small></span><span class="go">${I.chevR}</span></a></section>`;
   if (!bankReady()) return '<section class="msec"><p class="msec-note">Сначала выберите файл с вопросами.</p></section>';
   const res = searchBank(bank, q);
   const toks = norm(q).split(' ').filter(Boolean);
@@ -1774,24 +1776,27 @@ function menuTestHTML() {
   return h + '</section>';
 }
 function menuFilesHTML() {
-  const c = curCourse(), has = new Set(SETS.map(s => s.course));
-  const list = SETS.filter(s => s.course === c || !s.course);
+  const c = curCourse(), course = SETS.filter(s => s.bundled), mine = SETS.filter(s => !s.bundled);
+  const has = new Set(course.map(s => s.course));
+  const list = course.filter(s => s.course === c || !s.course);
   let h = `<section class="msec" id="m-files"><div class="sec-label">Курсы</div>${coursePills(c, 'data-act="m-course" data-c', has)}`;
   if (!list.length) h += `<p class="msec-note">Для ${c} курса файлов пока нет.</p>`;
-  for (const s of list) {
-    const on = s.id === S.setId;
-    h += `<div class="mline"><button type="button" class="mrow${on ? ' on' : ''}" data-act="m-set" data-id="${esc(s.id)}"${on ? ' aria-current="true"' : ''}><span class="mico">${I.doc}</span><span class="mtxt">${esc(setTitle(s))}</span>${on ? `<span class="mtick">${I.check}</span>` : ''}</button><button type="button" class="mmore" data-act="m-set-more" data-id="${esc(s.id)}" aria-label="Действия с файлом «${esc(setTitle(s))}»">${I.more}</button></div>`;
-  }
+  h += list.map(fileRowHTML).join('') + '</section>';
+  h += `<section class="msec" id="m-mine"><div class="sec-label">Мои файлы</div>`;
+  if (!mine.length) h += '<p class="msec-note">Свои JSON с вопросами — их видите только вы.</p>';
+  h += mine.map(fileRowHTML).join('');
   h += `<div class="m-imp"><label class="mbtn pri" for="fileInput" role="button" tabindex="0">${I.plus}<span>Загрузить JSON</span></label><button type="button" class="mbtn" data-act="paste-json" aria-label="Вставить JSON текстом">${I.paste}<span>Вставить</span></button></div>`;
-  const hidden = BUNDLED.filter(b => S.hiddenBundled.includes(b.id)).length;
-  if (hidden) h += `<button type="button" class="mlink" data-act="m-unhide">Вернуть скрытые встроенные файлы (${hidden})</button>`;
   return h + '</section>';
+}
+function fileRowHTML(s) {
+  const on = s.id === S.setId;
+  return `<div class="mline"><button type="button" class="mrow${on ? ' on' : ''}" data-act="m-set" data-id="${esc(s.id)}"${on ? ' aria-current="true"' : ''}><span class="mico">${I.doc}</span><span class="mtxt">${esc(setTitle(s))}</span>${on ? `<span class="mtick">${I.check}</span>` : ''}</button><button type="button" class="mmore" data-act="m-set-more" data-id="${esc(s.id)}" aria-label="Действия с файлом «${esc(setTitle(s))}»">${I.more}</button></div>`;
 }
 function menuSettingsHTML() {
   const pct = Math.round(S.fontScale * 100);
   return `<section class="msec m-set${settingsOpen ? ' open' : ''}"><button type="button" class="mrow set-toggle" data-act="m-settings" aria-expanded="${settingsOpen}" aria-controls="setBody"><span class="mico">${I.gear}</span><span class="mtxt">Настройки</span><span class="go">${I.chevD}</span></button>
 <div class="set-body" id="setBody"><div class="set-inner"><div class="mgroup">
-<button type="button" class="mrow" data-act="m-tour"><span class="mtxt">Обучение<small>Показать подсказки ещё раз</small></span><span class="go">${I.chevR}</span></button>
+${isAdmin() ? `<a class="mrow" href="admin.html"><span class="mtxt">Админка<small>Онлайн и файлы курсов</small></span><span class="go">${I.chevR}</span></a>` : ''}<button type="button" class="mrow" data-act="m-tour"><span class="mtxt">Обучение<small>Показать подсказки ещё раз</small></span><span class="go">${I.chevR}</span></button>
 <div class="mrow static"><span class="mtxt">Автопереход<small>После верного ответа — следующий вопрос</small></span><button type="button" class="switch" role="switch" aria-checked="${S.autoAdvance}" data-act="toggle-auto" aria-label="Автопереход"><span></span></button></div>
 <div class="fs-block"><div class="fs-head"><span>Размер текста</span><span class="fs-val"><span id="fontPct">${pct}%</span>${pct !== 100 ? '<button type="button" class="mlink" data-act="m-font-reset">Сбросить</button>' : ''}</span></div><div class="fs-row"><button type="button" class="sq-btn a-sm" data-act="m-font-dec" aria-label="Мельче"${S.fontScale <= 0.5 ? ' disabled' : ''}>A</button><input type="range" id="fontRange" min="50" max="160" step="5" value="${pct}" aria-label="Масштаб текста вопросов"><button type="button" class="sq-btn a-lg" data-act="m-font-inc" aria-label="Крупнее"${S.fontScale >= 1.6 ? ' disabled' : ''}>A</button></div></div>
 </div></div></div></section>`;
@@ -1977,13 +1982,12 @@ async function shareSetFile(s, text) {
 async function openSetActions(id) {
   const s = SETS.find(x => x.id === id);
   if (!s) return;
-  const hideOnly = s.bundled && !s.rec;
   const isCur = id === S.setId;
   const answered = answeredCount(id);
   // Read the file now, so «Отправить» can open the share sheet right on the tap.
   let fileText = null;
   const textP = setFileText(s).then(t => (fileText = t)).catch(() => null);
-  const src = (s.bundled ? 'Встроенный' : 'Загруженный') + (s.rec && s.rec.store === 'cloud' ? ', в аккаунте' : '');
+  const src = (s.bundled ? (s.course ? s.course + ' курс' : 'Курс') : 'Мой файл') + (s.rec && s.rec.store === 'cloud' ? ', в аккаунте' : '');
   const infoHTML = b => {
     if (!b) return [src + ', считаю вопросы…', ''];
     if (b.error) return [src + ', не открылся', ''];
@@ -1995,21 +1999,12 @@ async function openSetActions(id) {
   const row = (act, icon, label, small = '', cls = '') => `<button type="button" class="fa-row${cls}" data-s="${act}">${icon}<span>${label}${small ? `<small>${small}</small>` : ''}</span></button>`;
   const html = `<div class="fa"><div class="fa-head"><span class="fa-ico">${I.doc}</span><span class="fa-name"><b>${esc(setTitle(s))}</b><small id="faSub">${esc(sub0)}</small></span></div>
 <div class="fa-cats" id="faCats">${chips0}</div>
-${s.bundled ? '' : `<div class="fa-course"><span>Курс</span>${coursePills(s.course, 'data-s="course" data-c', null)}</div>`}
-<div class="fa-list">${isCur ? '' : row('open', FA_ICON.open, 'Открыть')}${row('rename', FA_ICON.rename, 'Переименовать')}${row('share', FA_ICON.share, 'Отправить JSON', 'В «Файлы», AirDrop, Telegram')}${answered ? row('reset', FA_ICON.reset, 'Сбросить ответы', answered + ' ' + plural(answered, 'вопрос', 'вопроса', 'вопросов') + ' с ответами') : ''}${row('delete', hideOnly ? I.eyeOff : I.trash, hideOnly ? 'Скрыть из списка' : 'Удалить файл', hideOnly ? 'Вернуть можно в меню' : '', ' danger')}</div>
+<div class="fa-list">${isCur ? '' : row('open', FA_ICON.open, 'Открыть')}${s.bundled ? '' : row('rename', FA_ICON.rename, 'Переименовать')}${row('share', FA_ICON.share, 'Отправить JSON', 'В «Файлы», AirDrop, Telegram')}${answered ? row('reset', FA_ICON.reset, 'Сбросить ответы', answered + ' ' + plural(answered, 'вопрос', 'вопроса', 'вопросов') + ' с ответами') : ''}${s.bundled ? '' : row('delete', I.trash, 'Удалить файл', '', ' danger')}</div>
 <button type="button" class="dlg-btn fa-done" data-s="close">Готово</button></div>`;
   const sh = openSheet({
     cls: 'dialog', html,
     onClick: async (act, el, e, close) => {
       if (act === 'close') return close();
-      if (act === 'course') {
-        const n = +el.dataset.c, r = S.sets.find(x => x.id === id);
-        if (!r || r.course === n) return;
-        r.course = n; s.course = n; S.course = n;
-        rebuildSets(); save(); renderAll();
-        el.parentElement.querySelectorAll('.course').forEach(b => { const on = b === el; b.classList.toggle('on', on); b.setAttribute('aria-checked', String(on)); });
-        return toast('«' + setTitle(s) + '» — теперь в ' + n + ' курсе');
-      }
       if (act === 'share') {
         if (fileText == null) await textP;
         if (fileText == null) return alertDlg('Файл не открылся', 'Не получилось прочитать файл. Попробуйте загрузить его заново.');
@@ -2031,11 +2026,9 @@ ${s.bundled ? '' : `<div class="fa-course"><span>Курс</span>${coursePills(s.
         save(); renderAll(); toast('Ответы сброшены');
         return;
       }
-      if (act === 'delete') {
-        const del = hideOnly ? 'Скрыть' : 'Удалить';
-        const msg = hideOnly ? 'Встроенный файл «' + setTitle(s) + '» пропадёт из списка. Вернуть его можно в меню.' : 'Файл «' + setTitle(s) + '», его прогресс, избранное и сохранённые тесты будут удалены.';
-        const r2 = await dialog({ title: del + ' файл?', message: msg, buttons: [{ id: 'cancel', label: 'Отмена' }, { id: 'ok', label: del, kind: 'danger' }] });
-        if (r2.id === 'ok') { await deleteSet(id); toast(hideOnly ? 'Файл скрыт' : 'Файл удалён'); }
+      if (act === 'delete' && !s.bundled) {
+        const r2 = await dialog({ title: 'Удалить файл?', message: 'Файл «' + setTitle(s) + '», его прогресс, избранное и сохранённые тесты будут удалены.', buttons: [{ id: 'cancel', label: 'Отмена' }, { id: 'ok', label: 'Удалить', kind: 'danger' }] });
+        if (r2.id === 'ok') { await deleteSet(id); toast('Файл удалён'); }
       }
     }
   });
@@ -2302,7 +2295,6 @@ const ACT = {
   'paste-json': () => openPaste(),
   'm-set': el => { selectSet(el.dataset.id); elSearch.value = ''; renderAll(); },
   'm-set-more': el => openSetActions(el.dataset.id),
-  'm-unhide': () => { S.hiddenBundled = []; rebuildSets(); save(); renderAll(); toast('Встроенные файлы снова в списке'); },
   'm-cat': el => { selectCategory(el.dataset.cat); closeDrawer(); render(); },
   'm-star-cat': el => { selectStarred(el.dataset.cat); closeDrawer(); render(); },
   'm-star-clear': async el => {
@@ -2744,6 +2736,43 @@ window.addEventListener('keydown', e => {
   }
 }, true);
 
+/* ---------- presence: «сейчас в сети» and «сегодня» for the admin page ---------- */
+const Presence = {
+  sid: Math.random().toString(36).slice(2, 12) + Date.now().toString(36),
+  timer: 0,
+  url: path => FIREBASE_DB.replace(/\/+$/, '') + '/' + path + '.json',
+  vid() {
+    try {
+      let v = localStorage.getItem('TestTrainer.vid');
+      if (!v) { v = Math.random().toString(36).slice(2, 12) + Date.now().toString(36); localStorage.setItem('TestTrainer.vid', v); }
+      return v;
+    } catch (e) { return this.sid; }
+  },
+  beat() {
+    fetch(this.url('online/' + this.sid), { method: 'PUT', body: '{".sv":"timestamp"}' }).catch(() => {});
+    const day = new Date().toLocaleDateString('sv'); // 2026-11-23
+    let seen = '';
+    try { seen = localStorage.getItem('TestTrainer.day') || ''; } catch (e) {}
+    if (seen !== day) {
+      fetch(this.url('days/' + day + '/' + this.vid()), { method: 'PUT', body: 'true' })
+        .then(r => { if (r.ok) try { localStorage.setItem('TestTrainer.day', day); } catch (e) {} }).catch(() => {});
+    }
+  },
+  on() { if (this.timer) return; this.beat(); this.timer = setInterval(() => this.beat(), 60000); },
+  off() {
+    if (!this.timer) return;
+    clearInterval(this.timer); this.timer = 0;
+    fetch(this.url('online/' + this.sid), { method: 'DELETE', keepalive: true }).catch(() => {});
+  },
+  start() {
+    if (!FIREBASE_DB) return;
+    const sync = () => (document.visibilityState === 'visible' ? this.on() : this.off());
+    document.addEventListener('visibilitychange', sync);
+    window.addEventListener('pagehide', () => this.off());
+    sync();
+  }
+};
+
 async function loadBundledList() {
   try {
     const r = await fetch('data/sets.json', { cache: 'no-cache' });
@@ -2760,8 +2789,6 @@ function normalizeState(st) {
   ['indexByScope', 'answers', 'starred', 'customSubs', 'titles', 'results', 'tour'].forEach(k => { if (!S[k] || typeof S[k] !== 'object' || Array.isArray(S[k])) S[k] = {}; });
   ['savedTests', 'sets', 'hiddenBundled'].forEach(k => { if (!Array.isArray(S[k])) S[k] = []; });
   if (S.test && (!Array.isArray(S.test.ids) || !S.test.points)) S.test = null;
-  // files loaded before courses existed go to the 3rd course; «…» next to a file moves it
-  S.sets.forEach(r => { if (!(r.course >= 1 && r.course <= 6)) r.course = 3; });
   if (!(S.course >= 1 && S.course <= 6)) S.course = 0;
 }
 async function boot() {
@@ -2779,6 +2806,7 @@ async function boot() {
   render();
   if (fresh || Store.mode === 'cloud') flush();
   if (Store.cloudDown) toast('Нет связи с аккаунтом — прогресс сохраняется в этом браузере');
+  Presence.start();
   if ('serviceWorker' in navigator && document.querySelector('link[rel="manifest"]') && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     const hadSW = !!navigator.serviceWorker.controller;
     navigator.serviceWorker.register('sw.js').then(reg => {

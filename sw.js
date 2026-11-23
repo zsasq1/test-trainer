@@ -1,7 +1,7 @@
 // Офлайн-кэш тренажёра. Файл создаётся скриптом собрать.py — не правьте вручную.
-const CACHE = 'trainer-20261123-190406';
+const CACHE = 'trainer-20261123-191512';
 const FONTS = 'trainer-fonts-v1'; // шрифты Google: один раз скачать — дальше работают без сети
-const ASSETS = ["./", "index.html", "manifest.webmanifest", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png", "data/sets.json", "data/3/topka.json"];
+const ASSETS = ["./", "index.html", "manifest.webmanifest", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png", "data/sets.json"];
 
 self.addEventListener('install', e => {
   // cache: 'reload' — мимо кэша браузера, иначе GitHub Pages ещё 10 минут отдаёт старые файлы
@@ -29,6 +29,22 @@ self.addEventListener('fetch', e => {
     return;
   }
   if (origin !== location.origin) return;
+  // Список файлов курсов маленький и меняется из админки: сначала сеть (3 с), без сети — из памяти.
+  if (new URL(req.url).pathname.endsWith('/data/sets.json')) {
+    e.respondWith((async () => {
+      const cache = await caches.open(CACHE);
+      try {
+        const res = await Promise.race([fetch(req.url, { cache: 'no-cache' }), new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 3000))]);
+        if (res.ok) cache.put(req, res.clone());
+        return res;
+      } catch (err) {
+        const hit = await cache.match(req, { ignoreSearch: true });
+        if (hit) return hit;
+        throw err;
+      }
+    })());
+    return;
+  }
   e.respondWith((async () => {
     const cache = await caches.open(CACHE);
     const nav = req.mode === 'navigate';

@@ -15,7 +15,6 @@
 import json
 import pathlib
 import time
-import urllib.parse
 
 ROOT = pathlib.Path(__file__).resolve().parent
 DATA = ROOT / "data"
@@ -72,6 +71,22 @@ self.addEventListener('fetch', e => {
     return;
   }
   if (origin !== location.origin) return;
+  // Список файлов курсов маленький и меняется из админки: сначала сеть (3 с), без сети — из памяти.
+  if (new URL(req.url).pathname.endsWith('/data/sets.json')) {
+    e.respondWith((async () => {
+      const cache = await caches.open(CACHE);
+      try {
+        const res = await Promise.race([fetch(req.url, { cache: 'no-cache' }), new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 3000))]);
+        if (res.ok) cache.put(req, res.clone());
+        return res;
+      } catch (err) {
+        const hit = await cache.match(req, { ignoreSearch: true });
+        if (hit) return hit;
+        throw err;
+      }
+    })());
+    return;
+  }
   e.respondWith((async () => {
     const cache = await caches.open(CACHE);
     const nav = req.mode === 'navigate';
@@ -139,7 +154,7 @@ def main():
 
     assets = ["./", "index.html", "manifest.webmanifest", "icons/icon-180.png", "icons/icon-192.png",
               "icons/icon-512.png", "data/sets.json"]
-    assets += ["data/" + urllib.parse.quote(s["file"]) for s in sets]
+    # файлы курсов не скачиваются заранее: каждый кэшируется, когда его впервые откроют
     sw = SW.replace("__VERSION__", time.strftime("%Y%m%d-%H%M%S")).replace("__ASSETS__", json.dumps(assets, ensure_ascii=False))
     (ROOT / "sw.js").write_text(sw, "utf-8")
     print("  ✓ sw.js (офлайн-кэш)")

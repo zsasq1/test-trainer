@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F5F4ED" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#262624" media="(prefers-color-scheme: dark)">
+<title>Админка</title>
+<link rel="icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..700&display=swap">
+<style>
+/* Owner-only page: who is on the site now, and the course files everyone sees.
+   Same look as the trainer: warm ivory, near-black ink, clay accent. */
+:root{
+  --bg:#F5F4ED; --surface:#FFFFFF; --line:#E3E0D5; --text:#1F1E1D; --muted:#6E6B63; --ink-soft:#EEECE3;
+  --accent:#B85735; --accent-btn:#B85735; --green:#3E7A35; --soft-green:#E7F0E1; --red:#B12C44; --soft-red:#F8E5E7;
+  --on-accent:#FFFFFF; --shadow:rgba(31,30,29,.13); --scrim:rgba(31,30,29,.32); --toast-bg:#1F1E1D; --toast-fg:#F5F4ED;
+  --font:"Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --ease-out:cubic-bezier(0.23,1,0.32,1);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#262624; --surface:#30302E; --line:#42413D; --text:#F2F0E8; --muted:#A8A59B; --ink-soft:#3B3A37;
+    --accent:#E2896A; --accent-btn:#B85735; --green:#8DC57C; --soft-green:#2D3A29; --red:#F08A96; --soft-red:#472A30;
+    --shadow:rgba(0,0,0,.45); --scrim:rgba(0,0,0,.55); --toast-bg:#F2F0E8; --toast-fg:#262624; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#262624; --surface:#30302E; --line:#42413D; --text:#F2F0E8; --muted:#A8A59B; --ink-soft:#3B3A37;
+  --accent:#E2896A; --accent-btn:#B85735; --green:#8DC57C; --soft-green:#2D3A29; --red:#F08A96; --soft-red:#472A30;
+  --shadow:rgba(0,0,0,.45); --scrim:rgba(0,0,0,.55); --toast-bg:#F2F0E8; --toast-fg:#262624; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font:15px/1.4 var(--font);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;padding:0;cursor:pointer;touch-action:manipulation}
+button:disabled{opacity:.45;cursor:default}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.i{width:1.2em;height:1.2em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;display:block}
+
+.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;padding:calc(8px + env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) 8px max(12px,env(safe-area-inset-left,0px));background:var(--bg);border-bottom:1px solid var(--line)}
+.back{display:inline-flex;align-items:center;gap:2px;min-height:40px;padding:0 8px 0 2px;border-radius:10px;color:var(--accent);font-size:16px;font-weight:600;text-decoration:none}
+.back:active{background:var(--ink-soft)}
+.top h1{flex:1;margin:0;font-size:17px;font-weight:650;text-align:center;padding-right:72px}
+main{max-width:620px;margin:0 auto;padding:18px max(16px,env(safe-area-inset-left,0px)) calc(32px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:22px}
+.label{font-size:13.5px;font-weight:600;color:var(--muted);margin:0 4px 6px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+.note{margin:0;font-size:14px;line-height:1.45;color:var(--muted)}
+
+/* online */
+.live{display:flex;align-items:baseline;gap:10px}
+.live b{font-size:46px;font-weight:700;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.live span{font-size:16px;font-weight:600;color:var(--muted)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--muted);align-self:center;margin-left:auto}
+.dot.on{background:var(--green);animation:breathe 2.4s ease-in-out infinite}
+@keyframes breathe{50%{opacity:.35}}
+.stats{display:flex;gap:8px;margin-top:14px}
+.stat{flex:1;padding:10px 12px;border-radius:12px;background:var(--bg)}
+.stat b{display:block;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.stat small{font-size:12.5px;color:var(--muted)}
+.upd{margin-top:10px;font-size:12.5px;color:var(--muted)}
+
+/* courses */
+.courses{display:flex;gap:8px;margin:0 2px 10px}
+.course{flex:1 1 0;max-width:46px;aspect-ratio:1;min-width:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--line);font-size:16px;font-weight:650;font-variant-numeric:tabular-nums;transition:background-color .2s ease,color .2s ease,border-color .2s ease,transform .12s var(--ease-out)}
+.course.empty{color:var(--muted)}
+.course.on{background:var(--text);border-color:var(--text);color:var(--bg)}
+.course:active{transform:scale(.94)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.row{display:flex;align-items:center;gap:10px;min-height:56px;padding:8px 8px 8px 14px}
+.row+.row{border-top:1px solid var(--line)}
+.row .t{flex:1;min-width:0}
+.row .t b{display:block;font-size:16px;font-weight:600;overflow-wrap:anywhere}
+.row .t small{font-size:12.5px;color:var(--muted)}
+.ib{width:40px;height:40px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);font-size:18px}
+.ib:active{background:var(--ink-soft)}
+.ib.del{color:var(--red)}
+.empty-row{padding:16px 14px;color:var(--muted);font-size:14.5px}
+.btn{min-height:48px;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 16px;border-radius:14px;font-size:16px;font-weight:600;background:var(--accent-btn);color:var(--on-accent);transition:transform .12s var(--ease-out)}
+.btn:active:not(:disabled){transform:scale(.98)}
+.btn.gray{background:var(--surface);color:var(--text);box-shadow:inset 0 0 0 1px var(--line)}
+.btn.red{background:var(--surface);color:var(--red);box-shadow:inset 0 0 0 1px var(--line)}
+.add{margin-top:10px}
+
+/* login */
+.field{width:100%;min-height:48px;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-size:16px;margin:12px 0}
+.field:focus{outline:none;border-color:var(--accent)}
+details.how{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+details.how summary{cursor:pointer;font-weight:600;color:var(--accent);list-style:none;min-height:36px;display:flex;align-items:center}
+details.how summary::-webkit-details-marker{display:none}
+details.how ol{margin:6px 0 0;padding-left:20px;color:var(--muted);font-size:14px;line-height:1.5}
+details.how a{color:var(--accent)}
+.err{color:var(--red);font-size:14px;margin:0 0 8px}
+
+/* dialog + toast */
+.wrap{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--scrim);opacity:0;transition:opacity .2s var(--ease-out)}
+.wrap.on{opacity:1}
+.dlg{width:min(400px,100%);background:var(--surface);border-radius:20px;padding:20px;box-shadow:0 14px 44px rgba(0,0,0,.24);transform:scale(.96);transition:transform .25s var(--ease-out)}
+.wrap.on .dlg{transform:none}
+.dlg h2{margin:0 0 6px;font-size:18px;font-weight:650}
+.dlg p{margin:0;color:var(--muted);font-size:15px;line-height:1.45;white-space:pre-line}
+.dlg .btns{display:flex;gap:8px;margin-top:16px}
+.dlg .btns .btn{min-height:44px;font-size:15.5px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:30;max-width:calc(100% - 32px);width:max-content;padding:11px 16px;border-radius:12px;background:var(--toast-bg);color:var(--toast-fg);font-size:14px;font-weight:600;text-align:center;opacity:0;transform:translate(-50%,8px);transition:opacity .2s var(--ease-out),transform .2s var(--ease-out);pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.busy{position:fixed;inset:0;z-index:25;display:flex;align-items:center;justify-content:center;background:var(--scrim)}
+.busy div{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:14px;background:var(--surface);font-weight:600;box-shadow:0 8px 30px var(--shadow)}
+.spin{width:20px;height:20px;border-radius:50%;border:2.5px solid var(--line);border-top-color:var(--accent);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (hover:hover) and (pointer:fine){
+  .ib:hover,.back:hover{background:var(--ink-soft)}
+  .course:not(.on):hover{border-color:var(--muted)}
+}
+@media (prefers-reduced-motion: reduce){
+  .dot.on{animation:none}
+  .dlg,.wrap.on .dlg{transform:none}
+  .btn:active:not(:disabled),.course:active{transform:none}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="back" href="./"><svg class="i" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>Тренажёр</a>
+  <h1>Админка</h1>
+</header>
+<main>
+  <section id="login" hidden>
+    <div class="label">Вход для владельца</div>
+    <div class="card">
+      <p class="note">Нужен токен GitHub с доступом к репозиторию <b>test-trainer</b>. Он хранится только на этом устройстве и никуда не отправляется, кроме GitHub.</p>
+      <input class="field" id="token" type="password" placeholder="github_pat_…" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <p class="err" id="loginErr" hidden></p>
+      <button class="btn" id="loginBtn" type="button">Войти</button>
+      <details class="how"><summary>Как получить токен</summary>
+        <ol>
+          <li>Откройте <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com → новый токен</a>.</li>
+          <li>Название — любое, например «Админка тренажёра». Срок — на ваше усмотрение.</li>
+          <li>Repository access → <b>Only select repositories</b> → <b>test-trainer</b>.</li>
+          <li>Permissions → Repository permissions → <b>Contents</b> → <b>Read and write</b>.</li>
+          <li>Generate token, скопируйте и вставьте сюда.</li>
+        </ol>
+      </details>
+    </div>
+  </section>
+
+  <section id="panel" hidden>
+    <div class="label">Сейчас на сайте</div>
+    <div class="card" id="online">
+      <div class="live"><b id="nowN">—</b><span id="nowW">в сети</span><i class="dot" id="dot"></i></div>
+      <div class="stats">
+        <div class="stat"><b id="todayN">—</b><small>сегодня</small></div>
+        <div class="stat"><b id="weekN">—</b><small>за 7 дней</small></div>
+      </div>
+      <div class="upd" id="upd"></div>
+    </div>
+  </section>
+
+  <section id="files" hidden>
+    <div class="label">Файлы курсов — их видят все</div>
+    <div class="courses" id="courses" role="radiogroup" aria-label="Курс"></div>
+    <div class="list" id="list"></div>
+    <button class="btn add" id="addBtn" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span id="addLbl">Добавить файл</span></button>
+    <input type="file" id="pick" accept=".json,application/json,text/json,text/plain" multiple hidden>
+    <p class="note" style="margin:10px 4px 0">После изменения сайт обновляется у всех примерно за 1–2 минуты.</p>
+  </section>
+
+  <section id="out" hidden>
+    <button class="btn red" id="logoutBtn" type="button">Выйти на этом устройстве</button>
+  </section>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+/* Settings. FIREBASE_DB must match the one in app.html. */
+const FIREBASE_DB = '';
+const REPO = 'zsasq1/test-trainer', BRANCH = 'main';
+const ADMIN_KEY = 'TestTrainer.admin';
+const COURSES = [1, 2, 3, 4, 5, 6];
+const TYPES = new Set(['single', 'multiple', 'dropdown', 'sortable', 'text_input', 'drag_and_drop', 'cluster_member']);
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const plural = (n, a, b, c) => { const m = n % 10, h = n % 100; return m === 1 && h !== 11 ? a : m >= 2 && m <= 4 && (h < 12 || h > 14) ? b : c; };
+const kb = n => n >= 1048576 ? (n / 1048576).toFixed(1).replace('.', ',') + ' МБ' : Math.max(1, Math.round(n / 1024)) + ' КБ';
+const ls = { get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} } };
+const ICON = {
+  edit: '<svg class="i" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16Z"/></svg>',
+  trash: '<svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M9 7V4.5h6V7M6 7l1 13h10l1-13"/></svg>'
+};
+
+let token = ls.get(ADMIN_KEY) || '';
+let course = +ls.get('TestTrainer.adminCourse') || 3;
+let repo = null; // { head, tree, sets, sizes }
+
+/* ---------- small UI helpers ---------- */
+let toastT = 0;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 3200);
+}
+function busy(msg) {
+  const el = document.createElement('div'); el.className = 'busy';
+  el.innerHTML = `<div><span class="spin"></span><span>${esc(msg)}</span></div>`;
+  document.body.appendChild(el);
+  return { set: m => { el.querySelector('span:last-child').textContent = m; }, done: () => el.remove() };
+}
+// One small dialog for confirm / rename. Resolves with {ok, value}.
+function dialog({ title, text = '', input = null, ok = 'Готово', danger = false }) {
+  return new Promise(resolve => {
+    const w = document.createElement('div'); w.className = 'wrap';
+    w.innerHTML = `<div class="dlg" role="dialog" aria-modal="true"><h2>${esc(title)}</h2>${text ? `<p>${esc(text)}</p>` : ''}${input != null ? `<input class="field" value="${esc(input)}" autocomplete="off">` : ''}<div class="btns"><button class="btn gray" data-r="0" type="button">Отмена</button><button class="btn${danger ? ' red' : ''}" data-r="1" type="button">${esc(ok)}</button></div></div>`;
+    document.body.appendChild(w);
+    requestAnimationFrame(() => w.classList.add('on'));
+    const inp = w.querySelector('input');
+    (inp || w.querySelector('[data-r="1"]')).focus();
+    const end = r => { w.classList.remove('on'); setTimeout(() => w.remove(), 200); resolve({ ok: r, value: inp ? inp.value.trim() : '' }); };
+    w.addEventListener('click', e => { const b = e.target.closest('[data-r]'); if (b) end(b.dataset.r === '1'); else if (e.target === w) end(false); });
+    w.addEventListener('keydown', e => { if (e.key === 'Escape') end(false); if (e.key === 'Enter' && inp) end(true); });
+  });
+}
+
+/* ---------- GitHub: the course files live in the site's own repository ---------- */
+async function gh(path, opts = {}) {
+  const r = await fetch('https://api.github.com/repos/' + REPO + path, {
+    ...opts, cache: 'no-store',
+    headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', ...(opts.body ? { 'Content-Type': 'application/json' } : {}) }
+  });
+  if (!r.ok) {
+    const e = new Error(r.status === 401 ? 'Токен не подходит или истёк.' : r.status === 403 || r.status === 404 ? 'У токена нет доступа к test-trainer (нужно Contents: Read and write).' : 'GitHub ответил ошибкой ' + r.status + '.');
+    e.status = r.status; throw e;
+  }
+  return r.status === 204 ? null : r.json();
+}
+const fromB64 = b64 => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\s/g, '')), c => c.charCodeAt(0)));
+async function loadRepo() {
+  const ref = await gh('/git/ref/heads/' + BRANCH);
+  const commit = await gh('/git/commits/' + ref.object.sha);
+  const tree = await gh('/git/trees/' + commit.tree.sha + '?recursive=1');
+  const sizes = {};
+  let setsSha = null;
+  for (const t of tree.tree) {
+    if (t.type !== 'blob' || !t.path.startsWith('data/')) continue;
+    sizes[t.path.slice(5)] = t.size;
+    if (t.path === 'data/sets.json') setsSha = t.sha;
+  }
+  let sets = [];
+  if (setsSha) { try { sets = JSON.parse(fromB64((await gh('/git/blobs/' + setsSha)).content)); } catch (e) { sets = []; } }
+  return { head: ref.object.sha, tree: commit.tree.sha, sets: Array.isArray(sets) ? sets : [], sizes };
+}
+// One commit: new/removed files plus the updated list. Retried once if the branch moved meanwhile.
+async function publish(message, files, edit) {
+  const blobs = new Map();
+  for (let attempt = 0; ; attempt++) {
+    const cur = await loadRepo();
+    const entries = [];
+    for (const f of files) {
+      if (f.remove) { entries.push({ path: 'data/' + f.path, mode: '100644', type: 'blob', sha: null }); continue; }
+      if (!blobs.has(f.path)) blobs.set(f.path, (await gh('/git/blobs', { method: 'POST', body: JSON.stringify({ content: f.content, encoding: 'utf-8' }) })).sha);
+      entries.push({ path: 'data/' + f.path, mode: '100644', type: 'blob', sha: blobs.get(f.path) });
+    }
+    const sets = edit(cur.sets.slice());
+    entries.push({ path: 'data/sets.json', mode: '100644', type: 'blob', content: JSON.stringify(sets, null, 2) + '\n' });
+    const tree = await gh('/git/trees', { method: 'POST', body: JSON.stringify({ base_tree: cur.tree, tree: entries }) });
+    const commit = await gh('/git/commits', { method: 'POST', body: JSON.stringify({ message, tree: tree.sha, parents: [cur.head] }) });
+    try {
+      await gh('/git/refs/heads/' + BRANCH, { method: 'PATCH', body: JSON.stringify({ sha: commit.sha, force: false }) });
+      return;
+    } catch (e) { if (attempt || e.status !== 422) throw e; }
+  }
+}
+
+/* ---------- files of a course ---------- */
+const courseOf = s => +s.course || +((s.file || '').match(/^([1-6])\//) || [])[1] || 0;
+function renderFiles() {
+  if (!repo) return;
+  const has = new Set(repo.sets.map(courseOf));
+  $('#courses').innerHTML = COURSES.map(n => `<button type="button" class="course${n === course ? ' on' : ''}${has.has(n) ? '' : ' empty'}" role="radio" aria-checked="${n === course}" data-c="${n}" aria-label="${n} курс">${n}</button>`).join('');
+  const list = repo.sets.filter(s => courseOf(s) === course);
+  $('#list').innerHTML = list.length ? list.map(s => `<div class="row"><div class="t"><b>${esc(s.title || s.file)}</b><small>${esc(kb(repo.sizes[s.file] || 0))}</small></div><button type="button" class="ib" data-edit="${esc(s.file)}" aria-label="Переименовать «${esc(s.title)}»">${ICON.edit}</button><button type="button" class="ib del" data-del="${esc(s.file)}" aria-label="Удалить «${esc(s.title)}»">${ICON.trash}</button></div>`).join('')
+    : `<div class="empty-row">В ${course} курсе пока нет файлов.</div>`;
+  $('#addLbl').textContent = 'Добавить файл в ' + course + ' курс';
+}
+async function refreshFiles() {
+  try { repo = await loadRepo(); renderFiles(); }
+  catch (e) { if (e.status === 401) return logout(e.message); toast(e.message); }
+}
+const TR = { а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z', и: 'i', й: 'y', к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u', ф: 'f', х: 'h', ц: 'c', ч: 'ch', ш: 'sh', щ: 'sch', ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya' };
+const slug = t => t.toLowerCase().split('').map(c => TR[c] != null ? TR[c] : c).join('').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'fail';
+function freePath(c, base) {
+  let p = c + '/' + base + '.json', k = 2;
+  while (repo.sizes[p] != null || repo.sets.some(s => s.file === p)) p = c + '/' + base + '-' + k++ + '.json';
+  return p;
+}
+async function addFiles(files) {
+  for (const f of files) {
+    let text;
+    try { text = (await f.text()).replace(/^﻿/, ''); } catch (e) { toast('Не удалось прочитать ' + f.name); continue; }
+    let obj;
+    try { obj = JSON.parse(text); } catch (e) { await dialog({ title: 'Это не JSON', text: '«' + f.name + '» не читается как JSON: ' + e.message, ok: 'Понятно' }); continue; }
+    const n = obj && typeof obj === 'object' && !Array.isArray(obj) ? Object.values(obj).filter(v => v && typeof v === 'object' && TYPES.has(v.type)).length : 0;
+    if (!n) { await dialog({ title: 'В файле нет вопросов', text: '«' + f.name + '» — ожидается объект вида {"Текст вопроса": {"type": "single", …}}.', ok: 'Понятно' }); continue; }
+    const r = await dialog({ title: 'Добавить в ' + course + ' курс', text: n + ' ' + plural(n, 'вопрос', 'вопроса', 'вопросов') + '. Название в меню:', input: f.name.replace(/\.[^.]+$/, ''), ok: 'Опубликовать' });
+    if (!r.ok) continue;
+    const title = r.value || f.name.replace(/\.[^.]+$/, '');
+    const path = freePath(course, slug(title)), c = course;
+    const b = busy('Публикую «' + title + '»…');
+    try {
+      await publish('Админка: «' + title + '» в ' + c + ' курс', [{ path, content: text }], sets => sets.concat([{ file: path, title, course: c }]));
+      toast('«' + title + '» добавлен. У всех появится через 1–2 минуты.');
+    } catch (e) { toast(e.message); }
+    b.done();
+    await refreshFiles();
+  }
+}
+async function removeFile(file) {
+  const s = repo.sets.find(x => x.file === file);
+  if (!s) return;
+  const r = await dialog({ title: 'Удалить «' + s.title + '»?', text: 'Файл пропадёт из ' + courseOf(s) + ' курса у всех. Прогресс посетителей по нему тоже пропадёт.', ok: 'Удалить', danger: true });
+  if (!r.ok) return;
+  const b = busy('Удаляю…');
+  try {
+    await publish('Админка: удалён «' + s.title + '»', repo.sizes[file] != null ? [{ path: file, remove: true }] : [], sets => sets.filter(x => x.file !== file));
+    toast('Удалено. У всех пропадёт через 1–2 минуты.');
+  } catch (e) { toast(e.message); }
+  b.done();
+  await refreshFiles();
+}
+async function renameFile(file) {
+  const s = repo.sets.find(x => x.file === file);
+  if (!s) return;
+  const r = await dialog({ title: 'Название в меню', input: s.title || '', ok: 'Сохранить' });
+  if (!r.ok || !r.value || r.value === s.title) return;
+  const b = busy('Сохраняю…');
+  try {
+    await publish('Админка: «' + s.title + '» → «' + r.value + '»', [], sets => sets.map(x => x.file === file ? { ...x, title: r.value } : x));
+    toast('Название сохранено. У всех обновится через 1–2 минуты.');
+  } catch (e) { toast(e.message); }
+  b.done();
+  await refreshFiles();
+}
+
+/* ---------- online: Firebase Realtime Database over REST ---------- */
+const fb = path => FIREBASE_DB.replace(/\/+$/, '') + '/' + path + '.json';
+let onlineT = 0;
+async function refreshOnline() {
+  if (!FIREBASE_DB) {
+    $('#nowN').textContent = '—'; $('#todayN').textContent = '—'; $('#weekN').textContent = '—';
+    $('#upd').textContent = 'Счётчик ещё не подключён к Firebase.';
+    return;
+  }
+  try {
+    const now = Date.now();
+    const online = (await (await fetch(fb('online'), { cache: 'no-store' })).json()) || {};
+    let n = 0;
+    for (const [sid, ts] of Object.entries(online)) {
+      const age = now - (+ts || 0);
+      if (age < 150000) n++;
+      else if (age > 600000) fetch(fb('online/' + sid), { method: 'DELETE' }).catch(() => {}); // left without saying goodbye
+    }
+    const days = [...Array(7)].map((_, i) => new Date(now - i * 864e5).toLocaleDateString('sv'));
+    const lists = await Promise.all(days.map(d => fetch(fb('days/' + d) + '?shallow=true', { cache: 'no-store' }).then(r => r.json()).catch(() => null)));
+    const week = new Set();
+    lists.forEach(l => Object.keys(l || {}).forEach(k => week.add(k)));
+    $('#nowN').textContent = n;
+    $('#nowW').textContent = plural(n, 'человек', 'человека', 'человек') + ' в сети';
+    $('#dot').classList.toggle('on', n > 0);
+    $('#todayN').textContent = Object.keys(lists[0] || {}).length;
+    $('#weekN').textContent = week.size;
+    $('#upd').textContent = 'Обновлено в ' + new Date().toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' · включая вас, если тренажёр открыт';
+  } catch (e) {
+    $('#upd').textContent = 'Нет связи с Firebase. Повторю через 15 секунд.';
+  }
+}
+function watchOnline() {
+  clearInterval(onlineT);
+  if (document.visibilityState !== 'visible') return;
+  refreshOnline();
+  onlineT = setInterval(refreshOnline, 15000);
+}
+
+/* ---------- sign in / out ---------- */
+function show(signedIn) {
+  $('#login').hidden = signedIn;
+  ['#panel', '#files', '#out'].forEach(s => { $(s).hidden = !signedIn; });
+  if (signedIn) { watchOnline(); refreshFiles(); } else clearInterval(onlineT);
+}
+function logout(msg) {
+  token = ''; ls.set(ADMIN_KEY, null); repo = null;
+  show(false);
+  if (msg) { $('#loginErr').textContent = msg; $('#loginErr').hidden = false; }
+}
+$('#loginBtn').addEventListener('click', async () => {
+  const v = $('#token').value.trim();
+  if (!v) return;
+  token = v;
+  const btn = $('#loginBtn'); btn.disabled = true;
+  try {
+    await gh('/contents/data/sets.json?ref=' + BRANCH);
+    ls.set(ADMIN_KEY, v); $('#token').value = ''; $('#loginErr').hidden = true;
+    show(true);
+  } catch (e) { token = ''; $('#loginErr').textContent = e.message; $('#loginErr').hidden = false; }
+  btn.disabled = false;
+});
+$('#token').addEventListener('keydown', e => { if (e.key === 'Enter') $('#loginBtn').click(); });
+$('#logoutBtn').addEventListener('click', async () => {
+  const r = await dialog({ title: 'Выйти на этом устройстве?', text: 'Токен удалится с этого устройства. Чтобы вернуться, понадобится вставить его снова.', ok: 'Выйти', danger: true });
+  if (r.ok) logout();
+});
+$('#courses').addEventListener('click', e => { const b = e.target.closest('[data-c]'); if (!b) return; course = +b.dataset.c; ls.set('TestTrainer.adminCourse', String(course)); renderFiles(); });
+$('#list').addEventListener('click', e => {
+  const d = e.target.closest('[data-del]'), r = e.target.closest('[data-edit]');
+  if (d) removeFile(d.dataset.del); else if (r) renameFile(r.dataset.edit);
+});
+$('#addBtn').addEventListener('click', () => $('#pick').click());
+$('#pick').addEventListener('change', async () => { const f = [...$('#pick').files]; $('#pick').value = ''; if (f.length && repo) await addFiles(f); });
+document.addEventListener('visibilitychange', () => { if (token) watchOnline(); });
+
+show(!!token);
+})();
+</script>
+</body>
+</html>
