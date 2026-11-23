@@ -202,9 +202,6 @@ button:disabled{cursor:default}
 .sublabel{font-size:14px;font-weight:600;color:var(--muted);display:flex;align-items:center;justify-content:space-between;gap:8px}
 .sublabel.own{color:var(--accent)}
 .mini-del{width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;color:var(--red);font-size:15px;border-radius:8px}
-.feedback{display:flex;align-items:center;gap:8px;padding:11px 14px;border-radius:12px;font-size:15px;font-weight:600}
-.feedback .i{font-size:20px}
-.feedback.ok{background:var(--soft-green);color:var(--green)}
 .pulse{animation:pulse .5s ease-out}
 @keyframes pulse{0%{transform:scale(1);box-shadow:0 0 0 0 transparent}35%{transform:scale(1.03);box-shadow:0 0 14px 2px var(--glow)}100%{transform:scale(1);box-shadow:0 0 0 0 transparent}}
 
@@ -1406,8 +1403,6 @@ function itemHTML(it) {
       h += `<div class="case-sub"><div class="sublabel own"><span>Ваш вопрос ${i + 1}</span><button type="button" class="mini-del" data-act="del-sub" data-case="${esc(it.id)}" data-sub="${esc(sub.id)}" aria-label="Удалить ваш вопрос ${i + 1}">${I.trash}</button></div>${qHTML(subToQ(sub), { inCase: true, forced, scope: it.id })}</div>`;
     });
   } else h += qHTML(it, { scope: it.id });
-  const r = rec(it.id);
-  if (r.checked && isCorrect(it)) h += `<div class="feedback ok" role="status">${I.ok}Верно</div>`;
   return h;
 }
 const contextHTML = t => `<div class="panel"><div class="label">Условие</div><div class="ctx">${esc(t)}</div></div>`;
@@ -2323,7 +2318,6 @@ elContent.addEventListener('input', e => {
   setText(qid, ta.value);
   if (was) {
     elContent.querySelectorAll('.q').forEach(q => { q.dataset.hl = '0'; });
-    elContent.querySelectorAll('.feedback').forEach(n => n.remove());
     renderTop();
     renderBottom();
   }
