@@ -53,7 +53,8 @@ self.addEventListener('activate', e => {
     .then(keys => Promise.all(keys.filter(k => k !== CACHE && k !== FONTS).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
-// Сначала сеть (чтобы обновления приходили сразу), без сети — из кэша.
+// Сначала из памяти телефона — страница открывается сразу, даже при плохом интернете.
+// Параллельно в фоне скачивается свежая версия: она покажется при следующем открытии.
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
@@ -71,22 +72,17 @@ self.addEventListener('fetch', e => {
   if (origin !== location.origin) return;
   e.respondWith((async () => {
     const cache = await caches.open(CACHE);
-    try {
-      const res = await Promise.race([
-        fetch(req),
-        new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 4000))
-      ]);
-      if (res && res.ok) cache.put(req, res.clone());
+    const nav = req.mode === 'navigate';
+    const hit = await cache.match(nav ? 'index.html' : req, { ignoreSearch: true });
+    const fresh = fetch(req).then(res => {
+      if (res && res.ok) return cache.put(nav ? 'index.html' : req, res.clone()).then(() => res);
       return res;
-    } catch (err) {
-      const hit = await cache.match(req, { ignoreSearch: true });
-      if (hit) return hit;
-      if (req.mode === 'navigate') {
-        const page = await cache.match('index.html');
-        if (page) return page;
-      }
-      throw err;
+    });
+    if (hit) {
+      e.waitUntil(fresh.catch(() => {}));
+      return hit;
     }
+    return fresh;
   })());
 });
 """
