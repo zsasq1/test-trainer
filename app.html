@@ -403,29 +403,49 @@ textarea.f-in{resize:vertical;min-height:84px}
 .mt-htitle{min-width:0;text-align:center;font-size:16px;font-weight:650;line-height:1.2;white-space:nowrap}
 .mt-htitle small{display:block;margin-top:2px;font-size:12px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis}
 .mt-htitle small.on{color:var(--accent);font-weight:600}
-.mt-go{justify-self:end;height:38px;display:inline-flex;align-items:center;gap:6px;padding:0 14px 0 12px;border-radius:19px;background:var(--accent-btn);color:var(--on-accent);font-size:15px;font-weight:600;white-space:nowrap}
-.mt-go .i{font-size:13px}
-.mt-go:disabled{background:var(--line);color:var(--muted)}
-.mt-go:active:not(:disabled){filter:brightness(.9)}
 .sheet.mt .sheet-body{gap:8px;padding-block:10px calc(16px + env(safe-area-inset-bottom,0px))}
-.mt-hint{font-size:13px;line-height:1.35;color:var(--muted);padding:0 2px 2px}
-.mt-card{display:flex;flex-direction:column;gap:8px;padding:8px 10px 10px 12px;border-radius:14px;background:var(--surface);border:1px solid var(--line);transition:border-color .15s}
-.mt-card.on{border-color:var(--ink-line)}
-.mt-top{display:flex;align-items:center;gap:10px;min-height:40px}
-.mt-ico{color:var(--text);font-size:18px;display:inline-flex;flex:none}
-.mt-title{flex:1;min-width:0;font-size:16px;font-weight:600;line-height:1.25;overflow-wrap:anywhere}
-.mt-title small{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-top:1px}
+.mt-body{gap:22px;padding-bottom:20px}
+.mt-sec{display:flex;flex-direction:column;gap:10px}
+.mt-h{display:flex;align-items:flex-start;gap:10px;font-size:17px;font-weight:700;line-height:1.25;padding:0 2px}
+.mt-h small{display:block;margin-top:2px;font-size:13px;font-weight:500;color:var(--muted);overflow-wrap:anywhere}
+.mt-n{width:24px;height:24px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--text);color:var(--surface);font-size:13px;font-weight:700;margin-top:-1px}
+.mt-sizes{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.mt-size{min-width:0;height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border-radius:14px;background:var(--surface);border:1px solid var(--line);transition:background-color .15s ease,border-color .15s ease,color .15s ease,transform .12s var(--ease-out)}
+.mt-size b{font-size:20px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.mt-size small{font-size:11.5px;font-weight:600;color:var(--muted)}
+.mt-size.on{background:var(--accent-btn);border-color:transparent;color:var(--on-accent)}
+.mt-size.on small{color:inherit;opacity:.85}
+.mt-size:active:not(:disabled){transform:scale(.96)}
+.mt-size:disabled{opacity:.35}
+.mt-list{display:flex;flex-direction:column;border-radius:14px;background:var(--surface);border:1px solid var(--line);overflow:hidden}
+.mt-row{display:flex;align-items:center;gap:8px;padding:6px 10px 6px 0;min-height:62px}
+.mt-row+.mt-row{border-top:1px solid var(--line)}
+.mt-pick{flex:1;min-width:0;align-self:stretch;display:flex;align-items:center;gap:11px;padding:6px 0 6px 12px;text-align:left}
+.mt-box{width:24px;height:24px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:7px;border:2px solid var(--line);color:transparent;font-size:15px;transition:background-color .15s ease,border-color .15s ease,color .15s ease}
+.mt-row.on .mt-box{background:var(--accent-btn);border-color:transparent;color:var(--on-accent)}
+.mt-name{min-width:0;font-size:16px;font-weight:600;line-height:1.25;overflow-wrap:anywhere}
+.mt-name small{display:block;margin-top:2px;font-size:12.5px;font-weight:500;color:var(--muted)}
+.mt-row:not(.on) .mt-name{color:var(--muted)}
+.mt-num{display:flex;align-items:center;gap:4px;flex:none}
+.mt-num .sq-btn{width:38px;height:38px}
+.mt-num .num-in{width:46px;height:38px}
+.mt-pts{font-size:15px;line-height:1.4;padding:0 2px}
+.mt-more{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;padding:8px 2px;font-size:15px;font-weight:600;color:var(--accent)}
+.mt-more svg{width:16px;height:16px}
+.mt-adv{display:flex;flex-direction:column;gap:8px}
+.mt-advhint{font-size:13px;line-height:1.35;color:var(--muted);padding:0 2px}
+.mt-arow{display:flex;flex-direction:column;gap:8px;padding:10px 12px;border-radius:14px;background:var(--surface);border:1px solid var(--line)}
+.mt-atop{display:flex;align-items:center;gap:8px;min-height:38px}
+.mt-aname{flex:1;min-width:0;font-size:16px;font-weight:600;overflow-wrap:anywhere}
 .mt-ord{display:flex;gap:6px;flex:none}
-.mt-ord .sq-btn,.mt-ctrls .sq-btn{width:40px;height:40px}
-.mt-steps{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.mt-step{display:flex;flex-direction:column;gap:4px;min-width:0}
-.mt-lbl{font-size:12.5px;font-weight:600;color:var(--muted);white-space:nowrap}
-.mt-ctrls{display:flex;align-items:center;gap:4px}
-.mt-ctrls .num-in{flex:1;min-width:0;width:auto;height:40px}
-.mt-card.off{flex-direction:row;align-items:center;gap:10px;padding:8px 12px;min-height:0}
-.mt-card.off .mt-ico,.mt-card.off .mt-title{color:var(--muted)}
-.mt-card.off .mt-title{font-size:15px;font-weight:500}
-@media (max-width:340px){.mt-ctrls .sq-btn{width:34px}.mt-ctrls{gap:3px}.mt-steps{gap:8px}.mt-title{font-size:15px}.mt-top{gap:8px}.mt-ord{gap:4px}.mt-ord .sq-btn{width:38px}.mt-card{padding-left:10px}.mt-go{padding:0 12px 0 10px}}
+.mt-ord .sq-btn{width:38px;height:38px}
+.mt-apts{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:14px;color:var(--muted);font-weight:600}
+.mt-now{display:flex;flex-direction:column;gap:10px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);font-size:14.5px;line-height:1.4}
+.mt-end{align-self:flex-start;font-size:15px;font-weight:600;color:var(--red);padding:2px 0}
+.mt-foot{flex:none;display:flex;flex-direction:column;gap:8px;padding:10px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-top:1px solid var(--line)}
+.mt-sum{text-align:center;font-size:14px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.mt-start{height:52px;font-size:17px}
+@media (max-width:360px){.mt-av{display:none}.mt-sizes{gap:6px}.mt-size b{font-size:18px}.mt-num .sq-btn{width:34px}.mt-num .num-in{width:40px}.mt-row{gap:6px}.mt-pick{gap:9px;padding-left:10px}}
 .num-in{width:58px;height:36px;text-align:center;border-radius:10px;background:var(--bg);border:1px solid var(--line);font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
 .num-in:focus{outline:none;border-color:var(--ink-line)}
 .num-in:disabled{opacity:.5}
@@ -458,8 +478,8 @@ textarea.f-in{resize:vertical;min-height:84px}
 }
 @media (hover:hover) and (pointer:fine){
   .choice:hover:not(.is-sel){border-color:var(--ink-line)}
-  .icon-btn:hover:not(:disabled),.titles:hover:not(:disabled),.star-btn:hover,.plain-btn:hover,.handle:hover,.mt-x:hover,.sq-btn:hover:not(:disabled){background:var(--ink-soft)}
-  .act.green:hover:not(:disabled),.dlg-btn.primary:hover,.mt-go:hover:not(:disabled){filter:brightness(1.08)}
+  .icon-btn:hover:not(:disabled),.titles:hover:not(:disabled),.star-btn:hover,.plain-btn:hover,.handle:hover,.mt-x:hover,.sq-btn:hover:not(:disabled),.mt-size:hover:not(:disabled):not(.on){background:var(--ink-soft)}
+  .act.green:hover:not(:disabled),.dlg-btn.primary:hover{filter:brightness(1.08)}
   .act.gray:hover:not(:disabled),.dlg-btn:not(.primary):hover,.pick:hover:not(.on){background:var(--ink-soft)}
   .mrow:not(.static):not(.on):not(.star-on):not(.test-on):hover,.mmore:hover,.mx:hover,.sec-chip:hover{background:var(--side-hover)}
   .dd-btn:hover,.sres:hover{border-color:var(--ink-line)}
@@ -1012,7 +1032,7 @@ const Store = {
 const defaults = () => ({
   setId: '', category: 'multiple', starOnly: false, index: 0, indexByScope: {}, answers: {},
   starred: {}, savedTests: [], test: null, autoAdvance: true, fontScale: 1, customSubs: {},
-  sets: [], hiddenBundled: [], titles: {}, results: {}, tour: {}, course: 0, profile: null, checks: 0
+  sets: [], hiddenBundled: [], titles: {}, results: {}, tour: {}, course: 0, profile: null, checks: 0, mtLast: null
 });
 let S = defaults();
 let BUNDLED = [];          // [{id, file, title}] from data/sets.json
@@ -1861,7 +1881,7 @@ function menuTestHTML() {
     h += `<button type="button" class="mrow test-on" data-act="m-close"><span class="mico">${I.play}</span><span class="mtxt">Продолжить тест<small>Вопрос ${Math.min(S.index + 1, n)} из ${n}, ${testEarned()}/${tot} ${plural(tot, 'балл', 'балла', 'баллов')}</small></span><span class="mico">${I.chevR}</span></button>`;
     h += `<button type="button" class="mrow" data-act="m-maketest"><span class="mico">${I.test}</span><span class="mtxt">Новый тест<small>Или завершить текущий</small></span><span class="mico">${I.chevR}</span></button>`;
   } else {
-    h += `<button type="button" class="mrow box" data-act="m-maketest"><span class="mico">${I.test}</span><span class="mtxt">Сделать тест<small>Выбрать вопросы и баллы</small></span><span class="mico">${I.chevR}</span></button>`;
+    h += `<button type="button" class="mrow box" data-act="m-maketest"><span class="mico">${I.test}</span><span class="mtxt">Сделать тест<small>Случайные вопросы, как на экзамене</small></span><span class="mico">${I.chevR}</span></button>`;
   }
   for (const t of S.savedTests) {
     const n = t.configs.reduce((a, c) => a + c.count, 0), pts = t.configs.reduce((a, c) => a + c.count * c.points, 0);
@@ -2165,29 +2185,91 @@ function openPaste() {
 }
 
 /* ---------- make test ---------- */
+// Three plain steps: how many questions → which kinds → points (optional). It opens ready to start:
+// 20 questions mixed from every kind, 1 point each, as the person set it up last time.
+const MT_SIZES = [10, 20, 30, 50];
+const MT_HINT = {
+  multiple: 'выбрать все верные', single: 'выбрать один верный', dropdown: 'выбрать ответ из списка',
+  sortable: 'расставить по порядку', text: 'вписать ответ самому', caseStudy: 'задача с несколькими вопросами'
+};
 function openMakeTest() {
   if (!bankReady() || !curSet()) return toast('Сначала выберите файл с вопросами');
   const avail = c => (bank.byCat[c] || []).length;
-  // Categories with questions first (their order is the order in the test), empty ones last.
-  const cfg = { order: CATS.filter(c => avail(c) > 0).concat(CATS.filter(c => avail(c) <= 0)), counts: {}, points: {} };
-  CATS.forEach(c => { cfg.counts[c] = 0; cfg.points[c] = 0; });
-  const active = () => cfg.order.filter(c => avail(c) > 0);
-  const totals = () => [cfg.order.reduce((a, c) => a + cfg.counts[c], 0), cfg.order.reduce((a, c) => a + cfg.counts[c] * cfg.points[c], 0)];
-  const stepper = (label, kind, c, v, max) => `<div class="mt-step"><span class="mt-lbl">${label}</span><span class="mt-ctrls"><button type="button" class="sq-btn" data-s="${kind}-" data-cat="${c}" aria-label="${label}: меньше"${v <= 0 ? ' disabled' : ''}>${I.minus}</button><input class="num-in" data-num="${kind}" data-cat="${c}" inputmode="numeric" pattern="[0-9]*" value="${v || ''}" placeholder="0" aria-label="${label}: ${CAT_TITLE[c]}"><button type="button" class="sq-btn" data-s="${kind}+" data-cat="${c}" aria-label="${label}: больше"${v >= max ? ' disabled' : ''}>${I.plus}</button></span></div>`;
+  const kinds = CATS.filter(c => avail(c) > 0);
+  if (!kinds.length) return toast('В этом файле нет вопросов');
+  const last = S.mtLast && typeof S.mtLast === 'object' ? S.mtLast : {};
+  const st = { size: 20, on: {}, counts: {}, points: {}, order: kinds.slice(), more: false };
+  if (Array.isArray(last.order)) st.order = last.order.filter(c => kinds.includes(c)).concat(kinds.filter(c => !last.order.includes(c)));
+  kinds.forEach(c => {
+    st.on[c] = !(Array.isArray(last.off) && last.off.includes(c));
+    st.points[c] = last.points && last.points[c] >= 0 && last.points[c] <= 100 ? last.points[c] | 0 : 1;
+  });
+  if (!kinds.some(c => st.on[c])) kinds.forEach(c => { st.on[c] = true; });
+  if (last.size === 'all' || MT_SIZES.includes(last.size)) st.size = last.size;
+  else if (last.size === null && last.counts) { st.size = null; kinds.forEach(c => { st.counts[c] = st.on[c] ? clamp(last.counts[c] | 0, 0, avail(c)) : 0; }); }
+  const picked = () => st.order.filter(c => st.on[c]);
+  const room = () => picked().reduce((a, c) => a + avail(c), 0);
+  const totals = () => { const k = picked(); return [k.reduce((a, c) => a + st.counts[c], 0), k.reduce((a, c) => a + st.counts[c] * st.points[c], 0)]; };
+  // a size → counts: one of each kind first (so the test is mixed), the rest by how many each kind has
+  function spread() {
+    if (st.size === null) return;
+    const k = picked();
+    kinds.forEach(c => { st.counts[c] = 0; });
+    let left = st.size === 'all' ? room() : Math.min(st.size, room());
+    if (left >= k.length) { k.forEach(c => { st.counts[c] = 1; }); left -= k.length; }
+    let pool = k.filter(c => st.counts[c] < avail(c));
+    while (left > 0 && pool.length) {
+      const all = pool.reduce((a, c) => a + avail(c), 0);
+      const want = pool.map(c => ({ c, x: left * avail(c) / all }));
+      let given = 0;
+      want.forEach(w => { const n = Math.min(Math.floor(w.x), avail(w.c) - st.counts[w.c]); st.counts[w.c] += n; given += n; });
+      left -= given;
+      want.sort((a, b) => (b.x % 1) - (a.x % 1));
+      for (const w of want) { if (!left) break; if (st.counts[w.c] < avail(w.c)) { st.counts[w.c]++; left--; } }
+      pool = pool.filter(c => st.counts[c] < avail(c));
+    }
+  }
+  // sizes bigger than what the chosen kinds have can't be picked
+  function fitSize() { if (typeof st.size === 'number' && st.size > room()) st.size = 'all'; }
+  fitSize(); spread();
+  const qw = n => n + ' ' + plural(n, 'вопрос', 'вопроса', 'вопросов');
+  const ptsText = () => { const p = picked().map(c => st.points[c]); return p.every(x => x === p[0]) ? 'За каждый верный ответ — ' + bw(p[0]) + '.' : 'За разные вопросы — разные баллы.'; };
+  const bw = n => n + ' ' + plural(n, 'балл', 'балла', 'баллов');
+  const num = (kind, c, v, max, label) => `<span class="mt-num"><button type="button" class="sq-btn" data-s="${kind}-" data-cat="${c}" aria-label="${label}: меньше"${v <= 0 ? ' disabled' : ''}>${I.minus}</button><input class="num-in" data-num="${kind}" data-cat="${c}" inputmode="numeric" pattern="[0-9]*" value="${v}" aria-label="${label}"><button type="button" class="sq-btn" data-s="${kind}+" data-cat="${c}" aria-label="${label}: больше"${v >= max ? ' disabled' : ''}>${I.plus}</button></span>`;
+  const head = (n, t, sub = '') => `<div class="mt-h"><span class="mt-n">${n}</span><span>${t}${sub ? `<small>${sub}</small>` : ''}</span></div>`;
   const bodyHTML = () => {
-    const act = active();
-    let h = act.length > 1 ? '<div class="mt-hint">Порядок разделов в тесте — стрелками ↑↓</div>' : '';
-    act.forEach((c, k) => {
-      h += `<div class="mt-card${cfg.counts[c] ? ' on' : ''}" data-card="${c}"><div class="mt-top"><span class="mt-ico">${I.cat[c]}</span><span class="mt-title">${CAT_TITLE[c]}<small>Доступно: ${avail(c)}</small></span>${act.length > 1 ? `<span class="mt-ord"><button type="button" class="sq-btn" data-s="up" data-cat="${c}" aria-label="Поднять «${CAT_TITLE[c]}»"${k === 0 ? ' disabled' : ''}>${I.up}</button><button type="button" class="sq-btn" data-s="down" data-cat="${c}" aria-label="Опустить «${CAT_TITLE[c]}»"${k === act.length - 1 ? ' disabled' : ''}>${I.down}</button></span>` : ''}</div>
-<div class="mt-steps">${stepper('Вопросов', 'cnt', c, cfg.counts[c], avail(c))}${stepper('Баллов за вопрос', 'pts', c, cfg.points[c], 100)}</div></div>`;
-    });
-    cfg.order.filter(c => avail(c) <= 0).forEach(c => {
-      h += `<div class="mt-card off"><span class="mt-ico">${I.cat[c]}</span><span class="mt-title">${CAT_TITLE[c]} — нет вопросов</span></div>`;
-    });
-    if (S.test) h += `<button type="button" class="act red wide" data-s="end">${I.x}Завершить текущий тест</button>`;
-    return h;
+    const k = picked(), max = room();
+    let h = '';
+    if (S.test) {
+      const n = currentItems().length;
+      h += `<div class="mt-now"><div><b>Сейчас идёт тест</b> — вопрос ${Math.min(S.index + 1, n)} из ${n}. Новый тест заменит его.</div><button type="button" class="mt-end" data-s="end">Завершить текущий тест</button></div>`;
+    }
+    // 1. how many
+    h += `<section class="mt-sec">${head(1, 'Сколько вопросов?', 'Выпадут случайно из файла «' + esc(setTitle(curSet())) + '»')}<div class="mt-sizes" role="radiogroup" aria-label="Сколько вопросов">`;
+    for (const n of MT_SIZES) h += `<button type="button" class="mt-size${st.size === n ? ' on' : ''}" data-s="size" data-n="${n}" role="radio" aria-checked="${st.size === n}"${n > max ? ' disabled' : ''}><b>${n}</b><small>вопр.</small></button>`;
+    h += `<button type="button" class="mt-size${st.size === 'all' ? ' on' : ''}" data-s="size" data-n="all" role="radio" aria-checked="${st.size === 'all'}"><b>Все</b><small>${max}</small></button></div></section>`;
+    // 2. which kinds
+    h += `<section class="mt-sec">${head(2, 'Какие вопросы?', kinds.length > 1 ? 'Снимите галочку, если такие не нужны' : '')}<div class="mt-list">`;
+    for (const c of kinds) {
+      const on = st.on[c];
+      h += `<div class="mt-row${on ? ' on' : ''}" data-row="${c}"><button type="button" class="mt-pick" data-s="pick" data-cat="${c}" role="checkbox" aria-checked="${on}"${on && k.length === 1 ? ' aria-disabled="true"' : ''}><span class="mt-box">${I.check}</span><span class="mt-name">${CAT_TITLE[c]}<small>${MT_HINT[c]}<span class="mt-av"> · в файле ${avail(c)}</span></small></span></button>${on ? num('cnt', c, st.counts[c], avail(c), 'Сколько вопросов: ' + CAT_TITLE[c]) : ''}</div>`;
+    }
+    h += '</div></section>';
+    // 3. points (and the order of the kinds) — most people never need it
+    h += `<section class="mt-sec">${head(3, 'Баллы', 'Можно не менять')}<div class="mt-pts" id="mtPts">${ptsText()}</div>`;
+    h += `<button type="button" class="mt-more" data-s="more" aria-expanded="${st.more}">${st.more ? 'Скрыть' : 'Изменить баллы' + (k.length > 1 ? ' и порядок' : '')}${st.more ? I.up : I.chevD}</button>`;
+    if (st.more) {
+      h += `<div class="mt-adv">${k.length > 1 ? '<div class="mt-advhint">Разделы идут в тесте в этом порядке — сверху вниз.</div>' : ''}`;
+      k.forEach((c, i) => {
+        h += `<div class="mt-arow" data-arow="${c}"><div class="mt-atop"><span class="mt-aname">${CAT_TITLE[c]}</span>${k.length > 1 ? `<span class="mt-ord"><button type="button" class="sq-btn" data-s="up" data-cat="${c}" aria-label="«${CAT_TITLE[c]}» раньше"${i === 0 ? ' disabled' : ''}>${I.up}</button><button type="button" class="sq-btn" data-s="down" data-cat="${c}" aria-label="«${CAT_TITLE[c]}» позже"${i === k.length - 1 ? ' disabled' : ''}>${I.down}</button></span>` : ''}</div><div class="mt-apts"><span>Баллов за вопрос</span>${num('pts', c, st.points[c], 100, 'Баллов за вопрос: ' + CAT_TITLE[c])}</div></div>`;
+      });
+      h += '</div>';
+    }
+    return h + '</section>';
   };
-  const html = `<div class="sheet-head"><button type="button" class="mt-x" data-s="close" aria-label="Закрыть">${I.x}</button><div class="mt-htitle">Сделать тест<small id="mtSum" aria-live="polite"></small></div><button type="button" class="mt-go" data-s="start" id="mtStart">${I.play}Начать</button></div><div class="sheet-body" id="mtBody"></div>`;
+  const html = `<div class="sheet-head"><button type="button" class="mt-x" data-s="close" aria-label="Закрыть">${I.x}</button><div class="mt-htitle">Новый тест<small>${esc(setTitle(curSet()))}</small></div><span></span></div>
+<div class="sheet-body mt-body" id="mtBody"></div>
+<div class="mt-foot"><div class="mt-sum" id="mtSum" aria-live="polite"></div><button type="button" class="act green wide mt-start" data-s="start" id="mtStart">${I.play}Начать тест</button></div>`;
   const sh = openSheet({
     cls: 'full mt', html,
     onClick: (id, el, e, close) => {
@@ -2195,63 +2277,71 @@ function openMakeTest() {
       if (id === 'close') return close();
       if (id === 'end') { endTest(); close(); renderAll(); return; }
       if (id === 'start') {
-        if (!totals()[0]) return;
-        if (startTest(cfg.order.map(cat => ({ cat, count: cfg.counts[cat], points: cfg.points[cat] })), true)) { close(); closeDrawer(); renderAll(); toast('Тест начат: ' + currentItems().length + ' ' + plural(currentItems().length, 'вопрос', 'вопроса', 'вопросов')); }
+        const [q] = totals();
+        if (!q) return;
+        S.mtLast = { size: st.size, off: kinds.filter(x => !st.on[x]), counts: { ...st.counts }, points: { ...st.points }, order: st.order.slice() };
+        if (startTest(picked().map(cat => ({ cat, count: st.counts[cat], points: st.points[cat] })), true)) { close(); closeDrawer(); renderAll(); toast('Тест начат: ' + qw(currentItems().length)); }
         return;
       }
+      if (id === 'size') { st.size = el.dataset.n === 'all' ? 'all' : +el.dataset.n; spread(); }
+      if (id === 'pick') {
+        if (st.on[c] && picked().length === 1) return toast('Нужен хотя бы один вид вопросов');
+        st.on[c] = !st.on[c];
+        if (st.size === null) st.counts[c] = st.on[c] ? Math.min(avail(c), 5) : 0;
+        fitSize(); spread();
+      }
+      if (id === 'cnt-' || id === 'cnt+') { st.size = null; st.counts[c] = clamp(st.counts[c] + (id === 'cnt+' ? 1 : -1), 0, avail(c)); }
+      if (id === 'pts-' || id === 'pts+') st.points[c] = clamp(st.points[c] + (id === 'pts+' ? 1 : -1), 0, 100);
+      if (id === 'more') st.more = !st.more;
       if (id === 'up' || id === 'down') {
-        const act = active(), i = act.indexOf(c), j = i + (id === 'up' ? -1 : 1);
-        if (i >= 0 && j >= 0 && j < act.length) {
-          [act[i], act[j]] = [act[j], act[i]];
-          cfg.order = act.concat(cfg.order.filter(x => avail(x) <= 0));
+        const k = picked(), i = k.indexOf(c), j = i + (id === 'up' ? -1 : 1);
+        if (i >= 0 && j >= 0 && j < k.length) {
+          const a = st.order.indexOf(k[i]), b = st.order.indexOf(k[j]);
+          [st.order[a], st.order[b]] = [st.order[b], st.order[a]];
         }
       }
-      if (id === 'cnt-') cfg.counts[c] = Math.max(0, cfg.counts[c] - 1);
-      if (id === 'cnt+') cfg.counts[c] = Math.min(avail(c), cfg.counts[c] + 1);
-      if (id === 'pts-') cfg.points[c] = Math.max(0, cfg.points[c] - 1);
-      if (id === 'pts+') cfg.points[c] = Math.min(100, cfg.points[c] + 1);
       draw();
-      if (id === 'up' || id === 'down') {
-        // keep the moved card in view and the finger on the same arrow when possible
-        const card = body.querySelector(`[data-card="${c}"]`);
-        if (card) card.scrollIntoView({ block: 'nearest' });
-      }
+      if (id === 'more' && st.more) { const adv = body.querySelector('.mt-adv'); if (adv) adv.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+      if (id === 'up' || id === 'down') { const r = body.querySelector(`[data-arow="${c}"]`); if (r) r.scrollIntoView({ block: 'nearest' }); }
     }
   });
   const body = sh.panel.querySelector('#mtBody');
-  const sum = sh.panel.querySelector('#mtSum');
+  const sum = sh.panel.querySelector('#mtSum'), go = sh.panel.querySelector('#mtStart');
   const sync = () => {
     const [q, p] = totals();
-    sum.textContent = q ? q + ' ' + plural(q, 'вопрос', 'вопроса', 'вопросов') + ', ' + p + ' ' + plural(p, 'балл', 'балла', 'баллов') : 'выберите вопросы';
-    sum.classList.toggle('on', q > 0);
-    sh.panel.querySelector('#mtStart').disabled = !q;
-    body.querySelectorAll('[data-card]').forEach(el => {
-      const c = el.dataset.card;
-      el.classList.toggle('on', cfg.counts[c] > 0);
-      // update −/+ in place (no re-render, so a tap right after typing is not lost)
-      [['cnt', cfg.counts[c], avail(c)], ['pts', cfg.points[c], 100]].forEach(([k, v, max]) => {
-        const minus = el.querySelector(`[data-s="${k}-"]`), plus = el.querySelector(`[data-s="${k}+"]`);
-        if (minus) minus.disabled = v <= 0;
-        if (plus) plus.disabled = v >= max;
-      });
+    sum.textContent = q ? qw(q) + ' · максимум ' + bw(p) : 'Выберите, сколько вопросов';
+    const pt = body.querySelector('#mtPts'); if (pt) pt.textContent = ptsText();
+    go.disabled = !q;
+    // −/+ in place (no redraw, so a tap right after typing is not lost); sizes follow a typed count
+    body.querySelectorAll('.mt-num').forEach(n => {
+      const inp = n.querySelector('.num-in'), c = inp.dataset.cat, cnt = inp.dataset.num === 'cnt';
+      const v = cnt ? st.counts[c] : st.points[c], max = cnt ? avail(c) : 100;
+      n.querySelector('[data-s$="-"]').disabled = v <= 0;
+      n.querySelector('[data-s$="+"]').disabled = v >= max;
     });
+    body.querySelectorAll('.mt-size').forEach(b => { const on = String(st.size) === b.dataset.n; b.classList.toggle('on', on); b.setAttribute('aria-checked', String(on)); });
   };
-  function draw() { const t = body.scrollTop; body.innerHTML = bodyHTML(); body.scrollTop = t; sync(); }
+  function draw() {
+    const t = body.scrollTop, f = document.activeElement, key = f && f.dataset && body.contains(f) ? f.dataset.s + '|' + (f.dataset.cat || f.dataset.n || '') : '';
+    body.innerHTML = bodyHTML();
+    body.scrollTop = t;
+    if (key) { const [s1, s2] = key.split('|'); const b = [...body.querySelectorAll(`[data-s="${s1}"]`)].find(x => (x.dataset.cat || x.dataset.n || '') === s2); if (b && !b.disabled) b.focus({ preventScroll: true }); }
+    sync();
+  }
   body.addEventListener('input', e => {
     const inp = e.target.closest('.num-in');
     if (!inp) return;
-    const c = inp.dataset.cat, max = inp.dataset.num === 'cnt' ? avail(c) : 100;
+    const c = inp.dataset.cat, cnt = inp.dataset.num === 'cnt', max = cnt ? avail(c) : 100;
     const digits = inp.value.replace(/\D/g, '');
     const v = digits ? clamp(parseInt(digits, 10), 0, max) : 0;
-    if (inp.dataset.num === 'cnt') cfg.counts[c] = v; else cfg.points[c] = v;
+    if (cnt) { st.counts[c] = v; st.size = null; } else st.points[c] = v;
     if (digits && String(v) !== inp.value) inp.value = String(v);
     sync();
   });
   body.addEventListener('change', e => {
     const inp = e.target.closest('.num-in');
     if (!inp) return;
-    const v = inp.dataset.num === 'cnt' ? cfg.counts[inp.dataset.cat] : cfg.points[inp.dataset.cat];
-    inp.value = v ? String(v) : '';
+    inp.value = String(inp.dataset.num === 'cnt' ? st.counts[inp.dataset.cat] : st.points[inp.dataset.cat]);
     sync();
   });
   draw();
