@@ -300,6 +300,15 @@ button:disabled{cursor:default}
 .cred{position:relative;display:inline-flex;align-items:center;gap:7px;padding:4px 6px;border-radius:10px;font-size:15px;font-weight:500;color:var(--muted);text-decoration:none;white-space:nowrap}
 .cred:active{opacity:.7}
 .cred b{font-weight:600;color:#2AABEE}
+/* «Жалобы и предложения» above the words: shows up out of nothing once the last word has landed */
+.cred .note{position:absolute;left:0;right:0;bottom:100%;margin-bottom:10px;text-align:center;font-size:12px;font-weight:500;color:var(--muted);opacity:.8;pointer-events:none}
+.cred.pre .note{opacity:0}
+.cred.drop .note{animation:cred-note .9s var(--ease-out) 1.12s both}
+@keyframes cred-note{from{opacity:0}}
+/* @ziplogo: a thin outline around the letters, its colours slowly flowing along the word */
+.cred .zl{position:relative;z-index:0;display:inline-block;-webkit-text-stroke:1.4px var(--surface);paint-order:stroke fill}
+.cred .zl::before{content:attr(data-t);position:absolute;left:0;top:0;z-index:-1;color:transparent;-webkit-text-fill-color:transparent;-webkit-text-stroke:3.6px transparent;background:repeating-linear-gradient(90deg,#8B5CF6 0,#EC4899 40px,#F59E0B 80px,#8B5CF6 120px);-webkit-background-clip:text;background-clip:text;animation:zl-flow 8s linear infinite}
+@keyframes zl-flow{to{background-position:120px 0}}
 /* whole words fall like something very heavy: from high up, stretched by speed, a dead stop (no bounce);
    each one tears the page a little and the page's own code shows through the rip; scraps fly; the menu jolts (JS).
    They stay where they fell, each at its own angle. */
@@ -1914,9 +1923,9 @@ function creditHTML() {
   const words = CRED_WORDS.map((w, i) => {
     const st = `style="--d:${CRED_BASE + i * CRED_STEP}ms;--r:${w.r}deg;--y:${w.y}px"`;
     const bits = fall ? CRED_BITS.map(([x, y], k) => `<i class="bit" style="--px:${x + (i % 2 ? 3 : -3) * (k % 2)}px;--py:${y}px"></i>`).join('') : '';
-    return w.pl ? `<span class="w pl" ${st}>${TG_LOGO}${tearHTML(i)}${bits}</span>` : `<${w.b ? 'b' : 'span'} class="w" aria-hidden="true" ${st}>${esc(w.t)}${tearHTML(i)}${bits}</${w.b ? 'b' : 'span'}>`;
+    return w.pl ? `<span class="w pl" ${st}>${TG_LOGO}${tearHTML(i)}${bits}</span>` : `<${w.b ? 'b' : 'span'} class="w" aria-hidden="true" ${st}>${w.b ? `<span class="zl" data-t="${esc(w.t)}">${esc(w.t)}</span>` : esc(w.t)}${tearHTML(i)}${bits}</${w.b ? 'b' : 'span'}>`;
   }).join('');
-  return `<div class="d-foot"><a class="cred${fall ? ' pre' : ''}" href="https://t.me/ziplogo" target="_blank" rel="noopener" aria-label="Made by TG @ziplogo">${words}</a></div>`;
+  return `<div class="d-foot"><a class="cred${fall ? ' pre' : ''}" href="https://t.me/ziplogo" target="_blank" rel="noopener" aria-label="Жалобы и предложения — Made by TG @ziplogo"><span class="note" aria-hidden="true">Жалобы и предложения</span>${words}</a></div>`;
 }
 // The words fall only when the whole line is on screen, the scrolling has stopped and the menu has finished
 // sliding in — so the person is actually looking at it.
