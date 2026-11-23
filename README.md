@@ -37,6 +37,6 @@ Firebase Realtime Database: адрес базы в `FIREBASE_DB` — в `app.htm
 
 Нужно для работы:
 - `FB_API_KEY` (Web API Key из Firebase → Project settings) в `app.html` и `admin.html`. Пока ключа нет, аккаунты выключены.
-- Правила из `firebase.rules.json`, в которых `ADMIN_UID` заменён на UID администратора. Их вставляют в Firebase → Realtime Database → Rules → Publish.
+- Правила из `firebase.rules.json` (в них уже стоит UID администратора). Их вставляют в Firebase → Realtime Database → Rules → Publish.
 
 `app.html` — само приложение; `index.html` и `sw.js` собирает `собрать.py`.

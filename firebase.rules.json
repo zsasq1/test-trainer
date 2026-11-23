@@ -20,7 +20,7 @@
       }
     },
     "live": {
-      ".read": "auth != null && auth.uid === 'ADMIN_UID'",
+      ".read": "auth != null && auth.uid === '9PzGNx8jvqYVoQri3ZaoRrPlyQC3'",
       "$sid": {
         ".write": "$sid.length >= 8 && $sid.length <= 40",
         ".validate": "newData.hasChildren(['t']) && (!newData.child('u').exists() || (auth != null && newData.child('u').val() === auth.uid))",
@@ -36,15 +36,15 @@
     "logins": {
       "$key": {
         ".read": true,
-        ".write": "auth != null && (auth.uid === 'ADMIN_UID' || (!data.exists() && newData.parent().parent().child('users').child(auth.uid).child('key').val() === $key) || (data.exists() && !newData.exists() && data.val() + '@users.example.com' === auth.token.email && newData.parent().parent().child('users').child(auth.uid).child('key').val() !== $key))",
+        ".write": "auth != null && (auth.uid === '9PzGNx8jvqYVoQri3ZaoRrPlyQC3' || (!data.exists() && newData.parent().parent().child('users').child(auth.uid).child('key').val() === $key) || (data.exists() && !newData.exists() && data.val() + '@users.example.com' === auth.token.email && newData.parent().parent().child('users').child(auth.uid).child('key').val() !== $key))",
         ".validate": "newData.isString() && newData.val() + '@users.example.com' === auth.token.email && $key.length >= 3 && $key.length <= 24"
       }
     },
     "users": {
-      ".read": "auth != null && auth.uid === 'ADMIN_UID'",
+      ".read": "auth != null && auth.uid === '9PzGNx8jvqYVoQri3ZaoRrPlyQC3'",
       "$uid": {
         ".read": "auth != null && auth.uid === $uid",
-        ".write": "auth != null && auth.uid === 'ADMIN_UID'",
+        ".write": "auth != null && auth.uid === '9PzGNx8jvqYVoQri3ZaoRrPlyQC3'",
         ".validate": "newData.hasChildren(['name', 'key', 'login', 'renamed'])",
         "name": {
           ".write": "auth != null && auth.uid === $uid && newData.exists() && data.parent().child('blocked').val() !== true && (!data.exists() || (data.parent().child('renamed').val() === false && newData.parent().child('renamed').val() === true))",
