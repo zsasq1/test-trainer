@@ -649,8 +649,8 @@ const FB_API_KEY = 'AIzaSyAGDxn2z6l4MzgkR8mV1_vuIfJIu7vyc2U';
 const GOOGLE_CLIENT_ID = '866024625038-9ivgkk2tnj2mbg88g44o11cmtuk2rdj7.apps.googleusercontent.com';
 // «Продолжить с Telegram»: the bot's number (the digits before «:» in its token — never the token itself)
 // and the address of the Cloudflare worker (telegram-worker/) that checks Telegram's signature. Empty = no button.
-const TG_BOT_ID = '';
-const TG_WORKER = '';
+const TG_BOT_ID = '9064717499'; // @trainer_login_bot
+const TG_WORKER = 'https://trainer-telegram.zsasqzsasq.workers.dev';
 const ADMIN_KEY = 'TestTrainer.admin'; // the site owner's GitHub token: present only on their own devices
 const isAdmin = () => { try { return !!localStorage.getItem(ADMIN_KEY); } catch (e) { return false; } };
 const TEXT_PLACEHOLDERS = new Set(['текстовая строка (без учета регистра)', 'текстовая строка']);
