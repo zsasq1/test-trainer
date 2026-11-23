@@ -296,28 +296,31 @@ button:disabled{cursor:default}
 .sq-btn:disabled{opacity:.4}
 .sq-btn.a-sm{font-size:13px}
 .sq-btn.a-lg{font-size:20px}
-.d-foot{flex:none;display:flex;justify-content:center;padding:30px 0 30px}
+.d-foot{flex:none;display:flex;justify-content:center;padding:84px 0 30px;margin-top:-24px;overflow:hidden} /* the space above is where the words fall: they never cross the menu */
 .cred{position:relative;display:inline-flex;align-items:center;gap:7px;padding:4px 6px;border-radius:10px;font-size:15px;font-weight:500;color:var(--muted);text-decoration:none;white-space:nowrap}
 .cred:active{opacity:.7}
 .cred b{font-weight:600;color:#2AABEE}
-/* whole words fall like something very heavy: gravity, a dead stop (no bounce), a dent and a puff of dust;
-   then they stay where they fell — each at its own careless angle */
+/* whole words fall like something very heavy: from high up, stretched by speed, a dead stop (no bounce),
+   a dark dent, dust and chips of stone; the menu jolts (JS). They stay where they fell, each at its own angle. */
 .w{position:relative;display:inline-block;transform-origin:50% 100%;transform:translateY(var(--y)) rotate(var(--r))}
 .w.pl{width:20px;height:18px;color:#2AABEE}
 .w.pl svg{width:100%;height:100%;display:block}
-.w::before{content:"";position:absolute;left:6%;right:6%;bottom:-4px;height:7px;border-radius:50%;background:radial-gradient(closest-side,rgba(40,32,24,.42),transparent);opacity:.6;z-index:-1;pointer-events:none}
-.w::after{content:"";position:absolute;left:-14%;right:-14%;bottom:-3px;height:9px;border-radius:50%;background:radial-gradient(closest-side,rgba(128,118,100,.55),transparent);opacity:0;pointer-events:none}
+.w::before{content:"";position:absolute;left:4%;right:4%;bottom:-4px;height:8px;border-radius:50%;background:radial-gradient(closest-side,rgba(30,24,18,.5),transparent);opacity:.75;z-index:-1;pointer-events:none}
+.w::after{content:"";position:absolute;left:-30%;right:-30%;bottom:-4px;height:12px;border-radius:50%;background:radial-gradient(closest-side,rgba(128,118,100,.6),transparent);opacity:0;pointer-events:none}
+.w .bit{position:absolute;left:50%;bottom:0;width:3px;height:3px;margin-left:-1.5px;border-radius:1px;background:var(--muted);opacity:0;pointer-events:none}
 .cred.pre .w{opacity:0}
-.cred.drop .w{animation:w-fall .42s both;animation-delay:var(--d)}
-.cred.drop .w::before{animation:w-dent .16s ease-out both;animation-delay:calc(var(--d) + 420ms)}
-.cred.drop .w::after{animation:w-dust .6s var(--ease-out) both;animation-delay:calc(var(--d) + 420ms)}
+.cred.drop .w{animation:w-fall .32s both;animation-delay:var(--d)}
+.cred.drop .w::before{animation:w-dent .06s linear both;animation-delay:calc(var(--d) + 320ms)}
+.cred.drop .w::after{animation:w-dust .7s var(--ease-out) both;animation-delay:calc(var(--d) + 320ms)}
+.cred.drop .w .bit{animation:w-bit .55s cubic-bezier(.2,.6,.4,1) both;animation-delay:calc(var(--d) + 320ms)}
 @keyframes w-fall{
-  0%{opacity:0;transform:translateY(-95px) rotate(calc(var(--r) * -0.5));animation-timing-function:cubic-bezier(.11,0,.5,0)}
-  35%{opacity:1}
-  100%{opacity:1;transform:translateY(var(--y)) rotate(var(--r))}
+  0%{opacity:1;transform:translateY(-120px) rotate(calc(var(--r) * -.4)) scale(.92,1.16);animation-timing-function:cubic-bezier(.11,0,.5,0)}
+  99%{opacity:1;transform:translateY(var(--y)) rotate(var(--r)) scale(.92,1.16)}
+  100%{opacity:1;transform:translateY(var(--y)) rotate(var(--r)) scale(1)}
 }
-@keyframes w-dent{from{opacity:0;transform:scaleX(.5)}to{opacity:.6;transform:scaleX(1)}}
-@keyframes w-dust{0%{opacity:.9;transform:scale(.5,.6)}100%{opacity:0;transform:translateY(-4px) scale(1.5,1.6)}}
+@keyframes w-dent{from{opacity:0}to{opacity:.75}}
+@keyframes w-dust{0%{opacity:1;transform:scale(.45,.6)}100%{opacity:0;transform:translateY(-6px) scale(1.25,1.9)}}
+@keyframes w-bit{0%{opacity:1;transform:translate(0,0) rotate(0deg)}55%{opacity:1;transform:translate(calc(var(--px) * .7),var(--py)) rotate(120deg)}100%{opacity:0;transform:translate(var(--px),5px) rotate(200deg)}}
 @media (max-width:360px){.cred{font-size:14px;gap:6px}}
 
 /* ---------- sheets & dialogs ---------- */
@@ -1689,7 +1692,8 @@ function openDrawer() {
   if (docked()) return;
   hideToast();
   drawerOpen = true;
-  creditDone = false; // the letters fall again
+  drawerAt = performance.now();
+  creditDone = false; // the words fall again
   renderMenuBody();
   elDrawer.classList.add('open');
   elScrim.classList.add('on');
@@ -1858,27 +1862,55 @@ function menuHTML() {
 // and stay lying where they fell. r = angle, y = how deep it sank (px).
 let creditDone = false, creditIO = null;
 const CRED_WORDS = [{ pl: true, r: -14, y: 2 }, { t: 'Made', r: -6, y: 3 }, { t: 'by', r: 8, y: -1 }, { t: 'TG', r: -3, y: 4 }, { t: '@ziplogo', b: true, r: 4, y: 1 }];
-const CRED_STEP = 110, CRED_BASE = 150; // ms: between words, before the first
+const CRED_STEP = 150, CRED_BASE = 120, CRED_FALL = 320; // ms: between words, before the first, the fall itself
+const CRED_BITS = [[-22, -14], [-13, -20], [14, -18], [24, -11]]; // chips of stone flying out: x, peak y (px)
 function creditHTML() {
   const fall = !creditDone && !matchMedia('(prefers-reduced-motion: reduce)').matches;
   const words = CRED_WORDS.map((w, i) => {
     const st = `style="--d:${CRED_BASE + i * CRED_STEP}ms;--r:${w.r}deg;--y:${w.y}px"`;
-    return w.pl ? `<span class="w pl" ${st}>${TG_LOGO}</span>` : `<${w.b ? 'b' : 'span'} class="w" aria-hidden="true" ${st}>${esc(w.t)}</${w.b ? 'b' : 'span'}>`;
+    const bits = fall ? CRED_BITS.map(([x, y], k) => `<i class="bit" style="--px:${x + (i % 2 ? 3 : -3) * (k % 2)}px;--py:${y}px"></i>`).join('') : '';
+    return w.pl ? `<span class="w pl" ${st}>${TG_LOGO}${bits}</span>` : `<${w.b ? 'b' : 'span'} class="w" aria-hidden="true" ${st}>${esc(w.t)}${bits}</${w.b ? 'b' : 'span'}>`;
   }).join('');
   return `<div class="d-foot"><a class="cred${fall ? ' pre' : ''}" href="https://t.me/ziplogo" target="_blank" rel="noopener" aria-label="Made by TG @ziplogo">${words}</a></div>`;
 }
+// The words fall only when the whole line is on screen, the scrolling has stopped and the menu has finished
+// sliding in — so the person is actually looking at it.
+let creditWait = 0, drawerAt = 0, creditScroll = null;
 function armCredit() {
   if (creditIO) { creditIO.disconnect(); creditIO = null; }
+  if (creditScroll) { elMenuBody.removeEventListener('scroll', creditScroll); creditScroll = null; }
+  clearTimeout(creditWait);
   const el = elMenuBody.querySelector('.cred.pre');
   if (!el) return;
-  const go = () => { creditDone = true; el.classList.remove('pre'); el.classList.add('drop'); };
-  if (!('IntersectionObserver' in window)) return go();
-  creditIO = new IntersectionObserver(es => {
-    if (!es.some(e => e.isIntersecting && e.intersectionRatio >= 0.6)) return;
-    creditIO.disconnect(); creditIO = null;
-    go();
-  }, { root: elMenuBody, threshold: [0, 0.6, 1] });
+  if (!('IntersectionObserver' in window)) return dropCredit(el);
+  let full = false;
+  const soon = () => {
+    clearTimeout(creditWait);
+    if (!full) return;
+    const settle = Math.max(260, drawerAt + 420 - performance.now());
+    creditWait = setTimeout(() => {
+      if (!full || !el.isConnected || !(drawerOpen || docked()) || document.visibilityState !== 'visible') return;
+      elMenuBody.removeEventListener('scroll', soon); creditScroll = null;
+      if (creditIO) { creditIO.disconnect(); creditIO = null; }
+      dropCredit(el);
+    }, settle);
+  };
+  creditIO = new IntersectionObserver(es => { full = es.some(e => e.intersectionRatio >= 0.98); soon(); }, { root: elMenuBody, threshold: [0, 0.5, 0.98, 1] });
   creditIO.observe(el);
+  creditScroll = soon;
+  elMenuBody.addEventListener('scroll', soon, { passive: true });
+}
+function dropCredit(el) {
+  creditDone = true;
+  el.classList.remove('pre');
+  el.classList.add('drop');
+  // every impact jolts the menu a little, the last word hardest
+  if (!elMenuBody.animate) return;
+  CRED_WORDS.forEach((w, i) => setTimeout(() => {
+    if (!el.isConnected) return;
+    const last = i === CRED_WORDS.length - 1;
+    elMenuBody.animate([{ transform: 'translateY(0)' }, { transform: `translateY(${last ? 6 : 3}px)`, offset: 0.25 }, { transform: 'translateY(0)' }], { duration: last ? 260 : 170, easing: 'ease-out' });
+  }, CRED_BASE + i * CRED_STEP + CRED_FALL));
 }
 function menuCatsHTML() {
   const cs = curSet();
