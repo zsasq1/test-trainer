@@ -1,7 +1,7 @@
 // Офлайн-кэш тренажёра. Файл создаётся скриптом собрать.py — не правьте вручную.
-const CACHE = 'trainer-20261123-190113';
+const CACHE = 'trainer-20261123-190406';
 const FONTS = 'trainer-fonts-v1'; // шрифты Google: один раз скачать — дальше работают без сети
-const ASSETS = ["./", "index.html", "manifest.webmanifest", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png", "data/sets.json"];
+const ASSETS = ["./", "index.html", "manifest.webmanifest", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png", "data/sets.json", "data/3/topka.json"];
 
 self.addEventListener('install', e => {
   // cache: 'reload' — мимо кэша браузера, иначе GitHub Pages ещё 10 минут отдаёт старые файлы

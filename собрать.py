@@ -19,7 +19,7 @@ import urllib.parse
 
 ROOT = pathlib.Path(__file__).resolve().parent
 DATA = ROOT / "data"
-KNOWN_TITLES = {"bot_dlya_tela": "бот для тела"}
+KNOWN_TITLES = {"bot_dlya_tela": "бот для тела", "topka": "Топка"}
 
 HEAD = """<!doctype html>
 <html lang="ru">
