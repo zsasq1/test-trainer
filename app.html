@@ -301,14 +301,21 @@ button:disabled{cursor:default}
 .cred:active{opacity:.7}
 .cred b{font-weight:600;color:#2AABEE}
 /* whole words fall like something very heavy: from high up, stretched by speed, a dead stop (no bounce),
-   a dark dent, dust and chips of stone; the menu jolts (JS). They stay where they fell, each at its own angle. */
+   a dark dent, cracks running out from the impact, dust and chips of stone; the menu jolts (JS). They stay where they fell, each at its own angle. */
 .w{position:relative;display:inline-block;transform-origin:50% 100%;transform:translateY(var(--y)) rotate(var(--r))}
 .w.pl{width:20px;height:18px;color:#2AABEE}
-.w.pl svg{width:100%;height:100%;display:block}
+.w.pl svg:not(.crk){width:100%;height:100%;display:block}
 .w::before{content:"";position:absolute;left:4%;right:4%;bottom:-4px;height:8px;border-radius:50%;background:radial-gradient(closest-side,rgba(30,24,18,.5),transparent);opacity:.75;z-index:-1;pointer-events:none}
 .w::after{content:"";position:absolute;left:-30%;right:-30%;bottom:-4px;height:12px;border-radius:50%;background:radial-gradient(closest-side,rgba(128,118,100,.6),transparent);opacity:0;pointer-events:none}
 .w .bit{position:absolute;left:50%;bottom:0;width:3px;height:3px;margin-left:-1.5px;border-radius:1px;background:var(--muted);opacity:0;pointer-events:none}
+.w .crk{position:absolute;left:-10px;right:-10px;top:calc(100% + 1px);width:calc(100% + 20px);height:8px;overflow:visible;z-index:-1;pointer-events:none;transform-origin:50% 0;transform:rotate(calc(var(--r) * -1)) scaleX(var(--fx))}
+.w .crk path{fill:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;vector-effect:non-scaling-stroke}
+.w .crk .dk path{stroke:rgba(20,14,8,.45)}
+.w .crk .hl path{stroke:rgba(255,255,255,.2)}
 .cred.pre .w{opacity:0}
+.cred.pre .w .crk{clip-path:inset(0 50% 0 50%)}
+.cred.drop .w .crk{animation:w-crack .26s var(--ease-out) both;animation-delay:calc(var(--d) + 320ms)}
+@keyframes w-crack{from{clip-path:inset(0 50% 0 50%)}to{clip-path:inset(0 0 0 0)}}
 .cred.drop .w{animation:w-fall .32s both;animation-delay:var(--d)}
 .cred.drop .w::before{animation:w-dent .06s linear both;animation-delay:calc(var(--d) + 320ms)}
 .cred.drop .w::after{animation:w-dust .7s var(--ease-out) both;animation-delay:calc(var(--d) + 320ms)}
@@ -1864,12 +1871,15 @@ let creditDone = false, creditIO = null;
 const CRED_WORDS = [{ pl: true, r: -14, y: 2 }, { t: 'Made', r: -6, y: 3 }, { t: 'by', r: 8, y: -1 }, { t: 'TG', r: -3, y: 4 }, { t: '@ziplogo', b: true, r: 4, y: 1 }];
 const CRED_STEP = 150, CRED_BASE = 120, CRED_FALL = 320; // ms: between words, before the first, the fall itself
 const CRED_BITS = [[-22, -14], [-13, -20], [14, -18], [24, -11]]; // chips of stone flying out: x, peak y (px)
+// cracks in the stone from the impact point (50,1) outward, with a few branches; stretched to the word's width
+const CRED_CRACKS = ['M50 .6 43 1.9 37 1.3 30 3.4 21 2.7 10 4.4', 'M37 1.3 33.5 5.6', 'M50 .6 57 1.7 64 1.1 71.5 3.2 80 2.6 91 4.2', 'M71.5 3.2 75 6.8', 'M50 .6 48.6 3.8'];
+const crackSVG = () => { const d = CRED_CRACKS.map(x => `<path d="${x}"/>`).join(''); return `<svg class="crk" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true"><g class="hl" transform="translate(0 .7)">${d}</g><g class="dk">${d}</g></svg>`; };
 function creditHTML() {
   const fall = !creditDone && !matchMedia('(prefers-reduced-motion: reduce)').matches;
   const words = CRED_WORDS.map((w, i) => {
-    const st = `style="--d:${CRED_BASE + i * CRED_STEP}ms;--r:${w.r}deg;--y:${w.y}px"`;
+    const st = `style="--d:${CRED_BASE + i * CRED_STEP}ms;--r:${w.r}deg;--y:${w.y}px;--fx:${i % 2 ? -1 : 1}"`;
     const bits = fall ? CRED_BITS.map(([x, y], k) => `<i class="bit" style="--px:${x + (i % 2 ? 3 : -3) * (k % 2)}px;--py:${y}px"></i>`).join('') : '';
-    return w.pl ? `<span class="w pl" ${st}>${TG_LOGO}${bits}</span>` : `<${w.b ? 'b' : 'span'} class="w" aria-hidden="true" ${st}>${esc(w.t)}${bits}</${w.b ? 'b' : 'span'}>`;
+    return w.pl ? `<span class="w pl" ${st}>${TG_LOGO}${crackSVG()}${bits}</span>` : `<${w.b ? 'b' : 'span'} class="w" aria-hidden="true" ${st}>${esc(w.t)}${crackSVG()}${bits}</${w.b ? 'b' : 'span'}>`;
   }).join('');
   return `<div class="d-foot"><a class="cred${fall ? ' pre' : ''}" href="https://t.me/ziplogo" target="_blank" rel="noopener" aria-label="Made by TG @ziplogo">${words}</a></div>`;
 }
