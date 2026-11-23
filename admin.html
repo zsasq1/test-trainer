@@ -138,12 +138,11 @@ details.how a{color:var(--accent)}
       <button class="btn" id="loginBtn" type="button">Войти</button>
       <details class="how"><summary>Как получить токен</summary>
         <ol>
-          <li>Откройте <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com → новый токен</a>.</li>
-          <li>Название — любое, например «Админка тренажёра». Срок — на ваше усмотрение.</li>
-          <li>Repository access → <b>Only select repositories</b> → <b>test-trainer</b>.</li>
-          <li>Permissions → Repository permissions → <b>Contents</b> → <b>Read and write</b>.</li>
-          <li>Generate token, скопируйте и вставьте сюда.</li>
+          <li>Откройте <a href="https://github.com/settings/personal-access-tokens/new?name=Trainer+admin&amp;description=test-trainer+course+files&amp;expires_in=366&amp;contents=write" target="_blank" rel="noopener">готовую форму токена</a>: название, срок и доступ к файлам уже заполнены.</li>
+          <li>В блоке <b>Repository access</b> выберите <b>Only select repositories</b>, затем в списке — <b>test-trainer</b>.</li>
+          <li>Нажмите <b>Generate token</b> внизу, скопируйте токен и вставьте сюда.</li>
         </ol>
+        <p class="note" style="margin-top:8px">Не получается? <a href="https://github.com/settings/tokens/new?description=Trainer+admin&amp;scopes=public_repo" target="_blank" rel="noopener">Классический токен</a>: галочка <b>public_repo</b> уже стоит — нажмите <b>Generate token</b>.</p>
       </details>
     </div>
   </section>
@@ -233,7 +232,7 @@ async function gh(path, opts = {}) {
     headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', ...(opts.body ? { 'Content-Type': 'application/json' } : {}) }
   });
   if (!r.ok) {
-    const e = new Error(r.status === 401 ? 'Токен не подходит или истёк.' : r.status === 403 || r.status === 404 ? 'У токена нет доступа к test-trainer (нужно Contents: Read and write).' : 'GitHub ответил ошибкой ' + r.status + '.');
+    const e = new Error(r.status === 401 ? 'Токен не подходит или истёк.' : r.status === 403 || r.status === 404 ? 'У токена нет доступа к test-trainer: в Repository access выберите test-trainer.' : 'GitHub ответил ошибкой ' + r.status + '.');
     e.status = r.status; throw e;
   }
   return r.status === 204 ? null : r.json();
