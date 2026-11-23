@@ -544,6 +544,29 @@ a.mrow{color:inherit;text-decoration:none}
 a.tg-btn{text-decoration:none}
 .su-ico.tg{background:#2AABEE;color:#FFFFFF}
 .su-ico.tg svg{width:27px;height:24px;margin-left:-3px}
+.su-tg{display:flex;flex-direction:column;align-items:stretch;gap:10px;padding:12px;border-radius:16px;background:rgba(42,171,238,.09);border:1px solid rgba(42,171,238,.28)}
+.su-tg[hidden]{display:none}
+.tg-badge{align-self:center;display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;background:#2AABEE;color:#FFFFFF;font-size:12px;font-weight:700;letter-spacing:.2px}
+.tg-btn.big{height:56px;font-size:17px;font-weight:700;background:linear-gradient(180deg,#37B6F2,#2399D6);box-shadow:0 8px 18px -8px rgba(34,158,217,.75)}
+.tg-btn.big svg{width:23px;height:21px}
+.shine{position:relative;overflow:hidden;isolation:isolate}
+.shine::after{content:"";position:absolute;top:0;bottom:0;left:0;width:42%;z-index:1;pointer-events:none;background:linear-gradient(100deg,transparent,rgba(255,255,255,.38),transparent);transform:translateX(-140%) skewX(-18deg);animation:tg-shine 4.5s ease-in-out 1s infinite}
+@keyframes tg-shine{0%{transform:translateX(-140%) skewX(-18deg)}26%,100%{transform:translateX(340%) skewX(-18deg)}}
+@media (prefers-reduced-motion:reduce){.shine::after{display:none}}
+.tg-perks{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;font-size:13px;font-weight:600;color:var(--muted)}
+.tg-perks span{display:inline-flex;align-items:center;gap:4px}
+.tg-perks svg{width:15px;height:15px;color:#2AABEE;stroke-width:2.6}
+.su-more{align-self:center;display:inline-flex;align-items:center;gap:4px;padding:6px 10px;font-size:14.5px;font-weight:600;color:var(--muted)}
+.su-more svg{width:16px;height:16px}
+.su-more[hidden]{display:none}
+.su.folded .su-x{display:none}
+.tg-promo{display:flex;align-items:center;gap:12px;min-height:64px;padding:11px 12px;border-radius:14px;background:linear-gradient(135deg,#37B6F2,#2399D6);color:#FFFFFF;text-decoration:none;box-shadow:0 8px 18px -10px rgba(34,158,217,.8);transition:filter .15s ease,transform .12s var(--ease-out)}
+.tg-promo:active{filter:brightness(.94);transform:scale(.985)}
+.tg-promo-ico{width:38px;height:38px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.22)}
+.tg-promo-ico svg{width:21px;height:19px;margin-left:-2px}
+.tg-promo .mtxt{flex:1;min-width:0;font-size:16px;font-weight:700;line-height:1.25}
+.tg-promo .mtxt small{display:block;margin-top:2px;font-size:13px;font-weight:500;color:rgba(255,255,255,.88)}
+.tg-promo .go{color:rgba(255,255,255,.85);font-size:15px}
 .tw-wait{display:flex;align-items:center;justify-content:center;gap:10px;min-height:28px;font-size:15px;color:var(--muted);text-align:center}
 .tw-wait .spinner{width:20px;height:20px;border-width:2.5px;flex:none}
 .tw-wait.stop .spinner{display:none}
@@ -1791,7 +1814,7 @@ function menuHTML() {
     if (!S.test) h += menuTestHTML();
   }
   h += menuFilesHTML() + menuSettingsHTML();
-  return h + '<div class="d-foot">Made by <a href="https://t.me/ziplogo" target="_blank" rel="noopener">tg @ziplogo</a></div>';
+  return tgPromoHTML() + h + '<div class="d-foot">Made by <a href="https://t.me/ziplogo" target="_blank" rel="noopener">tg @ziplogo</a></div>';
 }
 function menuCatsHTML() {
   const cs = curSet();
@@ -1855,12 +1878,17 @@ function fileRowHTML(s) {
   const on = s.id === S.setId;
   return `<div class="mline"><button type="button" class="mrow${on ? ' on' : ''}" data-act="m-set" data-id="${esc(s.id)}"${on ? ' aria-current="true"' : ''}><span class="mico">${I.doc}</span><span class="mtxt">${esc(setTitle(s))}</span>${on ? `<span class="mtick">${I.check}</span>` : ''}</button><button type="button" class="mmore" data-act="m-set-more" data-id="${esc(s.id)}" aria-label="Действия с файлом «${esc(setTitle(s))}»">${I.more}</button></div>`;
 }
+// «Войти через Telegram» on top of the menu: one tap opens the bot straight away
+function tgPromoHTML() {
+  if (Account.user || Account.works !== true || !tgOneTap()) return '';
+  return `<a class="tg-promo shine" data-act="m-tg" href="${tgLink(rid(24))}" target="_blank" rel="noopener"><span class="tg-promo-ico">${TG_LOGO}</span><span class="mtxt">Войти через Telegram<small>Одно нажатие — без пароля</small></span><span class="go">${I.chevR}</span></a>`;
+}
 function accountRowHTML() {
   const u = Account.user;
   if (!Account.ready() || (!u && Account.works !== true)) return '';
   return u
     ? `<button type="button" class="mrow" data-act="m-profile"><span class="mtxt">${esc(u.name)}<small>${u.course ? u.course + ' курс · ' : ''}аккаунт</small></span><span class="go">${I.chevR}</span></button>`
-    : `<button type="button" class="mrow" data-act="m-profile"><span class="mtxt">Войти<small>Или зарегистрироваться</small></span><span class="go">${I.chevR}</span></button>`;
+    : `<button type="button" class="mrow" data-act="m-profile"><span class="mtxt">Войти<small>${tgOneTap() ? 'Через Telegram — в одно нажатие' : 'Или зарегистрироваться'}</small></span><span class="go">${I.chevR}</span></button>`;
 }
 function menuSettingsHTML() {
   const pct = Math.round(S.fontScale * 100);
@@ -2343,6 +2371,14 @@ const ACT = {
   'dd-open': el => openDDPicker(el.dataset.qid, +el.dataset.row),
   'check': () => { if (needsSignup()) return openAuth(); check(); },
   'reveal': () => { if (needsSignup()) return openAuth(); reveal(); render(); },
+  'm-tg': (el, e) => {
+    // the link opens Telegram; this page waits for «Запустить»
+    if (navigator.onLine === false) { e.preventDefault(); return toast('Нет связи с интернетом'); }
+    const code = new URL(el.href).searchParams.get('start');
+    tgPending(code);
+    const was = drawerOpen; closeDrawer();
+    setTimeout(() => tgWait({ code }), was ? 300 : 0);
+  },
   'm-profile': () => { const was = drawerOpen; closeDrawer(); setTimeout(() => (Account.user ? openProfile() : openAuth({ dismissible: true, mode: 'in' })), was ? 300 : 0); },
   'finish': () => openFinish(),
   'star': () => {
@@ -2828,6 +2864,9 @@ const TG_KEY = 'TestTrainer.tgauth'; // when the person left for Telegram's page
 // One tap: t.me/<bot>?start=<code> opens the bot, «Запустить» there confirms the code, and this page
 // asks the worker until it is. The code waits in TG_WAIT, so a page reloaded meanwhile picks it up again.
 const TG_WAIT = 'TestTrainer.tgwait', TG_TTL = 600000;
+const VIA_KEY = 'TestTrainer.via'; // 'tg' | 'g' | 'pass': how this device signed in last
+const lastVia = () => { try { return localStorage.getItem(VIA_KEY) || ''; } catch (e) { return ''; } };
+const tgOneTap = () => !!TG_BOT && Account.tgOn();
 const tgLink = code => 'https://t.me/' + TG_BOT + '?start=' + code;
 function tgPending(code) {
   try {
@@ -2869,7 +2908,7 @@ const Account = {
   probe() {
     if (!this.ready() || this.works !== undefined || this.probing) return;
     this.probing = true;
-    this.owner('-').then(() => { this.works = true; }, e => { if (e.message !== 'NETWORK') this.works = false; })
+    this.owner('-').then(() => { this.works = true; if (!this.user && docked()) renderMenuBody(); }, e => { if (e.message !== 'NETWORK') this.works = false; })
       .finally(() => { this.probing = false; });
   },
   blocked() { return !!(this.user && this.user.blocked); },
@@ -2979,7 +3018,11 @@ const Account = {
     await this.req('users/' + u.uid, 'PATCH', { course: c }, await this.token());
     u.course = c; this.save();
   },
-  signOut() { this.user = null; this.idt = ''; this.exp = 0; this.seen = false; this.save(); },
+  signOut() {
+    // next time the sign-in sheet opens on the way this person used
+    try { if (this.user) localStorage.setItem(VIA_KEY, isTelegram(this.user) ? 'tg' : isGoogle(this.user) ? 'g' : 'pass'); } catch (e) {}
+    this.user = null; this.idt = ''; this.exp = 0; this.seen = false; this.save();
+  },
   googleOn() { return this.ready() && !!GOOGLE_CLIENT_ID; },
   // the app's own address without the last «/», exactly as registered for Google; GitHub Pages adds the «/» and keeps the #token
   back: () => new URL('./', location.href).href.replace(/\/$/, ''),
@@ -3259,18 +3302,25 @@ function openAuth({ dismissible = false, mode = 'up', g = null } = {}) {
   const gOn = Account.googleOn(), tOn = Account.tgOn(), extOn = gOn || tOn;
   let course = curCourse() || S.course || 0, busy = false, checkT = 0, checkN = 0, skip = false;
   const tgCode = TG_BOT ? rid(24) : ''; // ready before the tap: the link must open straight away
+  // Telegram in one tap is the main way; Google and name + password fold away under «Другие способы входа»
+  // (they stay open for someone who used them last time on this device)
+  const hero = tOn && !!tgCode;
+  let folded = hero && lastVia() !== 'pass' && lastVia() !== 'g';
+  const tgPerk = t => `<span>${I.check}${t}</span>`;
   const legacy = g ? suggestName(g.name) : S.profile && S.profile.name ? cleanName(S.profile.name).slice(0, 24) : '';
   const html = `<div class="dlg su">
 <div class="su-ico">${I.user}</div>
 <div class="dlg-title" id="suTitle"></div>
-<div class="dlg-msg" id="suMsg">${dismissible ? '' : 'Все функции откроются сразу после лёгкой регистрации.'}</div>
-${extOn ? `<div class="su-ext" id="suExt">${tOn ? (tgCode ? `<a class="tg-btn" data-s="tg-tap" href="${tgLink(tgCode)}" target="_blank" rel="noopener">${TG_LOGO}<span>Продолжить с Telegram</span></a>` : `<button type="button" class="tg-btn" data-s="telegram">${TG_LOGO}<span>Продолжить с Telegram</span></button>`) : ''}${gOn ? `<button type="button" class="g-btn" data-s="google">${G_LOGO}<span>Продолжить с Google</span></button>` : ''}</div><div class="su-or" id="suOr">или по имени и паролю</div>` : ''}
-<div class="su-seg" id="suSeg" role="tablist" aria-label="Регистрация или вход"><button type="button" role="tab" data-s="m-up">Регистрация</button><button type="button" role="tab" data-s="m-in">Вход</button></div>
-<div class="su-field"><input id="suName" class="f-in" placeholder="Имя пользователя" maxlength="24" autocomplete="username" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" value="${esc(legacy)}" aria-label="Имя пользователя" aria-describedby="suNameHint"><div class="su-hint" id="suNameHint" aria-live="polite"></div></div>
-<div class="su-field" id="suPassF"><div class="su-pass"><input id="suPass" class="f-in" type="password" placeholder="Пароль" maxlength="128" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="Пароль" aria-describedby="suPassHint"><button type="button" class="su-eye" data-s="eye" aria-label="Показать пароль" aria-pressed="false">${I.eye}</button></div><div class="su-hint" id="suPassHint"></div></div>
-<div class="su-course" id="suCourse"><span>Курс</span>${coursePills(course, 'data-s="su-c" data-c', null)}</div>
+<div class="dlg-msg" id="suMsg">${dismissible ? '' : 'Все функции откроются сразу после входа.'}</div>
+${hero ? `<div class="su-tg" id="suTg"><span class="tg-badge">Быстрее всего</span><a class="tg-btn big shine" data-s="tg-tap" href="${tgLink(tgCode)}" target="_blank" rel="noopener">${TG_LOGO}<span>Войти через Telegram</span></a><div class="tg-perks">${tgPerk('Без пароля')}${tgPerk('Без номера')}${tgPerk('За 5 секунд')}</div></div>
+<button type="button" class="su-more" id="suMore" data-s="more" aria-expanded="false">Другие способы входа${I.chevD}</button>` : ''}
+${(tOn && !hero) || gOn ? `<div class="su-ext su-x" id="suExt">${tOn && !hero ? `<button type="button" class="tg-btn" data-s="telegram">${TG_LOGO}<span>Продолжить с Telegram</span></button>` : ''}${gOn ? `<button type="button" class="g-btn" data-s="google">${G_LOGO}<span>Продолжить с Google</span></button>` : ''}</div>` : ''}${extOn ? '<div class="su-or su-x" id="suOr">или по имени и паролю</div>' : ''}
+<div class="su-seg su-x" id="suSeg" role="tablist" aria-label="Регистрация или вход"><button type="button" role="tab" data-s="m-up">Регистрация</button><button type="button" role="tab" data-s="m-in">Вход</button></div>
+<div class="su-field su-x"><input id="suName" class="f-in" placeholder="Имя пользователя" maxlength="24" autocomplete="username" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" value="${esc(legacy)}" aria-label="Имя пользователя" aria-describedby="suNameHint"><div class="su-hint" id="suNameHint" aria-live="polite"></div></div>
+<div class="su-field su-x" id="suPassF"><div class="su-pass"><input id="suPass" class="f-in" type="password" placeholder="Пароль" maxlength="128" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="Пароль" aria-describedby="suPassHint"><button type="button" class="su-eye" data-s="eye" aria-label="Показать пароль" aria-pressed="false">${I.eye}</button></div><div class="su-hint" id="suPassHint"></div></div>
+<div class="su-course su-x" id="suCourse"><span>Курс</span>${coursePills(course, 'data-s="su-c" data-c', null)}</div>
 <div class="su-err" id="suErr" role="alert"></div>
-<button type="button" class="dlg-btn primary" data-s="go"></button>
+<button type="button" class="dlg-btn primary su-x" data-s="go"></button>
 <div class="su-note" id="suNote"></div>
 </div>`;
   const sh = openSheet({
@@ -3291,6 +3341,7 @@ ${extOn ? `<div class="su-ext" id="suExt">${tOn ? (tgCode ? `<a class="tg-btn" d
         return;
       }
       if (act === 'go') go();
+      if (act === 'more') { folded = false; setMode(mode); setTimeout(() => nameInp.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 50); return; }
       if (act === 'tg-tap') {
         // the link itself opens Telegram; this page waits for «Запустить»
         if (navigator.onLine === false) { e.preventDefault(); return fail({ msg: 'Нет связи с интернетом. Попробуйте ещё раз' }); }
@@ -3320,9 +3371,14 @@ ${extOn ? `<div class="su-ext" id="suExt">${tOn ? (tgCode ? `<a class="tg-btn" d
     btn.textContent = gm ? 'Готово' : m === 'up' ? 'Зарегистрироваться' : 'Войти';
     passInp.setAttribute('autocomplete', m === 'up' ? 'new-password' : 'current-password');
     $p('#suSeg').hidden = gm; $p('#suPassF').hidden = gm;
-    if (extOn) { $p('#suExt').hidden = gm; $p('#suOr').hidden = gm; }
+    if ($p('#suExt')) $p('#suExt').hidden = gm;
+    if (extOn) $p('#suOr').hidden = gm;
+    if (hero) { $p('#suTg').hidden = gm; $p('#suMore').hidden = gm || !folded; }
+    const fold = folded && !gm;
+    $p('.su').classList.toggle('folded', fold);
     $p('#suCourse').hidden = m === 'in';
-    $p('#suNote').textContent = gm ? 'Сменить имя потом можно один раз — в настройках.'
+    $p('#suNote').textContent = fold ? 'Автор сайта увидит только ваш @username в Telegram.'
+      : gm ? 'Сменить имя потом можно один раз — в настройках.'
       : m === 'up' ? 'Пароль хранится у Google — даже автор сайта его не видит.' + (gOn ? ' При входе через Google автор видит вашу почту' + (tOn ? ', через Telegram — ваш @username.' : '.') : tOn ? ' При входе через Telegram автор видит ваш @username.' : '')
       : 'Забыли пароль? Напишите автору сайта: tg @ziplogo';
     hint($p('#suPassHint'), m === 'up' ? 'Минимум 6 символов' : '');
@@ -3386,7 +3442,7 @@ ${extOn ? `<div class="su-ext" id="suExt">${tOn ? (tgCode ? `<a class="tg-btn" d
   nameInp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); passInp.focus(); } });
   passInp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } });
   setMode(mode);
-  setTimeout(() => (legacy && mode === 'up' ? passInp : nameInp).focus({ preventScroll: true }), 250);
+  if (!folded) setTimeout(() => (legacy && mode === 'up' ? passInp : nameInp).focus({ preventScroll: true }), 250);
   return sh;
 }
 
