@@ -46,7 +46,8 @@ const FONTS = 'trainer-fonts-v1'; // шрифты Google: один раз ска
 const ASSETS = __ASSETS__;
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  // cache: 'reload' — мимо кэша браузера, иначе GitHub Pages ещё 10 минут отдаёт старые файлы
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS.map(u => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys()
@@ -74,7 +75,7 @@ self.addEventListener('fetch', e => {
     const cache = await caches.open(CACHE);
     const nav = req.mode === 'navigate';
     const hit = await cache.match(nav ? 'index.html' : req, { ignoreSearch: true });
-    const fresh = fetch(req).then(res => {
+    const fresh = fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' }).then(res => {
       if (res && res.ok) return cache.put(nav ? 'index.html' : req, res.clone()).then(() => res);
       return res;
     });

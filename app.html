@@ -2704,7 +2704,21 @@ async function boot() {
   if (fresh || Store.mode === 'cloud') flush();
   if (Store.cloudDown) toast('Нет связи с аккаунтом — прогресс сохраняется в этом браузере');
   if ('serviceWorker' in navigator && document.querySelector('link[rel="manifest"]') && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    const hadSW = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.register('sw.js').then(reg => {
+      // A home-screen app on iPhone is resumed, not reloaded, so it never asks for a new version by itself.
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') reg.update().catch(() => {}); });
+    }).catch(() => {});
+    // A new version has taken over: reload into it as soon as nothing is in the way (progress is saved first).
+    if (hadSW) navigator.serviceWorker.addEventListener('controllerchange', () => {
+      const go = () => {
+        const typing = document.activeElement && /^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName);
+        if (document.visibilityState === 'visible' && (tour || anySheet() || typing || document.querySelector('.busy'))) return setTimeout(go, 1500);
+        flush();
+        location.reload();
+      };
+      go();
+    });
   }
 }
 boot();
