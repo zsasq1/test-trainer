@@ -317,33 +317,32 @@ button:disabled{cursor:default}
 .cred{position:relative;display:inline-flex;align-items:center;gap:7px;padding:4px 6px;border-radius:10px;font-size:15px;font-weight:500;color:var(--muted);text-decoration:none;white-space:nowrap}
 .cred:active{opacity:.7}
 .cred b{font-weight:600;color:#2AABEE}
-/* whole words fall like something very heavy: from high up, stretched by speed, a dead stop (no bounce),
-   a dark dent, cracks running out from the impact, dust and chips of stone; the menu jolts (JS). They stay where they fell, each at its own angle. */
+/* whole words fall like something very heavy: from high up, stretched by speed, a dead stop (no bounce);
+   each one tears the page a little and the page's own code shows through the rip; scraps fly; the menu jolts (JS).
+   They stay where they fell, each at its own angle. */
 .w{position:relative;display:inline-block;transform-origin:50% 100%;transform:translateY(var(--y)) rotate(var(--r))}
 .w.pl{width:20px;height:18px;color:#2AABEE}
-.w.pl svg:not(.crk){width:100%;height:100%;display:block}
-.w::before{content:"";position:absolute;left:4%;right:4%;bottom:-4px;height:8px;border-radius:50%;background:radial-gradient(closest-side,rgba(30,24,18,.5),transparent);opacity:.75;z-index:-1;pointer-events:none}
-.w::after{content:"";position:absolute;left:-30%;right:-30%;bottom:-4px;height:12px;border-radius:50%;background:radial-gradient(closest-side,rgba(128,118,100,.6),transparent);opacity:0;pointer-events:none}
-.w .bit{position:absolute;left:50%;bottom:0;width:3px;height:3px;margin-left:-1.5px;border-radius:1px;background:var(--muted);opacity:0;pointer-events:none}
-.w .crk{position:absolute;left:-10px;right:-10px;top:calc(100% + 1px);width:calc(100% + 20px);height:8px;overflow:visible;z-index:-1;pointer-events:none;transform-origin:50% 0;transform:rotate(calc(var(--r) * -1)) scaleX(var(--fx))}
-.w .crk path{fill:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;vector-effect:non-scaling-stroke}
-.w .crk .dk path{stroke:rgba(20,14,8,.45)}
-.w .crk .hl path{stroke:rgba(255,255,255,.2)}
+.w.pl>svg{width:100%;height:100%;display:block}
+.w .tear{position:absolute;left:50%;width:max(calc(100% + 6px),32px);margin-left:calc(max(calc(100% + 6px),32px) / -2);top:66%;height:11px;z-index:-1;pointer-events:none;transform-origin:50% 30%;transform:rotate(calc(var(--r) * -1));filter:drop-shadow(0 -.6px 0 rgba(255,255,255,.85)) drop-shadow(0 0 .5px rgba(0,0,0,.5)) drop-shadow(0 .8px 1px rgba(0,0,0,.25))}
+.w .code{position:relative;display:block;width:100%;height:100%;overflow:hidden;padding:1.5px 3px;background:#1d2026;color:#abb2bf;font:600 6px/1.25 var(--mono);letter-spacing:0;white-space:pre;text-align:left}
+.w .code::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.6),transparent 55%)}
+.w .code .kw{color:#c678dd}
+.w .code .st{color:#98c379}
+.w .code .nu{color:#d19a66}
+.w .code .fn{color:#61afef}
+.w .code .cm{color:#5c6370;font-style:italic}
+.w .bit{position:absolute;left:50%;bottom:0;width:4px;height:3px;margin-left:-2px;border-radius:.5px;background:var(--surface);box-shadow:0 0 0 .6px rgba(0,0,0,.35);opacity:0;pointer-events:none}
 .cred.pre .w{opacity:0}
-.cred.pre .w .crk{clip-path:inset(0 50% 0 50%)}
-.cred.drop .w .crk{animation:w-crack .26s var(--ease-out) both;animation-delay:calc(var(--d) + 320ms)}
-@keyframes w-crack{from{clip-path:inset(0 50% 0 50%)}to{clip-path:inset(0 0 0 0)}}
+.cred.pre .w .tear{transform:rotate(calc(var(--r) * -1)) scale(.25,0)}
 .cred.drop .w{animation:w-fall .32s both;animation-delay:var(--d)}
-.cred.drop .w::before{animation:w-dent .06s linear both;animation-delay:calc(var(--d) + 320ms)}
-.cred.drop .w::after{animation:w-dust .7s var(--ease-out) both;animation-delay:calc(var(--d) + 320ms)}
-.cred.drop .w .bit{animation:w-bit .55s cubic-bezier(.2,.6,.4,1) both;animation-delay:calc(var(--d) + 320ms)}
+.cred.drop .w .tear{animation:w-tear .2s var(--ease-out) both;animation-delay:calc(var(--d) + 320ms)}
+.cred.drop .w .bit{animation:w-bit .55s cubic-bezier(.2,.6,.4,1) forwards;animation-delay:calc(var(--d) + 320ms)}
 @keyframes w-fall{
   0%{opacity:1;transform:translateY(-120px) rotate(calc(var(--r) * -.4)) scale(.92,1.16);animation-timing-function:cubic-bezier(.11,0,.5,0)}
   99%{opacity:1;transform:translateY(var(--y)) rotate(var(--r)) scale(.92,1.16)}
   100%{opacity:1;transform:translateY(var(--y)) rotate(var(--r)) scale(1)}
 }
-@keyframes w-dent{from{opacity:0}to{opacity:.75}}
-@keyframes w-dust{0%{opacity:1;transform:scale(.45,.6)}100%{opacity:0;transform:translateY(-6px) scale(1.25,1.9)}}
+@keyframes w-tear{from{transform:rotate(calc(var(--r) * -1)) scale(.25,0)}to{transform:rotate(calc(var(--r) * -1)) scale(1)}}
 @keyframes w-bit{0%{opacity:1;transform:translate(0,0) rotate(0deg)}55%{opacity:1;transform:translate(calc(var(--px) * .7),var(--py)) rotate(120deg)}100%{opacity:0;transform:translate(var(--px),5px) rotate(200deg)}}
 @media (max-width:360px){.cred{font-size:14px;gap:6px}}
 
@@ -1888,15 +1887,51 @@ let creditDone = false, creditIO = null;
 const CRED_WORDS = [{ pl: true, r: -14, y: 2 }, { t: 'Made', r: -6, y: 3 }, { t: 'by', r: 8, y: -1 }, { t: 'TG', r: -3, y: 4 }, { t: '@ziplogo', b: true, r: 4, y: 1 }];
 const CRED_STEP = 150, CRED_BASE = 120, CRED_FALL = 320; // ms: between words, before the first, the fall itself
 const CRED_BITS = [[-22, -14], [-13, -20], [14, -18], [24, -11]]; // chips of stone flying out: x, peak y (px)
-// cracks in the stone from the impact point (50,1) outward, with a few branches; stretched to the word's width
-const CRED_CRACKS = ['M50 .6 43 1.9 37 1.3 30 3.4 21 2.7 10 4.4', 'M37 1.3 33.5 5.6', 'M50 .6 57 1.7 64 1.1 71.5 3.2 80 2.6 91 4.2', 'M71.5 3.2 75 6.8', 'M50 .6 48.6 3.8'];
-const crackSVG = () => { const d = CRED_CRACKS.map(x => `<path d="${x}"/>`).join(''); return `<svg class="crk" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true"><g class="hl" transform="translate(0 .7)">${d}</g><g class="dk">${d}</g></svg>`; };
+// The rip under each word shows a few real lines of this page's own code, lightly highlighted.
+let credCode = null;
+function codeLines() {
+  if (credCode) return credCode;
+  const src = (document.querySelector('script:not([src])') || {}).textContent || '';
+  credCode = src.split('\n').map(l => l.replace(/\s+$/, '')).filter(l => l.trim().length >= 24);
+  return credCode;
+}
+const HL_KW = /^(?:const|let|var|function|return|if|else|for|of|in|new|await|async|try|catch|throw|typeof|true|false|null)$/;
+function hlCode(line) {
+  let out = '', at = 0;
+  for (const m of line.matchAll(/\/\/.*$|'(?:[^'\\]|\\.)*'?|`(?:[^`\\]|\\.)*`?|"(?:[^"\\]|\\.)*"?|\b\d+(?:\.\d+)?\b|[A-Za-z_$][\w$]*/g)) {
+    const t = m[0];
+    out += esc(line.slice(at, m.index));
+    const c = t.startsWith('//') ? 'cm' : /^['"`]/.test(t) ? 'st' : /^\d/.test(t) ? 'nu' : HL_KW.test(t) ? 'kw' : line[m.index + t.length] === '(' ? 'fn' : '';
+    out += c ? `<span class="${c}">${esc(t)}</span>` : esc(t);
+    at = m.index + t.length;
+  }
+  return out + esc(line.slice(at));
+}
+// a jagged rip, pinched at both ends; the same shape for the same word every time
+function tearPoly(seed) {
+  let x = (seed + 3) * 7919;
+  const rnd = () => (x = (x * 16807) % 2147483647) / 2147483647;
+  const n = 10, top = [], bot = [];
+  for (let k = 0; k <= n; k++) {
+    const t = k / n, sn = Math.sin(Math.PI * t), pinch = 47 * (1 - sn * sn), jag = 20 * (0.35 + 0.65 * sn);
+    top.push(`${(t * 100).toFixed(1)}% ${(pinch + rnd() * jag).toFixed(1)}%`);
+    bot.push(`${(t * 100).toFixed(1)}% ${(100 - pinch - rnd() * jag).toFixed(1)}%`);
+  }
+  return 'polygon(' + top.concat(bot.reverse()).join(',') + ')';
+}
+function tearHTML(i) {
+  const L = codeLines();
+  if (!L.length) return '';
+  const from = Math.floor(L.length * (0.09 + 0.17 * i)) % L.length;
+  const lines = L.slice(from, from + 3).map(l => l.replace(/^\s{0,6}/, '').slice(0, 70));
+  return `<span class="tear" aria-hidden="true"><span class="code" style="clip-path:${tearPoly(i)}">${lines.map(hlCode).join('\n')}</span></span>`;
+}
 function creditHTML() {
   const fall = !creditDone && !matchMedia('(prefers-reduced-motion: reduce)').matches;
   const words = CRED_WORDS.map((w, i) => {
-    const st = `style="--d:${CRED_BASE + i * CRED_STEP}ms;--r:${w.r}deg;--y:${w.y}px;--fx:${i % 2 ? -1 : 1}"`;
+    const st = `style="--d:${CRED_BASE + i * CRED_STEP}ms;--r:${w.r}deg;--y:${w.y}px"`;
     const bits = fall ? CRED_BITS.map(([x, y], k) => `<i class="bit" style="--px:${x + (i % 2 ? 3 : -3) * (k % 2)}px;--py:${y}px"></i>`).join('') : '';
-    return w.pl ? `<span class="w pl" ${st}>${TG_LOGO}${crackSVG()}${bits}</span>` : `<${w.b ? 'b' : 'span'} class="w" aria-hidden="true" ${st}>${esc(w.t)}${crackSVG()}${bits}</${w.b ? 'b' : 'span'}>`;
+    return w.pl ? `<span class="w pl" ${st}>${TG_LOGO}${tearHTML(i)}${bits}</span>` : `<${w.b ? 'b' : 'span'} class="w" aria-hidden="true" ${st}>${esc(w.t)}${tearHTML(i)}${bits}</${w.b ? 'b' : 'span'}>`;
   }).join('');
   return `<div class="d-foot"><a class="cred${fall ? ' pre' : ''}" href="https://t.me/ziplogo" target="_blank" rel="noopener" aria-label="Made by TG @ziplogo">${words}</a></div>`;
 }
