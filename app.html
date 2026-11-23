@@ -1387,7 +1387,7 @@ function renderContent() {
   let html, key;
   if (bankStatus === 'boot') { html = stateHTML({ spinner: true, title: 'Загружаю вопросы…' }); key = 'boot'; }
   else if (!s) {
-    html = stateHTML({ icon: I.doc, title: 'Файлы не выбраны', text: 'Загрузите JSON с вопросами: из «Файлов», iCloud Drive или после сохранения из Telegram.', actions: loadBtn('Загрузить JSON') + `<button type="button" class="ghost-btn" data-act="paste-json">${I.paste}Вставить JSON текстом</button>` });
+    html = stateHTML({ icon: I.doc, title: 'Файлы не выбраны', text: 'Загрузите JSON с вопросами: из «Файлов», iCloud Drive или после сохранения из Telegram.', actions: loadBtn('Загрузить JSON') });
     key = 'nosets';
   } else if (bankStatus === 'loading') { html = stateHTML({ spinner: true, title: 'Открываю «' + setTitle(s) + '»…' }); key = 'loading'; }
   else if (bankStatus === 'error') {
@@ -2494,9 +2494,8 @@ const TOURS = {
   intro: {
     when: () => bankStatus !== 'boot' && !SETS.length,
     steps: [
-      { title: 'Тренажёр тестов', text: 'Учите вопросы из своих JSON-файлов: с подсветкой ответов, избранным и тестами. Сначала загрузим файл.', go: 'Начать' },
-      { el: '#content .state label.act', title: 'Загрузите файл', text: 'Выберите JSON в «Файлах», iCloud Drive или сохранённый из Telegram. Можно сразу несколько.', allow: 'label', end: true },
-      { el: '#content .state [data-act="paste-json"]', title: 'Или вставьте текстом', text: 'Если JSON скопирован как текст, вставьте его сюда.', allow: 'button', end: true }
+      { title: 'Тренажёр тестов', text: 'Сначала загрузим файл.', go: 'Начать' },
+      { el: '#content .state label.act', title: 'Загрузите файл', text: 'Выберите JSON в «Файлах», iCloud Drive или сохранённый из Telegram. Можно сразу несколько.', allow: 'label', end: true }
     ]
   },
   main: {
