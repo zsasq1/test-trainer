@@ -625,7 +625,7 @@ const LS_KEY = 'TestTrainer.web.v1';
 /* Online counter and accounts: Firebase Realtime Database over plain REST. Empty = off. */
 const FIREBASE_DB = 'https://reclama-kgu-default-rtdb.europe-west1.firebasedatabase.app';
 // Firebase → Project settings → Web API Key. It is public by design; until it is set, accounts stay switched off.
-const FB_API_KEY = '';
+const FB_API_KEY = 'AIzaSyAGDxn2z6l4MzgkR8mV1_vuIfJIu7vyc2U';
 const ADMIN_KEY = 'TestTrainer.admin'; // the site owner's GitHub token: present only on their own devices
 const isAdmin = () => { try { return !!localStorage.getItem(ADMIN_KEY); } catch (e) { return false; } };
 const TEXT_PLACEHOLDERS = new Set(['текстовая строка (без учета регистра)', 'текстовая строка']);
@@ -1227,6 +1227,7 @@ function check() {
   const ok = isCorrect(it);
   const seq = ++checkSeq;
   S.checks++;
+  if (S.checks >= SIGNUP_AFTER - 2 && !Account.user) Account.probe();
   if (S.checks === SIGNUP_AFTER && needsSignup()) setTimeout(() => { if (needsSignup()) openAuth(); }, 1300); // after the answer has been seen
   haptic();
   setResult(it.id, ok);
@@ -1820,8 +1821,8 @@ function fileRowHTML(s) {
   return `<div class="mline"><button type="button" class="mrow${on ? ' on' : ''}" data-act="m-set" data-id="${esc(s.id)}"${on ? ' aria-current="true"' : ''}><span class="mico">${I.doc}</span><span class="mtxt">${esc(setTitle(s))}</span>${on ? `<span class="mtick">${I.check}</span>` : ''}</button><button type="button" class="mmore" data-act="m-set-more" data-id="${esc(s.id)}" aria-label="Действия с файлом «${esc(setTitle(s))}»">${I.more}</button></div>`;
 }
 function accountRowHTML() {
-  if (!Account.ready()) return '';
   const u = Account.user;
+  if (!Account.ready() || (!u && Account.works !== true)) return '';
   return u
     ? `<button type="button" class="mrow" data-act="m-profile"><span class="mtxt">${esc(u.name)}<small>${u.course ? u.course + ' курс · ' : ''}аккаунт</small></span><span class="go">${I.chevR}</span></button>`
     : `<button type="button" class="mrow" data-act="m-profile"><span class="mtxt">Войти<small>Или зарегистрироваться</small></span><span class="go">${I.chevR}</span></button>`;
@@ -2796,13 +2797,21 @@ function authError(e) {
   if (/TOO_MANY_ATTEMPTS/.test(c)) return { msg: 'Слишком много попыток. Подождите пару минут' };
   if (/WEAK_PASSWORD/.test(c)) return { msg: 'Пароль — минимум 6 символов', f: 'pass' };
   if (/USER_DISABLED/.test(c)) return { msg: 'Этот аккаунт отключён' };
-  if (c === 'NETWORK') return { msg: 'Нет связи с интернетом. Попробуйте ещё раз' };
-  return { msg: 'Не получилось (' + (c || 'ошибка') + '). Попробуйте позже' };
+  if (c === 'NETWORK') return { msg: 'Нет связи с интернетом. Попробуйте ещё раз', down: true };
+  return { msg: 'Не получилось (' + (c || 'ошибка') + '). Попробуйте позже', down: true };
 }
 const Account = {
   user: null, // { uid, rt, login, name, key, course, renamed, blocked } — rt is the Firebase refresh token
   idt: '', exp: 0, syncAt: 0, seen: false,
+  works: undefined, // does the database answer for accounts (rules in place)? undefined = not known yet
   ready: () => !!(FIREBASE_DB && FB_API_KEY),
+  // one tiny read before asking anyone to sign up: with old rules or a broken base nobody gets stuck
+  probe() {
+    if (!this.ready() || this.works !== undefined || this.probing) return;
+    this.probing = true;
+    this.owner('-').then(() => { this.works = true; }, e => { if (e.message !== 'NETWORK') this.works = false; })
+      .finally(() => { this.probing = false; });
+  },
   blocked() { return !!(this.user && this.user.blocked); },
   load() {
     try {
@@ -2928,7 +2937,7 @@ const Account = {
   },
   lost(msg) { this.signOut(); applyBlock(); renderAll(); Presence.live(); toast(msg); }
 };
-const needsSignup = () => Account.ready() && !Account.user && S.checks >= SIGNUP_AFTER && !isAdmin() && navigator.onLine !== false;
+const needsSignup = () => Account.ready() && Account.works === true && !Account.user && S.checks >= SIGNUP_AFTER && !isAdmin() && navigator.onLine !== false;
 
 // Full-screen «доступ закрыт» while the account is blocked; everything under it is inert.
 function applyBlock() {
@@ -2957,7 +2966,7 @@ window.addEventListener('keydown', e => { if (Account.blocked()) e.stopImmediate
 // Sign-up and sign-in in one sheet. As a gate (after a few answers) it cannot be dismissed.
 function openAuth({ dismissible = false, mode = 'up' } = {}) {
   if (anySheet() || tour || Account.blocked()) return;
-  let course = curCourse() || S.course || 0, busy = false, checkT = 0, checkN = 0;
+  let course = curCourse() || S.course || 0, busy = false, checkT = 0, checkN = 0, skip = false;
   const legacy = S.profile && S.profile.name ? cleanName(S.profile.name).slice(0, 24) : '';
   const html = `<div class="dlg su">
 <div class="su-ico">${I.user}</div>
@@ -2974,7 +2983,7 @@ ${dismissible ? '' : '<div class="dlg-msg">Все функции откроют�
   const sh = openSheet({
     cls: 'dialog', html, dismissible,
     onClick: (act, el) => {
-      if (act === 'm-up' || act === 'm-in') return setMode(act.slice(2));
+      if (act === 'm-up' || act === 'm-in') { if (skip) { skip = false; Account.works = true; } return setMode(act.slice(2)); }
       if (act === 'eye') {
         const show = passInp.type === 'password';
         passInp.type = show ? 'text' : 'password';
@@ -3027,6 +3036,7 @@ ${dismissible ? '' : '<div class="dlg-msg">Все функции откроют�
   }
   async function go() {
     if (busy) return;
+    if (skip) { sh.close(); return; }
     err.textContent = '';
     const name = cleanName(nameInp.value), pass = passInp.value;
     const np = nameProblem(name);
@@ -3040,7 +3050,15 @@ ${dismissible ? '' : '<div class="dlg-msg">Все функции откроют�
       else await Account.signIn(name, pass);
     } catch (e) {
       busy = false; btn.disabled = false; btn.textContent = label;
-      return fail(authError(e));
+      const r = authError(e);
+      if (r.down && !dismissible) {
+        // the service is down: never lock the person out of the trainer — ask again next time
+        Account.works = false; skip = true;
+        err.textContent = 'Регистрация сейчас не работает. Можно заниматься дальше — предложим позже.';
+        btn.textContent = 'Продолжить';
+        return;
+      }
+      return fail(r);
     }
     const u = Account.user;
     S.profile = null;
@@ -3270,6 +3288,7 @@ async function boot() {
   if (fresh || Store.mode === 'cloud') flush();
   if (Store.cloudDown) toast('Нет связи с аккаунтом — прогресс сохраняется в этом браузере');
   Presence.start();
+  if (!Account.user && !isAdmin()) Account.probe();
   if ('serviceWorker' in navigator && document.querySelector('link[rel="manifest"]') && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     const hadSW = !!navigator.serviceWorker.controller;
     navigator.serviceWorker.register('sw.js').then(reg => {
