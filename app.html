@@ -299,25 +299,25 @@ button:disabled{cursor:default}
 .d-foot{flex:none;display:flex;justify-content:center;padding:30px 0 30px}
 .cred{position:relative;display:inline-flex;align-items:center;gap:7px;padding:4px 6px;border-radius:10px;font-size:15px;font-weight:500;color:var(--muted);text-decoration:none;white-space:nowrap}
 .cred:active{opacity:.7}
-.cred .pl{width:20px;height:18px;flex:none;margin-right:3px;color:#2AABEE}
-.cred .pl svg{width:100%;height:100%;display:block}
 .cred b{font-weight:600;color:#2AABEE}
-/* the letters fall like something very heavy and stick into stone: gravity, a hard squash on impact, dust, a jolt */
-.ch{position:relative;display:inline-block;transform-origin:50% 100%;transform:translateY(1.5px) rotate(var(--r))}
-.ch::after{content:"";position:absolute;left:50%;bottom:-2px;width:16px;height:6px;margin-left:-8px;border-radius:50%;background:radial-gradient(closest-side,rgba(128,118,100,.6),transparent);opacity:0;pointer-events:none}
-.cred.pre .ch{opacity:0}
-.cred.drop .ch{animation:ch-fall .52s both;animation-delay:var(--d)}
-.cred.drop .ch::after{animation:ch-dust .55s var(--ease-out) both;animation-delay:calc(var(--d) + 300ms)}
-.cred.drop{animation:cred-jolt .38s linear both;animation-delay:var(--end)}
-@keyframes ch-fall{
-  0%{opacity:0;transform:translateY(-90px) rotate(0deg);animation-timing-function:cubic-bezier(.11,0,.5,0)}
-  32%{opacity:1}
-  58%{opacity:1;transform:translateY(4px) scale(1.18,.76) rotate(var(--r));animation-timing-function:var(--ease-out)}
-  76%{transform:translateY(1px) scale(.97,1.05) rotate(var(--r))}
-  100%{opacity:1;transform:translateY(1.5px) scale(1) rotate(var(--r))}
+/* whole words fall like something very heavy: gravity, a dead stop (no bounce), a dent and a puff of dust;
+   then they stay where they fell — each at its own careless angle */
+.w{position:relative;display:inline-block;transform-origin:50% 100%;transform:translateY(var(--y)) rotate(var(--r))}
+.w.pl{width:20px;height:18px;color:#2AABEE}
+.w.pl svg{width:100%;height:100%;display:block}
+.w::before{content:"";position:absolute;left:6%;right:6%;bottom:-4px;height:7px;border-radius:50%;background:radial-gradient(closest-side,rgba(40,32,24,.42),transparent);opacity:.6;z-index:-1;pointer-events:none}
+.w::after{content:"";position:absolute;left:-14%;right:-14%;bottom:-3px;height:9px;border-radius:50%;background:radial-gradient(closest-side,rgba(128,118,100,.55),transparent);opacity:0;pointer-events:none}
+.cred.pre .w{opacity:0}
+.cred.drop .w{animation:w-fall .42s both;animation-delay:var(--d)}
+.cred.drop .w::before{animation:w-dent .16s ease-out both;animation-delay:calc(var(--d) + 420ms)}
+.cred.drop .w::after{animation:w-dust .6s var(--ease-out) both;animation-delay:calc(var(--d) + 420ms)}
+@keyframes w-fall{
+  0%{opacity:0;transform:translateY(-95px) rotate(calc(var(--r) * -0.5));animation-timing-function:cubic-bezier(.11,0,.5,0)}
+  35%{opacity:1}
+  100%{opacity:1;transform:translateY(var(--y)) rotate(var(--r))}
 }
-@keyframes ch-dust{0%{opacity:.9;transform:scale(.4,.6)}100%{opacity:0;transform:translateY(-3px) scale(2.3,1.4)}}
-@keyframes cred-jolt{0%,100%{transform:translate(0,0)}12%{transform:translate(-2.5px,2px)}26%{transform:translate(2.5px,-1px)}42%{transform:translate(-2px,1px)}58%{transform:translate(1.5px,0)}76%{transform:translate(-.5px,0)}}
+@keyframes w-dent{from{opacity:0;transform:scaleX(.5)}to{opacity:.6;transform:scaleX(1)}}
+@keyframes w-dust{0%{opacity:.9;transform:scale(.5,.6)}100%{opacity:0;transform:translateY(-4px) scale(1.5,1.6)}}
 @media (max-width:360px){.cred{font-size:14px;gap:6px}}
 
 /* ---------- sheets & dialogs ---------- */
@@ -1854,17 +1854,18 @@ function menuHTML() {
   h += menuFilesHTML() + menuSettingsHTML();
   return tgPromoHTML() + h + creditHTML();
 }
-// «Made by TG @ziplogo»: its letters fall once each time the menu is opened, when they come into view
+// «Made by TG @ziplogo»: its words fall once each time the menu is opened, when they come into view,
+// and stay lying where they fell. r = angle, y = how deep it sank (px).
 let creditDone = false, creditIO = null;
-const CRED_STEP = 28, CRED_BASE = 150, CRED_HIT = 300; // ms: between letters, before the first, fall time
+const CRED_WORDS = [{ pl: true, r: -14, y: 2 }, { t: 'Made', r: -6, y: 3 }, { t: 'by', r: 8, y: -1 }, { t: 'TG', r: -3, y: 4 }, { t: '@ziplogo', b: true, r: 4, y: 1 }];
+const CRED_STEP = 110, CRED_BASE = 150; // ms: between words, before the first
 function creditHTML() {
   const fall = !creditDone && !matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let i = 0;
-  // a small fixed tilt per letter: stuck in the stone, not crooked
-  const ch = (c, cls = '') => { const n = i++, r = ((n * 7) % 5 - 2) * 0.7; return `<span class="ch${cls}" style="--d:${CRED_BASE + n * CRED_STEP}ms;--r:${r}deg">${c}</span>`; };
-  const word = t => [...t].map(c => c === ' ' ? ' ' : ch(esc(c))).join('');
-  const html = ch(TG_LOGO, ' pl') + `<span aria-hidden="true">${word('Made by TG')}</span><b aria-hidden="true">${word('@ziplogo')}</b>`;
-  return `<div class="d-foot"><a class="cred${fall ? ' pre' : ''}" href="https://t.me/ziplogo" target="_blank" rel="noopener" aria-label="Made by TG @ziplogo" style="--end:${CRED_BASE + (i - 1) * CRED_STEP + CRED_HIT}ms">${html}</a></div>`;
+  const words = CRED_WORDS.map((w, i) => {
+    const st = `style="--d:${CRED_BASE + i * CRED_STEP}ms;--r:${w.r}deg;--y:${w.y}px"`;
+    return w.pl ? `<span class="w pl" ${st}>${TG_LOGO}</span>` : `<${w.b ? 'b' : 'span'} class="w" aria-hidden="true" ${st}>${esc(w.t)}</${w.b ? 'b' : 'span'}>`;
+  }).join('');
+  return `<div class="d-foot"><a class="cred${fall ? ' pre' : ''}" href="https://t.me/ziplogo" target="_blank" rel="noopener" aria-label="Made by TG @ziplogo">${words}</a></div>`;
 }
 function armCredit() {
   if (creditIO) { creditIO.disconnect(); creditIO = null; }
