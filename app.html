@@ -296,15 +296,27 @@ button:disabled{cursor:default}
 .sq-btn:disabled{opacity:.4}
 .sq-btn.a-sm{font-size:13px}
 .sq-btn.a-lg{font-size:20px}
-.d-foot{font-size:12px;color:var(--muted);text-align:center;padding-top:4px;display:flex;align-items:center;justify-content:center;gap:6px}
-/* small straight arrows pointing at the credit: one soft nudge toward it, then a long rest */
-.st{flex:none;width:20px;height:14px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.18));animation:st-nudge-l 3.2s var(--ease-in-out) infinite}
-.st svg{width:100%;height:100%;overflow:visible;fill:none;stroke-linecap:round;stroke-linejoin:round}
-.st.r{animation-name:st-nudge-r}
-.st.r svg{transform:scaleX(-1)}
-@keyframes st-nudge-l{0%,36%,100%{transform:translateX(0)}18%{transform:translateX(3px)}}
-@keyframes st-nudge-r{0%,36%,100%{transform:translateX(0)}18%{transform:translateX(-3px)}}
-.d-foot a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.d-foot{flex:none;display:flex;justify-content:center;padding:44px 0 40px;overflow:hidden}
+.cred{position:relative;display:inline-flex;align-items:center;gap:7px;padding:4px 6px;border-radius:10px;font-size:15px;font-weight:500;color:var(--muted);text-decoration:none;white-space:nowrap}
+.cred:active{opacity:.7}
+.cred .pl{width:20px;height:18px;flex:none;margin-right:3px;color:#2AABEE;display:inline-flex}
+.cred .pl svg{width:100%;height:100%}
+.cred b{font-weight:600;color:#2AABEE}
+/* four thin arrows from the corners, tails fading out; one soft nudge toward the credit, then a long rest */
+.da{position:absolute;width:52px;height:38px;pointer-events:none;animation:da-tl 3.2s var(--ease-in-out) infinite}
+.da svg{width:100%;height:100%;overflow:visible;fill:none;stroke:#2AABEE;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 62%);mask-image:linear-gradient(to right,transparent 0%,#000 62%)}
+.da.tl{right:calc(100% - 4px);bottom:calc(100% + 2px)}
+.da.tr{left:calc(100% - 4px);bottom:calc(100% + 2px);animation-name:da-tr}
+.da.bl{right:calc(100% - 4px);top:calc(100% + 2px);animation-name:da-bl}
+.da.br{left:calc(100% - 4px);top:calc(100% + 2px);animation-name:da-br}
+.da.tr svg{transform:scaleX(-1)}
+.da.bl svg{transform:scaleY(-1)}
+.da.br svg{transform:scale(-1,-1)}
+@keyframes da-tl{0%,36%,100%{transform:translate(0,0)}18%{transform:translate(2px,2px)}}
+@keyframes da-tr{0%,36%,100%{transform:translate(0,0)}18%{transform:translate(-2px,2px)}}
+@keyframes da-bl{0%,36%,100%{transform:translate(0,0)}18%{transform:translate(2px,-2px)}}
+@keyframes da-br{0%,36%,100%{transform:translate(0,0)}18%{transform:translate(-2px,-2px)}}
+@media (max-width:360px){.cred{font-size:14px;gap:6px}.da{width:38px;height:28px}}
 
 /* ---------- sheets & dialogs ---------- */
 .sheet-wrap{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center}
@@ -1836,11 +1848,14 @@ function menuHTML() {
     if (!S.test) h += menuTestHTML();
   }
   h += menuFilesHTML() + menuSettingsHTML();
-  return tgPromoHTML() + h + `<div class="d-foot">${stArrow('l')}<span>Made by <a href="https://t.me/ziplogo" target="_blank" rel="noopener">tg @ziplogo</a></span>${stArrow('r')}</div>`;
+  return tgPromoHTML() + h + creditHTML();
 }
-// the menu is redrawn often: a delay from the clock keeps the arrows' rhythm going instead of restarting it
-const ST_PATH = 'M3 8h15M13 3.5 18 8l-5 4.5';
-const stArrow = side => `<span class="st ${side}" aria-hidden="true" style="animation-delay:${-(Date.now() % 3200)}ms"><svg viewBox="0 0 21 16"><path d="${ST_PATH}" stroke="#FFFFFF" stroke-width="4.6"/><path d="${ST_PATH}" stroke="#2AABEE" stroke-width="2.4"/></svg></span>`;
+// «Made by TG @ziplogo» with four arrows pointing at it (the clock keeps their rhythm across redraws)
+const DA_SVG = '<svg viewBox="0 0 52 38"><path d="M2 4C24 4 38 14 43 33M38.4 29.1 43 33 45.1 27.4"/></svg>';
+function creditHTML() {
+  const d = -(Date.now() % 3200);
+  return `<div class="d-foot"><a class="cred" href="https://t.me/ziplogo" target="_blank" rel="noopener">${['tl', 'tr', 'bl', 'br'].map(k => `<span class="da ${k}" aria-hidden="true" style="animation-delay:${d}ms">${DA_SVG}</span>`).join('')}<span class="pl" aria-hidden="true">${TG_LOGO}</span><span>Made by TG</span><b>@ziplogo</b></a></div>`;
+}
 function menuCatsHTML() {
   const cs = curSet();
   let h = `<section class="msec"><div class="sec-row"><div class="sec-label">Категории</div><button type="button" class="sec-chip" data-jump="m-files" aria-label="Файл «${esc(setTitle(cs))}» — к списку файлов"><span>${esc(setTitle(cs))}</span>${I.chevD}</button></div>`;
