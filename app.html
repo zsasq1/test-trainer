@@ -496,6 +496,28 @@ textarea.f-in{resize:vertical;min-height:84px}
   .tour-x:hover{background:var(--ink-soft)}
 }
 .mrow .go{color:var(--muted);font-size:15px}
+/* courses: six round buttons above the file list */
+.courses{display:flex;gap:8px;margin:0 2px 8px}
+.course{flex:1 1 0;max-width:44px;aspect-ratio:1;min-width:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--bg);border:1px solid var(--line);font-size:16px;font-weight:650;font-variant-numeric:tabular-nums;color:var(--text);transition:background-color .2s ease,color .2s ease,border-color .2s ease,transform .12s var(--ease-out)}
+.course.empty{color:var(--muted)}
+.course.on{background:var(--text);border-color:var(--text);color:var(--bg)}
+.course:active{transform:scale(.94)}
+.fa-course{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:2px 4px}
+.fa-course>span{font-size:15px;font-weight:600;color:var(--muted)}
+.fa-course .courses{margin:0;flex:1;justify-content:flex-end;gap:6px}
+.fa-course .course{max-width:36px;font-size:14px}
+/* settings folded behind the gear */
+.set-toggle .mico{color:var(--text)}
+.set-toggle .mico .i{transition:transform .4s var(--ease-out)}
+.set-toggle .go .i{transition:transform .28s var(--ease-out)}
+.m-set.open .set-toggle .mico .i{transform:rotate(90deg)}
+.m-set.open .set-toggle .go .i{transform:rotate(180deg)}
+.set-body{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .28s var(--ease-out),visibility 0s linear .28s}
+.m-set.open .set-body{grid-template-rows:1fr;visibility:visible;transition:grid-template-rows .28s var(--ease-out),visibility 0s}
+.set-inner{min-height:0;overflow:hidden}
+.set-inner>.mgroup{margin-top:4px;opacity:0;transform:translateY(-6px);transition:opacity .2s ease-out,transform .28s var(--ease-out)}
+.m-set.open .set-inner>.mgroup{opacity:1;transform:none}
+@media (hover:hover) and (pointer:fine){ .course:not(.on):hover{border-color:var(--ink-line)} }
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
@@ -620,6 +642,7 @@ const I = {
   trash: sv('<path d="M4 7h16M10 11v6M14 11v6M9 7V4.5h6V7M6 7l1 13h10l1-13"/>'),
   flag: sv('<path d="M5 21V4h11l-2 4 2 4H5"/>'),
   play: sv('<path d="M8 5v14l11-7Z"/>', true),
+  gear: sv('<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>'),
   doc: sv('<path d="M7 3h7l5 5v13H7Z"/><path d="M14 3v5h5"/>'),
   updown: sv('<path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/>'),
   up: sv('<path d="M12 19V5M6 11l6-6 6 6"/>'),
@@ -880,7 +903,7 @@ const Store = {
 const defaults = () => ({
   setId: '', category: 'multiple', starOnly: false, index: 0, indexByScope: {}, answers: {},
   starred: {}, savedTests: [], test: null, autoAdvance: true, fontScale: 1, customSubs: {},
-  sets: [], hiddenBundled: [], titles: {}, results: {}, tour: {}
+  sets: [], hiddenBundled: [], titles: {}, results: {}, tour: {}, course: 0
 });
 let S = defaults();
 let BUNDLED = [];          // [{id, file, title}] from data/sets.json
@@ -921,9 +944,9 @@ function rebuildSets() {
   const list = [];
   for (const b of BUNDLED) {
     if (S.hiddenBundled.includes(b.id)) continue;
-    list.push({ id: b.id, title: b.title, bundled: true, file: b.file, rec: recs.get(b.id) || null });
+    list.push({ id: b.id, title: b.title, bundled: true, file: b.file, course: b.course, rec: recs.get(b.id) || null });
   }
-  for (const r of S.sets) if (!list.some(s => s.id === r.id)) list.push({ id: r.id, title: r.title, bundled: false, rec: r });
+  for (const r of S.sets) if (!list.some(s => s.id === r.id)) list.push({ id: r.id, title: r.title, bundled: false, course: r.course, rec: r });
   SETS = list;
 }
 
@@ -1058,9 +1081,21 @@ function selectSet(id) {
   S.setId = id;
   S.starOnly = false;
   S.index = S.indexByScope[scopeKey()] || 0;
+  const c = (SETS.find(s => s.id === id) || {}).course;
+  if (c) S.course = c;
   activateSet();
   save();
 }
+// Course shown in the menu: the one picked, else the open file's, else the first that has files.
+function curCourse() {
+  if (S.course) return S.course;
+  const s = curSet();
+  if (s && s.course) return s.course;
+  const any = SETS.find(x => x.course);
+  return any ? any.course : 1;
+}
+const COURSES = [1, 2, 3, 4, 5, 6];
+const coursePills = (cur, act, has) => `<div class="courses" role="radiogroup" aria-label="Курс">${COURSES.map(n => `<button type="button" class="course${n === cur ? ' on' : ''}${has && !has.has(n) ? ' empty' : ''}" role="radio" aria-checked="${n === cur}" ${act}="${n}" aria-label="${n} курс">${n}</button>`).join('')}</div>`;
 function selectCategory(cat) {
   endTest();
   remember();
@@ -1224,7 +1259,7 @@ async function loadBank(entry) {
     let text;
     if (entry.rec) text = await Store.getFile(entry.rec);
     else {
-      const r = await fetch('data/' + encodeURIComponent(entry.file));
+      const r = await fetch('data/' + entry.file.split('/').map(encodeURIComponent).join('/'));
       if (!r.ok) throw new Error('Встроенный файл не открылся (код ' + r.status + ').');
       text = await r.text();
     }
@@ -1303,7 +1338,7 @@ async function importText(text, title) {
   done();
   const id = targetId || ('imp-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6));
   const old = S.sets.find(r => r.id === id);
-  const entry = { id, title: targetId ? ((old && old.title) || twin.title) : title, store: ref.store, ref: ref.ref, addedAt: Date.now(), hash, count: b.total };
+  const entry = { id, title: targetId ? ((old && old.title) || twin.title) : title, store: ref.store, ref: ref.ref, addedAt: Date.now(), hash, count: b.total, course: (old && old.course) || (twin && twin.course) || curCourse() };
   if (old) { Store.delFile(old); S.sets = S.sets.map(r => r.id === id ? entry : r); } else S.sets.push(entry);
   BANKS.set(id, b);
   rebuildSets();
@@ -1312,7 +1347,7 @@ async function importText(text, title) {
   closeDrawer();
   renderAll();
   const extra = b.skipped ? ', пропущено ' + b.skipped : '';
-  toast((targetId ? 'Обновлено' : 'Загружено') + ': «' + setTitle(SETS.find(s => s.id === id)) + '» — ' + b.total + ' ' + plural(b.total, 'вопрос', 'вопроса', 'вопросов') + extra);
+  toast((targetId ? 'Обновлено' : 'Загружено в ' + entry.course + ' курс') + ': «' + setTitle(SETS.find(s => s.id === id)) + '» — ' + b.total + ' ' + plural(b.total, 'вопрос', 'вопроса', 'вопросов') + extra);
 }
 async function deleteSet(id) {
   const s = SETS.find(x => x.id === id);
@@ -1722,9 +1757,11 @@ function menuTestHTML() {
   return h + '</section>';
 }
 function menuFilesHTML() {
-  let h = '<section class="msec" id="m-files"><div class="sec-label">Файлы</div>';
-  if (!SETS.length) h += '<p class="msec-note">Файлов пока нет. Загрузите JSON с вопросами.</p>';
-  for (const s of SETS) {
+  const c = curCourse(), has = new Set(SETS.map(s => s.course));
+  const list = SETS.filter(s => s.course === c || !s.course);
+  let h = `<section class="msec" id="m-files"><div class="sec-label">Курсы</div>${coursePills(c, 'data-act="m-course" data-c', has)}`;
+  if (!list.length) h += `<p class="msec-note">Для ${c} курса файлов пока нет.</p>`;
+  for (const s of list) {
     const on = s.id === S.setId;
     h += `<div class="mline"><button type="button" class="mrow${on ? ' on' : ''}" data-act="m-set" data-id="${esc(s.id)}"${on ? ' aria-current="true"' : ''}><span class="mico">${I.doc}</span><span class="mtxt">${esc(setTitle(s))}</span>${on ? `<span class="mtick">${I.check}</span>` : ''}</button><button type="button" class="mmore" data-act="m-set-more" data-id="${esc(s.id)}" aria-label="Действия с файлом «${esc(setTitle(s))}»">${I.more}</button></div>`;
   }
@@ -1735,12 +1772,14 @@ function menuFilesHTML() {
 }
 function menuSettingsHTML() {
   const pct = Math.round(S.fontScale * 100);
-  return `<section class="msec"><div class="sec-label">Настройки</div><div class="mgroup">
+  return `<section class="msec m-set${settingsOpen ? ' open' : ''}"><button type="button" class="mrow set-toggle" data-act="m-settings" aria-expanded="${settingsOpen}" aria-controls="setBody"><span class="mico">${I.gear}</span><span class="mtxt">Настройки</span><span class="go">${I.chevD}</span></button>
+<div class="set-body" id="setBody"><div class="set-inner"><div class="mgroup">
 <button type="button" class="mrow" data-act="m-tour"><span class="mtxt">Обучение<small>Показать подсказки ещё раз</small></span><span class="go">${I.chevR}</span></button>
 <div class="mrow static"><span class="mtxt">Автопереход<small>После верного ответа — следующий вопрос</small></span><button type="button" class="switch" role="switch" aria-checked="${S.autoAdvance}" data-act="toggle-auto" aria-label="Автопереход"><span></span></button></div>
 <div class="fs-block"><div class="fs-head"><span>Размер текста</span><span class="fs-val"><span id="fontPct">${pct}%</span>${pct !== 100 ? '<button type="button" class="mlink" data-act="m-font-reset">Сбросить</button>' : ''}</span></div><div class="fs-row"><button type="button" class="sq-btn a-sm" data-act="m-font-dec" aria-label="Мельче"${S.fontScale <= 0.5 ? ' disabled' : ''}>A</button><input type="range" id="fontRange" min="50" max="160" step="5" value="${pct}" aria-label="Масштаб текста вопросов"><button type="button" class="sq-btn a-lg" data-act="m-font-inc" aria-label="Крупнее"${S.fontScale >= 1.6 ? ' disabled' : ''}>A</button></div></div>
-</div></section>`;
+</div></div></div></section>`;
 }
+let settingsOpen = false;
 // The file chip next to «Категории» scrolls the menu down to the file list.
 elMenuBody.addEventListener('click', e => {
   const j = e.target.closest('[data-jump]');
@@ -1939,12 +1978,21 @@ async function openSetActions(id) {
   const row = (act, icon, label, small = '', cls = '') => `<button type="button" class="fa-row${cls}" data-s="${act}">${icon}<span>${label}${small ? `<small>${small}</small>` : ''}</span></button>`;
   const html = `<div class="fa"><div class="fa-head"><span class="fa-ico">${I.doc}</span><span class="fa-name"><b>${esc(setTitle(s))}</b><small id="faSub">${esc(sub0)}</small></span></div>
 <div class="fa-cats" id="faCats">${chips0}</div>
+${s.bundled ? '' : `<div class="fa-course"><span>Курс</span>${coursePills(s.course, 'data-s="course" data-c', null)}</div>`}
 <div class="fa-list">${isCur ? '' : row('open', FA_ICON.open, 'Открыть')}${row('rename', FA_ICON.rename, 'Переименовать')}${row('share', FA_ICON.share, 'Отправить JSON', 'В «Файлы», AirDrop, Telegram')}${answered ? row('reset', FA_ICON.reset, 'Сбросить ответы', answered + ' ' + plural(answered, 'вопрос', 'вопроса', 'вопросов') + ' с ответами') : ''}${row('delete', hideOnly ? I.eyeOff : I.trash, hideOnly ? 'Скрыть из списка' : 'Удалить файл', hideOnly ? 'Вернуть можно в меню' : '', ' danger')}</div>
 <button type="button" class="dlg-btn fa-done" data-s="close">Готово</button></div>`;
   const sh = openSheet({
     cls: 'dialog', html,
     onClick: async (act, el, e, close) => {
       if (act === 'close') return close();
+      if (act === 'course') {
+        const n = +el.dataset.c, r = S.sets.find(x => x.id === id);
+        if (!r || r.course === n) return;
+        r.course = n; s.course = n; S.course = n;
+        rebuildSets(); save(); renderAll();
+        el.parentElement.querySelectorAll('.course').forEach(b => { const on = b === el; b.classList.toggle('on', on); b.setAttribute('aria-checked', String(on)); });
+        return toast('«' + setTitle(s) + '» — теперь в ' + n + ' курсе');
+      }
       if (act === 'share') {
         if (fileText == null) await textP;
         if (fileText == null) return alertDlg('Файл не открылся', 'Не получилось прочитать файл. Попробуйте загрузить его заново.');
@@ -2269,6 +2317,14 @@ const ACT = {
   'm-font-dec': () => setFont(S.fontScale - 0.1),
   'm-font-inc': () => setFont(S.fontScale + 0.1),
   'm-font-reset': () => setFont(1),
+  'm-course': el => { S.course = +el.dataset.c; save(); renderMenuBody(); },
+  'm-settings': el => {
+    settingsOpen = !settingsOpen;
+    const sec = el.closest('.m-set');
+    sec.classList.toggle('open', settingsOpen);
+    el.setAttribute('aria-expanded', String(settingsOpen));
+    if (settingsOpen) setTimeout(() => sec.scrollIntoView({ block: 'nearest', behavior: RM.matches ? 'auto' : 'smooth' }), 120);
+  },
   'm-tour': () => {
     const name = TOURS.main.when() ? 'main' : TOURS.intro.when() ? 'intro' : '';
     if (!name) return toast('Откройте любой вопрос — и обучение покажет, как заниматься');
@@ -2677,7 +2733,7 @@ async function loadBundledList() {
     if (!r.ok) return [];
     const list = await r.json();
     return (Array.isArray(list) ? list : []).filter(x => x && typeof x.file === 'string')
-      .map(x => ({ id: 'bundle.' + x.file.replace(/\.json$/i, ''), file: x.file, title: x.title || x.file.replace(/\.json$/i, '') }));
+      .map(x => ({ id: 'bundle.' + x.file.replace(/\.json$/i, ''), file: x.file, title: x.title || x.file.replace(/^.*\//, '').replace(/\.json$/i, ''), course: +x.course || +(x.file.match(/^([1-6])\//) || [])[1] || 0 }));
   } catch (e) { return []; }
 }
 function normalizeState(st) {
@@ -2687,6 +2743,9 @@ function normalizeState(st) {
   ['indexByScope', 'answers', 'starred', 'customSubs', 'titles', 'results', 'tour'].forEach(k => { if (!S[k] || typeof S[k] !== 'object' || Array.isArray(S[k])) S[k] = {}; });
   ['savedTests', 'sets', 'hiddenBundled'].forEach(k => { if (!Array.isArray(S[k])) S[k] = []; });
   if (S.test && (!Array.isArray(S.test.ids) || !S.test.points)) S.test = null;
+  // files loaded before courses existed go to the 3rd course; «…» next to a file moves it
+  S.sets.forEach(r => { if (!(r.course >= 1 && r.course <= 6)) r.course = 3; });
+  if (!(S.course >= 1 && S.course <= 6)) S.course = 0;
 }
 async function boot() {
   applyDock();

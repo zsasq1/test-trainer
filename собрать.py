@@ -7,7 +7,8 @@
   2. Делает index.html из app.html — с иконкой и манифестом для экрана «Домой».
   3. Обновляет sw.js — офлайн-кэш, чтобы на iPhone работало без интернета.
 
-Добавить свой JSON во встроенные: положите файл в data/ и запустите
+Добавить свой JSON во встроенные: положите файл в папку курса data/1 … data/6
+(например data/3/топка.json — это 3 курс) и запустите
     python3 собрать.py
 Название в меню берётся из имени файла; его можно поправить в data/sets.json.
 """
@@ -101,22 +102,29 @@ def build_sets():
     order = [x.get("file") for x in old if isinstance(x, dict)]
 
     found = []
-    for p in sorted(DATA.glob("*.json")):
-        if p.name == "sets.json":
-            continue
+    files = [p for p in DATA.glob("*.json") if p.name != "sets.json"]
+    for n in range(1, 7):
+        files += (DATA / str(n)).glob("*.json")
+    for p in sorted(files):
+        rel = p.relative_to(DATA).as_posix()
         try:
             obj = json.loads(p.read_text("utf-8-sig"))
         except Exception as e:
-            print(f"  ! {p.name}: это не JSON ({e}) — пропускаю")
+            print(f"  ! {rel}: это не JSON ({e}) — пропускаю")
             continue
         if not isinstance(obj, dict) or not obj:
-            print(f"  ! {p.name}: нет вопросов (ожидается объект «вопрос → ответы») — пропускаю")
+            print(f"  ! {rel}: нет вопросов (ожидается объект «вопрос → ответы») — пропускаю")
             continue
-        found.append(p.name)
-        print(f"  ✓ {p.name}: {len(obj)} записей")
+        found.append(rel)
+        print(f"  ✓ {rel}: {len(obj)} записей")
 
     found.sort(key=lambda n: (order.index(n) if n in order else len(order), n))
-    sets = [{"file": n, "title": titles.get(n) or KNOWN_TITLES.get(pathlib.Path(n).stem) or pathlib.Path(n).stem} for n in found]
+    courses = {x.get("file"): x.get("course") for x in old if isinstance(x, dict)}
+    sets = []
+    for n in found:
+        folder = n.split("/")[0] if "/" in n else ""
+        course = int(folder) if folder.isdigit() else (courses.get(n) or 0)
+        sets.append({"file": n, "title": titles.get(n) or KNOWN_TITLES.get(pathlib.Path(n).stem) or pathlib.Path(n).stem, "course": course})
     sets_path.write_text(json.dumps(sets, ensure_ascii=False, indent=2) + "\n", "utf-8")
     return sets
 
