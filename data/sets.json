@@ -13,5 +13,10 @@
     "file": "2/ekologiya.json",
     "title": "Экология",
     "course": 2
+  },
+  {
+    "file": "2/filosofiya.json",
+    "title": "Философия",
+    "course": 2
   }
 ]
