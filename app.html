@@ -512,7 +512,11 @@ textarea.f-in{resize:vertical;min-height:84px}
   body{display:flex}
   .app{flex:1;min-width:0;max-width:none;margin:0}
   .drawer{position:relative;order:-1;flex:none;width:320px;height:100%;z-index:1;transform:none;visibility:visible;transition:none;box-shadow:none;border-right:1px solid var(--line);background:var(--side);padding-top:16px;--dpad:14px}
-  .scrim,#menuBtn,.d-head,.state .ghost-btn[data-act="menu"]{display:none}
+  .scrim,.d-head,.state .ghost-btn[data-act="menu"]{display:none}
+  /* the sidebar can be hidden: the question gets the whole width, the button in the top bar brings it back */
+  .dock-off .drawer{display:none}
+  .dock-off .state .ghost-btn[data-act="menu"]{display:inline-flex}
+  .dock-off .toast{left:50%}
   .drawer>.searchbox{grid-column:1/-1;background:var(--surface)}
   .menu-body{padding-bottom:24px}
   .mrow.on{background:var(--side-sel)}
@@ -813,6 +817,7 @@ function firstSentence(t) { const s = String(t).trim(); return s.length > 96 ? s
 const sv = (body, filled) => `<svg class="i${filled ? ' f' : ''}" viewBox="0 0 24 24" aria-hidden="true">${body}</svg>`;
 const I = {
   menu: sv('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+  sidebar: sv('<rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M9.5 4.5v15"/>'),
   x: sv('<path d="M6 6l12 12M18 6 6 18"/>'),
   chevL: sv('<path d="m15 18-6-6 6-6"/>'),
   chevR: sv('<path d="m9 6 6 6-6 6"/>'),
@@ -1615,7 +1620,7 @@ function render() {
   renderTop();
   renderContent();
   renderBottom();
-  if (docked()) renderMenuBody();
+  if (sidebarShown()) renderMenuBody();
   tourSoon();
   if (FIREBASE_DB) Presence.touch();
 }
@@ -1775,16 +1780,30 @@ const elDrawer = $('#drawer'), elScrim = $('#scrim'), elMenuBody = $('#menuBody'
 // On a wide screen the menu is always shown as a sidebar; the slide-in drawer is for phones.
 const mqDock = window.matchMedia('(min-width: 960px)');
 const docked = () => mqDock.matches;
+// The sidebar can be hidden on a wide screen; this device remembers it.
+const DOCK_KEY = 'TestTrainer.dockOff';
+let dockOff = (() => { try { return localStorage.getItem(DOCK_KEY) === '1'; } catch (e) { return false; } })();
+const sidebarShown = () => docked() && !dockOff;
+function setDockOff(off) {
+  dockOff = !!off;
+  try { if (dockOff) localStorage.setItem(DOCK_KEY, '1'); else localStorage.removeItem(DOCK_KEY); } catch (e) {}
+  applyDock();
+}
 function applyDock() {
+  document.documentElement.classList.toggle('dock-off', dockOff);
+  const mb = $('#menuBtn'), lbl = docked() ? (dockOff ? 'Показать меню' : 'Скрыть меню') : 'Открыть меню';
+  mb.innerHTML = docked() ? I.sidebar : I.menu;
+  mb.setAttribute('aria-label', lbl);
+  if (docked()) { mb.title = lbl; mb.setAttribute('aria-expanded', String(!dockOff)); } else { mb.removeAttribute('title'); mb.removeAttribute('aria-expanded'); }
   if (docked()) {
     if (drawerOpen) { drawerOpen = false; elDrawer.classList.remove('open'); elScrim.classList.remove('on'); $('#app').removeAttribute('inert'); }
-    elDrawer.setAttribute('aria-hidden', 'false');
-    renderMenuBody();
+    elDrawer.setAttribute('aria-hidden', dockOff ? 'true' : 'false');
+    if (!dockOff) renderMenuBody();
   } else elDrawer.setAttribute('aria-hidden', drawerOpen ? 'false' : 'true');
 }
 if (mqDock.addEventListener) mqDock.addEventListener('change', applyDock); else if (mqDock.addListener) mqDock.addListener(applyDock);
 function openDrawer() {
-  if (docked()) return;
+  if (docked()) { if (dockOff) setDockOff(false); return; } // anything that opens the menu shows a hidden sidebar
   hideToast();
   drawerOpen = true;
   drawerAt = performance.now();
@@ -2023,7 +2042,7 @@ function armCredit() {
     if (!full) return;
     const settle = Math.max(260, drawerAt + 420 - performance.now());
     creditWait = setTimeout(() => {
-      if (!full || !el.isConnected || !(drawerOpen || docked()) || document.visibilityState !== 'visible') return;
+      if (!full || !el.isConnected || !(drawerOpen || sidebarShown()) || document.visibilityState !== 'visible') return;
       elMenuBody.removeEventListener('scroll', soon); creditScroll = null;
       if (creditIO) { creditIO.disconnect(); creditIO = null; }
       dropCredit(el);
@@ -2700,7 +2719,7 @@ function openAddSub(caseId) {
    Events
    ========================================================= */
 const ACT = {
-  'menu': () => openDrawer(),
+  'menu': () => (docked() ? setDockOff(!dockOff) : openDrawer()),
   'm-close': () => closeDrawer(),
   'pick': el => { pick(el.dataset.qid, +el.dataset.i); render(); },
   'dd-open': el => openDDPicker(el.dataset.qid, +el.dataset.row),
@@ -2806,7 +2825,7 @@ document.addEventListener('keydown', e => {
   // Enter checks — unless focus is on some other button, which Enter should press as usual.
   else if (e.key === 'Enter') { const t = e.target.closest && e.target.closest('button, a, label, summary, [role="button"]'); if (!t || t.classList.contains('choice')) press('[data-act="check"]'); }
   else if (e.code === 'KeyG') press('[data-act="reveal"]');
-  else if (e.code === 'Slash' && docked()) { e.preventDefault(); elSearch.focus(); }
+  else if (e.code === 'Slash' && docked()) { e.preventDefault(); if (dockOff) setDockOff(false); elSearch.focus(); }
 });
 elScrim.addEventListener('click', closeDrawer);
 
@@ -2974,7 +2993,7 @@ document.addEventListener('pointercancel', endDrag);
 /* =========================================================
    Boot
    ========================================================= */
-$('#menuBtn').innerHTML = I.menu;
+$('#menuBtn').innerHTML = docked() ? I.sidebar : I.menu;
 $('#closeBtn').innerHTML = I.x;
 $('#prevBtn').innerHTML = I.chevL;
 $('#nextBtn').innerHTML = I.chevR;
@@ -3014,7 +3033,7 @@ const TOURS = {
       { el: '#nextBtn', title: 'Дальше', text: () => KB.matches ? 'Листайте стрелками здесь или клавишами ← и →. Если держать кнопку, вопросы листаются быстро.' : 'Листайте стрелками или свайпом по вопросу. Если держать кнопку, вопросы листаются быстро.', allow: '#nextBtn' },
       { el: '#counter', title: 'Номер вопроса', text: 'Здесь видно, какой это вопрос и из какого файла. Нажмите, чтобы перейти к вопросу по номеру.' },
       { el: '#topActions', title: 'Автопереход и избранное', text: 'Переключатель после верного ответа сразу открывает следующий вопрос. Звёздочка добавляет вопрос в избранное.', allow: '[data-act="toggle-auto"], [data-act="star"]' },
-      { el: () => docked() ? '#drawer' : '#menuBtn', title: 'Меню', text: () => docked() ? 'Слева — категории, поиск, избранное, тесты, файлы и настройки. Клавиша / сразу открывает поиск.' : 'Категории, поиск, избранное, тесты, файлы и настройки. Меню открывается и свайпом от левого края.', allow: '#menuBtn', end: true }
+      { el: () => sidebarShown() ? '#drawer' : '#menuBtn', title: 'Меню', text: () => sidebarShown() ? 'Слева — категории, поиск, избранное, тесты, файлы и настройки. Клавиша / сразу открывает поиск.' : docked() ? 'Эта кнопка показывает и прячет боковую панель: категории, поиск, избранное, тесты, файлы и настройки.' : 'Категории, поиск, избранное, тесты, файлы и настройки. Меню открывается и свайпом от левого края.', allow: '#menuBtn', end: true }
     ]
   }
 };
