@@ -84,12 +84,6 @@
     "fac": "ped"
   },
   {
-    "file": "ped/2/mikrobiologiya-virusologiya.json",
-    "title": "Микробиология, вирусология",
-    "course": 2,
-    "fac": "ped"
-  },
-  {
     "file": "stom/3/filosofiya.json",
     "title": "Философия",
     "course": 3,
