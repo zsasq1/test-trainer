@@ -7,9 +7,11 @@
   2. Делает index.html из app.html — с иконкой и манифестом для экрана «Домой».
   3. Обновляет sw.js — офлайн-кэш, чтобы на iPhone работало без интернета.
 
-Добавить свой JSON во встроенные: положите файл в папку курса data/1 … data/6
-(например data/3/топка.json — это 3 курс) и запустите
+Добавить свой JSON во встроенные: положите файл в папку курса и запустите
     python3 собрать.py
+Лечебное дело — data/1 … data/6 (например data/3/топка.json — это 3 курс),
+Педиатрия — data/ped/1 … data/ped/6, Стоматология — data/stom/1 … data/stom/5.
+Проще всего добавлять тесты через админку (admin.html) — она делает это сама.
 Название в меню берётся из имени файла; его можно поправить в data/sets.json.
 """
 import json
@@ -18,6 +20,7 @@ import time
 
 ROOT = pathlib.Path(__file__).resolve().parent
 DATA = ROOT / "data"
+FAC_DIRS = {"ped": 6, "stom": 5}  # папка → сколько курсов; data/ped/<курс>/…, data/stom/<курс>/…; Лечебное дело — прямо data/<курс>/…
 KNOWN_TITLES = {"bot_dlya_tela": "бот для тела", "topka": "Топка"}
 
 HEAD = """<!doctype html>
@@ -87,6 +90,10 @@ self.addEventListener('fetch', e => {
     })());
     return;
   }
+  // Из памяти отдаётся только сам тренажёр. Другие страницы (admin.html) — всегда из сети: иначе вместо
+  // админки открывался тренажёр, а потом вместо тренажёра — админка.
+  const path = new URL(req.url).pathname;
+  if (req.mode === 'navigate' && !(path.endsWith('/') || path.endsWith('/index.html'))) return;
   e.respondWith((async () => {
     const cache = await caches.open(CACHE);
     const nav = req.mode === 'navigate';
@@ -119,7 +126,10 @@ def build_sets():
     found = []
     files = [p for p in DATA.glob("*.json") if p.name != "sets.json"]
     for n in range(1, 7):
-        files += (DATA / str(n)).glob("*.json")
+        files += (DATA / str(n)).glob("*.json")  # Лечебное дело
+        for fac, courses in FAC_DIRS.items():
+            if n <= courses:  # у Стоматологии нет 6 курса
+                files += (DATA / fac / str(n)).glob("*.json")  # Педиатрия, Стоматология
     for p in sorted(files):
         rel = p.relative_to(DATA).as_posix()
         try:
@@ -137,9 +147,11 @@ def build_sets():
     courses = {x.get("file"): x.get("course") for x in old if isinstance(x, dict)}
     sets = []
     for n in found:
-        folder = n.split("/")[0] if "/" in n else ""
+        parts = n.split("/")
+        fac = parts[0] if parts[0] in FAC_DIRS else "lech"  # the faculty is the folder; everything else is Лечебное дело
+        folder = parts[1] if fac != "lech" else (parts[0] if len(parts) > 1 else "")
         course = int(folder) if folder.isdigit() else (courses.get(n) or 0)
-        sets.append({"file": n, "title": titles.get(n) or KNOWN_TITLES.get(pathlib.Path(n).stem) or pathlib.Path(n).stem, "course": course})
+        sets.append({"file": n, "title": titles.get(n) or KNOWN_TITLES.get(pathlib.Path(n).stem) or pathlib.Path(n).stem, "course": course, "fac": fac})
     sets_path.write_text(json.dumps(sets, ensure_ascii=False, indent=2) + "\n", "utf-8")
     return sets
 

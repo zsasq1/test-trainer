@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..700&display=swap">
 <style>
-/* Owner-only page: who is on the site now, and the course files everyone sees.
+/* Owner-only page: who is on the site now, and the course files each faculty sees.
    Same look as the trainer: warm ivory, near-black ink, clay accent. */
 :root{
   --bg:#F5F4ED; --surface:#FFFFFF; --line:#E3E0D5; --text:#1F1E1D; --muted:#6E6B63; --ink-soft:#EEECE3;
@@ -77,9 +77,16 @@ main{max-width:620px;margin:0 auto;padding:18px max(16px,env(safe-area-inset-lef
 .row.off .t small b{display:inline;font-size:inherit;color:var(--red)}
 .who .row.acc{padding-right:6px}
 
+/* faculties: a segmented switch in the same ink-on-surface language as the course pills */
+.facs{display:flex;padding:3px;margin:0 0 10px;border-radius:14px;background:var(--surface);border:1px solid var(--line)}
+.fac{flex:1 1 auto;min-width:0;min-height:40px;padding:0 6px;border-radius:11px;font-size:14px;font-weight:600;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background-color .2s ease,color .2s ease,transform .12s var(--ease-out)}
+.fac.on{background:var(--text);color:var(--bg)}
+.fac:active{transform:scale(.97)}
+@media (max-width:360px){.fac{font-size:13px;padding:0 2px}}
+
 /* courses */
 .courses{display:flex;gap:8px;margin:0 2px 10px}
-.course{flex:1 1 0;max-width:46px;aspect-ratio:1;min-width:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--line);font-size:16px;font-weight:650;font-variant-numeric:tabular-nums;transition:background-color .2s ease,color .2s ease,border-color .2s ease,transform .12s var(--ease-out)}
+.course{flex:0 1 calc((100% - 40px) / 6);max-width:46px;aspect-ratio:1;min-width:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--line);font-size:16px;font-weight:650;font-variant-numeric:tabular-nums;transition:background-color .2s ease,color .2s ease,border-color .2s ease,transform .12s var(--ease-out)}
 .course.empty{color:var(--muted)}
 .course.on{background:var(--text);border-color:var(--text);color:var(--bg)}
 .course:active{transform:scale(.94)}
@@ -97,7 +104,10 @@ main{max-width:620px;margin:0 auto;padding:18px max(16px,env(safe-area-inset-lef
 .btn:active:not(:disabled){transform:scale(.98)}
 .btn.gray{background:var(--surface);color:var(--text);box-shadow:inset 0 0 0 1px var(--line)}
 .btn.red{background:var(--surface);color:var(--red);box-shadow:inset 0 0 0 1px var(--line)}
-.add{margin-top:10px}
+/* add button: course on the first line, faculty under it, so the long names never wrap mid-phrase */
+.add{margin-top:10px;min-height:56px}
+#addLbl{display:flex;flex-direction:column;align-items:flex-start;line-height:1.2;text-align:left}
+#addLbl small{font-size:13px;font-weight:500;opacity:.85}
 
 /* login */
 .field{width:100%;min-height:48px;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-size:16px;margin:12px 0}
@@ -127,11 +137,12 @@ details.how a{color:var(--accent)}
 @media (hover:hover) and (pointer:fine){
   .ib:hover,.back:hover{background:var(--ink-soft)}
   .course:not(.on):hover{border-color:var(--muted)}
+  .fac:not(.on):hover{color:var(--text)}
 }
 @media (prefers-reduced-motion: reduce){
   .dot.on{animation:none}
   .dlg,.wrap.on .dlg{transform:none}
-  .btn:active:not(:disabled),.course:active{transform:none}
+  .btn:active:not(:disabled),.course:active,.fac:active{transform:none}
 }
 </style>
 </head>
@@ -188,7 +199,8 @@ details.how a{color:var(--accent)}
   </section>
 
   <section id="files" hidden>
-    <div class="label">Файлы курсов — их видят все</div>
+    <div class="label">Файлы курсов — их видит весь факультет</div>
+    <div class="facs" id="facs" role="radiogroup" aria-label="Факультет"></div>
     <div class="courses" id="courses" role="radiogroup" aria-label="Курс"></div>
     <div class="list" id="list"></div>
     <button class="btn add" id="addBtn" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span id="addLbl">Добавить файл</span></button>
@@ -210,7 +222,16 @@ const FIREBASE_DB = 'https://reclama-kgu-default-rtdb.europe-west1.firebasedatab
 const FB_API_KEY = 'AIzaSyAGDxn2z6l4MzgkR8mV1_vuIfJIu7vyc2U'; // Firebase → Project settings → Web API Key (it is public by design)
 const REPO = 'zsasq1/test-trainer', BRANCH = 'main';
 const ADMIN_KEY = 'TestTrainer.admin';
-const COURSES = [1, 2, 3, 4, 5, 6];
+/* Faculties: same ids as app.html. Each one sees only its own files. Лечебное дело is the
+   original faculty: its files stay in data/<course>/ and entries or accounts without `fac` are
+   Лечебное дело; the others live in data/<fac>/<course>/. `gen` is for "из 2 курса Педиатрии". */
+const FACS = [
+  { id: 'lech', name: 'Лечебное дело', short: 'Лечебное', gen: 'Лечебного дела', courses: 6 },
+  { id: 'ped', name: 'Педиатрия', short: 'Педиатрия', gen: 'Педиатрии', courses: 6 },
+  { id: 'stom', name: 'Стоматология', short: 'Стоматология', gen: 'Стоматологии', courses: 5 }
+];
+const FAC = Object.fromEntries(FACS.map(f => [f.id, f]));
+const facOf = x => x && FAC[x.fac] ? x.fac : 'lech'; // a set entry or an account
 const TYPES = new Set(['single', 'multiple', 'dropdown', 'sortable', 'text_input', 'drag_and_drop', 'cluster_member']);
 
 const $ = s => document.querySelector(s);
@@ -226,7 +247,11 @@ const ICON = {
 };
 
 let token = ls.get(ADMIN_KEY) || '';
+let fac = FAC[ls.get('TestTrainer.adminFac')] ? ls.get('TestTrainer.adminFac') : 'lech';
 let course = +ls.get('TestTrainer.adminCourse') || 3;
+// Стоматология has 5 courses: a remembered 6 (or anything odd) falls back to the 1st.
+const fitCourse = () => { if (!(course >= 1 && course <= FAC[fac].courses && course % 1 === 0)) course = 1; };
+fitCourse();
 let repo = null; // { head, tree, sets, sizes }
 
 /* ---------- small UI helpers ---------- */
@@ -295,7 +320,7 @@ async function publish(message, files, edit) {
       if (!blobs.has(f.path)) blobs.set(f.path, (await gh('/git/blobs', { method: 'POST', body: JSON.stringify({ content: f.content, encoding: 'utf-8' }) })).sha);
       entries.push({ path: 'data/' + f.path, mode: '100644', type: 'blob', sha: blobs.get(f.path) });
     }
-    const sets = edit(cur.sets.slice());
+    const sets = withFac(edit(cur.sets.slice()));
     entries.push({ path: 'data/sets.json', mode: '100644', type: 'blob', content: JSON.stringify(sets, null, 2) + '\n' });
     const tree = await gh('/git/trees', { method: 'POST', body: JSON.stringify({ base_tree: cur.tree, tree: entries }) });
     const commit = await gh('/git/commits', { method: 'POST', body: JSON.stringify({ message, tree: tree.sha, parents: [cur.head] }) });
@@ -307,15 +332,24 @@ async function publish(message, files, edit) {
 }
 
 /* ---------- files of a course ---------- */
-const courseOf = s => +s.course || +((s.file || '').match(/^([1-6])\//) || [])[1] || 0;
+// The course digit is the folder right before the file: "3/x.json" and "ped/3/x.json" are both 3rd year.
+const courseOf = s => +(s && s.course) || +(String((s && s.file) || '').match(/(?:^|\/)([1-6])\//) || [])[1] || 0;
+// Every write spells `fac` out on every entry, so the list never depends on "missing means lech".
+// An unknown `fac` (a typo, or a faculty the site has but this page doesn't yet) is kept as it is: turning it into
+// lech would show that file to every Лечебное дело student.
+const withFac = sets => sets.map(s => s && typeof s === 'object' && !Array.isArray(s) && (s.fac == null || s.fac === '') ? { ...s, fac: 'lech' } : s);
+const mine = s => s && facOf(s) === fac;
 function renderFiles() {
   if (!repo) return;
-  const has = new Set(repo.sets.map(courseOf));
-  $('#courses').innerHTML = COURSES.map(n => `<button type="button" class="course${n === course ? ' on' : ''}${has.has(n) ? '' : ' empty'}" role="radio" aria-checked="${n === course}" data-c="${n}" aria-label="${n} курс">${n}</button>`).join('');
-  const list = repo.sets.filter(s => courseOf(s) === course);
+  const F = FAC[fac];
+  $('#facs').innerHTML = FACS.map(f => `<button type="button" class="fac${f.id === fac ? ' on' : ''}" role="radio" aria-checked="${f.id === fac}" data-f="${f.id}">${esc(f.name)}</button>`).join('');
+  const has = new Set(repo.sets.filter(mine).map(courseOf));
+  $('#courses').innerHTML = Array.from({ length: F.courses }, (_, i) => i + 1).map(n => `<button type="button" class="course${n === course ? ' on' : ''}${has.has(n) ? '' : ' empty'}" role="radio" aria-checked="${n === course}" data-c="${n}" aria-label="${n} курс">${n}</button>`).join('');
+  const list = repo.sets.filter(s => mine(s) && courseOf(s) === course);
   $('#list').innerHTML = list.length ? list.map(s => `<div class="row"><div class="t"><b>${esc(s.title || s.file)}</b><small>${esc(kb(repo.sizes[s.file] || 0))}</small></div><button type="button" class="ib" data-edit="${esc(s.file)}" aria-label="Переименовать «${esc(s.title)}»">${ICON.edit}</button><button type="button" class="ib del" data-del="${esc(s.file)}" aria-label="Удалить «${esc(s.title)}»">${ICON.trash}</button></div>`).join('')
-    : `<div class="empty-row">В ${course} курсе пока нет файлов.</div>`;
-  $('#addLbl').textContent = 'Добавить файл в ' + course + ' курс';
+    : `<div class="empty-row">В ${course} курсе ${esc(F.gen)} пока нет файлов.</div>`;
+  $('#addLbl').innerHTML = 'Добавить файл в ' + course + ' курс<small>' + esc(F.name) + '</small>';
+  $('#addBtn').setAttribute('aria-label', 'Добавить файл в ' + course + ' курс · ' + F.name);
 }
 async function refreshFiles() {
   try { repo = await loadRepo(); renderFiles(); }
@@ -323,12 +357,16 @@ async function refreshFiles() {
 }
 const TR = { а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z', и: 'i', й: 'y', к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u', ф: 'f', х: 'h', ц: 'c', ч: 'ch', ш: 'sh', щ: 'sch', ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya' };
 const slug = t => t.toLowerCase().split('').map(c => TR[c] != null ? TR[c] : c).join('').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'fail';
-function freePath(c, base) {
-  let p = c + '/' + base + '.json', k = 2;
-  while (repo.sizes[p] != null || repo.sets.some(s => s.file === p)) p = c + '/' + base + '-' + k++ + '.json';
+// Path under data/: Лечебное дело keeps the original "<course>/…" layout (old links and progress
+// stay valid), the other faculties get their own folder "<fac>/<course>/…".
+function freePath(f, c, base) {
+  const dir = (f === 'lech' ? '' : f + '/') + c + '/';
+  let p = dir + base + '.json', k = 2;
+  while (repo.sizes[p] != null || repo.sets.some(s => s && s.file === p)) p = dir + base + '-' + k++ + '.json';
   return p;
 }
 async function addFiles(files) {
+  const fc = fac, c = course, F = FAC[fc]; // the faculty and course the add button named
   for (const f of files) {
     let text;
     try { text = (await f.text()).replace(/^﻿/, ''); } catch (e) { toast('Не удалось прочитать ' + f.name); continue; }
@@ -336,40 +374,41 @@ async function addFiles(files) {
     try { obj = JSON.parse(text); } catch (e) { await dialog({ title: 'Это не JSON', text: '«' + f.name + '» не читается как JSON: ' + e.message, ok: 'Понятно' }); continue; }
     const n = obj && typeof obj === 'object' && !Array.isArray(obj) ? Object.values(obj).filter(v => v && typeof v === 'object' && TYPES.has(v.type)).length : 0;
     if (!n) { await dialog({ title: 'В файле нет вопросов', text: '«' + f.name + '» — ожидается объект вида {"Текст вопроса": {"type": "single", …}}.', ok: 'Понятно' }); continue; }
-    const r = await dialog({ title: 'Добавить в ' + course + ' курс', text: n + ' ' + plural(n, 'вопрос', 'вопроса', 'вопросов') + '. Название в меню:', input: f.name.replace(/\.[^.]+$/, ''), ok: 'Опубликовать' });
+    const r = await dialog({ title: 'Добавить в ' + c + ' курс · ' + F.name, text: n + ' ' + plural(n, 'вопрос', 'вопроса', 'вопросов') + '. Название в меню:', input: f.name.replace(/\.[^.]+$/, ''), ok: 'Опубликовать' });
     if (!r.ok) continue;
     const title = r.value || f.name.replace(/\.[^.]+$/, '');
-    const path = freePath(course, slug(title)), c = course;
+    const path = freePath(fc, c, slug(title));
     const b = busy('Публикую «' + title + '»…');
     try {
-      await publish('Админка: «' + title + '» в ' + c + ' курс', [{ path, content: text }], sets => sets.concat([{ file: path, title, course: c }]));
-      toast('«' + title + '» добавлен. У всех появится через 1–2 минуты.');
+      await publish('Админка: «' + title + '» в ' + c + ' курс (' + F.name + ')', [{ path, content: text }], sets => sets.concat([{ file: path, title, course: c, fac: fc }]));
+      toast('«' + title + '» добавлен. У студентов ' + F.gen + ' появится через 1–2 минуты.');
     } catch (e) { toast(e.message); }
     b.done();
     await refreshFiles();
   }
 }
 async function removeFile(file) {
-  const s = repo.sets.find(x => x.file === file);
+  const s = repo.sets.find(x => x && x.file === file);
   if (!s) return;
-  const r = await dialog({ title: 'Удалить «' + s.title + '»?', text: 'Файл пропадёт из ' + courseOf(s) + ' курса у всех. Прогресс посетителей по нему тоже пропадёт.', ok: 'Удалить', danger: true });
+  const F = FAC[facOf(s)], c = courseOf(s);
+  const r = await dialog({ title: 'Удалить «' + s.title + '»?', text: 'Файл пропадёт из ' + c + ' курса ' + F.gen + ' у всех. Прогресс посетителей по нему тоже пропадёт.', ok: 'Удалить', danger: true });
   if (!r.ok) return;
   const b = busy('Удаляю…');
   try {
-    await publish('Админка: удалён «' + s.title + '»', repo.sizes[file] != null ? [{ path: file, remove: true }] : [], sets => sets.filter(x => x.file !== file));
+    await publish('Админка: удалён «' + s.title + '» (' + c + ' курс, ' + F.name + ')', repo.sizes[file] != null ? [{ path: file, remove: true }] : [], sets => sets.filter(x => !(x && x.file === file)));
     toast('Удалено. У всех пропадёт через 1–2 минуты.');
   } catch (e) { toast(e.message); }
   b.done();
   await refreshFiles();
 }
 async function renameFile(file) {
-  const s = repo.sets.find(x => x.file === file);
+  const s = repo.sets.find(x => x && x.file === file);
   if (!s) return;
   const r = await dialog({ title: 'Название в меню', input: s.title || '', ok: 'Сохранить' });
   if (!r.ok || !r.value || r.value === s.title) return;
   const b = busy('Сохраняю…');
   try {
-    await publish('Админка: «' + s.title + '» → «' + r.value + '»', [], sets => sets.map(x => x.file === file ? { ...x, title: r.value } : x));
+    await publish('Админка: «' + s.title + '» → «' + r.value + '» (' + FAC[facOf(s)].name + ')', [], sets => sets.map(x => x && x.file === file ? { ...x, title: r.value } : x));
     toast('Название сохранено. У всех обновится через 1–2 минуты.');
   } catch (e) { toast(e.message); }
   b.done();
@@ -423,12 +462,14 @@ function renderPeople() {
     .sort((a, b) => (b.last || 0) - (a.last || 0));
   const list = find ? all.filter(u => fold(u.name).includes(fold(find))) : all;
   const nBlocked = all.filter(u => u.blocked).length;
+  // Per-faculty split only once someone outside Лечебное дело exists; until then it is just noise.
+  const byFac = FACS.map(f => [f, all.filter(u => facOf(u) === f.id).length]).filter(([, n]) => n);
   $('#peopleSec').hidden = false;
-  $('#peopleLbl').textContent = 'Аккаунты · ' + all.length + (nBlocked ? ' · заблокировано ' + nBlocked : '');
+  $('#peopleLbl').textContent = 'Аккаунты · ' + all.length + (byFac.some(([f]) => f.id !== 'lech') ? ' (' + byFac.map(([f, n]) => f.short + ' ' + n).join(', ') + ')' : '') + (nBlocked ? ' · заблокировано ' + nBlocked : '');
   $('#peopleFind').hidden = all.length <= 8 && !find;
   const shown = showAll || find ? list : list.slice(0, 30);
   $('#peopleList').innerHTML = shown.length ? shown.map(u => {
-    const meta = [u.course ? u.course + ' курс' : '', String(u.login || '').startsWith('g:') ? 'Google' : String(u.login || '').startsWith('tg-') ? 'Telegram' + (u.tg ? ' @' + u.tg : '') : '', u.d, 'заходил(а) ' + ago(u.last || u.created || 0)].filter(Boolean).map(esc).join(' · ');
+    const meta = [FAC[facOf(u)].short, u.course ? u.course + ' курс' : '', String(u.login || '').startsWith('g:') ? 'Google' : String(u.login || '').startsWith('tg-') ? 'Telegram' + (u.tg ? ' @' + u.tg : '') : '', u.d, 'заходил(а) ' + ago(u.last || u.created || 0)].filter(Boolean).map(esc).join(' · ');
     return `<div class="row acc${u.blocked ? ' off' : ''}"><span class="av named">${esc(initials(u.name))}</span><div class="t"><b>${esc(u.name)}</b><small>${u.blocked ? '<b>заблокирован</b> · ' : ''}${meta}</small></div>`
       + `<button class="ib" type="button" data-block="${esc(u.uid)}" aria-label="${u.blocked ? 'Разблокировать' : 'Заблокировать'} «${esc(u.name)}»">${u.blocked ? ICON.unlock : ICON.lock}</button>`
       + `<button class="ib del" type="button" data-udel="${esc(u.uid)}" aria-label="Удалить «${esc(u.name)}»">${ICON.trash}</button></div>`;
@@ -502,7 +543,7 @@ async function refreshOnline() {
         fresh.sort((a, b) => (!!b.who - !!a.who) || (a.s || 0) - (b.s || 0));
         setCounts(fresh.length, today, week.size);
         $('#liveList').hidden = !fresh.length;
-        $('#liveList').innerHTML = fresh.map(x => rowHTML(x.who ? x.who.name : guest(x.v), !!x.who, [x.who && x.who.course ? x.who.course + ' курс' : '', x.d, x.w, dur(now - (x.s || now))].filter(Boolean).join(' · '))).join('');
+        $('#liveList').innerHTML = fresh.map(x => rowHTML(x.who ? x.who.name : guest(x.v), !!x.who, [x.who ? FAC[facOf(x.who)].short : '', x.who && x.who.course ? x.who.course + ' курс' : '', x.d, x.w, dur(now - (x.s || now))].filter(Boolean).join(' · '))).join('');
       } catch (e) {
         $('#liveList').hidden = true;
         note = e.status === 401 ? ' · имена закрыты правилами Firebase — обновите правила' : '';
@@ -577,6 +618,13 @@ $('#token').addEventListener('keydown', e => { if (e.key === 'Enter') $('#loginB
 $('#logoutBtn').addEventListener('click', async () => {
   const r = await dialog({ title: 'Выйти на этом устройстве?', text: 'Токен удалится с этого устройства. Чтобы вернуться, понадобится вставить его снова.', ok: 'Выйти', danger: true });
   if (r.ok) logout();
+});
+$('#facs').addEventListener('click', e => {
+  const b = e.target.closest('[data-f]');
+  if (!b || b.dataset.f === fac) return;
+  fac = b.dataset.f; ls.set('TestTrainer.adminFac', fac);
+  fitCourse(); ls.set('TestTrainer.adminCourse', String(course));
+  renderFiles();
 });
 $('#courses').addEventListener('click', e => { const b = e.target.closest('[data-c]'); if (!b) return; course = +b.dataset.c; ls.set('TestTrainer.adminCourse', String(course)); renderFiles(); });
 $('#list').addEventListener('click', e => {

@@ -423,6 +423,21 @@ button:disabled{cursor:default}
 .pick.on{background:var(--ink-soft);border-color:var(--ink-line);box-shadow:inset 0 0 0 1px var(--ink-line)}
 .pick .i{color:var(--text)}
 .pick.none{color:var(--muted);font-weight:500}
+/* faculty picker: three big rows — on the first visit it is the very first thing on screen */
+.fac{gap:14px}
+.fac-head{display:flex;flex-direction:column;gap:4px;padding:0 2px}
+.fac-list{display:flex;flex-direction:column;gap:8px}
+.fac-opt{width:100%;min-height:64px;display:flex;align-items:center;gap:12px;padding:9px 14px 9px 10px;border-radius:14px;background:var(--bg);border:1px solid var(--line);text-align:left;transition:background-color .15s ease,border-color .15s ease,transform .12s var(--ease-out)}
+.fac-opt:active{background:var(--ink-soft);transform:scale(.985)}
+.fac-opt.on{background:var(--ink-soft);border-color:var(--ink-line);box-shadow:inset 0 0 0 1px var(--ink-line)}
+.fac-ico{width:44px;height:44px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;background:var(--surface);color:var(--accent);font-size:22px}
+.fac-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.fac-txt b{font-size:17px;font-weight:650;line-height:1.25;overflow-wrap:anywhere}
+.fac-txt small{font-size:14px;color:var(--muted)}
+.fac-opt>.i{color:var(--muted);font-size:16px}
+.fac-opt.on>.i{color:var(--text);font-size:18px}
+@media (hover:hover) and (pointer:fine){ .fac-opt:not(.on):hover{border-color:var(--ink-line)} }
+@media (max-width:340px){ .fac-opt{gap:10px;padding-right:12px}.fac-ico{width:40px;height:40px;font-size:20px}.fac-txt b{font-size:16px} }
 .f-in{width:100%;min-width:0;padding:10px 12px;border-radius:10px;background:var(--surface);border:1px solid var(--line);font-size:16px;line-height:1.35}
 .f-in:focus{outline:none;border-color:var(--ink-line);box-shadow:inset 0 0 0 1px var(--ink-line)}
 textarea.f-in{resize:vertical;min-height:84px}
@@ -749,6 +764,15 @@ const SUB_TYPES = [
   ['text', 'Текст', 'Написать текст']
 ];
 const SUB_TITLE = Object.fromEntries(SUB_TYPES.map(t => [t[0], t[2]]));
+/* Faculties: each has its own number of courses and its own course files (admin.html uses the same ids).
+   gen is «для …» — for the «no tests yet» notes. */
+const FACS = [
+  { id: 'lech', name: 'Лечебное дело', gen: 'лечебного дела', courses: 6 },
+  { id: 'ped', name: 'Педиатрия', gen: 'педиатрии', courses: 6 },
+  { id: 'stom', name: 'Стоматология', gen: 'стоматологии', courses: 5 }
+];
+const facOf = id => FACS.find(f => f.id === id) || null;
+const isFac = id => !!facOf(id);
 const LS_KEY = 'TestTrainer.web.v1';
 /* Online counter and accounts: Firebase Realtime Database over plain REST. Empty = off. */
 const FIREBASE_DB = 'https://reclama-kgu-default-rtdb.europe-west1.firebasedatabase.app';
@@ -829,6 +853,7 @@ const I = {
   updown: sv('<path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/>'),
   up: sv('<path d="M12 19V5M6 11l6-6 6 6"/>'),
   down: sv('<path d="M12 5v14M6 13l6 6 6-6"/>'),
+  swap: sv('<path d="M7 4 3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/>'),
   more: sv('<circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/>', true),
   test: sv('<path d="M7 3h7l5 5v13H7Z"/><path d="M14 3v5h5M10 13l1.5 1.5L14.5 11.5M10 18h5"/>'),
   ok: sv('<circle cx="12" cy="12" r="9.5" class="fillc"/><path d="m7.6 12.3 3 3 5.8-5.8" class="onfill"/>'),
@@ -1084,10 +1109,12 @@ const Store = {
 const defaults = () => ({
   setId: '', category: 'multiple', starOnly: false, index: 0, indexByScope: {}, answers: {},
   starred: {}, savedTests: [], test: null, autoAdvance: true, fontScale: 1, customSubs: {},
-  sets: [], hiddenBundled: [], titles: {}, results: {}, tour: {}, course: 0, profile: null, checks: 0, mtLast: null
+  sets: [], hiddenBundled: [], titles: {}, results: {}, tour: {}, course: 0, profile: null, checks: 0, mtLast: null,
+  fac: '' // '' = not chosen yet (the picker opens first)
 });
 let S = defaults();
-let BUNDLED = [];          // [{id, file, title}] from data/sets.json
+let BUNDLED = [];          // [{id, file, title, fac, course}] from data/sets.json — every faculty
+let bundledOk = false;     // did data/sets.json load? (if not, «no tests for this faculty» would be a lie)
 let SETS = [];             // what the menu lists
 const BANKS = new Map();   // id -> bank | {error}
 const LOADING = new Map(); // id -> promise
@@ -1120,10 +1147,13 @@ const scopeKey = (cat = S.category) => S.setId + '|' + cat;
 const akey = id => S.setId + '|' + id;
 const bankReady = () => bankStatus === 'ready';
 
+// The faculty whose courses and files are shown; Лечебное дело until one is chosen.
+const curFac = () => facOf(S.fac) || FACS[0];
+const fixCourse = () => { if (!(S.course >= 1 && S.course <= curFac().courses)) S.course = 0; };
+// Course files of this faculty only — a student never sees another faculty's tests. Own files («Мои файлы») stay always.
 function rebuildSets() {
-  const recs = new Map(S.sets.map(r => [r.id, r]));
-  const list = [];
-  for (const b of BUNDLED) list.push({ id: b.id, title: b.title, bundled: true, file: b.file, course: b.course, rec: null });
+  const fac = curFac().id, list = [];
+  for (const b of BUNDLED) if (b.fac === fac) list.push({ id: b.id, title: b.title, bundled: true, file: b.file, course: b.course, rec: null });
   for (const r of S.sets) if (!list.some(s => s.id === r.id)) list.push({ id: r.id, title: r.title, bundled: false, course: r.course, rec: r });
   SETS = list;
 }
@@ -1264,16 +1294,45 @@ function selectSet(id) {
   activateSet();
   save();
 }
+// The file to open in this faculty: one of the chosen course, else any of its files, else one of the person's own.
+function facFirstSet() {
+  const b = SETS.filter(s => s.bundled), c = S.course;
+  return (c && b.find(s => s.course === c)) || b[0] || SETS[0] || null;
+}
+const facEmpty = () => bundledOk && !SETS.some(s => s.bundled);
+// Show another faculty: its courses and files. The open file is kept if it is still listed (an own file),
+// else the faculty's first one opens. mine = the person chose it here, so the account gets it too.
+function changeFac(f, { mine = false, say = false } = {}) {
+  if (!isFac(f)) return;
+  if (facSheet && f !== S.fac) facSheet.close();
+  S.fac = f;
+  S.facAuto = false;
+  fixCourse();
+  rebuildSets();
+  if (!SETS.some(s => s.id === S.setId)) {
+    endTest();
+    remember();
+    const n = facFirstSet();
+    S.setId = n ? n.id : '';
+    S.starOnly = false;
+    S.index = S.indexByScope[scopeKey()] || 0;
+    activateSet();
+  }
+  save();
+  renderAll();
+  if (mine) Account.setFac(f);
+  if (say) toast('Факультет: ' + curFac().name);
+}
 // Course shown in the menu: the one picked, else the open file's, else the first that has files.
 function curCourse() {
-  if (S.course) return S.course;
+  if (S.course >= 1 && S.course <= curFac().courses) return S.course;
   const s = curSet();
   if (s && s.bundled && s.course) return s.course;
   const any = SETS.find(x => x.bundled && x.course);
   return any ? any.course : 1;
 }
-const COURSES = [1, 2, 3, 4, 5, 6];
-const coursePills = (cur, act, has) => `<div class="courses" role="radiogroup" aria-label="Курс">${COURSES.map(n => `<button type="button" class="course${n === cur ? ' on' : ''}${has && !has.has(n) ? ' empty' : ''}" role="radio" aria-checked="${n === cur}" ${act}="${n}" aria-label="${n} курс">${n}</button>`).join('')}</div>`;
+// n round buttons, one per course of the faculty (5 for Стоматология)
+const coursePills = (count, cur, act, has) => `<div class="courses" role="radiogroup" aria-label="Курс">${range(count).map(i => i + 1).map(n => `<button type="button" class="course${n === cur ? ' on' : ''}${has && !has.has(n) ? ' empty' : ''}" role="radio" aria-checked="${n === cur}" ${act}="${n}" aria-label="${n} курс">${n}</button>`).join('')}</div>`;
 function selectCategory(cat) {
   endTest();
   remember();
@@ -1433,6 +1492,8 @@ function startTest(configs, shouldSave) {
 /* =========================================================
    Loading sets
    ========================================================= */
+// data/ped/2/anatomy.json: each part encoded on its own — the «/» must stay a folder.
+const bundleURL = file => 'data/' + file.split('/').map(encodeURIComponent).join('/');
 async function loadBank(entry) {
   if (BANKS.has(entry.id)) return BANKS.get(entry.id);
   if (LOADING.has(entry.id)) return LOADING.get(entry.id);
@@ -1440,7 +1501,7 @@ async function loadBank(entry) {
     let text;
     if (entry.rec) text = await Store.getFile(entry.rec);
     else {
-      const r = await fetch('data/' + entry.file.split('/').map(encodeURIComponent).join('/'));
+      const r = await fetch(bundleURL(entry.file));
       if (!r.ok) throw new Error('Встроенный файл не открылся (код ' + r.status + ').');
       text = await r.text();
     }
@@ -1571,9 +1632,10 @@ function render() {
 
 function renderTop() {
   const items = currentItems(), it = items[S.index], s = curSet();
-  $('#title').textContent = S.test ? 'Тест' : ((S.starOnly ? '★ ' : '') + CAT_TITLE[S.category]);
+  $('#title').textContent = S.test ? 'Тест' : !S.fac && bankStatus !== 'boot' ? 'Тренажёр тестов' : ((S.starOnly ? '★ ' : '') + CAT_TITLE[S.category]);
   let p;
   if (bankStatus === 'boot') p = 'Загрузка…';
+  else if (!S.fac) p = 'Выберите факультет';
   else if (!s) p = 'Нет файлов';
   else if (bankStatus === 'loading') p = esc(setTitle(s)) + ', загрузка…';
   else {
@@ -1602,7 +1664,12 @@ function renderContent() {
   const it = currentItem(), s = curSet();
   let html, key;
   if (bankStatus === 'boot') { html = stateHTML({ spinner: true, title: 'Загружаю вопросы…' }); key = 'boot'; }
-  else if (!s) {
+  else if (!S.fac) { html = ''; key = 'nofac'; } // the faculty picker is on top
+  else if (!s && facEmpty()) {
+    // Педиатрия and Стоматология start out without course files
+    html = stateHTML({ icon: FAC_ICON[curFac().id], title: 'Для ' + curFac().gen + ' тестов пока нет', text: 'Их скоро добавят. А пока можно загрузить свой JSON с вопросами — из «Файлов», iCloud Drive или Telegram.', actions: loadBtn('Загрузить JSON') + `<button type="button" class="ghost-btn" data-act="m-fac">${I.swap}Сменить факультет</button>` });
+    key = 'nofac|' + curFac().id;
+  } else if (!s) {
     html = stateHTML({ icon: I.doc, title: 'Файлы не выбраны', text: 'Загрузите JSON с вопросами: из «Файлов», iCloud Drive или после сохранения из Telegram.', actions: loadBtn('Загрузить JSON') });
     key = 'nosets';
   } else if (bankStatus === 'loading') { html = stateHTML({ spinner: true, title: 'Открываю «' + setTitle(s) + '»…' }); key = 'loading'; }
@@ -1861,7 +1928,7 @@ function snippetHTML(it, toks) {
 }
 function searchHTML(q) {
   if (/^(admin|админ|админка)$/i.test(q.trim())) return `<section class="msec"><a class="mrow" href="admin.html"><span class="mico">${I.gear}</span><span class="mtxt">Админка<small>Только для владельца сайта</small></span><span class="go">${I.chevR}</span></a></section>`;
-  if (!bankReady()) return '<section class="msec"><p class="msec-note">Сначала выберите файл с вопросами.</p></section>';
+  if (!bankReady() || !curSet()) return `<section class="msec"><p class="msec-note">Сначала ${SETS.length ? 'выберите' : 'загрузите'} файл с вопросами.</p></section>`;
   const res = searchBank(bank, q);
   const toks = norm(q).split(' ').filter(Boolean);
   const set = curSet();
@@ -2027,24 +2094,31 @@ function menuTestHTML() {
   } else {
     h += `<button type="button" class="mrow box" data-act="m-maketest"><span class="mico">${I.test}</span><span class="mtxt">Сделать тест<small>Случайные вопросы, как на экзамене</small></span><span class="mico">${I.chevR}</span></button>`;
   }
-  for (const t of S.savedTests) {
+  for (const t of S.savedTests.filter(t => SETS.some(s => s.id === t.setId))) { // not another faculty's files
     const n = t.configs.reduce((a, c) => a + c.count, 0), pts = t.configs.reduce((a, c) => a + c.count * c.points, 0);
     h += `<div class="mline"><button type="button" class="mrow" data-act="m-saved" data-id="${esc(t.id)}"><span class="mico">${I.play}</span><span class="mtxt">${esc(t.title)}<small>${esc(t.setTitle)}, ${n} вопр., ${pts} ${plural(pts, 'балл', 'балла', 'баллов')}</small></span></button><button type="button" class="mx" data-act="m-saved-del" data-id="${esc(t.id)}" aria-label="Удалить «${esc(t.title)}»">${I.trash}</button></div>`;
   }
   return h + '</section>';
 }
 function menuFilesHTML() {
-  const c = curCourse(), course = SETS.filter(s => s.bundled), mine = SETS.filter(s => !s.bundled);
-  const has = new Set(course.map(s => s.course));
-  const list = course.filter(s => s.course === c || !s.course);
-  let h = `<section class="msec" id="m-files"><div class="sec-label">Курсы</div>${coursePills(c, 'data-act="m-course" data-c', has)}`;
-  if (!list.length) h += `<p class="msec-note">Для ${c} курса файлов пока нет.</p>`;
-  h += list.map(fileRowHTML).join('') + '</section>';
+  // Not chosen yet (the picker is open; on a computer the menu stays visible behind it): no course files at all.
+  let h = S.fac ? menuCoursesHTML() : '';
+  const mine = SETS.filter(s => !s.bundled);
   h += `<section class="msec" id="m-mine"><div class="sec-label">Мои файлы</div>`;
   if (!mine.length) h += '<p class="msec-note">Свои JSON с вопросами — их видите только вы.</p>';
   h += mine.map(fileRowHTML).join('');
   h += `<div class="m-imp"><label class="mbtn pri" for="fileInput" role="button" tabindex="0">${I.plus}<span>Загрузить JSON</span></label></div>`;
   return h + '</section>';
+}
+// The faculty sits next to «Курсы», so it is clear whose files these are; a tap on it changes the faculty.
+function menuCoursesHTML() {
+  const c = curCourse(), fac = curFac(), course = SETS.filter(s => s.bundled);
+  const has = new Set(course.map(s => s.course));
+  const list = course.filter(s => s.course === c || !s.course);
+  let h = `<section class="msec" id="m-files"><div class="sec-row"><div class="sec-label">Курсы</div><button type="button" class="sec-chip" data-act="m-fac" aria-label="Факультет: ${esc(fac.name)} — сменить"><span>${esc(fac.name)}</span>${I.chevD}</button></div>${coursePills(fac.courses, c, 'data-act="m-course" data-c', has)}`;
+  if (facEmpty()) h += `<p class="msec-note">Для ${esc(fac.gen)} тестов пока нет — их скоро добавят. Пока можно загрузить свой JSON в «Мои файлы».</p>`;
+  else if (!list.length) h += `<p class="msec-note">Для ${c} курса файлов пока нет.</p>`;
+  return h + list.map(fileRowHTML).join('') + '</section>';
 }
 function fileRowHTML(s) {
   const on = s.id === S.setId;
@@ -2066,7 +2140,8 @@ function menuSettingsHTML() {
   const pct = Math.round(S.fontScale * 100);
   return `<section class="msec m-set${settingsOpen ? ' open' : ''}"><button type="button" class="mrow set-toggle" data-act="m-settings" aria-expanded="${settingsOpen}" aria-controls="setBody"><span class="mico">${I.gear}</span><span class="mtxt">Настройки</span><span class="go">${I.chevD}</span></button>
 <div class="set-body" id="setBody"><div class="set-inner"><div class="mgroup">
-${accountRowHTML()}${isAdmin() ? `<a class="mrow" href="admin.html"><span class="mtxt">Админка<small>Онлайн и файлы курсов</small></span><span class="go">${I.chevR}</span></a>` : ''}<button type="button" class="mrow" data-act="m-tour"><span class="mtxt">Обучение<small>Показать подсказки ещё раз</small></span><span class="go">${I.chevR}</span></button>
+${accountRowHTML()}${isAdmin() ? `<a class="mrow" href="admin.html"><span class="mtxt">Админка<small>Онлайн и файлы курсов</small></span><span class="go">${I.chevR}</span></a>` : ''}<button type="button" class="mrow" data-act="m-fac"><span class="mtxt">Факультет<small>${esc(curFac().name)}</small></span><span class="go">${I.chevR}</span></button>
+<button type="button" class="mrow" data-act="m-tour"><span class="mtxt">Обучение<small>Показать подсказки ещё раз</small></span><span class="go">${I.chevR}</span></button>
 <div class="mrow static"><span class="mtxt">Автопереход<small>После верного ответа — следующий вопрос</small></span><button type="button" class="switch" role="switch" aria-checked="${S.autoAdvance}" data-act="toggle-auto" aria-label="Автопереход"><span></span></button></div>
 <div class="fs-block"><div class="fs-head"><span>Размер текста</span><span class="fs-val"><span id="fontPct">${pct}%</span>${pct !== 100 ? '<button type="button" class="mlink" data-act="m-font-reset">Сбросить</button>' : ''}</span></div><div class="fs-row"><button type="button" class="sq-btn a-sm" data-act="m-font-dec" aria-label="Мельче"${S.fontScale <= 0.5 ? ' disabled' : ''}>A</button><input type="range" id="fontRange" min="50" max="160" step="5" value="${pct}" aria-label="Масштаб текста вопросов"><button type="button" class="sq-btn a-lg" data-act="m-font-inc" aria-label="Крупнее"${S.fontScale >= 1.6 ? ' disabled' : ''}>A</button></div></div>
 </div></div></div></section>`;
@@ -2199,6 +2274,51 @@ function openFinish() {
   dialog({ title: 'Тест завершён', message: msg, buttons: [{ id: 'stay', label: 'Остаться' }, { id: 'close', label: 'Закрыть тест', kind: 'primary' }] })
     .then(r => { if (r.id === 'close') { endTest(); renderAll(); } });
 }
+/* ---------- faculty ---------- */
+const FAC_ICON = {
+  lech: sv('<path d="M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/>'),
+  ped: sv('<path d="M9 12h.01M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/>'),
+  stom: sv('<path d="M7.5 3C5 3 3 5 3 7.6c0 2 .8 3.3 1.5 4.9.7 1.6 1 3.4 1.3 5.4.3 2 .9 3.6 2.2 3.6 1.5 0 1.8-2.1 2.2-3.9.3-1.3.8-2.2 1.8-2.2s1.5.9 1.8 2.2c.4 1.8.7 3.9 2.2 3.9 1.3 0 1.9-1.6 2.2-3.6.3-2 .6-3.8 1.3-5.4.7-1.6 1.5-2.9 1.5-4.9C21 5 19 3 16.5 3c-1.9 0-2.8.9-4.5.9S9.4 3 7.5 3Z"/>')
+};
+let facSheet = null;
+// «Ваш факультет». First visit (first = true): before anything else, and it can't be skipped — the faculty decides
+// which tests exist at all. From Settings: an ordinary sheet with the current one marked.
+function openFac({ first = false } = {}) {
+  if (anySheet() || Account.blocked()) return;
+  if (tour) endTour();
+  const opt = f => {
+    const on = !first && f.id === S.fac;
+    return `<button type="button" class="fac-opt${on ? ' on' : ''}" data-s="fac" data-f="${f.id}" role="radio" aria-checked="${on}"><span class="fac-ico">${FAC_ICON[f.id]}</span><span class="fac-txt"><b>${esc(f.name)}</b><small>${f.courses} ${plural(f.courses, 'курс', 'курса', 'курсов')}</small></span>${on ? I.check : I.chevR}</button>`;
+  };
+  const html = `<div class="dlg fac">
+<div class="fac-head"><div class="dlg-title" id="facTitle">Ваш факультет</div><div class="dlg-msg">От него зависят курсы и тесты</div></div>
+<div class="fac-list" role="radiogroup" aria-labelledby="facTitle">${FACS.map(opt).join('')}</div>
+${first ? '<div class="su-note">Поменять можно в настройках</div>' : '<button type="button" class="dlg-btn" data-s="cancel">Отмена</button>'}
+</div>`;
+  const sh = openSheet({
+    cls: 'dialog', html, dismissible: !first,
+    onClick: (act, el, e, close) => {
+      if (act === 'cancel') return close();
+      if (act !== 'fac') return;
+      const f = el.dataset.f;
+      close();
+      if (f !== S.fac) changeFac(f, { mine: true, say: !first });
+    },
+    onClose: () => { if (facSheet === sh) facSheet = null; }
+  });
+  facSheet = sh;
+  return sh;
+}
+// Not chosen yet → the picker. Not over the block screen; called again when a block is lifted.
+function facGate() {
+  if (!S.fac && bankStatus !== 'boot' && !Account.blocked() && !anySheet()) openFac({ first: true });
+}
+// Signed in: the account's faculty wins (like the course); an account without one gets this device's.
+function facAfterSignIn(u) {
+  if (isFac(u.fac)) { if (u.fac !== S.fac) changeFac(u.fac, { say: !!S.fac }); }
+  else if (isFac(S.fac) && !S.facAuto) Account.setFac(S.fac);
+  fixCourse();
+}
 /* ---------- file «…» actions ---------- */
 const FA_ICON = {
   open: sv('<path d="M5 12h14M13 6l6 6-6 6"/>'),
@@ -2209,7 +2329,7 @@ const FA_ICON = {
 const FA_SHORT = { multiple: 'Несколько', single: 'Один', dropdown: 'Список', sortable: 'Порядок', text: 'Текст', caseStudy: 'Кейсы' };
 const setFileText = async s => {
   if (s.rec) return Store.getFile(s.rec);
-  const r = await fetch('data/' + encodeURIComponent(s.file));
+  const r = await fetch(bundleURL(s.file));
   if (!r.ok) throw new Error('Файл не открылся (код ' + r.status + ').');
   return r.text();
 };
@@ -2658,6 +2778,7 @@ const ACT = {
   'm-font-inc': () => setFont(S.fontScale + 0.1),
   'm-font-reset': () => setFont(1),
   'm-course': el => { S.course = +el.dataset.c; save(); renderMenuBody(); },
+  'm-fac': () => { const was = drawerOpen; closeDrawer(); setTimeout(() => openFac(), was ? 300 : 0); }, // let the menu slide away first
   'm-settings': el => {
     settingsOpen = !settingsOpen;
     const sec = el.closest('.m-set');
@@ -2890,7 +3011,7 @@ const TOURS = {
   intro: {
     when: () => bankStatus !== 'boot' && !SETS.length,
     steps: [
-      { title: 'Тренажёр тестов', text: 'Сначала загрузим файл.', go: 'Начать' },
+      { title: 'Тренажёр тестов', text: () => facEmpty() ? 'Для ' + curFac().gen + ' тестов пока нет — их скоро добавят. А пока можно загрузить свой файл.' : 'Сначала загрузим файл.', go: 'Начать' },
       { el: '#content .state label.act', title: 'Загрузите файл', text: 'Выберите JSON в «Файлах», iCloud Drive или сохранённый из Telegram. Можно сразу несколько.', allow: 'label', end: true }
     ]
   },
@@ -3124,7 +3245,7 @@ function authError(e) {
   return { msg: 'Не получилось (' + (c || 'ошибка') + '). Попробуйте позже', down: true };
 }
 const Account = {
-  user: null, // { uid, rt, login, name, key, course, renamed, blocked } — rt is the Firebase refresh token
+  user: null, // { uid, rt, login, name, key, course, fac, renamed, blocked } — rt is the Firebase refresh token; fac '' = none stored
   idt: '', exp: 0, syncAt: 0, seen: false,
   works: undefined, // does the database answer for accounts (rules in place)? undefined = not known yet
   ready: () => !!(FIREBASE_DB && FB_API_KEY),
@@ -3194,7 +3315,7 @@ const Account = {
       throw e;
     }
     this.keep(a.idToken, a.expiresIn);
-    this.user = { uid: a.localId, rt: a.refreshToken, login, name, key, course, renamed: false, blocked: false };
+    this.user = { uid: a.localId, rt: a.refreshToken, login, name, key, course, fac: '', renamed: false, blocked: false };
     this.seen = true;
     this.save();
   },
@@ -3207,7 +3328,7 @@ const Account = {
     const rec = await this.req('users/' + a.localId, 'GET', undefined, a.idToken);
     if (!rec || typeof rec.name !== 'string') throw new Error('NO_USER');
     this.keep(a.idToken, a.expiresIn);
-    this.user = { uid: a.localId, rt: a.refreshToken, login, name: rec.name, key: rec.key, course: +rec.course || 0, renamed: !!rec.renamed, blocked: !!rec.blocked };
+    this.user = { uid: a.localId, rt: a.refreshToken, login, name: rec.name, key: rec.key, course: +rec.course || 0, fac: recFac(rec), renamed: !!rec.renamed, blocked: !!rec.blocked };
     this.seen = false; this.syncAt = 0;
     this.save();
   },
@@ -3241,6 +3362,15 @@ const Account = {
     const u = this.user;
     await this.req('users/' + u.uid, 'PATCH', { course: c }, await this.token());
     u.course = c; this.save();
+  },
+  // Best effort, always a request of its own: until the site owner republishes the rules «fac» is refused —
+  // it must never take sign-up or anything else down with it. u.fac changes only once it is really stored.
+  setFac(f) {
+    const u = this.user;
+    if (!u || u.blocked || !this.ready() || !isFac(f)) return Promise.resolve();
+    this.facAt = Date.now();
+    return this.token().then(t => this.req('users/' + u.uid, 'PATCH', { fac: f }, t))
+      .then(() => { if (this.user === u) { u.fac = f; this.save(); } }).catch(() => {});
   },
   signOut() {
     // next time the sign-in sheet opens on the way this person used
@@ -3280,7 +3410,7 @@ const Account = {
     const rec = await this.req('users/' + a.localId, 'GET', undefined, a.idToken);
     if (rec && typeof rec.name === 'string') {
       this.keep(a.idToken, a.expiresIn);
-      this.user = { uid: a.localId, rt: a.refreshToken, login: String(rec.login || 'g:' + a.localId), name: rec.name, key: rec.key, course: +rec.course || 0, renamed: !!rec.renamed, blocked: !!rec.blocked };
+      this.user = { uid: a.localId, rt: a.refreshToken, login: String(rec.login || 'g:' + a.localId), name: rec.name, key: rec.key, course: +rec.course || 0, fac: recFac(rec), renamed: !!rec.renamed, blocked: !!rec.blocked };
       this.seen = false; this.syncAt = 0;
       this.save();
       return null;
@@ -3333,7 +3463,7 @@ const Account = {
     const rec = await this.req('users/' + a.localId, 'GET', undefined, a.idToken);
     if (rec && typeof rec.name === 'string') {
       this.keep(a.idToken, a.expiresIn);
-      this.user = { uid: a.localId, rt: a.refreshToken, login: j.login, name: rec.name, key: rec.key, course: +rec.course || 0, renamed: !!rec.renamed, blocked: !!rec.blocked };
+      this.user = { uid: a.localId, rt: a.refreshToken, login: j.login, name: rec.name, key: rec.key, course: +rec.course || 0, fac: recFac(rec), renamed: !!rec.renamed, blocked: !!rec.blocked };
       this.seen = false; this.syncAt = 0;
       this.save();
       if (tg && rec.tg !== tg && !rec.blocked) this.req('users/' + a.localId, 'PATCH', { tg }, a.idToken).catch(() => {});
@@ -3354,7 +3484,7 @@ const Account = {
       throw e;
     }
     this.keep(g.idt, g.exp);
-    this.user = { uid: g.uid, rt: g.rt, login, name, key, course, renamed: false, blocked: false };
+    this.user = { uid: g.uid, rt: g.rt, login, name, key, course, fac: '', renamed: false, blocked: false };
     this.seen = true;
     this.save();
   },
@@ -3363,20 +3493,31 @@ const Account = {
     const u = this.user;
     if (!u || !this.ready() || (!force && Date.now() - this.syncAt < 60000)) return;
     this.syncAt = Date.now();
+    const asked = Date.now();
     let t, rec;
     try { t = await this.token(); rec = await this.req('users/' + u.uid, 'GET', undefined, t); }
     catch (e) { if (e.gone && this.user === u) this.lost('Вы вышли из аккаунта — войдите снова'); return; } // offline: keep what we know
     if (this.user !== u) return;
     if (!rec) return this.lost('Аккаунт удалён автором сайта');
-    const before = JSON.stringify([u.name, u.course, u.renamed, u.blocked]);
-    Object.assign(u, { name: String(rec.name || u.name), key: String(rec.key || u.key), course: +rec.course || 0, renamed: !!rec.renamed, blocked: !!rec.blocked });
+    // a faculty chosen here while this answer was on its way is newer than the answer: keep it
+    const stale = this.facAt >= asked;
+    const before = JSON.stringify([u.name, u.course, u.renamed, u.blocked]), wasFac = u.fac || '', fac = stale ? wasFac : recFac(rec);
+    Object.assign(u, { name: String(rec.name || u.name), key: String(rec.key || u.key), course: +rec.course || 0, fac, renamed: !!rec.renamed, blocked: !!rec.blocked });
     this.save();
     applyBlock();
     if (!u.blocked && !this.seen) { this.seen = true; this.req('users/' + u.uid, 'PATCH', { last: SV, d: Presence.device() }, t).catch(() => {}); }
     if (JSON.stringify([u.name, u.course, u.renamed, u.blocked]) !== before) { renderAll(); Presence.live(); }
+    if (u.blocked || stale) return;
+    // Faculty: changed in the account since we last looked (another device, the site owner) → follow it.
+    // Not stored (old rules) or only this device differs (its write failed) → send this device's again, once a visit;
+    // a missing one never resets what was chosen here.
+    if (fac && (fac !== wasFac || !S.fac)) { if (fac !== S.fac) changeFac(fac, { say: !!S.fac }); }
+    else if (isFac(S.fac) && !S.facAuto && fac !== S.fac && !this.facSent) { this.facSent = true; this.setFac(S.fac); }
   },
   lost(msg) { this.signOut(); applyBlock(); renderAll(); Presence.live(); toast(msg); }
 };
+// the account's faculty, when it is one we know ('' otherwise: nothing stored yet, or rules that refuse it)
+const recFac = rec => (rec && isFac(rec.fac) ? rec.fac : '');
 const needsSignup = () => Account.ready() && Account.works === true && !Account.user && S.checks >= SIGNUP_AFTER && !isAdmin() && navigator.onLine !== false;
 
 // Full-screen «доступ закрыт» while the account is blocked; everything under it is inert.
@@ -3397,6 +3538,7 @@ function externalDone(g) {
   if (!g) {
     const u = Account.user;
     if (u.course) S.course = u.course;
+    facAfterSignIn(u);
     S.profile = null; save(); renderAll(); applyBlock(); Presence.live();
     if (!u.blocked) toast('С возвращением, ' + u.name + '!');
     return;
@@ -3505,6 +3647,7 @@ function applyBlock() {
     el.remove();
     [...document.body.children].forEach(c => { c.inert = false; });
     Presence.on();
+    facGate();
     return;
   }
   document.querySelectorAll('.sheet-wrap').forEach(w => w.remove());
@@ -3541,7 +3684,7 @@ ${(tOn && !hero) || gOn ? `<div class="su-ext su-x" id="suExt">${tOn && !hero ? 
 <div class="su-seg su-x" id="suSeg" role="tablist" aria-label="Регистрация или вход"><button type="button" role="tab" data-s="m-up">Регистрация</button><button type="button" role="tab" data-s="m-in">Вход</button></div>
 <div class="su-field su-x"><input id="suName" class="f-in" placeholder="Имя пользователя" maxlength="24" autocomplete="username" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" value="${esc(legacy)}" aria-label="Имя пользователя" aria-describedby="suNameHint"><div class="su-hint" id="suNameHint" aria-live="polite"></div></div>
 <div class="su-field su-x" id="suPassF"><div class="su-pass"><input id="suPass" class="f-in" type="password" placeholder="Пароль" maxlength="128" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="Пароль" aria-describedby="suPassHint"><button type="button" class="su-eye" data-s="eye" aria-label="Показать пароль" aria-pressed="false">${I.eye}</button></div><div class="su-hint" id="suPassHint"></div></div>
-<div class="su-course su-x" id="suCourse"><span>Курс</span>${coursePills(course, 'data-s="su-c" data-c', null)}</div>
+<div class="su-course su-x" id="suCourse"><span>Курс</span>${coursePills(curFac().courses, course, 'data-s="su-c" data-c', null)}</div>
 <div class="su-err" id="suErr" role="alert"></div>
 <button type="button" class="dlg-btn primary su-x" data-s="go"></button>
 <div class="su-note" id="suNote"></div>
@@ -3657,7 +3800,9 @@ ${(tOn && !hero) || gOn ? `<div class="su-ext su-x" id="suExt">${tOn && !hero ? 
     const u = Account.user;
     S.profile = null;
     if (u.course) S.course = u.course;
-    save(); sh.close(); renderAll(); applyBlock(); Presence.live();
+    sh.close();
+    facAfterSignIn(u);
+    save(); renderAll(); applyBlock(); Presence.live();
     if (!u.blocked) toast(mode === 'in' ? 'С возвращением, ' + u.name + '!' : 'Готово, ' + u.name + '! Всё открыто');
   }
   nameInp.addEventListener('input', () => { nameInp.classList.remove('bad'); err.textContent = ''; checkName(); });
@@ -3712,7 +3857,7 @@ function openProfile() {
   if (!u || anySheet()) return;
   const html = `<div class="dlg pf">
 <div class="pf-head"><span class="pf-av" aria-hidden="true">${esc(initials(u.name))}</span><div class="pf-id"><div class="dlg-title">${esc(u.name)}</div><div class="pf-sub">Ваш аккаунт</div></div></div>
-<div class="su-course"><span>Курс</span>${coursePills(u.course || 0, 'data-s="pf-c" data-c', null)}</div>
+<div class="su-course"><span>Курс</span>${coursePills(curFac().courses, u.course || 0, 'data-s="pf-c" data-c', null)}</div>
 <div class="mgroup">
 ${u.renamed ? '<div class="mrow static"><span class="mtxt">Имя уже менялось<small>Изменить его можно только один раз</small></span></div>' : `<button type="button" class="mrow" data-s="rename"><span class="mtxt">Изменить имя<small>Можно только один раз</small></span><span class="go">${I.chevR}</span></button>`}
 ${isGoogle(u) || isTelegram(u) ? `<div class="mrow static"><span class="mtxt">Вход через ${isGoogle(u) ? 'Google' : 'Telegram'}<small>Пароль не нужен</small></span></div>` : `<button type="button" class="mrow" data-s="pass"><span class="mtxt">Сменить пароль</span><span class="go">${I.chevR}</span></button>`}
@@ -3845,14 +3990,22 @@ const Presence = {
   }
 };
 
+// → the course files of every faculty, or null when the list didn't load.
+// No «fac» = Лечебное дело (everything from before faculties); an unknown one is skipped, not shown to everybody.
 async function loadBundledList() {
   try {
     const r = await fetch('data/sets.json', { cache: 'no-cache' });
-    if (!r.ok) return [];
+    if (!r.ok) return null;
     const list = await r.json();
-    return (Array.isArray(list) ? list : []).filter(x => x && typeof x.file === 'string')
-      .map(x => ({ id: 'bundle.' + x.file.replace(/\.json$/i, ''), file: x.file, title: x.title || x.file.replace(/^.*\//, '').replace(/\.json$/i, ''), course: +x.course || +(x.file.match(/^([1-6])\//) || [])[1] || 0 }));
-  } catch (e) { return []; }
+    const facIn = x => facOf(x.fac == null || x.fac === '' ? 'lech' : x.fac);
+    const courseIn = x => +x.course || +(x.file.match(/(?:^|\/)([1-6])\//) || [])[1] || 0;
+    // a course the faculty doesn't have (e.g. a 6th for Стоматология) is skipped, not shown under every course
+    return (Array.isArray(list) ? list : []).filter(x => x && typeof x.file === 'string' && facIn(x) && courseIn(x) <= facIn(x).courses)
+      .map(x => {
+        const fac = facIn(x), c = courseIn(x);
+        return { id: 'bundle.' + x.file.replace(/\.json$/i, ''), file: x.file, title: x.title || x.file.replace(/^.*\//, '').replace(/\.json$/i, ''), fac: fac.id, course: c >= 1 ? c : 0 };
+      });
+  } catch (e) { return null; }
 }
 function normalizeState(st) {
   S = Object.assign(defaults(), st && typeof st === 'object' ? st : {});
@@ -3861,7 +4014,13 @@ function normalizeState(st) {
   ['indexByScope', 'answers', 'starred', 'customSubs', 'titles', 'results', 'tour'].forEach(k => { if (!S[k] || typeof S[k] !== 'object' || Array.isArray(S[k])) S[k] = {}; });
   ['savedTests', 'sets', 'hiddenBundled'].forEach(k => { if (!Array.isArray(S[k])) S[k] = []; });
   if (S.test && (!Array.isArray(S.test.ids) || !S.test.points)) S.test = null;
-  if (!(S.course >= 1 && S.course <= 6)) S.course = 0;
+  // Saved before faculties existed (no «fac» at all) = Лечебное дело, which is everything uploaded until then.
+  // A newcomer's state can be saved before the choice, with fac: '' — that still means «not chosen yet».
+  if (!isFac(S.fac)) { const legacy = !!st && typeof st === 'object' && !('fac' in st); S.fac = legacy ? 'lech' : ''; S.facAuto = legacy; }
+  // facAuto: Лечебное дело was given automatically to someone from before faculties, not chosen. It is not sent
+  // to the account, so it can't overwrite a faculty this person picked on another device.
+  S.facAuto = !!S.facAuto && S.fac === 'lech';
+  fixCourse();
   if (!S.profile || typeof S.profile.name !== 'string' || !S.profile.name.trim()) S.profile = null;
   S.checks = Math.max(0, Math.floor(+S.checks || 0));
 }
@@ -3875,15 +4034,17 @@ async function boot() {
   Account.load();
   applyBlock(); // a blocked account sees the block screen at once, even offline
   const [list] = await Promise.all([loadBundledList(), Store.init()]);
-  BUNDLED = list;
+  BUNDLED = list || []; bundledOk = !!list;
   const { state, fresh } = await Store.loadState();
   normalizeState(state);
   if (Store.mode === 'cloud' && await Store.migrateLocalFiles(S.sets)) { /* saved below */ }
   rebuildSets();
-  if (!SETS.some(s => s.id === S.setId)) { S.setId = SETS.length ? SETS[0].id : ''; S.index = S.indexByScope[scopeKey()] || 0; }
+  if (!S.fac) S.setId = ''; // nothing opens until the faculty is chosen: not even a glimpse of another faculty's tests
+  else if (!SETS.some(s => s.id === S.setId)) { const n = facFirstSet(); S.setId = n ? n.id : ''; S.index = S.indexByScope[scopeKey()] || 0; }
   bankStatus = 'loading';
   activateSet();
   render();
+  facGate(); // a newcomer picks a faculty before anything else: tours and sign-up wait for the sheet
   if (fresh || Store.mode === 'cloud') flush();
   if (Store.cloudDown) toast('Нет связи с аккаунтом — прогресс сохраняется в этом браузере');
   Presence.start();

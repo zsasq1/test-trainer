@@ -66,6 +66,10 @@
           ".write": "auth != null && auth.uid === $uid && data.parent().child('blocked').val() !== true",
           ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 6"
         },
+        "fac": {
+          ".write": "auth != null && auth.uid === $uid && data.parent().child('blocked').val() !== true",
+          ".validate": "newData.isString() && newData.val().matches(/^(lech|ped|stom)$/)"
+        },
         "created": {
           ".write": "auth != null && auth.uid === $uid && !data.exists()",
           ".validate": "newData.isNumber() && newData.val() <= now"

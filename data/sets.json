@@ -2,6 +2,7 @@
   {
     "file": "3/topka.json",
     "title": "Топка",
+<<<<<<< Updated upstream
     "course": 3
   },
   {
@@ -23,5 +24,9 @@
     "file": "2/bioorganicheskaya-himiya.json",
     "title": "Биоорганическая химия",
     "course": 2
+=======
+    "course": 3,
+    "fac": "lech"
+>>>>>>> Stashed changes
   }
 ]

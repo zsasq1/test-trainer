@@ -1,5 +1,5 @@
 // Офлайн-кэш тренажёра. Файл создаётся скриптом собрать.py — не правьте вручную.
-const CACHE = 'trainer-20261124-011349';
+const CACHE = 'trainer-20261125-091737';
 const FONTS = 'trainer-fonts-v1'; // шрифты Google: один раз скачать — дальше работают без сети
 const ASSETS = ["./", "index.html", "manifest.webmanifest", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png", "data/sets.json"];
 
@@ -45,6 +45,10 @@ self.addEventListener('fetch', e => {
     })());
     return;
   }
+  // Из памяти отдаётся только сам тренажёр. Другие страницы (admin.html) — всегда из сети: иначе вместо
+  // админки открывался тренажёр, а потом вместо тренажёра — админка.
+  const path = new URL(req.url).pathname;
+  if (req.mode === 'navigate' && !(path.endsWith('/') || path.endsWith('/index.html'))) return;
   e.respondWith((async () => {
     const cache = await caches.open(CACHE);
     const nav = req.mode === 'navigate';
