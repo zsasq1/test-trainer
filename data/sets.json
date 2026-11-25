@@ -34,5 +34,11 @@
     "title": "Статистические методы доказательной медицины c использованием информационных тех",
     "course": 3,
     "fac": "lech"
+  },
+  {
+    "file": "3/molekulyarnye-mehanizmy-v-patologii-cheloveka.json",
+    "title": "Молекулярные механизмы в патологии человека",
+    "course": 3,
+    "fac": "lech"
   }
 ]
