@@ -52,5 +52,11 @@
     "title": "Межкультурная профессиональная коммуникация",
     "course": 3,
     "fac": "lech"
+  },
+  {
+    "file": "3/medicinskaya-i-biologicheskaya-fizika.json",
+    "title": "Медицинская и биологическая физика",
+    "course": 3,
+    "fac": "lech"
   }
 ]
