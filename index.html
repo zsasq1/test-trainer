@@ -1366,8 +1366,9 @@ function selectItem(cat, id) {
   save();
 }
 function goPrev() {
-  if (S.index <= 0) return;
-  S.index--;
+  const n = currentItems().length;
+  if (!n) return;
+  S.index = S.index <= 0 ? n - 1 : S.index - 1; // back from the first one goes round to the last, as «вперёд» does from the last
   checkSeq++;
   remember();
   save();
@@ -1421,6 +1422,8 @@ function setText(qid, text) {
 function check() {
   const it = currentItem();
   if (!it) return;
+  // After «Подглядеть» the answer is already known, so «Проверить» doesn't grade it: the question starts over.
+  if (rec(it.id).reveal) { resetItem(it); shuffleQ(it); checkSeq++; save(); render(); return; }
   mut(it.id, r => { r.checked = true; r.reveal = false; });
   const ok = isCorrect(it);
   const seq = ++checkSeq;
@@ -1779,7 +1782,7 @@ function renderBottom() {
   const row = $('#actionsRow');
   row.className = 'actions-row' + (lastTest ? ' last' : '');
   row.innerHTML = a;
-  $('#prevBtn').disabled = !items.length || S.index === 0;
+  $('#prevBtn').disabled = !items.length;
   $('#nextBtn').disabled = !items.length;
   $('#counter').disabled = !items.length;
 }

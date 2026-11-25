@@ -1,5 +1,5 @@
 // Офлайн-кэш тренажёра. Файл создаётся скриптом собрать.py — не правьте вручную.
-const CACHE = 'trainer-20261125-170619';
+const CACHE = 'trainer-20261125-173421';
 const FONTS = 'trainer-fonts-v1'; // шрифты Google: один раз скачать — дальше работают без сети
 const ASSETS = ["./", "index.html", "manifest.webmanifest", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png", "data/sets.json"];
 
