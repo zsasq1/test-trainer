@@ -76,5 +76,11 @@
     "title": "Нормальная физиология",
     "course": 2,
     "fac": "ped"
+  },
+  {
+    "file": "ped/2/filosofiya.json",
+    "title": "Философия",
+    "course": 2,
+    "fac": "ped"
   }
 ]
