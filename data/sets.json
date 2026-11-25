@@ -64,5 +64,11 @@
     "title": "Латинская фармацевтическая терминология",
     "course": 3,
     "fac": "lech"
+  },
+  {
+    "file": "3/gigiena.json",
+    "title": "Гигиена",
+    "course": 3,
+    "fac": "lech"
   }
 ]
