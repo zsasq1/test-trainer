@@ -88,5 +88,11 @@
     "title": "Философия",
     "course": 3,
     "fac": "stom"
+  },
+  {
+    "file": "ped/3/mikrobiologiya-virusologiya.json",
+    "title": "Микробиология, вирусология",
+    "course": 3,
+    "fac": "ped"
   }
 ]
