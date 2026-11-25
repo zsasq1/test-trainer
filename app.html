@@ -512,12 +512,13 @@ textarea.f-in{resize:vertical;min-height:84px}
   body{display:flex}
   .app{flex:1;min-width:0;max-width:none;margin:0}
   .drawer{position:relative;order:-1;flex:none;width:320px;height:100%;z-index:1;transform:none;visibility:visible;transition:none;box-shadow:none;border-right:1px solid var(--line);background:var(--side);padding-top:16px;--dpad:14px}
-  .scrim,.d-head,.state .ghost-btn[data-act="menu"]{display:none}
-  /* the sidebar can be hidden: the question gets the whole width, the button in the top bar brings it back */
+  .scrim,#menuBtn,.state .ghost-btn[data-act="menu"]{display:none}
+  /* the sidebar hides with the button next to the search; while it is hidden, one in the top bar brings it back */
   .dock-off .drawer{display:none}
+  .dock-off #menuBtn{display:inline-flex}
   .dock-off .state .ghost-btn[data-act="menu"]{display:inline-flex}
   .dock-off .toast{left:50%}
-  .drawer>.searchbox{grid-column:1/-1;background:var(--surface)}
+  .drawer>.searchbox{background:var(--surface)}
   .menu-body{padding-bottom:24px}
   .mrow.on{background:var(--side-sel)}
   .topbar,.content,.bottombar{padding-left:max(28px,calc((100% - 760px) / 2));padding-right:max(28px,calc((100% - 760px) / 2))}
@@ -1791,10 +1792,13 @@ function setDockOff(off) {
 }
 function applyDock() {
   document.documentElement.classList.toggle('dock-off', dockOff);
-  const mb = $('#menuBtn'), lbl = docked() ? (dockOff ? 'Показать меню' : 'Скрыть меню') : 'Открыть меню';
-  mb.innerHTML = docked() ? I.sidebar : I.menu;
-  mb.setAttribute('aria-label', lbl);
-  if (docked()) { mb.title = lbl; mb.setAttribute('aria-expanded', String(!dockOff)); } else { mb.removeAttribute('title'); mb.removeAttribute('aria-expanded'); }
+  // wide screen: «hide» sits next to the search, «show» in the top bar while the sidebar is hidden
+  const mb = $('#menuBtn'), cb = $('#closeBtn'), d = docked();
+  mb.innerHTML = d ? I.sidebar : I.menu;
+  mb.setAttribute('aria-label', d ? 'Показать меню' : 'Открыть меню');
+  cb.innerHTML = d ? I.sidebar : I.x;
+  cb.setAttribute('aria-label', d ? 'Скрыть меню' : 'Закрыть меню');
+  for (const b of [mb, cb]) { if (d) b.title = b.getAttribute('aria-label'); else b.removeAttribute('title'); }
   if (docked()) {
     if (drawerOpen) { drawerOpen = false; elDrawer.classList.remove('open'); elScrim.classList.remove('on'); $('#app').removeAttribute('inert'); }
     elDrawer.setAttribute('aria-hidden', dockOff ? 'true' : 'false');
@@ -2720,7 +2724,7 @@ function openAddSub(caseId) {
    ========================================================= */
 const ACT = {
   'menu': () => (docked() ? setDockOff(!dockOff) : openDrawer()),
-  'm-close': () => closeDrawer(),
+  'm-close': () => (docked() ? setDockOff(true) : closeDrawer()),
   'pick': el => { pick(el.dataset.qid, +el.dataset.i); render(); },
   'dd-open': el => openDDPicker(el.dataset.qid, +el.dataset.row),
   'check': () => { if (needsSignup()) return openAuth(); check(); },
@@ -2994,7 +2998,7 @@ document.addEventListener('pointercancel', endDrag);
    Boot
    ========================================================= */
 $('#menuBtn').innerHTML = docked() ? I.sidebar : I.menu;
-$('#closeBtn').innerHTML = I.x;
+$('#closeBtn').innerHTML = docked() ? I.sidebar : I.x;
 $('#prevBtn').innerHTML = I.chevL;
 $('#nextBtn').innerHTML = I.chevR;
 $('#counter .progress-row').insertAdjacentHTML('beforeend', I.chevD);
