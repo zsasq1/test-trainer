@@ -100,5 +100,11 @@
     "title": "Медицинская и биологическая физика",
     "course": 2,
     "fac": "lech"
+  },
+  {
+    "file": "ped/2/medicinskaya-i-biologicheskaya-fizika.json",
+    "title": "Медицинская и биологическая физика",
+    "course": 2,
+    "fac": "ped"
   }
 ]
