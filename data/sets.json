@@ -46,5 +46,11 @@
     "title": "Микробиология, вирусология",
     "course": 3,
     "fac": "lech"
+  },
+  {
+    "file": "3/mezhkulturnaya-professionalnaya-kommunikaciya.json",
+    "title": "Межкультурная профессиональная коммуникация",
+    "course": 3,
+    "fac": "lech"
   }
 ]

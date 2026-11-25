@@ -1,0 +1,5297 @@
+{
+  "Choose the right word.\nHow long … you … ?": {
+    "type": "single",
+    "answers": [
+      "have … been married"
+    ],
+    "all_options": [
+      {
+        "text": "are … married",
+        "correct": false
+      },
+      {
+        "text": "have … been married",
+        "correct": true
+      },
+      {
+        "text": "ismarried",
+        "correct": false
+      },
+      {
+        "text": "have … married",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Choose the right word.\nHow long … you … ?",
+    "precheck_sigs": [
+      "5366be050927531d4f79"
+    ]
+  },
+  "Insert the missing word.\nI’ll check on the computer and see what is ___.": {
+    "type": "multiple",
+    "answers": [
+      "suitable",
+      "available"
+    ],
+    "all_options": [
+      {
+        "text": "suitable",
+        "correct": true
+      },
+      {
+        "text": "available",
+        "correct": true
+      },
+      {
+        "text": "agreeable",
+        "correct": false
+      },
+      {
+        "text": "avoid",
+        "correct": false
+      },
+      {
+        "text": "take",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Insert the missing word.\nI’ll check on the computer and see what is ___.",
+    "precheck_sigs": [
+      "84106799bdb135c7409b"
+    ]
+  },
+  "Choose the right word.\nMaterials and methods describe ___ used and the way in which the work was done.": {
+    "type": "single",
+    "answers": [
+      "equipment"
+    ],
+    "all_options": [
+      {
+        "text": "references",
+        "correct": false
+      },
+      {
+        "text": "equipment",
+        "correct": true
+      },
+      {
+        "text": "conclusion",
+        "correct": false
+      },
+      {
+        "text": "discussion",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Choose the right word.\nMaterials and methods describe ___ used and the way in which the work was done.",
+    "precheck_sigs": [
+      "0fca297f522f5a9974e6"
+    ]
+  },
+  "Choose the right word/word combination.\nIntroduction is a ___ of the article.": {
+    "type": "single",
+    "answers": [
+      "brief summary"
+    ],
+    "all_options": [
+      {
+        "text": "a small part",
+        "correct": false
+      },
+      {
+        "text": "brief summary",
+        "correct": true
+      },
+      {
+        "text": "presents tables and graphs",
+        "correct": false
+      },
+      {
+        "text": "obtained results",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Choose the right word/word combination.\nIntroduction is a ___ of the article.",
+    "precheck_sigs": [
+      "34ddae59acceab213caf"
+    ]
+  },
+  "Choose the proper equivalents for “врач”": {
+    "type": "multiple",
+    "answers": [
+      "general practitioner",
+      "physician",
+      "clinician",
+      "doctor"
+    ],
+    "all_options": [
+      {
+        "text": "clinist",
+        "correct": false
+      },
+      {
+        "text": "general practitioner",
+        "correct": true
+      },
+      {
+        "text": "physician",
+        "correct": true
+      },
+      {
+        "text": "physicist",
+        "correct": false
+      },
+      {
+        "text": "generic practitioner",
+        "correct": false
+      },
+      {
+        "text": "physics",
+        "correct": false
+      },
+      {
+        "text": "doktor",
+        "correct": false
+      },
+      {
+        "text": "general practice",
+        "correct": false
+      },
+      {
+        "text": "clinician",
+        "correct": true
+      },
+      {
+        "text": "doctor",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalents for “врач”",
+    "precheck_sigs": [
+      "9721977eeca2026a2f18"
+    ]
+  },
+  "Insert the missing word.\n___ are you going to stay there?": {
+    "type": "multiple",
+    "answers": [
+      "Where exactly",
+      "How long"
+    ],
+    "all_options": [
+      {
+        "text": "Why",
+        "correct": false
+      },
+      {
+        "text": "How",
+        "correct": false
+      },
+      {
+        "text": "Where exactly",
+        "correct": true
+      },
+      {
+        "text": "How long",
+        "correct": true
+      },
+      {
+        "text": "Who",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Insert the missing word.\n___ are you going to stay there?",
+    "precheck_sigs": [
+      "e997ea1920d6a8c9f9dd"
+    ]
+  },
+  "Choose the proper equivalents for “зарплата”": {
+    "type": "multiple",
+    "answers": [
+      "payment",
+      "salary",
+      "wages"
+    ],
+    "all_options": [
+      {
+        "text": "payment",
+        "correct": true
+      },
+      {
+        "text": "celery",
+        "correct": false
+      },
+      {
+        "text": "salary",
+        "correct": true
+      },
+      {
+        "text": "waste",
+        "correct": false
+      },
+      {
+        "text": "wages",
+        "correct": true
+      },
+      {
+        "text": "paid",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalents for “зарплата”",
+    "precheck_sigs": [
+      "74a8bbc8ed6e4edc2ee1"
+    ]
+  },
+  "What does “HAVE TO” mean?": {
+    "type": "single",
+    "answers": [
+      "вынужденная необходимость"
+    ],
+    "all_options": [
+      {
+        "text": "совет",
+        "correct": false
+      },
+      {
+        "text": "разрешение",
+        "correct": false
+      },
+      {
+        "text": "быть в состоянии сделать что-либо",
+        "correct": false
+      },
+      {
+        "text": "вынужденная необходимость",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "question": "What does “HAVE TO” mean?",
+    "precheck_sigs": [
+      "7ea1d82d420af672c9d5"
+    ]
+  },
+  "Insert the missing word.\nI’d like to ___ my reservation for today’s flight to Atlanta.": {
+    "type": "multiple",
+    "answers": [
+      "cancel",
+      "check"
+    ],
+    "all_options": [
+      {
+        "text": "shake",
+        "correct": false
+      },
+      {
+        "text": "chick",
+        "correct": false
+      },
+      {
+        "text": "cancel",
+        "correct": true
+      },
+      {
+        "text": "pencil",
+        "correct": false
+      },
+      {
+        "text": "check",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "question": "Insert the missing word.\nI’d like to ___ my reservation for today’s flight to Atlanta.",
+    "precheck_sigs": [
+      "635db88d7a11063eb5d0"
+    ]
+  },
+  "Choose the tense markers for PRESENT PERFECT": {
+    "type": "multiple",
+    "answers": [
+      "just",
+      "already"
+    ],
+    "all_options": [
+      {
+        "text": "just",
+        "correct": true
+      },
+      {
+        "text": "tomorrow",
+        "correct": false
+      },
+      {
+        "text": "already",
+        "correct": true
+      },
+      {
+        "text": "always",
+        "correct": false
+      },
+      {
+        "text": "yesterday",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Choose the tense markers for PRESENT PERFECT",
+    "precheck_sigs": [
+      "da0721c1c2f6de3cd7f3"
+    ]
+  },
+  "Choose the right word.\nYou should follow the doctor’s …": {
+    "type": "single",
+    "answers": [
+      "advice"
+    ],
+    "all_options": [
+      {
+        "text": "instruct",
+        "correct": false
+      },
+      {
+        "text": "recommendations",
+        "correct": false
+      },
+      {
+        "text": "advice",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "question": "Choose the right word.\nYou should follow the doctor’s …",
+    "precheck_sigs": [
+      "b5262ec7d2851443edb6"
+    ]
+  },
+  "What tense is “am going to”?": {
+    "type": "single",
+    "answers": [
+      "Present Continuous/Progressive"
+    ],
+    "all_options": [
+      {
+        "text": "Present Simple Passive",
+        "correct": false
+      },
+      {
+        "text": "Present Simple Active",
+        "correct": false
+      },
+      {
+        "text": "Future Continuous/Progressive",
+        "correct": false
+      },
+      {
+        "text": "Present Continuous/Progressive",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "question": "What tense is “am going to”?",
+    "precheck_sigs": [
+      "a61ac777fda5709503d7"
+    ]
+  },
+  "Insert the missing word.\nIs everything ___?": {
+    "type": "multiple",
+    "answers": [
+      "in order",
+      "all right"
+    ],
+    "all_options": [
+      {
+        "text": "in order",
+        "correct": true
+      },
+      {
+        "text": "all left",
+        "correct": false
+      },
+      {
+        "text": "right and left",
+        "correct": false
+      },
+      {
+        "text": "all right",
+        "correct": true
+      },
+      {
+        "text": "order",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Insert the missing word.\nIs everything ___?",
+    "precheck_sigs": [
+      "4d41b6507d3fb7b3ac09"
+    ]
+  },
+  "What tense is “were investigating”?": {
+    "type": "single",
+    "answers": [
+      "Past Continuous/Progressive"
+    ],
+    "all_options": [
+      {
+        "text": "Past Continuous/Progressive",
+        "correct": true
+      },
+      {
+        "text": "Present Simple Passive",
+        "correct": false
+      },
+      {
+        "text": "Present Simple Active",
+        "correct": false
+      },
+      {
+        "text": "Present Continuous/Progressive",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "What tense is “were investigating”?",
+    "precheck_sigs": [
+      "de74cd1c686d7cec667f"
+    ]
+  },
+  "What does “MUST” mean?": {
+    "type": "single",
+    "answers": [
+      "долженствование"
+    ],
+    "all_options": [
+      {
+        "text": "способность совершить действие",
+        "correct": false
+      },
+      {
+        "text": "долженствование",
+        "correct": true
+      },
+      {
+        "text": "разрешение",
+        "correct": false
+      },
+      {
+        "text": "возможность",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "What does “MUST” mean?",
+    "precheck_sigs": [
+      "c02b33d9618fb7e2d634"
+    ]
+  },
+  "Choose the proper equivalents for “вакансия”": {
+    "type": "multiple",
+    "answers": [
+      "position",
+      "vacancy"
+    ],
+    "all_options": [
+      {
+        "text": "vacation",
+        "correct": false
+      },
+      {
+        "text": "posture",
+        "correct": false
+      },
+      {
+        "text": "post",
+        "correct": false
+      },
+      {
+        "text": "position",
+        "correct": true
+      },
+      {
+        "text": "vacancy",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalents for “вакансия”",
+    "precheck_sigs": [
+      "a7e4da59375d13e8d912"
+    ]
+  },
+  "What does “SHOULD” mean?": {
+    "type": "single",
+    "answers": [
+      "совет"
+    ],
+    "all_options": [
+      {
+        "text": "вынужденная необходимость",
+        "correct": false
+      },
+      {
+        "text": "разрешение",
+        "correct": false
+      },
+      {
+        "text": "быть в состоянии сделать что-либо",
+        "correct": false
+      },
+      {
+        "text": "совет",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "question": "What does “SHOULD” mean?",
+    "precheck_sigs": [
+      "d59cbe78183d8cfa582a"
+    ]
+  },
+  "Arrange in the correct order the parts of a sentence.": {
+    "type": "sortable",
+    "answers": [
+      "1. I’d",
+      "2. like",
+      "3. to",
+      "4. get",
+      "5. a",
+      "6. position",
+      "7. of",
+      "8. cardiologist"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "I’d"
+      },
+      {
+        "position": 2,
+        "text": "like"
+      },
+      {
+        "position": 3,
+        "text": "to"
+      },
+      {
+        "position": 4,
+        "text": "get"
+      },
+      {
+        "position": 5,
+        "text": "a"
+      },
+      {
+        "position": 6,
+        "text": "position"
+      },
+      {
+        "position": 7,
+        "text": "of"
+      },
+      {
+        "position": 8,
+        "text": "cardiologist"
+      }
+    ],
+    "images": [],
+    "question": "Arrange in the correct order the parts of a sentence.",
+    "precheck_sigs": [
+      "1a196abcaeaad0001edb"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order.": {
+    "type": "sortable",
+    "answers": [
+      "1. We",
+      "2. passed",
+      "3. two",
+      "4. exams",
+      "5. during",
+      "6. the",
+      "7. summer",
+      "8. examination",
+      "9. session"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "We"
+      },
+      {
+        "position": 2,
+        "text": "passed"
+      },
+      {
+        "position": 3,
+        "text": "two"
+      },
+      {
+        "position": 4,
+        "text": "exams"
+      },
+      {
+        "position": 5,
+        "text": "during"
+      },
+      {
+        "position": 6,
+        "text": "the"
+      },
+      {
+        "position": 7,
+        "text": "summer"
+      },
+      {
+        "position": 8,
+        "text": "examination"
+      },
+      {
+        "position": 9,
+        "text": "session"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "28877dec8ce59577b770"
+    ]
+  },
+  "Choose the proper equivalent": {
+    "type": "dropdown",
+    "answers": [
+      "abstract ➔ [аннотация]",
+      "research ➔ [исследование]",
+      "physician ➔ [врач-терапевт]",
+      "approach ➔ [подход]"
+    ],
+    "all_options": [
+      {
+        "left": "abstract",
+        "correct_value": "аннотация"
+      },
+      {
+        "left": "research",
+        "correct_value": "исследование"
+      },
+      {
+        "left": "physician",
+        "correct_value": "врач-терапевт"
+      },
+      {
+        "left": "approach",
+        "correct_value": "подход"
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalent",
+    "precheck_sigs": [
+      "120f56180cc150983f64",
+      "306b3912082de7ef363d",
+      "eb7632f2b9389341ad0b"
+    ]
+  },
+  "Arrange the parts of a sentencein the correct order.": {
+    "type": "sortable",
+    "answers": [
+      "1. I",
+      "2. haven’t",
+      "3. known",
+      "4. my",
+      "5. group-mates",
+      "6. for",
+      "7. many",
+      "8. years",
+      "9. yet"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "I"
+      },
+      {
+        "position": 2,
+        "text": "haven’t"
+      },
+      {
+        "position": 3,
+        "text": "known"
+      },
+      {
+        "position": 4,
+        "text": "my"
+      },
+      {
+        "position": 5,
+        "text": "group-mates"
+      },
+      {
+        "position": 6,
+        "text": "for"
+      },
+      {
+        "position": 7,
+        "text": "many"
+      },
+      {
+        "position": 8,
+        "text": "years"
+      },
+      {
+        "position": 9,
+        "text": "yet"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentencein the correct order.",
+    "precheck_sigs": [
+      "19ef4416ed24a0899ef3"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 2]": {
+    "type": "sortable",
+    "answers": [
+      "1. We",
+      "2. had",
+      "3. our",
+      "4. internship",
+      "5. in",
+      "6. several",
+      "7. hospitals",
+      "8. of",
+      "9. Kirov"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "We"
+      },
+      {
+        "position": 2,
+        "text": "had"
+      },
+      {
+        "position": 3,
+        "text": "our"
+      },
+      {
+        "position": 4,
+        "text": "internship"
+      },
+      {
+        "position": 5,
+        "text": "in"
+      },
+      {
+        "position": 6,
+        "text": "several"
+      },
+      {
+        "position": 7,
+        "text": "hospitals"
+      },
+      {
+        "position": 8,
+        "text": "of"
+      },
+      {
+        "position": 9,
+        "text": "Kirov"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "6d993bd50396725863f8"
+    ]
+  },
+  "Choose the proper equivalent [вариант 2]": {
+    "type": "dropdown",
+    "answers": [
+      "get ➔ [понимать]",
+      "assist ➔ [помогать]",
+      "implement ➔ [применять]"
+    ],
+    "all_options": [
+      {
+        "left": "get",
+        "correct_value": "понимать"
+      },
+      {
+        "left": "assist",
+        "correct_value": "помогать"
+      },
+      {
+        "left": "implement",
+        "correct_value": "применять"
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalent",
+    "precheck_sigs": [
+      "724429abbdf23437955d",
+      "924fc358731370350b49",
+      "649ea9c4f6377addc3b3",
+      "1f0e52963a287ea75a63"
+    ]
+  },
+  "Choose the proper equivalent [вариант 3]": {
+    "type": "dropdown",
+    "answers": [
+      "обеспечивать ➔ [provide]",
+      "указывать ➔ [indicate]",
+      "оборудовать ➔ [equip]"
+    ],
+    "all_options": [
+      {
+        "left": "обеспечивать",
+        "correct_value": "provide"
+      },
+      {
+        "left": "указывать",
+        "correct_value": "indicate"
+      },
+      {
+        "left": "оборудовать",
+        "correct_value": "equip"
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalent",
+    "precheck_sigs": [
+      "ca626a0c0b91f94a986d",
+      "9a77110f4e84b330079b",
+      "6dcba41e258c417ef1e2",
+      "dc391fea6bbfb32d3908"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 3]": {
+    "type": "sortable",
+    "answers": [
+      "1. I",
+      "2. haven’t",
+      "3. been",
+      "4. studying",
+      "5. medicine",
+      "6. for",
+      "7. 6",
+      "8. years",
+      "9. so",
+      "10. far"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "I"
+      },
+      {
+        "position": 2,
+        "text": "haven’t"
+      },
+      {
+        "position": 3,
+        "text": "been"
+      },
+      {
+        "position": 4,
+        "text": "studying"
+      },
+      {
+        "position": 5,
+        "text": "medicine"
+      },
+      {
+        "position": 6,
+        "text": "for"
+      },
+      {
+        "position": 7,
+        "text": "6"
+      },
+      {
+        "position": 8,
+        "text": "years"
+      },
+      {
+        "position": 9,
+        "text": "so"
+      },
+      {
+        "position": 10,
+        "text": "far"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "1d6aaff48398e25d5829"
+    ]
+  },
+  "Article structure\nThe participants had mostly advanced age. Over half of the cohort population were females.": {
+    "type": "cluster_member",
+    "answers": [
+      "1. Results",
+      "2. over 40"
+    ],
+    "all_options": [
+      {
+        "text": "References",
+        "correct": false
+      },
+      {
+        "text": "Discussion",
+        "correct": false
+      },
+      {
+        "text": "Results",
+        "correct": true
+      },
+      {
+        "text": "Materials and methods",
+        "correct": false
+      },
+      {
+        "text": "From 14 to 40",
+        "correct": false
+      },
+      {
+        "text": "over 40",
+        "correct": true
+      },
+      {
+        "text": "Over 14",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "Article structure\nThe participants had mostly advanced age. Over half of the cohort population were females.",
+    "question": "Article structure\nThe participants had mostly advanced age. Over half of the cohort population were females.",
+    "precheck_sigs": [
+      "4df1aa4180f9f5aabfb6"
+    ]
+  },
+  "Which part of the article does this information refer to?": {
+    "type": "single",
+    "answers": [
+      "Results"
+    ],
+    "all_options": [
+      {
+        "text": "References",
+        "correct": false
+      },
+      {
+        "text": "Discussion",
+        "correct": false
+      },
+      {
+        "text": "Results",
+        "correct": true
+      },
+      {
+        "text": "Materials and methods",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "Article structure\nThe participants had mostly advanced age. Over half of the cohort population were females.",
+    "question": "Which part of the article does this information refer to?"
+  },
+  "Choose the incorrect variant: Participants were mainly ___.": {
+    "type": "single",
+    "answers": [
+      "over 40"
+    ],
+    "all_options": [
+      {
+        "text": "From 14 to 40",
+        "correct": false
+      },
+      {
+        "text": "over 40",
+        "correct": true
+      },
+      {
+        "text": "Over 14",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "Article structure\nThe participants had mostly advanced age. Over half of the cohort population were females.",
+    "question": "Choose the incorrect variant: Participants were mainly ___."
+  },
+  "Hotel\nB: Hello. I would like to book a room at your hotel.\nA: We have several rooms.\nA: Good. We have a room with mountain view, and there is one with a view of the park. Which one would you prefer?\nB: I really like greenery. I have a beautiful view of the forest from my window at home. And the mountains are not mine. I'm afraid of heights. Give me a room with...": {
+    "type": "cluster_member",
+    "answers": [
+      "1. a view of the park",
+      "2. I have a beautiful view of the forest from my office window."
+    ],
+    "all_options": [
+      {
+        "text": "a view of the park",
+        "correct": true
+      },
+      {
+        "text": "a view of the forest",
+        "correct": false
+      },
+      {
+        "text": "a view of the mountains",
+        "correct": false
+      },
+      {
+        "text": "I'm fond of heights.",
+        "correct": false
+      },
+      {
+        "text": "I really like greenery.",
+        "correct": false
+      },
+      {
+        "text": "I have a beautiful view of the forest from my office window.",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "Hotel\nB: Hello. I would like to book a room at your hotel.\nA: We have several rooms.\nA: Good. We have a room with mountain view, and there is one with a view of the park. Which one would you prefer?\nB: I really like greenery. I have a beautiful view of the forest from my window at home. And the mountains are not mine. I'm afraid of heights. Give me a room with...",
+    "question": "Hotel\nB: Hello. I would like to book a room at your hotel.\nA: We have several rooms.\nA: Good. We have a room with mountain view, and there is one with a view of the park. Which one would you prefer?\nB: I really like greenery. I have a beautiful view of the forest from my window at home. And the mountains are not mine. I'm afraid of heights. Give me a room with...",
+    "precheck_sigs": [
+      "aff069dc41614edf5457"
+    ]
+  },
+  "Which of the views is B going to choose?": {
+    "type": "single",
+    "answers": [
+      "a view of the park"
+    ],
+    "all_options": [
+      {
+        "text": "a view of the park",
+        "correct": true
+      },
+      {
+        "text": "a view of the forest",
+        "correct": false
+      },
+      {
+        "text": "a view of the mountains",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "Hotel\nB: Hello. I would like to book a room at your hotel.\nA: We have several rooms.\nA: Good. We have a room with mountain view, and there is one with a view of the park. Which one would you prefer?\nB: I really like greenery. I have a beautiful view of the forest from my window at home. And the mountains are not mine. I'm afraid of heights. Give me a room with...",
+    "question": "Which of the views is B going to choose?"
+  },
+  "Choose the incorrect variant": {
+    "type": "single",
+    "answers": [
+      "I have a beautiful view of the forest from my office window."
+    ],
+    "all_options": [
+      {
+        "text": "I'm fond of heights.",
+        "correct": false
+      },
+      {
+        "text": "I really like greenery.",
+        "correct": false
+      },
+      {
+        "text": "I have a beautiful view of the forest from my office window.",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "Hotel\nB: Hello. I would like to book a room at your hotel.\nA: We have several rooms.\nA: Good. We have a room with mountain view, and there is one with a view of the park. Which one would you prefer?\nB: I really like greenery. I have a beautiful view of the forest from my window at home. And the mountains are not mine. I'm afraid of heights. Give me a room with...",
+    "question": "Choose the incorrect variant"
+  },
+  "At the Airport\nC: Hello! Can you give me a one-way ticket to Seattle, nearest possible time, please!T.\nA.: - I'm afraid you will not be able to fly there till Tuesday.\nC: - Tuesday? Are you kidding me? My business will be ruined!T.\nA.: - I'm really sorry but all the departures are ___ because of inclement weather.": {
+    "type": "cluster_member",
+    "answers": [
+      "1. delayed",
+      "2. favorable"
+    ],
+    "all_options": [
+      {
+        "text": "delay",
+        "correct": false
+      },
+      {
+        "text": "delayed",
+        "correct": true
+      },
+      {
+        "text": "delaed",
+        "correct": false
+      },
+      {
+        "text": "delaying",
+        "correct": false
+      },
+      {
+        "text": "nasty",
+        "correct": false
+      },
+      {
+        "text": "unfavorable",
+        "correct": false
+      },
+      {
+        "text": "favorable",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\nC: Hello! Can you give me a one-way ticket to Seattle, nearest possible time, please!T.\nA.: - I'm afraid you will not be able to fly there till Tuesday.\nC: - Tuesday? Are you kidding me? My business will be ruined!T.\nA.: - I'm really sorry but all the departures are ___ because of inclement weather.",
+    "question": "At the Airport\nC: Hello! Can you give me a one-way ticket to Seattle, nearest possible time, please!T.\nA.: - I'm afraid you will not be able to fly there till Tuesday.\nC: - Tuesday? Are you kidding me? My business will be ruined!T.\nA.: - I'm really sorry but all the departures are ___ because of inclement weather.",
+    "precheck_sigs": [
+      "7cbc4eb18279661cb8bc"
+    ]
+  },
+  "Choose the proper form": {
+    "type": "single",
+    "answers": [
+      "delayed"
+    ],
+    "all_options": [
+      {
+        "text": "delay",
+        "correct": false
+      },
+      {
+        "text": "delayed",
+        "correct": true
+      },
+      {
+        "text": "delaed",
+        "correct": false
+      },
+      {
+        "text": "delaying",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\nC: Hello! Can you give me a one-way ticket to Seattle, nearest possible time, please!T.\nA.: - I'm afraid you will not be able to fly there till Tuesday.\nC: - Tuesday? Are you kidding me? My business will be ruined!T.\nA.: - I'm really sorry but all the departures are ___ because of inclement weather.",
+    "question": "Choose the proper form"
+  },
+  "Choose the incorrect variant. “inclement” means": {
+    "type": "single",
+    "answers": [
+      "favorable"
+    ],
+    "all_options": [
+      {
+        "text": "nasty",
+        "correct": false
+      },
+      {
+        "text": "unfavorable",
+        "correct": false
+      },
+      {
+        "text": "favorable",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\nC: Hello! Can you give me a one-way ticket to Seattle, nearest possible time, please!T.\nA.: - I'm afraid you will not be able to fly there till Tuesday.\nC: - Tuesday? Are you kidding me? My business will be ruined!T.\nA.: - I'm really sorry but all the departures are ___ because of inclement weather.",
+    "question": "Choose the incorrect variant. “inclement” means"
+  },
+  "JobInterview\nA: It`s very interesting, why aren’t you happy with your present job, Miss Jones? Why are you going to leave them?\nJ: Well. The salary isn’t so bad, I must admit. But the work schedule isn’t convenient for me. Besides you have an excellent reputation and I hope to have more ___ and growth potential in your company.": {
+    "type": "cluster_member",
+    "answers": [
+      "1. opportunity",
+      "2. J doesn’t like her schedule at the present job."
+    ],
+    "all_options": [
+      {
+        "text": "opportunity",
+        "correct": true
+      },
+      {
+        "text": "possibility",
+        "correct": false
+      },
+      {
+        "text": "fortune",
+        "correct": false
+      },
+      {
+        "text": "ability",
+        "correct": false
+      },
+      {
+        "text": "good luck",
+        "correct": false
+      },
+      {
+        "text": "J doesn’t like her schedule at the new job.",
+        "correct": false
+      },
+      {
+        "text": "J likes her schedule at the present job.",
+        "correct": false
+      },
+      {
+        "text": "J doesn’t like her schedule at the present job.",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: It`s very interesting, why aren’t you happy with your present job, Miss Jones? Why are you going to leave them?\nJ: Well. The salary isn’t so bad, I must admit. But the work schedule isn’t convenient for me. Besides you have an excellent reputation and I hope to have more ___ and growth potential in your company.",
+    "question": "JobInterview\nA: It`s very interesting, why aren’t you happy with your present job, Miss Jones? Why are you going to leave them?\nJ: Well. The salary isn’t so bad, I must admit. But the work schedule isn’t convenient for me. Besides you have an excellent reputation and I hope to have more ___ and growth potential in your company.",
+    "precheck_sigs": [
+      "ef6cdd03214f991393af"
+    ]
+  },
+  "What does J hope to have more with the new company?": {
+    "type": "single",
+    "answers": [
+      "opportunity"
+    ],
+    "all_options": [
+      {
+        "text": "opportunity",
+        "correct": true
+      },
+      {
+        "text": "possibility",
+        "correct": false
+      },
+      {
+        "text": "fortune",
+        "correct": false
+      },
+      {
+        "text": "ability",
+        "correct": false
+      },
+      {
+        "text": "good luck",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: It`s very interesting, why aren’t you happy with your present job, Miss Jones? Why are you going to leave them?\nJ: Well. The salary isn’t so bad, I must admit. But the work schedule isn’t convenient for me. Besides you have an excellent reputation and I hope to have more ___ and growth potential in your company.",
+    "question": "What does J hope to have more with the new company?"
+  },
+  "Choose the correct variant.": {
+    "type": "single",
+    "answers": [
+      "J doesn’t like her schedule at the present job."
+    ],
+    "all_options": [
+      {
+        "text": "J doesn’t like her schedule at the new job.",
+        "correct": false
+      },
+      {
+        "text": "J likes her schedule at the present job.",
+        "correct": false
+      },
+      {
+        "text": "J doesn’t like her schedule at the present job.",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: It`s very interesting, why aren’t you happy with your present job, Miss Jones? Why are you going to leave them?\nJ: Well. The salary isn’t so bad, I must admit. But the work schedule isn’t convenient for me. Besides you have an excellent reputation and I hope to have more ___ and growth potential in your company.",
+    "question": "Choose the correct variant."
+  },
+  "Choose the proper equivalents for “работа”": {
+    "type": "multiple",
+    "answers": [
+      "job",
+      "work"
+    ],
+    "all_options": [
+      {
+        "text": "job",
+        "correct": true
+      },
+      {
+        "text": "position",
+        "correct": false
+      },
+      {
+        "text": "treatment",
+        "correct": false
+      },
+      {
+        "text": "jogging",
+        "correct": false
+      },
+      {
+        "text": "working",
+        "correct": false
+      },
+      {
+        "text": "work",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalents for “работа”",
+    "precheck_sigs": [
+      "5f8b94d86c363d0155f2"
+    ]
+  },
+  "Choose the right help verb for Present Perfect Active": {
+    "type": "single",
+    "answers": [
+      "have"
+    ],
+    "all_options": [
+      {
+        "text": "is",
+        "correct": false
+      },
+      {
+        "text": "have",
+        "correct": true
+      },
+      {
+        "text": "was",
+        "correct": false
+      },
+      {
+        "text": "been",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Choose the right help verb for Present Perfect Active",
+    "precheck_sigs": [
+      "701a9875b425a37270f0"
+    ]
+  },
+  "Choose the proper equivalents for “квалификация”": {
+    "type": "multiple",
+    "answers": [
+      "specialization",
+      "major",
+      "qualification"
+    ],
+    "all_options": [
+      {
+        "text": "specialize",
+        "correct": false
+      },
+      {
+        "text": "specialization",
+        "correct": true
+      },
+      {
+        "text": "qualified",
+        "correct": false
+      },
+      {
+        "text": "qualify",
+        "correct": false
+      },
+      {
+        "text": "major",
+        "correct": true
+      },
+      {
+        "text": "mayor",
+        "correct": false
+      },
+      {
+        "text": "special",
+        "correct": false
+      },
+      {
+        "text": "qualification",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalents for “квалификация”",
+    "precheck_sigs": [
+      "8376b1f34524f07f4647"
+    ]
+  },
+  "Insert the missing word.\nDo you have any preference about the ___?": {
+    "type": "multiple",
+    "answers": [
+      "time of the day",
+      "class"
+    ],
+    "all_options": [
+      {
+        "text": "weather",
+        "correct": false
+      },
+      {
+        "text": "time of the day",
+        "correct": true
+      },
+      {
+        "text": "class",
+        "correct": true
+      },
+      {
+        "text": "tense",
+        "correct": false
+      },
+      {
+        "text": "color of the seat",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Insert the missing word.\nDo you have any preference about the ___?",
+    "precheck_sigs": [
+      "0b8df8263d8015bc676a"
+    ]
+  },
+  "Choose the right word.\n____ presents the main outcomes of the article.": {
+    "type": "single",
+    "answers": [
+      "Conclusion"
+    ],
+    "all_options": [
+      {
+        "text": "Conclusion",
+        "correct": true
+      },
+      {
+        "text": "Discussion",
+        "correct": false
+      },
+      {
+        "text": "Methods and materials",
+        "correct": false
+      },
+      {
+        "text": "References",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Choose the right word.\n____ presents the main outcomes of the article.",
+    "precheck_sigs": [
+      "e7c8545e17bebf330134"
+    ]
+  },
+  "Choose the proper equivalents for “собеседование”": {
+    "type": "multiple",
+    "answers": [
+      "communication",
+      "interview"
+    ],
+    "all_options": [
+      {
+        "text": "interconnection",
+        "correct": false
+      },
+      {
+        "text": "communication",
+        "correct": true
+      },
+      {
+        "text": "interview",
+        "correct": true
+      },
+      {
+        "text": "discussion",
+        "correct": false
+      },
+      {
+        "text": "interaction",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalents for “собеседование”",
+    "precheck_sigs": [
+      "1a459e52c85c83aff8f1"
+    ]
+  },
+  "Insert the missing word.\nYour ___ weighs exactly ten pounds.": {
+    "type": "multiple",
+    "answers": [
+      "luggage",
+      "suitcase",
+      "backpack",
+      "bag"
+    ],
+    "all_options": [
+      {
+        "text": "suit",
+        "correct": false
+      },
+      {
+        "text": "luggage",
+        "correct": true
+      },
+      {
+        "text": "suitcase",
+        "correct": true
+      },
+      {
+        "text": "back",
+        "correct": false
+      },
+      {
+        "text": "backpack",
+        "correct": true
+      },
+      {
+        "text": "bag",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "question": "Insert the missing word.\nYour ___ weighs exactly ten pounds.",
+    "precheck_sigs": [
+      "60d0a1fd71b825c1d7b2"
+    ]
+  },
+  "What tense is “was discovered”?": {
+    "type": "single",
+    "answers": [
+      "Past Simple Passive"
+    ],
+    "all_options": [
+      {
+        "text": "Present Continuous/Progressive",
+        "correct": false
+      },
+      {
+        "text": "Present Simple Passive",
+        "correct": false
+      },
+      {
+        "text": "Past Continuous/Progressive",
+        "correct": false
+      },
+      {
+        "text": "Past Simple Passive",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "question": "What tense is “was discovered”?",
+    "precheck_sigs": [
+      "2aff3f2843bbd43126e3"
+    ]
+  },
+  "Insert the missing word.\nWill you pay by ___?": {
+    "type": "multiple",
+    "answers": [
+      "cash",
+      "credit card"
+    ],
+    "all_options": [
+      {
+        "text": "post card",
+        "correct": false
+      },
+      {
+        "text": "crash",
+        "correct": false
+      },
+      {
+        "text": "cash",
+        "correct": true
+      },
+      {
+        "text": "credit card",
+        "correct": true
+      },
+      {
+        "text": "poster",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Insert the missing word.\nWill you pay by ___?",
+    "precheck_sigs": [
+      "d929097fd3d4aed81f6e"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 4]": {
+    "type": "sortable",
+    "answers": [
+      "1. Would",
+      "2. you",
+      "3. like",
+      "4. a",
+      "5. non-smoking",
+      "6. carriage"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "Would"
+      },
+      {
+        "position": 2,
+        "text": "you"
+      },
+      {
+        "position": 3,
+        "text": "like"
+      },
+      {
+        "position": 4,
+        "text": "a"
+      },
+      {
+        "position": 5,
+        "text": "non-smoking"
+      },
+      {
+        "position": 6,
+        "text": "carriage"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "48b7e44677e2acccc2d3"
+    ]
+  },
+  "Define the part of speech for": {
+    "type": "dropdown",
+    "answers": [
+      "bleed ➔ [verb]",
+      "bleeding ➔ [noun]",
+      "blood ➔ [noun]"
+    ],
+    "all_options": [
+      {
+        "left": "bleed",
+        "correct_value": "verb"
+      },
+      {
+        "left": "bleeding",
+        "correct_value": "noun"
+      },
+      {
+        "left": "blood",
+        "correct_value": "noun"
+      }
+    ],
+    "images": [],
+    "question": "Define the part of speech for",
+    "precheck_sigs": [
+      "126d79c282bfc3f4321f",
+      "b668994b1a0a1364c401"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 5]": {
+    "type": "sortable",
+    "answers": [
+      "1. Rheumatologists",
+      "2. don’t",
+      "3. treat",
+      "4. nervous",
+      "5. disorders"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "Rheumatologists"
+      },
+      {
+        "position": 2,
+        "text": "don’t"
+      },
+      {
+        "position": 3,
+        "text": "treat"
+      },
+      {
+        "position": 4,
+        "text": "nervous"
+      },
+      {
+        "position": 5,
+        "text": "disorders"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "1757851db1cc9d72130d"
+    ]
+  },
+  "Arrange the parts of a sentencein the correct order. [вариант 2]": {
+    "type": "sortable",
+    "answers": [
+      "1. I’m",
+      "2. interested",
+      "3. in",
+      "4. up-to-date",
+      "5. methods",
+      "6. of",
+      "7. treatment"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "I’m"
+      },
+      {
+        "position": 2,
+        "text": "interested"
+      },
+      {
+        "position": 3,
+        "text": "in"
+      },
+      {
+        "position": 4,
+        "text": "up-to-date"
+      },
+      {
+        "position": 5,
+        "text": "methods"
+      },
+      {
+        "position": 6,
+        "text": "of"
+      },
+      {
+        "position": 7,
+        "text": "treatment"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentencein the correct order.",
+    "precheck_sigs": [
+      "ccb18cda720115bcab26"
+    ]
+  },
+  "Choose the proper equivalent [вариант 4]": {
+    "type": "dropdown",
+    "answers": [
+      "to require ➔ [требовать]",
+      "to determine ➔ [определять]",
+      "to identify ➔ [распознавать]",
+      "to reduce ➔ [уменьшать]"
+    ],
+    "all_options": [
+      {
+        "left": "to require",
+        "correct_value": "требовать"
+      },
+      {
+        "left": "to determine",
+        "correct_value": "определять"
+      },
+      {
+        "left": "to identify",
+        "correct_value": "распознавать"
+      },
+      {
+        "left": "to reduce",
+        "correct_value": "уменьшать"
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalent",
+    "precheck_sigs": [
+      "ef8f3f2327029a7f3635",
+      "ea8ad19b1ca2a7dc1f4c",
+      "0ebb45b29ce9dea9b5c5",
+      "016261a2fce24c49586e",
+      "7884c488bc906927f971"
+    ]
+  },
+  "Define the part of speech for [вариант 2]": {
+    "type": "dropdown",
+    "answers": [
+      "Science ➔ [noun]",
+      "Scientific ➔ [adjective]",
+      "Scientist ➔ [noun]"
+    ],
+    "all_options": [
+      {
+        "left": "Science",
+        "correct_value": "noun"
+      },
+      {
+        "left": "Scientific",
+        "correct_value": "adjective"
+      },
+      {
+        "left": "Scientist",
+        "correct_value": "noun"
+      }
+    ],
+    "images": [],
+    "question": "Define the part of speech for",
+    "precheck_sigs": [
+      "8975e70a97d6694039f7",
+      "ea5eb30381aac9106f9c"
+    ]
+  },
+  "Choose the proper equivalent [вариант 5]": {
+    "type": "dropdown",
+    "answers": [
+      "ссылаться ➔ [refer to]",
+      "помещать ➔ [place]",
+      "превышать ➔ [exceed]"
+    ],
+    "all_options": [
+      {
+        "left": "ссылаться",
+        "correct_value": "refer to"
+      },
+      {
+        "left": "помещать",
+        "correct_value": "place"
+      },
+      {
+        "left": "превышать",
+        "correct_value": "exceed"
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalent",
+    "precheck_sigs": [
+      "8d105cce9184fd19d2ad",
+      "45322daf627fae82a583",
+      "4dc93491cb6a1ba2d206",
+      "ccdc0c943af2b8d8c4b5"
+    ]
+  },
+  "Hotel\nA: If everything suits you, please fill in the application form and write down all the data.\nB: Here you are. Is it all right?\nA: Yes, all is well. Here are the keys to your room.\nB: Is there a mini-bar in the room?\nA: Yes, there is. And there is a gym downstairs with a sauna. But you need to pay extra for everything there.\nB: I see.\nA: Anyway, our hotel has free Wi-Fi and a safe. Moreover, we have a parking space for guests.\nB: Great. Thanks for the info.\nA: Have a nice rest.": {
+    "type": "cluster_member",
+    "answers": [
+      "1. No",
+      "2. hotel"
+    ],
+    "all_options": [
+      {
+        "text": "Downstairs",
+        "correct": false
+      },
+      {
+        "text": "No",
+        "correct": true
+      },
+      {
+        "text": "Yes",
+        "correct": false
+      },
+      {
+        "text": "In the gym",
+        "correct": false
+      },
+      {
+        "text": "hostel",
+        "correct": false
+      },
+      {
+        "text": "hotel",
+        "correct": true
+      },
+      {
+        "text": "dorm",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "Hotel\nA: If everything suits you, please fill in the application form and write down all the data.\nB: Here you are. Is it all right?\nA: Yes, all is well. Here are the keys to your room.\nB: Is there a mini-bar in the room?\nA: Yes, there is. And there is a gym downstairs with a sauna. But you need to pay extra for everything there.\nB: I see.\nA: Anyway, our hotel has free Wi-Fi and a safe. Moreover, we have a parking space for guests.\nB: Great. Thanks for the info.\nA: Have a nice rest.",
+    "question": "Hotel\nA: If everything suits you, please fill in the application form and write down all the data.\nB: Here you are. Is it all right?\nA: Yes, all is well. Here are the keys to your room.\nB: Is there a mini-bar in the room?\nA: Yes, there is. And there is a gym downstairs with a sauna. But you need to pay extra for everything there.\nB: I see.\nA: Anyway, our hotel has free Wi-Fi and a safe. Moreover, we have a parking space for guests.\nB: Great. Thanks for the info.\nA: Have a nice rest.",
+    "precheck_sigs": [
+      "be315b3e3b87f59ee122"
+    ]
+  },
+  "Do the guests have to pay for the Internet?": {
+    "type": "single",
+    "answers": [
+      "No"
+    ],
+    "all_options": [
+      {
+        "text": "Downstairs",
+        "correct": false
+      },
+      {
+        "text": "No",
+        "correct": true
+      },
+      {
+        "text": "Yes",
+        "correct": false
+      },
+      {
+        "text": "In the gym",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "Hotel\nA: If everything suits you, please fill in the application form and write down all the data.\nB: Here you are. Is it all right?\nA: Yes, all is well. Here are the keys to your room.\nB: Is there a mini-bar in the room?\nA: Yes, there is. And there is a gym downstairs with a sauna. But you need to pay extra for everything there.\nB: I see.\nA: Anyway, our hotel has free Wi-Fi and a safe. Moreover, we have a parking space for guests.\nB: Great. Thanks for the info.\nA: Have a nice rest.",
+    "question": "Do the guests have to pay for the Internet?"
+  },
+  "Choose the correct variant. The action takes place in a ___.": {
+    "type": "single",
+    "answers": [
+      "hotel"
+    ],
+    "all_options": [
+      {
+        "text": "hostel",
+        "correct": false
+      },
+      {
+        "text": "hotel",
+        "correct": true
+      },
+      {
+        "text": "dorm",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "Hotel\nA: If everything suits you, please fill in the application form and write down all the data.\nB: Here you are. Is it all right?\nA: Yes, all is well. Here are the keys to your room.\nB: Is there a mini-bar in the room?\nA: Yes, there is. And there is a gym downstairs with a sauna. But you need to pay extra for everything there.\nB: I see.\nA: Anyway, our hotel has free Wi-Fi and a safe. Moreover, we have a parking space for guests.\nB: Great. Thanks for the info.\nA: Have a nice rest.",
+    "question": "Choose the correct variant. The action takes place in a ___."
+  },
+  "At the Airport\nT.A.: - Мне действительно жаль, но все вылеты отложены из-за плохой погоды в штате Вашингтон.\nC: - Это катастрофа!": {
+    "type": "cluster_member",
+    "answers": [
+      "1. It's a disaster!",
+      "2. I’m really sorry."
+    ],
+    "all_options": [
+      {
+        "text": "It's a disease!",
+        "correct": false
+      },
+      {
+        "text": "It's a disfunction!",
+        "correct": false
+      },
+      {
+        "text": "It's a disorder!",
+        "correct": false
+      },
+      {
+        "text": "It's a disaster!",
+        "correct": true
+      },
+      {
+        "text": "Excuse me, really.",
+        "correct": false
+      },
+      {
+        "text": "I’m really sorry.",
+        "correct": true
+      },
+      {
+        "text": "I’m real, sorry.",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\nT.A.: - Мне действительно жаль, но все вылеты отложены из-за плохой погоды в штате Вашингтон.\nC: - Это катастрофа!",
+    "question": "At the Airport\nT.A.: - Мне действительно жаль, но все вылеты отложены из-за плохой погоды в штате Вашингтон.\nC: - Это катастрофа!",
+    "precheck_sigs": [
+      "3be0688a42f0c0d29f29"
+    ]
+  },
+  "Choose the English equivalent for the underlined phrase.": {
+    "type": "single",
+    "answers": [
+      "It's a disaster!"
+    ],
+    "all_options": [
+      {
+        "text": "It's a disease!",
+        "correct": false
+      },
+      {
+        "text": "It's a disfunction!",
+        "correct": false
+      },
+      {
+        "text": "It's a disorder!",
+        "correct": false
+      },
+      {
+        "text": "It's a disaster!",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\nT.A.: - Мне действительно жаль, но все вылеты отложены из-за плохой погоды в штате Вашингтон.\nC: - Это катастрофа!",
+    "question": "Choose the English equivalent for the underlined phrase."
+  },
+  "Give the English equivalent for “Мне действительно жаль”:": {
+    "type": "single",
+    "answers": [
+      "I’m really sorry."
+    ],
+    "all_options": [
+      {
+        "text": "Excuse me, really.",
+        "correct": false
+      },
+      {
+        "text": "I’m really sorry.",
+        "correct": true
+      },
+      {
+        "text": "I’m real, sorry.",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\nT.A.: - Мне действительно жаль, но все вылеты отложены из-за плохой погоды в штате Вашингтон.\nC: - Это катастрофа!",
+    "question": "Give the English equivalent for “Мне действительно жаль”:"
+  },
+  "JobInterview\nA: ___?\nJ: Well… I start my work on time. I learn rather quickly. I am friendly and I am able to work under pressure in a busy company.": {
+    "type": "cluster_member",
+    "answers": [
+      "1. Can you tell me about your good points then?",
+      "2. I am punctual."
+    ],
+    "all_options": [
+      {
+        "text": "Can you tell me about your good points then?",
+        "correct": true
+      },
+      {
+        "text": "Who can tell me about your good points then?",
+        "correct": false
+      },
+      {
+        "text": "Can you tell me about your education then?",
+        "correct": false
+      },
+      {
+        "text": "Can you tell me about your references then?",
+        "correct": false
+      },
+      {
+        "text": "I am sociophobic.",
+        "correct": false
+      },
+      {
+        "text": "I am punctual.",
+        "correct": true
+      },
+      {
+        "text": "I cannot resist stress and pressure.",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: ___?\nJ: Well… I start my work on time. I learn rather quickly. I am friendly and I am able to work under pressure in a busy company.",
+    "question": "JobInterview\nA: ___?\nJ: Well… I start my work on time. I learn rather quickly. I am friendly and I am able to work under pressure in a busy company.",
+    "precheck_sigs": [
+      "7c0d1b62ab54bb596331"
+    ]
+  },
+  "What did A ask?": {
+    "type": "single",
+    "answers": [
+      "Can you tell me about your good points then?"
+    ],
+    "all_options": [
+      {
+        "text": "Can you tell me about your good points then?",
+        "correct": true
+      },
+      {
+        "text": "Who can tell me about your good points then?",
+        "correct": false
+      },
+      {
+        "text": "Can you tell me about your education then?",
+        "correct": false
+      },
+      {
+        "text": "Can you tell me about your references then?",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: ___?\nJ: Well… I start my work on time. I learn rather quickly. I am friendly and I am able to work under pressure in a busy company.",
+    "question": "What did A ask?"
+  },
+  "Choose the correct variant. [вариант 2]": {
+    "type": "single",
+    "answers": [
+      "I am punctual."
+    ],
+    "all_options": [
+      {
+        "text": "I am sociophobic.",
+        "correct": false
+      },
+      {
+        "text": "I am punctual.",
+        "correct": true
+      },
+      {
+        "text": "I cannot resist stress and pressure.",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: ___?\nJ: Well… I start my work on time. I learn rather quickly. I am friendly and I am able to work under pressure in a busy company.",
+    "question": "Choose the correct variant."
+  },
+  "What does “CAN” mean?": {
+    "type": "single",
+    "answers": [
+      "способность совершить действие"
+    ],
+    "all_options": [
+      {
+        "text": "долженствование",
+        "correct": false
+      },
+      {
+        "text": "обязательство",
+        "correct": false
+      },
+      {
+        "text": "способность совершить действие",
+        "correct": true
+      },
+      {
+        "text": "разрешение",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "What does “CAN” mean?",
+    "precheck_sigs": [
+      "6674c7ed3cfdbcf0570f"
+    ]
+  },
+  "Choose the tense markers for PAST SIMPLE": {
+    "type": "multiple",
+    "answers": [
+      "yesterday",
+      "last summer"
+    ],
+    "all_options": [
+      {
+        "text": "yesterday",
+        "correct": true
+      },
+      {
+        "text": "often",
+        "correct": false
+      },
+      {
+        "text": "now",
+        "correct": false
+      },
+      {
+        "text": "next week",
+        "correct": false
+      },
+      {
+        "text": "last summer",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "question": "Choose the tense markers for PAST SIMPLE",
+    "precheck_sigs": [
+      "92b2232fa6f0282fc281"
+    ]
+  },
+  "Insert the missing word.\nI___ to make reservations for a round trip ticket.": {
+    "type": "multiple",
+    "answers": [
+      "want",
+      "’d like"
+    ],
+    "all_options": [
+      {
+        "text": "will",
+        "correct": false
+      },
+      {
+        "text": "want",
+        "correct": true
+      },
+      {
+        "text": "like",
+        "correct": false
+      },
+      {
+        "text": "went",
+        "correct": false
+      },
+      {
+        "text": "’d like",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "question": "Insert the missing word.\nI___ to make reservations for a round trip ticket.",
+    "precheck_sigs": [
+      "99382c096a8cb6c5aeca"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 6]": {
+    "type": "sortable",
+    "answers": [
+      "1. Have",
+      "2. you",
+      "3. got",
+      "4. anything",
+      "5. to",
+      "6. declare"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "Have"
+      },
+      {
+        "position": 2,
+        "text": "you"
+      },
+      {
+        "position": 3,
+        "text": "got"
+      },
+      {
+        "position": 4,
+        "text": "anything"
+      },
+      {
+        "position": 5,
+        "text": "to"
+      },
+      {
+        "position": 6,
+        "text": "declare"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "445a8ad77e6f69bb83fd"
+    ]
+  },
+  "Choose the proper equivalent [вариант 6]": {
+    "type": "dropdown",
+    "answers": [
+      "viral encephalitis ➔ [вирусный энцефалит]",
+      "genetic factor ➔ [генетический фактор]",
+      "discussion ➔ [обсуждение]",
+      "benign tumor ➔ [доброкачественная опухоль]"
+    ],
+    "all_options": [
+      {
+        "left": "viral encephalitis",
+        "correct_value": "вирусный энцефалит"
+      },
+      {
+        "left": "genetic factor",
+        "correct_value": "генетический фактор"
+      },
+      {
+        "left": "discussion",
+        "correct_value": "обсуждение"
+      },
+      {
+        "left": "benign tumor",
+        "correct_value": "доброкачественная опухоль"
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalent",
+    "precheck_sigs": [
+      "8c192db6f3848d6c8858",
+      "bd709ae5b9b525d8026a",
+      "0c57e7c369e3606b2a2d",
+      "b4c06ad2c0c741df03d8"
+    ]
+  },
+  "Choose the proper equivalent [вариант 7]": {
+    "type": "dropdown",
+    "answers": [
+      "Make a report ➔ [делать доклад]",
+      "Undergo a surgical operation ➔ [проходить хирургическое лечение]",
+      "Take part in the conference ➔ [принимать участие в научной конференции]"
+    ],
+    "all_options": [
+      {
+        "left": "Make a report",
+        "correct_value": "делать доклад"
+      },
+      {
+        "left": "Undergo a surgical operation",
+        "correct_value": "проходить хирургическое лечение"
+      },
+      {
+        "left": "Take part in the conference",
+        "correct_value": "принимать участие в научной конференции"
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalent",
+    "precheck_sigs": [
+      "8239d4539fc203f2ac9d",
+      "617c0cbcfada187c2309",
+      "62c6dddb32c35c835858",
+      "8bae716bbbbdd89ec455",
+      "7f4a59bc09df2af02746"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 7]": {
+    "type": "sortable",
+    "answers": [
+      "1. I",
+      "2. want",
+      "3. to",
+      "4. treat",
+      "5. patients",
+      "6. from",
+      "7. heart",
+      "8. diseases"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "I"
+      },
+      {
+        "position": 2,
+        "text": "want"
+      },
+      {
+        "position": 3,
+        "text": "to"
+      },
+      {
+        "position": 4,
+        "text": "treat"
+      },
+      {
+        "position": 5,
+        "text": "patients"
+      },
+      {
+        "position": 6,
+        "text": "from"
+      },
+      {
+        "position": 7,
+        "text": "heart"
+      },
+      {
+        "position": 8,
+        "text": "diseases"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "fa6c61ddce4a4e0ad53f"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 8]": {
+    "type": "sortable",
+    "answers": [
+      "1. What",
+      "2. is",
+      "3. your",
+      "4. objective"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "What"
+      },
+      {
+        "position": 2,
+        "text": "is"
+      },
+      {
+        "position": 3,
+        "text": "your"
+      },
+      {
+        "position": 4,
+        "text": "objective"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "c59a235db0b11611a474"
+    ]
+  },
+  "Choose the proper equivalent [вариант 8]": {
+    "type": "dropdown",
+    "answers": [
+      "Object of investigation ➔ [предмет исследования]",
+      "Morbidity ➔ [заболеваемость]",
+      "Incidence ➔ [число новых случаев заболевания]",
+      "Mortality ➔ [смертность]"
+    ],
+    "all_options": [
+      {
+        "left": "Object of investigation",
+        "correct_value": "предмет исследования"
+      },
+      {
+        "left": "Morbidity",
+        "correct_value": "заболеваемость"
+      },
+      {
+        "left": "Incidence",
+        "correct_value": "число новых случаев заболевания"
+      },
+      {
+        "left": "Mortality",
+        "correct_value": "смертность"
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalent",
+    "precheck_sigs": [
+      "712a685a82e8960a383a",
+      "e4ca86defe15d5646867",
+      "136a1a32d0befe76ef84",
+      "1b270dee0cbabc90c81b"
+    ]
+  },
+  "Article structure\nIn a case-control study conducted in the Great Britain high use of benzodiazepines was associated with an increased risk of Alzheimer’s disease. In a case-control study among older adults in Canada benzodiazepine use was associated with an increased risk of dementia.": {
+    "type": "cluster_member",
+    "answers": [
+      "1. Discussion",
+      "2. Nervous"
+    ],
+    "all_options": [
+      {
+        "text": "Abstract",
+        "correct": false
+      },
+      {
+        "text": "Materials and methods",
+        "correct": false
+      },
+      {
+        "text": "Discussion",
+        "correct": true
+      },
+      {
+        "text": "References",
+        "correct": false
+      },
+      {
+        "text": "Nervous",
+        "correct": true
+      },
+      {
+        "text": "Digestive",
+        "correct": false
+      },
+      {
+        "text": "Reproductive",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "Article structure\nIn a case-control study conducted in the Great Britain high use of benzodiazepines was associated with an increased risk of Alzheimer’s disease. In a case-control study among older adults in Canada benzodiazepine use was associated with an increased risk of dementia.",
+    "question": "Article structure\nIn a case-control study conducted in the Great Britain high use of benzodiazepines was associated with an increased risk of Alzheimer’s disease. In a case-control study among older adults in Canada benzodiazepine use was associated with an increased risk of dementia.",
+    "precheck_sigs": [
+      "f248d65c9599c3e33eb4"
+    ]
+  },
+  "Which part of the article does this information refer to? [вариант 2]": {
+    "type": "single",
+    "answers": [
+      "Discussion"
+    ],
+    "all_options": [
+      {
+        "text": "Abstract",
+        "correct": false
+      },
+      {
+        "text": "Materials and methods",
+        "correct": false
+      },
+      {
+        "text": "Discussion",
+        "correct": true
+      },
+      {
+        "text": "References",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "Article structure\nIn a case-control study conducted in the Great Britain high use of benzodiazepines was associated with an increased risk of Alzheimer’s disease. In a case-control study among older adults in Canada benzodiazepine use was associated with an increased risk of dementia.",
+    "question": "Which part of the article does this information refer to?"
+  },
+  "Choose the correct variant: Use of benzodiazepines can be associated with diseases of the ___ system.": {
+    "type": "single",
+    "answers": [
+      "Nervous"
+    ],
+    "all_options": [
+      {
+        "text": "Nervous",
+        "correct": true
+      },
+      {
+        "text": "Digestive",
+        "correct": false
+      },
+      {
+        "text": "Reproductive",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "Article structure\nIn a case-control study conducted in the Great Britain high use of benzodiazepines was associated with an increased risk of Alzheimer’s disease. In a case-control study among older adults in Canada benzodiazepine use was associated with an increased risk of dementia.",
+    "question": "Choose the correct variant: Use of benzodiazepines can be associated with diseases of the ___ system."
+  },
+  "JobInterview\nJ: Я обучаюсь довольно быстро. Я дружелюбна и могу работать под давлением в загруженной компании.": {
+    "type": "cluster_member",
+    "answers": [
+      "1. I start my work on time.",
+      "2. I am not a fast learner."
+    ],
+    "all_options": [
+      {
+        "text": "I am able to work under pressure in a busy company.",
+        "correct": false
+      },
+      {
+        "text": "I start my work on time.",
+        "correct": true
+      },
+      {
+        "text": "I learn rather quickly.",
+        "correct": false
+      },
+      {
+        "text": "I am friendly",
+        "correct": false
+      },
+      {
+        "text": "I am not a fast learner.",
+        "correct": true
+      },
+      {
+        "text": "I am communicative.",
+        "correct": false
+      },
+      {
+        "text": "I can manage stress.",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nJ: Я обучаюсь довольно быстро. Я дружелюбна и могу работать под давлением в загруженной компании.",
+    "question": "JobInterview\nJ: Я обучаюсь довольно быстро. Я дружелюбна и могу работать под давлением в загруженной компании.",
+    "precheck_sigs": [
+      "09e7e660ae800a887210"
+    ]
+  },
+  "What doesn’t J speak about?": {
+    "type": "single",
+    "answers": [
+      "I start my work on time."
+    ],
+    "all_options": [
+      {
+        "text": "I am able to work under pressure in a busy company.",
+        "correct": false
+      },
+      {
+        "text": "I start my work on time.",
+        "correct": true
+      },
+      {
+        "text": "I learn rather quickly.",
+        "correct": false
+      },
+      {
+        "text": "I am friendly",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nJ: Я обучаюсь довольно быстро. Я дружелюбна и могу работать под давлением в загруженной компании.",
+    "question": "What doesn’t J speak about?"
+  },
+  "Choose the incorrect variant.": {
+    "type": "single",
+    "answers": [
+      "I am not a fast learner."
+    ],
+    "all_options": [
+      {
+        "text": "I am not a fast learner.",
+        "correct": true
+      },
+      {
+        "text": "I am communicative.",
+        "correct": false
+      },
+      {
+        "text": "I can manage stress.",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nJ: Я обучаюсь довольно быстро. Я дружелюбна и могу работать под давлением в загруженной компании.",
+    "question": "Choose the incorrect variant."
+  },
+  "Insert the missing word.\nAre you going to travel first class or ___?": {
+    "type": "multiple",
+    "answers": [
+      "business class",
+      "economy"
+    ],
+    "all_options": [
+      {
+        "text": "business class",
+        "correct": true
+      },
+      {
+        "text": "fourth class",
+        "correct": false
+      },
+      {
+        "text": "economics",
+        "correct": false
+      },
+      {
+        "text": "economy",
+        "correct": true
+      },
+      {
+        "text": "busy",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Insert the missing word.\nAre you going to travel first class or ___?",
+    "precheck_sigs": [
+      "1c22c96404c2ba34ec0d"
+    ]
+  },
+  "Choose the right word.\n___ includes personal information, education, work experience, interests.": {
+    "type": "single",
+    "answers": [
+      "resume and CV"
+    ],
+    "all_options": [
+      {
+        "text": "resume",
+        "correct": false
+      },
+      {
+        "text": "drug summary",
+        "correct": false
+      },
+      {
+        "text": "resume and CV",
+        "correct": true
+      },
+      {
+        "text": "CV",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Choose the right word.\n___ includes personal information, education, work experience, interests.",
+    "precheck_sigs": [
+      "dfef1ed85d376c4cee5f"
+    ]
+  },
+  "Choose the right word.\nYour home address and telephone number ___ into the personal information section of a resume.": {
+    "type": "single",
+    "answers": [
+      "are included"
+    ],
+    "all_options": [
+      {
+        "text": "are included",
+        "correct": true
+      },
+      {
+        "text": "includes",
+        "correct": false
+      },
+      {
+        "text": "are including",
+        "correct": false
+      },
+      {
+        "text": "is included",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Choose the right word.\nYour home address and telephone number ___ into the personal information section of a resume.",
+    "precheck_sigs": [
+      "adbdcb39cd0ba51113d2"
+    ]
+  },
+  "Choose the right word\n.… you … ?": {
+    "type": "single",
+    "answers": [
+      "Are … married"
+    ],
+    "all_options": [
+      {
+        "text": "Are … married",
+        "correct": true
+      },
+      {
+        "text": "Do … married",
+        "correct": false
+      },
+      {
+        "text": "Do… marry",
+        "correct": false
+      },
+      {
+        "text": "Are...merry",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Choose the right word\n.… you … ?",
+    "precheck_sigs": [
+      "300e58ad2f82922c6775"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 9]": {
+    "type": "sortable",
+    "answers": [
+      "1. My",
+      "2. references",
+      "3. are",
+      "4. not",
+      "5. available",
+      "6. on",
+      "7. request"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "My"
+      },
+      {
+        "position": 2,
+        "text": "references"
+      },
+      {
+        "position": 3,
+        "text": "are"
+      },
+      {
+        "position": 4,
+        "text": "not"
+      },
+      {
+        "position": 5,
+        "text": "available"
+      },
+      {
+        "position": 6,
+        "text": "on"
+      },
+      {
+        "position": 7,
+        "text": "request"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "fdb6b426f5338b9497e1"
+    ]
+  },
+  "Arrange the parts of a sentencein the correct order. [вариант 3]": {
+    "type": "sortable",
+    "answers": [
+      "1. Have",
+      "2. you",
+      "3. got",
+      "4. a",
+      "5. morning",
+      "6. flight",
+      "7. from",
+      "8. Moscow",
+      "9. to",
+      "10. London"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "Have"
+      },
+      {
+        "position": 2,
+        "text": "you"
+      },
+      {
+        "position": 3,
+        "text": "got"
+      },
+      {
+        "position": 4,
+        "text": "a"
+      },
+      {
+        "position": 5,
+        "text": "morning"
+      },
+      {
+        "position": 6,
+        "text": "flight"
+      },
+      {
+        "position": 7,
+        "text": "from"
+      },
+      {
+        "position": 8,
+        "text": "Moscow"
+      },
+      {
+        "position": 9,
+        "text": "to"
+      },
+      {
+        "position": 10,
+        "text": "London"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentencein the correct order.",
+    "precheck_sigs": [
+      "20188b4103b9336a6faa"
+    ]
+  },
+  "Arrange in the correct order the parts of a scientific article": {
+    "type": "sortable",
+    "answers": [
+      "1. title",
+      "2. abstract",
+      "3. key words",
+      "4. introduction",
+      "5. materials and methods",
+      "6. results",
+      "7. discussion",
+      "8. conclusion",
+      "9. references"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "title"
+      },
+      {
+        "position": 2,
+        "text": "abstract"
+      },
+      {
+        "position": 3,
+        "text": "key words"
+      },
+      {
+        "position": 4,
+        "text": "introduction"
+      },
+      {
+        "position": 5,
+        "text": "materials and methods"
+      },
+      {
+        "position": 6,
+        "text": "results"
+      },
+      {
+        "position": 7,
+        "text": "discussion"
+      },
+      {
+        "position": 8,
+        "text": "conclusion"
+      },
+      {
+        "position": 9,
+        "text": "references"
+      }
+    ],
+    "images": [],
+    "question": "Arrange in the correct order the parts of a scientific article",
+    "precheck_sigs": [
+      "4b43daa0f6393fd1ab3e"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 10]": {
+    "type": "sortable",
+    "answers": [
+      "1. Who",
+      "2. is",
+      "3. your",
+      "4. teacher",
+      "5. of",
+      "6. Biochemistry"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "Who"
+      },
+      {
+        "position": 2,
+        "text": "is"
+      },
+      {
+        "position": 3,
+        "text": "your"
+      },
+      {
+        "position": 4,
+        "text": "teacher"
+      },
+      {
+        "position": 5,
+        "text": "of"
+      },
+      {
+        "position": 6,
+        "text": "Biochemistry"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "13062af59591a67b1e67"
+    ]
+  },
+  "Choose the proper equivalent [вариант 9]": {
+    "type": "dropdown",
+    "answers": [
+      "is reported to... ➔ [Сообщается, что…]",
+      "are considered to... ➔ [Считается, что…]",
+      "was thought to... ➔ [Представляли, что…]",
+      "were found to... ➔ [Обнаружили, что...]"
+    ],
+    "all_options": [
+      {
+        "left": "is reported to...",
+        "correct_value": "Сообщается, что…"
+      },
+      {
+        "left": "are considered to...",
+        "correct_value": "Считается, что…"
+      },
+      {
+        "left": "was thought to...",
+        "correct_value": "Представляли, что…"
+      },
+      {
+        "left": "were found to...",
+        "correct_value": "Обнаружили, что..."
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalent",
+    "precheck_sigs": [
+      "73a8809ff5c389d3fc76",
+      "38d0f6565b0404dd0cfb",
+      "66598257ca034dccc9eb"
+    ]
+  },
+  "At the Airport\nT.A.: - Your ticket costs 350 dollars. By the way, meals are served on the flight. And refreshments are free.\nC: - I don't care. I feel sick travelling by plane. It'd be a great luck for me to fall asleep right after takeoff.\nT.A.: - Have you got any bags?\nC: - No, I haven't. Just a small suitcase but I'd like to take it on board with me.\nT.A.: - OK, let me weigh it. Everything is fine with your luggage, it weighs about.": {
+    "type": "cluster_member",
+    "answers": [
+      "1. luggage check",
+      "2. doesn’t feel sick"
+    ],
+    "all_options": [
+      {
+        "text": "luggage check",
+        "correct": true
+      },
+      {
+        "text": "seven pounds. Take your___.",
+        "correct": false
+      },
+      {
+        "text": "passport",
+        "correct": false
+      },
+      {
+        "text": "luggage fine",
+        "correct": false
+      },
+      {
+        "text": "takeoff check",
+        "correct": false
+      },
+      {
+        "text": "doesn’t feel sick",
+        "correct": true
+      },
+      {
+        "text": "feels nauseated",
+        "correct": false
+      },
+      {
+        "text": "doesn’t eat",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\nT.A.: - Your ticket costs 350 dollars. By the way, meals are served on the flight. And refreshments are free.\nC: - I don't care. I feel sick travelling by plane. It'd be a great luck for me to fall asleep right after takeoff.\nT.A.: - Have you got any bags?\nC: - No, I haven't. Just a small suitcase but I'd like to take it on board with me.\nT.A.: - OK, let me weigh it. Everything is fine with your luggage, it weighs about.",
+    "question": "At the Airport\nT.A.: - Your ticket costs 350 dollars. By the way, meals are served on the flight. And refreshments are free.\nC: - I don't care. I feel sick travelling by plane. It'd be a great luck for me to fall asleep right after takeoff.\nT.A.: - Have you got any bags?\nC: - No, I haven't. Just a small suitcase but I'd like to take it on board with me.\nT.A.: - OK, let me weigh it. Everything is fine with your luggage, it weighs about.",
+    "precheck_sigs": [
+      "b661957b4d59756dd03a"
+    ]
+  },
+  "Choose the proper variant": {
+    "type": "single",
+    "answers": [
+      "luggage check"
+    ],
+    "all_options": [
+      {
+        "text": "luggage check",
+        "correct": true
+      },
+      {
+        "text": "seven pounds. Take your___.",
+        "correct": false
+      },
+      {
+        "text": "passport",
+        "correct": false
+      },
+      {
+        "text": "luggage fine",
+        "correct": false
+      },
+      {
+        "text": "takeoff check",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\nT.A.: - Your ticket costs 350 dollars. By the way, meals are served on the flight. And refreshments are free.\nC: - I don't care. I feel sick travelling by plane. It'd be a great luck for me to fall asleep right after takeoff.\nT.A.: - Have you got any bags?\nC: - No, I haven't. Just a small suitcase but I'd like to take it on board with me.\nT.A.: - OK, let me weigh it. Everything is fine with your luggage, it weighs about.",
+    "question": "Choose the proper variant"
+  },
+  "Choose the incorrect variant. The passenger ___ travelling by plane.": {
+    "type": "single",
+    "answers": [
+      "doesn’t feel sick"
+    ],
+    "all_options": [
+      {
+        "text": "doesn’t feel sick",
+        "correct": true
+      },
+      {
+        "text": "feels nauseated",
+        "correct": false
+      },
+      {
+        "text": "doesn’t eat",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\nT.A.: - Your ticket costs 350 dollars. By the way, meals are served on the flight. And refreshments are free.\nC: - I don't care. I feel sick travelling by plane. It'd be a great luck for me to fall asleep right after takeoff.\nT.A.: - Have you got any bags?\nC: - No, I haven't. Just a small suitcase but I'd like to take it on board with me.\nT.A.: - OK, let me weigh it. Everything is fine with your luggage, it weighs about.",
+    "question": "Choose the incorrect variant. The passenger ___ travelling by plane."
+  },
+  "JobInterview\nA: Good morning, Miss Jones. So you applied for a job in our team. Am I right?\nJ: Yes, I did. I sent my ____ for a position of a gastroenterologist.\nA: That`s good. I`d like to know a bit more about you.": {
+    "type": "cluster_member",
+    "answers": [
+      "1. a resume",
+      "2. The applicant is a medical student."
+    ],
+    "all_options": [
+      {
+        "text": "an application form",
+        "correct": false
+      },
+      {
+        "text": "an autobiography",
+        "correct": false
+      },
+      {
+        "text": "a resume",
+        "correct": true
+      },
+      {
+        "text": "an abstract",
+        "correct": false
+      },
+      {
+        "text": "The applicant completed a residency.",
+        "correct": false
+      },
+      {
+        "text": "The applicant graduated a medical iniversity.",
+        "correct": false
+      },
+      {
+        "text": "The applicant is a medical student.",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: Good morning, Miss Jones. So you applied for a job in our team. Am I right?\nJ: Yes, I did. I sent my ____ for a position of a gastroenterologist.\nA: That`s good. I`d like to know a bit more about you.",
+    "question": "JobInterview\nA: Good morning, Miss Jones. So you applied for a job in our team. Am I right?\nJ: Yes, I did. I sent my ____ for a position of a gastroenterologist.\nA: That`s good. I`d like to know a bit more about you.",
+    "precheck_sigs": [
+      "a6838084e0a015a582f4"
+    ]
+  },
+  "What did J send?": {
+    "type": "single",
+    "answers": [
+      "a resume"
+    ],
+    "all_options": [
+      {
+        "text": "an application form",
+        "correct": false
+      },
+      {
+        "text": "an autobiography",
+        "correct": false
+      },
+      {
+        "text": "a resume",
+        "correct": true
+      },
+      {
+        "text": "an abstract",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: Good morning, Miss Jones. So you applied for a job in our team. Am I right?\nJ: Yes, I did. I sent my ____ for a position of a gastroenterologist.\nA: That`s good. I`d like to know a bit more about you.",
+    "question": "What did J send?"
+  },
+  "Choose the incorrect variant. [вариант 2]": {
+    "type": "single",
+    "answers": [
+      "The applicant is a medical student."
+    ],
+    "all_options": [
+      {
+        "text": "The applicant completed a residency.",
+        "correct": false
+      },
+      {
+        "text": "The applicant graduated a medical iniversity.",
+        "correct": false
+      },
+      {
+        "text": "The applicant is a medical student.",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: Good morning, Miss Jones. So you applied for a job in our team. Am I right?\nJ: Yes, I did. I sent my ____ for a position of a gastroenterologist.\nA: That`s good. I`d like to know a bit more about you.",
+    "question": "Choose the incorrect variant."
+  },
+  "At the Airport\nT.A.: What seat would you prefer: aisle or window?\nC: - Aisle, of course. I'm terribly afraid of flying.\nT.A.: - Next time please try to book tickets ___. You are lucky that I've found an appropriate seat.\nC: - I know. I usually make reservations.": {
+    "type": "cluster_member",
+    "answers": [
+      "1. in advance",
+      "2. doesn’t like"
+    ],
+    "all_options": [
+      {
+        "text": "in the ticket-office",
+        "correct": false
+      },
+      {
+        "text": "on-line",
+        "correct": false
+      },
+      {
+        "text": "in advance",
+        "correct": true
+      },
+      {
+        "text": "in the morning",
+        "correct": false
+      },
+      {
+        "text": "imagines",
+        "correct": false
+      },
+      {
+        "text": "enjoys",
+        "correct": false
+      },
+      {
+        "text": "doesn’t like",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\nT.A.: What seat would you prefer: aisle or window?\nC: - Aisle, of course. I'm terribly afraid of flying.\nT.A.: - Next time please try to book tickets ___. You are lucky that I've found an appropriate seat.\nC: - I know. I usually make reservations.",
+    "question": "At the Airport\nT.A.: What seat would you prefer: aisle or window?\nC: - Aisle, of course. I'm terribly afraid of flying.\nT.A.: - Next time please try to book tickets ___. You are lucky that I've found an appropriate seat.\nC: - I know. I usually make reservations.",
+    "precheck_sigs": [
+      "58474ef8792c2af20c62"
+    ]
+  },
+  "Choose the proper variant [вариант 2]": {
+    "type": "single",
+    "answers": [
+      "in advance"
+    ],
+    "all_options": [
+      {
+        "text": "in the ticket-office",
+        "correct": false
+      },
+      {
+        "text": "on-line",
+        "correct": false
+      },
+      {
+        "text": "in advance",
+        "correct": true
+      },
+      {
+        "text": "in the morning",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\nT.A.: What seat would you prefer: aisle or window?\nC: - Aisle, of course. I'm terribly afraid of flying.\nT.A.: - Next time please try to book tickets ___. You are lucky that I've found an appropriate seat.\nC: - I know. I usually make reservations.",
+    "question": "Choose the proper variant"
+  },
+  "Choose the incorrect variant. The passenger ___ flying.": {
+    "type": "single",
+    "answers": [
+      "doesn’t like"
+    ],
+    "all_options": [
+      {
+        "text": "imagines",
+        "correct": false
+      },
+      {
+        "text": "enjoys",
+        "correct": false
+      },
+      {
+        "text": "doesn’t like",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\nT.A.: What seat would you prefer: aisle or window?\nC: - Aisle, of course. I'm terribly afraid of flying.\nT.A.: - Next time please try to book tickets ___. You are lucky that I've found an appropriate seat.\nC: - I know. I usually make reservations.",
+    "question": "Choose the incorrect variant. The passenger ___ flying."
+  },
+  "Choose the right help verb for Past Simple Active.": {
+    "type": "single",
+    "answers": [
+      "did"
+    ],
+    "all_options": [
+      {
+        "text": "did",
+        "correct": true
+      },
+      {
+        "text": "were done",
+        "correct": false
+      },
+      {
+        "text": "do",
+        "correct": false
+      },
+      {
+        "text": "was doing",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Choose the right help verb for Past Simple Active.",
+    "precheck_sigs": [
+      "035444daa9491efcaec4"
+    ]
+  },
+  "Insert the missing word.\nWhat’s the ___ of your visit?": {
+    "type": "multiple",
+    "answers": [
+      "objective",
+      "purpose"
+    ],
+    "all_options": [
+      {
+        "text": "objective",
+        "correct": true
+      },
+      {
+        "text": "cost",
+        "correct": false
+      },
+      {
+        "text": "purse",
+        "correct": false
+      },
+      {
+        "text": "purpose",
+        "correct": true
+      },
+      {
+        "text": "objection",
+        "correct": false
+      },
+      {
+        "text": "price",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Insert the missing word.\nWhat’s the ___ of your visit?",
+    "precheck_sigs": [
+      "360b7e0a3f234c9b355c"
+    ]
+  },
+  "Choose the proper equivalents for “фамилия”": {
+    "type": "multiple",
+    "answers": [
+      "family name",
+      "last name",
+      "surname"
+    ],
+    "all_options": [
+      {
+        "text": "sir-name",
+        "correct": false
+      },
+      {
+        "text": "family name",
+        "correct": true
+      },
+      {
+        "text": "last name",
+        "correct": true
+      },
+      {
+        "text": "familiar name",
+        "correct": false
+      },
+      {
+        "text": "lost name",
+        "correct": false
+      },
+      {
+        "text": "surname",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalents for “фамилия”",
+    "precheck_sigs": [
+      "3bb0a32c5cbfd7f3bf9d"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 11]": {
+    "type": "sortable",
+    "answers": [
+      "1. Why",
+      "2. did",
+      "3. you",
+      "4. decide",
+      "5. to",
+      "6. enter",
+      "7. a",
+      "8. medical",
+      "9. university"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "Why"
+      },
+      {
+        "position": 2,
+        "text": "did"
+      },
+      {
+        "position": 3,
+        "text": "you"
+      },
+      {
+        "position": 4,
+        "text": "decide"
+      },
+      {
+        "position": 5,
+        "text": "to"
+      },
+      {
+        "position": 6,
+        "text": "enter"
+      },
+      {
+        "position": 7,
+        "text": "a"
+      },
+      {
+        "position": 8,
+        "text": "medical"
+      },
+      {
+        "position": 9,
+        "text": "university"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "84e660c02fe65fc3a567"
+    ]
+  },
+  "JobInterview\nA: OK. Думаю, достаточно. Что ж, мисс Джонс. Большое спасибо. Было приятно побеседовать с вами, и мы сообщим вам о результатах собеседования через несколько дней. До свидания.": {
+    "type": "cluster_member",
+    "answers": [
+      "1. I was pleased to talk to you",
+      "2. A is appreciative."
+    ],
+    "all_options": [
+      {
+        "text": "I was pleased to talk to you",
+        "correct": true
+      },
+      {
+        "text": "I talked to you, my pleasure",
+        "correct": false
+      },
+      {
+        "text": "I’m pleased to talk to you",
+        "correct": false
+      },
+      {
+        "text": "Please, talk to me",
+        "correct": false
+      },
+      {
+        "text": "A is ungrateful.",
+        "correct": false
+      },
+      {
+        "text": "A is appreciative.",
+        "correct": true
+      },
+      {
+        "text": "A isn’t thankful.",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: OK. Думаю, достаточно. Что ж, мисс Джонс. Большое спасибо. Было приятно побеседовать с вами, и мы сообщим вам о результатах собеседования через несколько дней. До свидания.",
+    "question": "JobInterview\nA: OK. Думаю, достаточно. Что ж, мисс Джонс. Большое спасибо. Было приятно побеседовать с вами, и мы сообщим вам о результатах собеседования через несколько дней. До свидания.",
+    "precheck_sigs": [
+      "80bebad964d5a85c17ce"
+    ]
+  },
+  "Choose the English equivalent for the underlined phrase. [вариант 2]": {
+    "type": "single",
+    "answers": [
+      "I was pleased to talk to you"
+    ],
+    "all_options": [
+      {
+        "text": "I was pleased to talk to you",
+        "correct": true
+      },
+      {
+        "text": "I talked to you, my pleasure",
+        "correct": false
+      },
+      {
+        "text": "I’m pleased to talk to you",
+        "correct": false
+      },
+      {
+        "text": "Please, talk to me",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: OK. Думаю, достаточно. Что ж, мисс Джонс. Большое спасибо. Было приятно побеседовать с вами, и мы сообщим вам о результатах собеседования через несколько дней. До свидания.",
+    "question": "Choose the English equivalent for the underlined phrase."
+  },
+  "Choose the correct variant. [вариант 3]": {
+    "type": "single",
+    "answers": [
+      "A is appreciative."
+    ],
+    "all_options": [
+      {
+        "text": "A is ungrateful.",
+        "correct": false
+      },
+      {
+        "text": "A is appreciative.",
+        "correct": true
+      },
+      {
+        "text": "A isn’t thankful.",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: OK. Думаю, достаточно. Что ж, мисс Джонс. Большое спасибо. Было приятно побеседовать с вами, и мы сообщим вам о результатах собеседования через несколько дней. До свидания.",
+    "question": "Choose the correct variant."
+  },
+  "What tense is “has reserved”?": {
+    "type": "single",
+    "answers": [
+      "Present Perfect Active"
+    ],
+    "all_options": [
+      {
+        "text": "Present Simple Active",
+        "correct": false
+      },
+      {
+        "text": "Present Simple Passive",
+        "correct": false
+      },
+      {
+        "text": "Present Perfect Active",
+        "correct": true
+      },
+      {
+        "text": "Past Simple Passive",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "What tense is “has reserved”?",
+    "precheck_sigs": [
+      "aa91ff7da099e7bf97af"
+    ]
+  },
+  "Choose the right word.\nHow … I help you?": {
+    "type": "single",
+    "answers": [
+      "can"
+    ],
+    "all_options": [
+      {
+        "text": "can",
+        "correct": true
+      },
+      {
+        "text": "cannot",
+        "correct": false
+      },
+      {
+        "text": "must",
+        "correct": false
+      },
+      {
+        "text": "ought",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "question": "Choose the right word.\nHow … I help you?",
+    "precheck_sigs": [
+      "b95128eaa5f3a0663b4d"
+    ]
+  },
+  "What tense is “are married”?": {
+    "type": "single",
+    "answers": [
+      "Present Simple Passive"
+    ],
+    "all_options": [
+      {
+        "text": "Past Continuous/Progressive",
+        "correct": false
+      },
+      {
+        "text": "Present Continuous/Progressive",
+        "correct": false
+      },
+      {
+        "text": "Present Simple Active",
+        "correct": false
+      },
+      {
+        "text": "Present Simple Passive",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "question": "What tense is “are married”?",
+    "precheck_sigs": [
+      "9caa7212a9b2407f9737"
+    ]
+  },
+  "Choose the proper equivalents for “резервировать”": {
+    "type": "multiple",
+    "answers": [
+      "to reserve",
+      "to book"
+    ],
+    "all_options": [
+      {
+        "text": "to box",
+        "correct": false
+      },
+      {
+        "text": "to reserve",
+        "correct": true
+      },
+      {
+        "text": "to break",
+        "correct": false
+      },
+      {
+        "text": "to book",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalents for “резервировать”",
+    "precheck_sigs": [
+      "a9698ce0f0b29783e330"
+    ]
+  },
+  "Choose the proper equivalent [вариант 10]": {
+    "type": "dropdown",
+    "answers": [
+      "Affect ➔ [оказывать негативное влияние]",
+      "Develop ➔ [развивать]",
+      "describe ➔ [описывать]"
+    ],
+    "all_options": [
+      {
+        "left": "Affect",
+        "correct_value": "оказывать негативное влияние"
+      },
+      {
+        "left": "Develop",
+        "correct_value": "развивать"
+      },
+      {
+        "left": "describe",
+        "correct_value": "описывать"
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalent",
+    "precheck_sigs": [
+      "b6b03bc9b5a850edd344",
+      "9050ef95b7ba2d1ae46e"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 12]": {
+    "type": "sortable",
+    "answers": [
+      "1. Prevention",
+      "2. is",
+      "3. better",
+      "4. than",
+      "5. cure"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "Prevention"
+      },
+      {
+        "position": 2,
+        "text": "is"
+      },
+      {
+        "position": 3,
+        "text": "better"
+      },
+      {
+        "position": 4,
+        "text": "than"
+      },
+      {
+        "position": 5,
+        "text": "cure"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "37c477cce0d70c8b84f9"
+    ]
+  },
+  "Define the part of speech for [вариант 3]": {
+    "type": "dropdown",
+    "answers": [
+      "prevent ➔ [verb]",
+      "preventive ➔ [adjective]",
+      "prevention ➔ [noun]"
+    ],
+    "all_options": [
+      {
+        "left": "prevent",
+        "correct_value": "verb"
+      },
+      {
+        "left": "preventive",
+        "correct_value": "adjective"
+      },
+      {
+        "left": "prevention",
+        "correct_value": "noun"
+      }
+    ],
+    "images": [],
+    "question": "Define the part of speech for",
+    "precheck_sigs": [
+      "731ebf98bd9041229d91",
+      "6a521eacc0d9b216872f",
+      "95d4b8cd5794f7695dc5"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 13]": {
+    "type": "sortable",
+    "answers": [
+      "1. My",
+      "2. English",
+      "3. is",
+      "4. not",
+      "5. fluent",
+      "6. yet"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "My"
+      },
+      {
+        "position": 2,
+        "text": "English"
+      },
+      {
+        "position": 3,
+        "text": "is"
+      },
+      {
+        "position": 4,
+        "text": "not"
+      },
+      {
+        "position": 5,
+        "text": "fluent"
+      },
+      {
+        "position": 6,
+        "text": "yet"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "35b111e27f45f387c04c"
+    ]
+  },
+  "Choose the proper equivalent [вариант 11]": {
+    "type": "dropdown",
+    "answers": [
+      "доказывать ➔ [prove]",
+      "обсуждать ➔ [discuss]",
+      "убеждать ➔ [convince]"
+    ],
+    "all_options": [
+      {
+        "left": "доказывать",
+        "correct_value": "prove"
+      },
+      {
+        "left": "обсуждать",
+        "correct_value": "discuss"
+      },
+      {
+        "left": "убеждать",
+        "correct_value": "convince"
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalent",
+    "precheck_sigs": [
+      "1d9af43a8cde33f336ed",
+      "82d44332977d51876818",
+      "d4e17b86a488a0a5efbd"
+    ]
+  },
+  "JobInterview\nA: Do you mind business trips? And are you fluent in Italian or German?\nJ: Oh, foreign languages are my favorites. We did Italian and German at the University and I use them when I travel.\nA: Very good.": {
+    "type": "cluster_member",
+    "answers": [
+      "1. 3",
+      "2. He isn’t fluent in Italian and German."
+    ],
+    "all_options": [
+      {
+        "text": "1",
+        "correct": false
+      },
+      {
+        "text": "2",
+        "correct": false
+      },
+      {
+        "text": "3",
+        "correct": true
+      },
+      {
+        "text": "4",
+        "correct": false
+      },
+      {
+        "text": "He speaks three languages.",
+        "correct": false
+      },
+      {
+        "text": "He isn’t fluent in Italian and German.",
+        "correct": true
+      },
+      {
+        "text": "He has been using Italian and German since he was a student.",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: Do you mind business trips? And are you fluent in Italian or German?\nJ: Oh, foreign languages are my favorites. We did Italian and German at the University and I use them when I travel.\nA: Very good.",
+    "question": "JobInterview\nA: Do you mind business trips? And are you fluent in Italian or German?\nJ: Oh, foreign languages are my favorites. We did Italian and German at the University and I use them when I travel.\nA: Very good.",
+    "precheck_sigs": [
+      "3f90294c86332852f13a"
+    ]
+  },
+  "How many languages can J speak?": {
+    "type": "single",
+    "answers": [
+      "3"
+    ],
+    "all_options": [
+      {
+        "text": "1",
+        "correct": false
+      },
+      {
+        "text": "2",
+        "correct": false
+      },
+      {
+        "text": "3",
+        "correct": true
+      },
+      {
+        "text": "4",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: Do you mind business trips? And are you fluent in Italian or German?\nJ: Oh, foreign languages are my favorites. We did Italian and German at the University and I use them when I travel.\nA: Very good.",
+    "question": "How many languages can J speak?"
+  },
+  "Choose the incorrect variant. [вариант 3]": {
+    "type": "single",
+    "answers": [
+      "He isn’t fluent in Italian and German."
+    ],
+    "all_options": [
+      {
+        "text": "He speaks three languages.",
+        "correct": false
+      },
+      {
+        "text": "He isn’t fluent in Italian and German.",
+        "correct": true
+      },
+      {
+        "text": "He has been using Italian and German since he was a student.",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: Do you mind business trips? And are you fluent in Italian or German?\nJ: Oh, foreign languages are my favorites. We did Italian and German at the University and I use them when I travel.\nA: Very good.",
+    "question": "Choose the incorrect variant."
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 14]": {
+    "type": "sortable",
+    "answers": [
+      "1. What",
+      "2. is",
+      "3. the",
+      "4. scientific",
+      "5. article",
+      "6. about"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "What"
+      },
+      {
+        "position": 2,
+        "text": "is"
+      },
+      {
+        "position": 3,
+        "text": "the"
+      },
+      {
+        "position": 4,
+        "text": "scientific"
+      },
+      {
+        "position": 5,
+        "text": "article"
+      },
+      {
+        "position": 6,
+        "text": "about"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "44baab5c6c7f17f061de"
+    ]
+  },
+  "Arrange  the parts of a sentencein the correct order.": {
+    "type": "sortable",
+    "answers": [
+      "1. I’m",
+      "2. a",
+      "3. second-year",
+      "4. medical",
+      "5. student",
+      "6. at",
+      "7. the",
+      "8. Internal",
+      "9. Medicine",
+      "10. department"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "I’m"
+      },
+      {
+        "position": 2,
+        "text": "a"
+      },
+      {
+        "position": 3,
+        "text": "second-year"
+      },
+      {
+        "position": 4,
+        "text": "medical"
+      },
+      {
+        "position": 5,
+        "text": "student"
+      },
+      {
+        "position": 6,
+        "text": "at"
+      },
+      {
+        "position": 7,
+        "text": "the"
+      },
+      {
+        "position": 8,
+        "text": "Internal"
+      },
+      {
+        "position": 9,
+        "text": "Medicine"
+      },
+      {
+        "position": 10,
+        "text": "department"
+      }
+    ],
+    "images": [],
+    "question": "Arrange  the parts of a sentencein the correct order.",
+    "precheck_sigs": [
+      "90634532a0641cdb43e7"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 15]": {
+    "type": "sortable",
+    "answers": [
+      "1. An",
+      "2. apple",
+      "3. a",
+      "4. day",
+      "5. keeps",
+      "6. the",
+      "7. doctor",
+      "8. away"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "An"
+      },
+      {
+        "position": 2,
+        "text": "apple"
+      },
+      {
+        "position": 3,
+        "text": "a"
+      },
+      {
+        "position": 4,
+        "text": "day"
+      },
+      {
+        "position": 5,
+        "text": "keeps"
+      },
+      {
+        "position": 6,
+        "text": "the"
+      },
+      {
+        "position": 7,
+        "text": "doctor"
+      },
+      {
+        "position": 8,
+        "text": "away"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "f6fe7843c610e388a1c0"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 16]": {
+    "type": "sortable",
+    "answers": [
+      "1. foreign",
+      "2. professors",
+      "3. aren’t",
+      "4. taking part",
+      "5. in",
+      "6. a conference",
+      "7. at",
+      "8. this university",
+      "9. next",
+      "10. week"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "foreign"
+      },
+      {
+        "position": 2,
+        "text": "professors"
+      },
+      {
+        "position": 3,
+        "text": "aren’t"
+      },
+      {
+        "position": 4,
+        "text": "taking part"
+      },
+      {
+        "position": 5,
+        "text": "in"
+      },
+      {
+        "position": 6,
+        "text": "a conference"
+      },
+      {
+        "position": 7,
+        "text": "at"
+      },
+      {
+        "position": 8,
+        "text": "this university"
+      },
+      {
+        "position": 9,
+        "text": "next"
+      },
+      {
+        "position": 10,
+        "text": "week"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "7d4ac91320c996179b37"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 17]": {
+    "type": "sortable",
+    "answers": [
+      "1. This",
+      "2. guest",
+      "3. is",
+      "4. not",
+      "5. checking",
+      "6. in"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "This"
+      },
+      {
+        "position": 2,
+        "text": "guest"
+      },
+      {
+        "position": 3,
+        "text": "is"
+      },
+      {
+        "position": 4,
+        "text": "not"
+      },
+      {
+        "position": 5,
+        "text": "checking"
+      },
+      {
+        "position": 6,
+        "text": "in"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "2da8a6a5532e7bb91a9d"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 18]": {
+    "type": "sortable",
+    "answers": [
+      "1. I",
+      "2. don’t",
+      "3. smoke",
+      "4. in",
+      "5. the",
+      "6. office"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "I"
+      },
+      {
+        "position": 2,
+        "text": "don’t"
+      },
+      {
+        "position": 3,
+        "text": "smoke"
+      },
+      {
+        "position": 4,
+        "text": "in"
+      },
+      {
+        "position": 5,
+        "text": "the"
+      },
+      {
+        "position": 6,
+        "text": "office"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "e02054e4c611380a5853"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 19]": {
+    "type": "sortable",
+    "answers": [
+      "1. My",
+      "2. parents",
+      "3. aren’t",
+      "4. studying",
+      "5. at",
+      "6. college"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "My"
+      },
+      {
+        "position": 2,
+        "text": "parents"
+      },
+      {
+        "position": 3,
+        "text": "aren’t"
+      },
+      {
+        "position": 4,
+        "text": "studying"
+      },
+      {
+        "position": 5,
+        "text": "at"
+      },
+      {
+        "position": 6,
+        "text": "college"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "6151869597f1d23fef8c"
+    ]
+  },
+  "Hotel\nA: Hello, how can I help you?\nB: Hello. I would like to stay at your hotel.\nA: Have you booked the room in advance?\nB: No, but I hope you will find something for me.\nA: We have several rooms. There is a suite, there is a single standard and a double economy.\nB: And how much do the rooms cost?\nA: The suite costs $ 30 per night, the \"Standard\" room - $ 20 per night, and the \"Economy\" for two people - $ 15 per person.\nB: I do not want to live with a stranger. But I’m pressed for money. I'll take …": {
+    "type": "cluster_member",
+    "answers": [
+      "1. the standard room for $ 20",
+      "2. $ 15"
+    ],
+    "all_options": [
+      {
+        "text": "the suite for $ 30",
+        "correct": false
+      },
+      {
+        "text": "the standard room for $ 20",
+        "correct": true
+      },
+      {
+        "text": "the “Economy”",
+        "correct": false
+      },
+      {
+        "text": "$ 15",
+        "correct": true
+      },
+      {
+        "text": "$ 20",
+        "correct": false
+      },
+      {
+        "text": "$ 30",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "Hotel\nA: Hello, how can I help you?\nB: Hello. I would like to stay at your hotel.\nA: Have you booked the room in advance?\nB: No, but I hope you will find something for me.\nA: We have several rooms. There is a suite, there is a single standard and a double economy.\nB: And how much do the rooms cost?\nA: The suite costs $ 30 per night, the \"Standard\" room - $ 20 per night, and the \"Economy\" for two people - $ 15 per person.\nB: I do not want to live with a stranger. But I’m pressed for money. I'll take …",
+    "question": "Hotel\nA: Hello, how can I help you?\nB: Hello. I would like to stay at your hotel.\nA: Have you booked the room in advance?\nB: No, but I hope you will find something for me.\nA: We have several rooms. There is a suite, there is a single standard and a double economy.\nB: And how much do the rooms cost?\nA: The suite costs $ 30 per night, the \"Standard\" room - $ 20 per night, and the \"Economy\" for two people - $ 15 per person.\nB: I do not want to live with a stranger. But I’m pressed for money. I'll take …",
+    "precheck_sigs": [
+      "74dae96b6cc4846294f7"
+    ]
+  },
+  "Which room will B take?": {
+    "type": "single",
+    "answers": [
+      "the standard room for $ 20"
+    ],
+    "all_options": [
+      {
+        "text": "the suite for $ 30",
+        "correct": false
+      },
+      {
+        "text": "the standard room for $ 20",
+        "correct": true
+      },
+      {
+        "text": "the “Economy”",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "Hotel\nA: Hello, how can I help you?\nB: Hello. I would like to stay at your hotel.\nA: Have you booked the room in advance?\nB: No, but I hope you will find something for me.\nA: We have several rooms. There is a suite, there is a single standard and a double economy.\nB: And how much do the rooms cost?\nA: The suite costs $ 30 per night, the \"Standard\" room - $ 20 per night, and the \"Economy\" for two people - $ 15 per person.\nB: I do not want to live with a stranger. But I’m pressed for money. I'll take …",
+    "question": "Which room will B take?"
+  },
+  "And how much does the Economy room cost?": {
+    "type": "single",
+    "answers": [
+      "$ 15"
+    ],
+    "all_options": [
+      {
+        "text": "$ 15",
+        "correct": true
+      },
+      {
+        "text": "$ 20",
+        "correct": false
+      },
+      {
+        "text": "$ 30",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "Hotel\nA: Hello, how can I help you?\nB: Hello. I would like to stay at your hotel.\nA: Have you booked the room in advance?\nB: No, but I hope you will find something for me.\nA: We have several rooms. There is a suite, there is a single standard and a double economy.\nB: And how much do the rooms cost?\nA: The suite costs $ 30 per night, the \"Standard\" room - $ 20 per night, and the \"Economy\" for two people - $ 15 per person.\nB: I do not want to live with a stranger. But I’m pressed for money. I'll take …",
+    "question": "And how much does the Economy room cost?"
+  },
+  "Choose the proper equivalent [вариант 12]": {
+    "type": "dropdown",
+    "answers": [
+      "Advantages ➔ [преимущества]",
+      "Discomfort ➔ [недомогание]",
+      "Acute pain ➔ [острая боль]",
+      "Disorder ➔ [расстройство]"
+    ],
+    "all_options": [
+      {
+        "left": "Advantages",
+        "correct_value": "преимущества"
+      },
+      {
+        "left": "Discomfort",
+        "correct_value": "недомогание"
+      },
+      {
+        "left": "Acute pain",
+        "correct_value": "острая боль"
+      },
+      {
+        "left": "Disorder",
+        "correct_value": "расстройство"
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalent",
+    "precheck_sigs": [
+      "47f93888fd8ff58ddf98",
+      "74984854f50d94da021f"
+    ]
+  },
+  "Arrange the parts of a sentencein the correct order. [вариант 4]": {
+    "type": "sortable",
+    "answers": [
+      "1. I’m",
+      "2. going",
+      "3. to",
+      "4. specialize",
+      "5. in",
+      "6. Cardiology",
+      "7. in",
+      "8. the",
+      "9. future"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "I’m"
+      },
+      {
+        "position": 2,
+        "text": "going"
+      },
+      {
+        "position": 3,
+        "text": "to"
+      },
+      {
+        "position": 4,
+        "text": "specialize"
+      },
+      {
+        "position": 5,
+        "text": "in"
+      },
+      {
+        "position": 6,
+        "text": "Cardiology"
+      },
+      {
+        "position": 7,
+        "text": "in"
+      },
+      {
+        "position": 8,
+        "text": "the"
+      },
+      {
+        "position": 9,
+        "text": "future"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentencein the correct order.",
+    "precheck_sigs": [
+      "6bb7709227de34eb8c56"
+    ]
+  },
+  "Choose the proper equivalent [вариант 13]": {
+    "type": "dropdown",
+    "answers": [
+      "Contamination ➔ [заражение]",
+      "Side effects ➔ [побочные действия лекарства]",
+      "Adverse reaction ➔ [неблагоприятная реакция]"
+    ],
+    "all_options": [
+      {
+        "left": "Contamination",
+        "correct_value": "заражение"
+      },
+      {
+        "left": "Side effects",
+        "correct_value": "побочные действия лекарства"
+      },
+      {
+        "left": "Adverse reaction",
+        "correct_value": "неблагоприятная реакция"
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalent",
+    "precheck_sigs": [
+      "e35391656836e75404d9",
+      "580693c3f638eddf1f1b"
+    ]
+  },
+  "Arrange the parts of a sentencein the correct order. [вариант 5]": {
+    "type": "sortable",
+    "answers": [
+      "1. The",
+      "2. 17.00",
+      "3. o’clock",
+      "4. flight",
+      "5. to",
+      "6. Chicago",
+      "7. hasn’t",
+      "8. been",
+      "9. announced",
+      "10. yet"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "The"
+      },
+      {
+        "position": 2,
+        "text": "17.00"
+      },
+      {
+        "position": 3,
+        "text": "o’clock"
+      },
+      {
+        "position": 4,
+        "text": "flight"
+      },
+      {
+        "position": 5,
+        "text": "to"
+      },
+      {
+        "position": 6,
+        "text": "Chicago"
+      },
+      {
+        "position": 7,
+        "text": "hasn’t"
+      },
+      {
+        "position": 8,
+        "text": "been"
+      },
+      {
+        "position": 9,
+        "text": "announced"
+      },
+      {
+        "position": 10,
+        "text": "yet"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentencein the correct order.",
+    "precheck_sigs": [
+      "a88b8c08087568700c68"
+    ]
+  },
+  "At the Airport\n- Don't worry, I'll try to help. You are planning to fly to Seattle, aren't you?\nC: - Yes, I am. Haven't you asked?\nT.A.: - Let me process your request... Well, flights to Redmond are available. You can fly here and then go to Seattle by bus. It will take you about ten hours.\nC: - It would be great!\nT.A.: - There are some first class tickets available to the daytime flight at six p.m.\nC: - I would prefer to save money.\nT.A.: - Yes, there are some. But they are for the nine p.m. departure.\nC: - Then I'll take one first class ticket. Here is my passport.": {
+    "type": "cluster_member",
+    "answers": [
+      "1. 6 p.m.",
+      "2. C is going to Redmond by plane, and then from Redmond to Seattle by bus."
+    ],
+    "all_options": [
+      {
+        "text": "9 p.m.",
+        "correct": false
+      },
+      {
+        "text": "1 a.m.",
+        "correct": false
+      },
+      {
+        "text": "6 a.m.",
+        "correct": false
+      },
+      {
+        "text": "6 p.m.",
+        "correct": true
+      },
+      {
+        "text": "C is on the bus station and is going to buy a bus ticket to Seattle.",
+        "correct": false
+      },
+      {
+        "text": "C preferred to stay in Redmond.",
+        "correct": false
+      },
+      {
+        "text": "C is going to Redmond by plane, and then from Redmond to Seattle by bus.",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\n- Don't worry, I'll try to help. You are planning to fly to Seattle, aren't you?\nC: - Yes, I am. Haven't you asked?\nT.A.: - Let me process your request... Well, flights to Redmond are available. You can fly here and then go to Seattle by bus. It will take you about ten hours.\nC: - It would be great!\nT.A.: - There are some first class tickets available to the daytime flight at six p.m.\nC: - I would prefer to save money.\nT.A.: - Yes, there are some. But they are for the nine p.m. departure.\nC: - Then I'll take one first class ticket. Here is my passport.",
+    "question": "At the Airport\n- Don't worry, I'll try to help. You are planning to fly to Seattle, aren't you?\nC: - Yes, I am. Haven't you asked?\nT.A.: - Let me process your request... Well, flights to Redmond are available. You can fly here and then go to Seattle by bus. It will take you about ten hours.\nC: - It would be great!\nT.A.: - There are some first class tickets available to the daytime flight at six p.m.\nC: - I would prefer to save money.\nT.A.: - Yes, there are some. But they are for the nine p.m. departure.\nC: - Then I'll take one first class ticket. Here is my passport.",
+    "precheck_sigs": [
+      "1f4d69239ee8bced94db"
+    ]
+  },
+  "What time flight does C take?": {
+    "type": "single",
+    "answers": [
+      "6 p.m."
+    ],
+    "all_options": [
+      {
+        "text": "9 p.m.",
+        "correct": false
+      },
+      {
+        "text": "1 a.m.",
+        "correct": false
+      },
+      {
+        "text": "6 a.m.",
+        "correct": false
+      },
+      {
+        "text": "6 p.m.",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\n- Don't worry, I'll try to help. You are planning to fly to Seattle, aren't you?\nC: - Yes, I am. Haven't you asked?\nT.A.: - Let me process your request... Well, flights to Redmond are available. You can fly here and then go to Seattle by bus. It will take you about ten hours.\nC: - It would be great!\nT.A.: - There are some first class tickets available to the daytime flight at six p.m.\nC: - I would prefer to save money.\nT.A.: - Yes, there are some. But they are for the nine p.m. departure.\nC: - Then I'll take one first class ticket. Here is my passport.",
+    "question": "What time flight does C take?"
+  },
+  "Choose the correct variant. [вариант 4]": {
+    "type": "single",
+    "answers": [
+      "C is going to Redmond by plane, and then from Redmond to Seattle by bus."
+    ],
+    "all_options": [
+      {
+        "text": "C is on the bus station and is going to buy a bus ticket to Seattle.",
+        "correct": false
+      },
+      {
+        "text": "C preferred to stay in Redmond.",
+        "correct": false
+      },
+      {
+        "text": "C is going to Redmond by plane, and then from Redmond to Seattle by bus.",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\n- Don't worry, I'll try to help. You are planning to fly to Seattle, aren't you?\nC: - Yes, I am. Haven't you asked?\nT.A.: - Let me process your request... Well, flights to Redmond are available. You can fly here and then go to Seattle by bus. It will take you about ten hours.\nC: - It would be great!\nT.A.: - There are some first class tickets available to the daytime flight at six p.m.\nC: - I would prefer to save money.\nT.A.: - Yes, there are some. But they are for the nine p.m. departure.\nC: - Then I'll take one first class ticket. Here is my passport.",
+    "question": "Choose the correct variant."
+  },
+  "Choose the proper equivalent [вариант 14]": {
+    "type": "dropdown",
+    "answers": [
+      "recurrent seizure ➔ [рецидивный припадок]",
+      "stroke ➔ [инсульт]",
+      "brain tumor ➔ [опухоль мозга]",
+      "intoxication ➔ [отравление]"
+    ],
+    "all_options": [
+      {
+        "left": "recurrent seizure",
+        "correct_value": "рецидивный припадок"
+      },
+      {
+        "left": "stroke",
+        "correct_value": "инсульт"
+      },
+      {
+        "left": "brain tumor",
+        "correct_value": "опухоль мозга"
+      },
+      {
+        "left": "intoxication",
+        "correct_value": "отравление"
+      }
+    ],
+    "images": [],
+    "question": "Choose the proper equivalent",
+    "precheck_sigs": [
+      "e141233d1d13a06c0452",
+      "b8a12ef0c84ebc1ed75f"
+    ]
+  },
+  "JobInterview\nA:Well, Miss Jones, and have you got any experience?\nJ: Certainly. I stayed in my first job there for four years.": {
+    "type": "cluster_member",
+    "answers": [
+      "1. Have you worked before?",
+      "2. A doesn’t ask about work experience."
+    ],
+    "all_options": [
+      {
+        "text": "Have you worked with Miss Jones before?",
+        "correct": false
+      },
+      {
+        "text": "Have you studied before?",
+        "correct": false
+      },
+      {
+        "text": "Have you worked for four years before?",
+        "correct": false
+      },
+      {
+        "text": "Have you worked before?",
+        "correct": true
+      },
+      {
+        "text": "A doesn’t ask about work experience.",
+        "correct": true
+      },
+      {
+        "text": "A asks about work experience.",
+        "correct": false
+      },
+      {
+        "text": "A doesn’t ask about wages.",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA:Well, Miss Jones, and have you got any experience?\nJ: Certainly. I stayed in my first job there for four years.",
+    "question": "JobInterview\nA:Well, Miss Jones, and have you got any experience?\nJ: Certainly. I stayed in my first job there for four years.",
+    "precheck_sigs": [
+      "1b00a44b72a53c7a8e1a"
+    ]
+  },
+  "Choose another variant to ask A’s question.": {
+    "type": "single",
+    "answers": [
+      "Have you worked before?"
+    ],
+    "all_options": [
+      {
+        "text": "Have you worked with Miss Jones before?",
+        "correct": false
+      },
+      {
+        "text": "Have you studied before?",
+        "correct": false
+      },
+      {
+        "text": "Have you worked for four years before?",
+        "correct": false
+      },
+      {
+        "text": "Have you worked before?",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA:Well, Miss Jones, and have you got any experience?\nJ: Certainly. I stayed in my first job there for four years.",
+    "question": "Choose another variant to ask A’s question."
+  },
+  "Choose the incorrect variant. [вариант 4]": {
+    "type": "single",
+    "answers": [
+      "A doesn’t ask about work experience."
+    ],
+    "all_options": [
+      {
+        "text": "A doesn’t ask about work experience.",
+        "correct": true
+      },
+      {
+        "text": "A asks about work experience.",
+        "correct": false
+      },
+      {
+        "text": "A doesn’t ask about wages.",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA:Well, Miss Jones, and have you got any experience?\nJ: Certainly. I stayed in my first job there for four years.",
+    "question": "Choose the incorrect variant."
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 20]": {
+    "type": "sortable",
+    "answers": [
+      "1. The",
+      "2. passengers",
+      "3. from",
+      "4. Washington",
+      "5. are",
+      "6. not",
+      "7. paying",
+      "8. by",
+      "9. cash"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "The"
+      },
+      {
+        "position": 2,
+        "text": "passengers"
+      },
+      {
+        "position": 3,
+        "text": "from"
+      },
+      {
+        "position": 4,
+        "text": "Washington"
+      },
+      {
+        "position": 5,
+        "text": "are"
+      },
+      {
+        "position": 6,
+        "text": "not"
+      },
+      {
+        "position": 7,
+        "text": "paying"
+      },
+      {
+        "position": 8,
+        "text": "by"
+      },
+      {
+        "position": 9,
+        "text": "cash"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "4d2a8c04dbbc3342f1fe"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 21]": {
+    "type": "sortable",
+    "answers": [
+      "1. My",
+      "2. favorite",
+      "3. discipline",
+      "4. is",
+      "5. Anatomy"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "My"
+      },
+      {
+        "position": 2,
+        "text": "favorite"
+      },
+      {
+        "position": 3,
+        "text": "discipline"
+      },
+      {
+        "position": 4,
+        "text": "is"
+      },
+      {
+        "position": 5,
+        "text": "Anatomy"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "ba85bbb793867eaa08dc"
+    ]
+  },
+  "At the Airport\nT.A.: - ___\nC: - Can I pay with my credit card? I have little cash with me.\nT.A.: - No problem. Now your seat is reserved and you have to wait for two hours. Take a seat or visit our duty free. Be on time near the fifth gate. Don't be late for the departure.\nC: - Thanks a lot!\nT.A.: - Safe travels!": {
+    "type": "cluster_member",
+    "answers": [
+      "1. How will you pay?",
+      "2. Be on time near gate 5."
+    ],
+    "all_options": [
+      {
+        "text": "How you will pay?",
+        "correct": false
+      },
+      {
+        "text": "How should you pay?",
+        "correct": false
+      },
+      {
+        "text": "How did you pay?",
+        "correct": false
+      },
+      {
+        "text": "How will you pay?",
+        "correct": true
+      },
+      {
+        "text": "Be on time near gate 55.",
+        "correct": false
+      },
+      {
+        "text": "Be on time near gate 5.",
+        "correct": true
+      },
+      {
+        "text": "Be on time near gate 15.",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\nT.A.: - ___\nC: - Can I pay with my credit card? I have little cash with me.\nT.A.: - No problem. Now your seat is reserved and you have to wait for two hours. Take a seat or visit our duty free. Be on time near the fifth gate. Don't be late for the departure.\nC: - Thanks a lot!\nT.A.: - Safe travels!",
+    "question": "At the Airport\nT.A.: - ___\nC: - Can I pay with my credit card? I have little cash with me.\nT.A.: - No problem. Now your seat is reserved and you have to wait for two hours. Take a seat or visit our duty free. Be on time near the fifth gate. Don't be late for the departure.\nC: - Thanks a lot!\nT.A.: - Safe travels!",
+    "precheck_sigs": [
+      "e36992e3dc11f490e94b"
+    ]
+  },
+  "What does T.A. asks?": {
+    "type": "single",
+    "answers": [
+      "How will you pay?"
+    ],
+    "all_options": [
+      {
+        "text": "How you will pay?",
+        "correct": false
+      },
+      {
+        "text": "How should you pay?",
+        "correct": false
+      },
+      {
+        "text": "How did you pay?",
+        "correct": false
+      },
+      {
+        "text": "How will you pay?",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\nT.A.: - ___\nC: - Can I pay with my credit card? I have little cash with me.\nT.A.: - No problem. Now your seat is reserved and you have to wait for two hours. Take a seat or visit our duty free. Be on time near the fifth gate. Don't be late for the departure.\nC: - Thanks a lot!\nT.A.: - Safe travels!",
+    "question": "What does T.A. asks?"
+  },
+  "Choose the correct variant. The passenger should___": {
+    "type": "single",
+    "answers": [
+      "Be on time near gate 5."
+    ],
+    "all_options": [
+      {
+        "text": "Be on time near gate 55.",
+        "correct": false
+      },
+      {
+        "text": "Be on time near gate 5.",
+        "correct": true
+      },
+      {
+        "text": "Be on time near gate 15.",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "At the Airport\nT.A.: - ___\nC: - Can I pay with my credit card? I have little cash with me.\nT.A.: - No problem. Now your seat is reserved and you have to wait for two hours. Take a seat or visit our duty free. Be on time near the fifth gate. Don't be late for the departure.\nC: - Thanks a lot!\nT.A.: - Safe travels!",
+    "question": "Choose the correct variant. The passenger should___"
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 22]": {
+    "type": "sortable",
+    "answers": [
+      "1. Kirov",
+      "2. State",
+      "3. Medical",
+      "4. University",
+      "5. wasn’t",
+      "6. established",
+      "7. in",
+      "8. 1887"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "Kirov"
+      },
+      {
+        "position": 2,
+        "text": "State"
+      },
+      {
+        "position": 3,
+        "text": "Medical"
+      },
+      {
+        "position": 4,
+        "text": "University"
+      },
+      {
+        "position": 5,
+        "text": "wasn’t"
+      },
+      {
+        "position": 6,
+        "text": "established"
+      },
+      {
+        "position": 7,
+        "text": "in"
+      },
+      {
+        "position": 8,
+        "text": "1887"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "82e993b5fff858c10e72"
+    ]
+  },
+  "Arrange the parts of a sentencein the correct order. [вариант 6]": {
+    "type": "sortable",
+    "answers": [
+      "1. What",
+      "2. are",
+      "3. you",
+      "4. interested",
+      "5. in"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "What"
+      },
+      {
+        "position": 2,
+        "text": "are"
+      },
+      {
+        "position": 3,
+        "text": "you"
+      },
+      {
+        "position": 4,
+        "text": "interested"
+      },
+      {
+        "position": 5,
+        "text": "in"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentencein the correct order.",
+    "precheck_sigs": [
+      "9b34a9900c997f4a1876"
+    ]
+  },
+  "Arrange the parts of a sentence in the correct order. [вариант 23]": {
+    "type": "sortable",
+    "answers": [
+      "1. How",
+      "2. are",
+      "3. you",
+      "4. doing"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "How"
+      },
+      {
+        "position": 2,
+        "text": "are"
+      },
+      {
+        "position": 3,
+        "text": "you"
+      },
+      {
+        "position": 4,
+        "text": "doing"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentence in the correct order.",
+    "precheck_sigs": [
+      "a3caf1ca3d200d1c017a"
+    ]
+  },
+  "Hotel\nA: Hello, how can I help you?\nB: Hello. I would like to stay at your hotel. But I’m picky about food.\nA: All right. Breakfast is included in the room price. Standard continental breakfast.\nB: And where can I have lunch and dinner here?\nA: There is a small restaurant on the 1st floor of the hotel. There you can eat at any time.\nB: Great.": {
+    "type": "cluster_member",
+    "answers": [
+      "1. Lunch and dinner",
+      "2. free."
+    ],
+    "all_options": [
+      {
+        "text": "Lunch and dinner",
+        "correct": true
+      },
+      {
+        "text": "Breakfast",
+        "correct": false
+      },
+      {
+        "text": "Breakfast, lunch, dinner",
+        "correct": false
+      },
+      {
+        "text": "open 7/24",
+        "correct": false
+      },
+      {
+        "text": "on the first floor.",
+        "correct": false
+      },
+      {
+        "text": "free.",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "Hotel\nA: Hello, how can I help you?\nB: Hello. I would like to stay at your hotel. But I’m picky about food.\nA: All right. Breakfast is included in the room price. Standard continental breakfast.\nB: And where can I have lunch and dinner here?\nA: There is a small restaurant on the 1st floor of the hotel. There you can eat at any time.\nB: Great.",
+    "question": "Hotel\nA: Hello, how can I help you?\nB: Hello. I would like to stay at your hotel. But I’m picky about food.\nA: All right. Breakfast is included in the room price. Standard continental breakfast.\nB: And where can I have lunch and dinner here?\nA: There is a small restaurant on the 1st floor of the hotel. There you can eat at any time.\nB: Great.",
+    "precheck_sigs": [
+      "b08127649ffb652afdd5"
+    ]
+  },
+  "Which meal(s) is(are) not included?": {
+    "type": "single",
+    "answers": [
+      "Lunch and dinner"
+    ],
+    "all_options": [
+      {
+        "text": "Lunch and dinner",
+        "correct": true
+      },
+      {
+        "text": "Breakfast",
+        "correct": false
+      },
+      {
+        "text": "Breakfast, lunch, dinner",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "Hotel\nA: Hello, how can I help you?\nB: Hello. I would like to stay at your hotel. But I’m picky about food.\nA: All right. Breakfast is included in the room price. Standard continental breakfast.\nB: And where can I have lunch and dinner here?\nA: There is a small restaurant on the 1st floor of the hotel. There you can eat at any time.\nB: Great.",
+    "question": "Which meal(s) is(are) not included?"
+  },
+  "Choose the incorrect variant. The restaurant is ___.": {
+    "type": "single",
+    "answers": [
+      "free."
+    ],
+    "all_options": [
+      {
+        "text": "open 7/24",
+        "correct": false
+      },
+      {
+        "text": "on the first floor.",
+        "correct": false
+      },
+      {
+        "text": "free.",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "Hotel\nA: Hello, how can I help you?\nB: Hello. I would like to stay at your hotel. But I’m picky about food.\nA: All right. Breakfast is included in the room price. Standard continental breakfast.\nB: And where can I have lunch and dinner here?\nA: There is a small restaurant on the 1st floor of the hotel. There you can eat at any time.\nB: Great.",
+    "question": "Choose the incorrect variant. The restaurant is ___."
+  },
+  "JobInterview\nA: Good morning, Miss Jones. You’re looking for a position in this hospital. Probably you could tell us about your ____ first.\nJ: Well, I left school at 17 and then for the next five years I studied at Kazan State Medical University. I graduated from the Internal Medicine Department with high honors and specialized for 2 years in Gastroenterology. And after that I did a one-year Residency in Belarus.\nA: Well. Sounds great, Miss Jones.": {
+    "type": "cluster_member",
+    "answers": [
+      "1. education",
+      "2. gastroenterologist"
+    ],
+    "all_options": [
+      {
+        "text": "experience",
+        "correct": false
+      },
+      {
+        "text": "internship",
+        "correct": false
+      },
+      {
+        "text": "residency",
+        "correct": false
+      },
+      {
+        "text": "education",
+        "correct": true
+      },
+      {
+        "text": "gastroenterologist",
+        "correct": true
+      },
+      {
+        "text": "Gastroenterology",
+        "correct": false
+      },
+      {
+        "text": "gastric ulcer",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: Good morning, Miss Jones. You’re looking for a position in this hospital. Probably you could tell us about your ____ first.\nJ: Well, I left school at 17 and then for the next five years I studied at Kazan State Medical University. I graduated from the Internal Medicine Department with high honors and specialized for 2 years in Gastroenterology. And after that I did a one-year Residency in Belarus.\nA: Well. Sounds great, Miss Jones.",
+    "question": "JobInterview\nA: Good morning, Miss Jones. You’re looking for a position in this hospital. Probably you could tell us about your ____ first.\nJ: Well, I left school at 17 and then for the next five years I studied at Kazan State Medical University. I graduated from the Internal Medicine Department with high honors and specialized for 2 years in Gastroenterology. And after that I did a one-year Residency in Belarus.\nA: Well. Sounds great, Miss Jones.",
+    "precheck_sigs": [
+      "2c130ac36c5a79908806"
+    ]
+  },
+  "What did Miss Jones ask about?": {
+    "type": "single",
+    "answers": [
+      "education"
+    ],
+    "all_options": [
+      {
+        "text": "experience",
+        "correct": false
+      },
+      {
+        "text": "internship",
+        "correct": false
+      },
+      {
+        "text": "residency",
+        "correct": false
+      },
+      {
+        "text": "education",
+        "correct": true
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: Good morning, Miss Jones. You’re looking for a position in this hospital. Probably you could tell us about your ____ first.\nJ: Well, I left school at 17 and then for the next five years I studied at Kazan State Medical University. I graduated from the Internal Medicine Department with high honors and specialized for 2 years in Gastroenterology. And after that I did a one-year Residency in Belarus.\nA: Well. Sounds great, Miss Jones.",
+    "question": "What did Miss Jones ask about?"
+  },
+  "Choose the correct variant. Can be admitted to work at the hospital as a___.": {
+    "type": "single",
+    "answers": [
+      "gastroenterologist"
+    ],
+    "all_options": [
+      {
+        "text": "gastroenterologist",
+        "correct": true
+      },
+      {
+        "text": "Gastroenterology",
+        "correct": false
+      },
+      {
+        "text": "gastric ulcer",
+        "correct": false
+      }
+    ],
+    "images": [],
+    "main_text": "JobInterview\nA: Good morning, Miss Jones. You’re looking for a position in this hospital. Probably you could tell us about your ____ first.\nJ: Well, I left school at 17 and then for the next five years I studied at Kazan State Medical University. I graduated from the Internal Medicine Department with high honors and specialized for 2 years in Gastroenterology. And after that I did a one-year Residency in Belarus.\nA: Well. Sounds great, Miss Jones.",
+    "question": "Choose the correct variant. Can be admitted to work at the hospital as a___."
+  },
+  "Arrange the parts of a sentencein the correct order. [вариант 7]": {
+    "type": "sortable",
+    "answers": [
+      "1. How",
+      "2. long",
+      "3. have",
+      "4. you",
+      "5. been",
+      "6. married"
+    ],
+    "all_options": [
+      {
+        "position": 1,
+        "text": "How"
+      },
+      {
+        "position": 2,
+        "text": "long"
+      },
+      {
+        "position": 3,
+        "text": "have"
+      },
+      {
+        "position": 4,
+        "text": "you"
+      },
+      {
+        "position": 5,
+        "text": "been"
+      },
+      {
+        "position": 6,
+        "text": "married"
+      }
+    ],
+    "images": [],
+    "question": "Arrange the parts of a sentencein the correct order.",
+    "precheck_sigs": [
+      "23926fd083eb58446ade"
+    ]
+  }
+}
