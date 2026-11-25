@@ -40,5 +40,11 @@
     "title": "Молекулярные механизмы в патологии человека",
     "course": 3,
     "fac": "lech"
+  },
+  {
+    "file": "3/mikrobiologiya-virusologiya.json",
+    "title": "Микробиология, вирусология",
+    "course": 3,
+    "fac": "lech"
   }
 ]
