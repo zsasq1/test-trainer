@@ -8,5 +8,10 @@
     "file": "2/normalnaya-fiziologiya.json",
     "title": "Нормальная физиология",
     "course": 2
+  },
+  {
+    "file": "2/ekologiya.json",
+    "title": "Экология",
+    "course": 2
   }
 ]
