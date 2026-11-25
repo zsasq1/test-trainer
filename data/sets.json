@@ -106,5 +106,11 @@
     "title": "Медицинская и биологическая физика",
     "course": 2,
     "fac": "ped"
+  },
+  {
+    "file": "ped/2/bioorganicheskaya-himiya.json",
+    "title": "Биоорганическая химия",
+    "course": 2,
+    "fac": "ped"
   }
 ]
