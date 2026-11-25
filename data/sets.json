@@ -18,5 +18,10 @@
     "file": "2/filosofiya.json",
     "title": "Философия",
     "course": 2
+  },
+  {
+    "file": "2/bioorganicheskaya-himiya.json",
+    "title": "Биоорганическая химия",
+    "course": 2
   }
 ]
