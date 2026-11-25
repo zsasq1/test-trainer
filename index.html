@@ -273,7 +273,6 @@ button:disabled{cursor:default}
 .mmore:active,.mx:active{background:var(--bg)}
 .mx{font-size:16px}
 .mlink{align-self:flex-start;color:var(--accent);font-size:14px;font-weight:600;padding:6px 4px}
-.m-imp{display:flex;gap:8px;margin-top:8px}
 .mbtn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 12px;border-radius:12px;background:var(--bg);border:1px solid var(--line);color:var(--accent);font-size:15px;font-weight:600;white-space:nowrap;cursor:pointer}
 .mbtn.pri{flex:1;min-width:0}
 .mbtn .i{width:18px;height:18px}
@@ -2132,12 +2131,10 @@ function menuTestHTML() {
 function menuFilesHTML() {
   // Not chosen yet (the picker is open; on a computer the menu stays visible behind it): no course files at all.
   let h = S.fac ? menuCoursesHTML() : '';
+  // «Мои файлы» only lists files someone already uploaded (so they aren't lost); the menu no longer offers uploading
   const mine = SETS.filter(s => !s.bundled);
-  h += `<section class="msec" id="m-mine"><div class="sec-label">Мои файлы</div>`;
-  if (!mine.length) h += '<p class="msec-note">Свои JSON с вопросами — их видите только вы.</p>';
-  h += mine.map(fileRowHTML).join('');
-  h += `<div class="m-imp"><label class="mbtn pri" for="fileInput" role="button" tabindex="0">${I.plus}<span>Загрузить JSON</span></label></div>`;
-  return h + '</section>';
+  if (mine.length) h += `<section class="msec" id="m-mine"><div class="sec-label">Мои файлы</div>${mine.map(fileRowHTML).join('')}</section>`;
+  return h;
 }
 // The faculty sits next to «Курсы», so it is clear whose files these are; a tap on it changes the faculty.
 function menuCoursesHTML() {
@@ -2145,7 +2142,7 @@ function menuCoursesHTML() {
   const has = new Set(course.map(s => s.course));
   const list = course.filter(s => s.course === c || !s.course);
   let h = `<section class="msec" id="m-files"><div class="sec-row"><div class="sec-label">Курсы</div><button type="button" class="sec-chip" data-act="m-fac" aria-label="Факультет: ${esc(fac.name)} — сменить"><span>${esc(fac.name)}</span>${I.chevD}</button></div>${coursePills(fac.courses, c, 'data-act="m-course" data-c', has)}`;
-  if (facEmpty()) h += `<p class="msec-note">Для ${esc(fac.gen)} тестов пока нет — их скоро добавят. Пока можно загрузить свой JSON в «Мои файлы».</p>`;
+  if (facEmpty()) h += `<p class="msec-note">Для ${esc(fac.gen)} тестов пока нет — их скоро добавят.</p>`;
   else if (!list.length) h += `<p class="msec-note">Для ${c} курса файлов пока нет.</p>`;
   return h + list.map(fileRowHTML).join('') + '</section>';
 }
