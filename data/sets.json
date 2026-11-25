@@ -28,5 +28,11 @@
     "title": "Биоорганическая химия",
     "course": 2,
     "fac": "lech"
+  },
+  {
+    "file": "3/statisticheskie-metody-dokazatelnoy-mediciny-c-ispolzovaniem.json",
+    "title": "Статистические методы доказательной медицины c использованием информационных тех",
+    "course": 3,
+    "fac": "lech"
   }
 ]
