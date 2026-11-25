@@ -94,5 +94,11 @@
     "title": "Топографическая анатомия и оперативная хирургия",
     "course": 3,
     "fac": "ped"
+  },
+  {
+    "file": "2/medicinskaya-i-biologicheskaya-fizika.json",
+    "title": "Медицинская и биологическая физика",
+    "course": 2,
+    "fac": "lech"
   }
 ]
