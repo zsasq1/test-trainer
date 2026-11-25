@@ -2,31 +2,31 @@
   {
     "file": "3/topka.json",
     "title": "Топка",
-<<<<<<< Updated upstream
-    "course": 3
+    "course": 3,
+    "fac": "lech"
   },
   {
     "file": "2/normalnaya-fiziologiya.json",
     "title": "Нормальная физиология",
-    "course": 2
+    "course": 2,
+    "fac": "lech"
   },
   {
     "file": "2/ekologiya.json",
     "title": "Экология",
-    "course": 2
+    "course": 2,
+    "fac": "lech"
   },
   {
     "file": "2/filosofiya.json",
     "title": "Философия",
-    "course": 2
+    "course": 2,
+    "fac": "lech"
   },
   {
     "file": "2/bioorganicheskaya-himiya.json",
     "title": "Биоорганическая химия",
-    "course": 2
-=======
-    "course": 3,
+    "course": 2,
     "fac": "lech"
->>>>>>> Stashed changes
   }
 ]
