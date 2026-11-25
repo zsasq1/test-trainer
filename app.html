@@ -861,6 +861,9 @@ I.sub = { single: I.radioOn, multiple: I.boxOn, dropdown: I.cat.dropdown, sortab
    ========================================================= */
 const EMPTY_BANK = Object.freeze({ byCat: Object.fromEntries(CATS.map(c => [c, []])), byId: new Map(), total: 0, skipped: 0 });
 
+// Files made by the converter can't repeat a question as a JSON key, so repeats arrive as «… [вариант 2]».
+// Shown without it; the full key still names the question, so progress and stars stay with the right one.
+const shownPrompt = k => k.replace(/\s*\[вариант \d+\]\s*$/, '');
 function buildBank(raw) {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
     throw new Error('Ожидался объект вида {"Текст вопроса": {"type": "single", "all_options": [...]}}.');
@@ -871,38 +874,39 @@ function buildBank(raw) {
   entries.sort((a, b) => coll.compare(a.prompt, b.prompt));
   const groups = { single: [], multiple: [], dropdown: [], sortable: [], text: [] };
   let skipped = 0;
-  for (const { prompt, r } of entries) {
+  for (const { prompt: key, r } of entries) {
+    const prompt = shownPrompt(key);
     const ctx = typeof r.main_text === 'string' && r.main_text.trim() ? r.main_text : null;
     const opts = Array.isArray(r.all_options) ? r.all_options.filter(o => o && typeof o === 'object') : [];
     const answers = Array.isArray(r.answers) ? r.answers.filter(a => typeof a === 'string') : [];
-    const seed = prompt + '|' + (ctx || '');
+    const seed = key + '|' + (ctx || '');
     switch (r.type) {
       case 'single':
       case 'multiple': {
         const options = opts.filter(o => typeof o.text === 'string' && o.text !== '').map(o => ({ text: o.text, correct: o.correct === true }));
         if (!options.length) { skipped++; break; }
-        groups[r.type].push({ kind: r.type, id: sid(r.type, seed), prompt, context: ctx, options });
+        groups[r.type].push({ kind: r.type, id: sid(r.type, seed), prompt, key, context: ctx, options });
         break;
       }
       case 'dropdown': {
         const rows = opts.filter(o => typeof o.left === 'string' && o.left && typeof o.correct_value === 'string' && o.correct_value)
           .map(o => ({ left: o.left, value: o.correct_value }));
         if (!rows.length) { skipped++; break; }
-        groups.dropdown.push({ kind: 'dropdown', id: sid('dropdown', seed), prompt, context: ctx, rows, choices: uniq(rows.map(x => x.value)) });
+        groups.dropdown.push({ kind: 'dropdown', id: sid('dropdown', seed), prompt, key, context: ctx, rows, choices: uniq(rows.map(x => x.value)) });
         break;
       }
       case 'sortable': {
         const order = opts.filter(o => Number.isFinite(o.position) && typeof o.text === 'string' && o.text)
           .sort((a, b) => a.position - b.position).map(o => o.text);
         if (!order.length) { skipped++; break; }
-        groups.sortable.push({ kind: 'sortable', id: sid('sortable', seed), prompt, context: ctx, order });
+        groups.sortable.push({ kind: 'sortable', id: sid('sortable', seed), prompt, key, context: ctx, order });
         break;
       }
       case 'drag_and_drop':
       case 'text_input': {
         const accepted = uniq(answers.concat(opts.filter(o => o.correct === true && typeof o.text === 'string').map(o => o.text))
           .map(s => s.trim()).filter(s => s && !TEXT_PLACEHOLDERS.has(s.toLowerCase())));
-        groups.text.push({ kind: 'text', id: sid('text', seed), prompt, context: ctx, accepted });
+        groups.text.push({ kind: 'text', id: sid('text', seed), prompt, key, context: ctx, accepted });
         break;
       }
       case 'cluster_member':
@@ -917,7 +921,7 @@ function buildBank(raw) {
   const inCase = new Set();
   const cases = [...caseMap.keys()].sort(coll.compare).map(mainText => {
     const subs = caseMap.get(mainText).sort((a, b) =>
-      ((keyIndex.has(a.prompt) ? keyIndex.get(a.prompt) : 1e9) - (keyIndex.has(b.prompt) ? keyIndex.get(b.prompt) : 1e9)) || coll.compare(a.prompt, b.prompt));
+      ((keyIndex.has(a.key) ? keyIndex.get(a.key) : 1e9) - (keyIndex.has(b.key) ? keyIndex.get(b.key) : 1e9)) || coll.compare(a.prompt, b.prompt));
     subs.forEach(s => inCase.add(s.id));
     return { kind: 'case', id: sid('case', mainText), mainText, subs, category: 'caseStudy', title: firstSentence(mainText), searchSrc: [mainText].concat(subs.map(s => s.prompt)).join(' ') };
   });
