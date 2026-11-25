@@ -70,5 +70,11 @@
     "title": "Гигиена",
     "course": 3,
     "fac": "lech"
+  },
+  {
+    "file": "ped/2/normalnaya-fiziologiya.json",
+    "title": "Нормальная физиология",
+    "course": 2,
+    "fac": "ped"
   }
 ]
