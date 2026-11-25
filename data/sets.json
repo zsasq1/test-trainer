@@ -3,5 +3,10 @@
     "file": "3/topka.json",
     "title": "Топка",
     "course": 3
+  },
+  {
+    "file": "2/normalnaya-fiziologiya.json",
+    "title": "Нормальная физиология",
+    "course": 2
   }
 ]
