@@ -1,0 +1,19 @@
+{
+  "name": "trainer-duel",
+  "private": true,
+  "type": "module",
+  "description": "Дуэли для тренажёра: сервер-судья на Cloudflare Workers + Durable Objects",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "build": "wrangler deploy --dry-run --outdir .build",
+    "test": "node --test test/game.test.mjs && node test/arena.test.mjs",
+    "test:unit": "node --test test/game.test.mjs",
+    "test:server": "node test/arena.test.mjs",
+    "test:e2e": "node test/e2e.test.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "4.158.0",
+    "ws": "8.22.1"
+  }
+}

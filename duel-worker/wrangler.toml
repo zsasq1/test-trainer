@@ -1,0 +1,22 @@
+name = "trainer-duel"
+main = "worker.js"
+compatibility_date = "2025-06-01"
+workers_dev = true
+
+[vars]
+# сайт, которому можно подключаться к дуэлям
+ALLOWED_ORIGIN = "https://zsasq1.github.io"
+# откуда сервер берёт data/sets.json и файлы вопросов
+SITE_URL = "https://zsasq1.github.io/test-trainer/"
+# база и проект Firebase: по ним сервер проверяет, кто подключился
+FIREBASE_DB = "https://reclama-kgu-default-rtdb.europe-west1.firebasedatabase.app"
+FIREBASE_PROJECT = "reclama-kgu"
+
+# Арена: приглашения, комнаты и сами дуэли (один экземпляр, SQLite внутри)
+[[durable_objects.bindings]]
+name = "ARENA"
+class_name = "Arena"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Arena"]

@@ -929,6 +929,173 @@ a.tg-btn{text-decoration:none}
 .tour-foot{flex-wrap:wrap;row-gap:12px}
 .tour-btns{margin-inline-start:auto}
 .tour-btn{padding:0 13px}
+/* ---------- Дуэль: a screen of its own over the trainer, in the same frame and buttons ---------- */
+.duel-layer{position:fixed;inset:0;z-index:50;display:flex;padding:calc(4px + env(safe-area-inset-top,0px)) calc(4px + env(safe-area-inset-right,0px)) calc(4px + env(safe-area-inset-bottom,0px)) calc(4px + env(safe-area-inset-left,0px));background:var(--bg);animation:d-in .26s var(--ease-out)}
+.duel-layer.closing{animation:d-out .18s var(--ease-out) forwards;pointer-events:none}
+@keyframes d-in{from{opacity:0;transform:translateY(12px)}}
+@keyframes d-out{to{opacity:0;transform:translateY(12px)}}
+.d-frame{flex:1;min-width:0;max-width:1100px;margin:0 auto;display:flex;flex-direction:column;background:var(--frame);border:1px solid var(--line);border-radius:5px;container-type:inline-size;container-name:app;overflow:hidden}
+.d-top{flex:none;display:flex;align-items:center;gap:6px;min-height:44px;padding:2px 6px 2px 3px;color:var(--ink)}
+.d-ttl{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}
+.d-ttl b{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.d-ttl small{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.d-net{flex:none;display:inline-flex;align-items:center;gap:6px;padding:0 6px;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.d-net i{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.d-net.wait i{background:var(--star);animation:d-blink 1s ease-in-out infinite alternate}
+.d-net.off i{background:var(--red)}
+.d-net.on span{display:none}
+@keyframes d-blink{to{opacity:.3}}
+.d-strip{flex:none;margin:0 5px 6px}
+.d-strip:empty{display:none}
+.duel-layer .scroller{margin:0 5px}
+.d-body{transition:opacity .15s}
+.d-body.top>:first-child{margin-top:0}
+.d-body.enter{animation:d-rise .24s var(--ease-out)}
+@keyframes d-rise{from{opacity:0;transform:translateY(6px)}}
+.d-wrap{width:100%;max-width:640px;margin-inline:auto;display:flex;flex-direction:column;gap:10px}
+.dl-foot{flex:none;display:flex;align-items:center;gap:6px;padding:8px 6px;min-height:60px}
+.dl-foot:empty{display:none}
+.dl-foot .act{flex:1;min-width:0}
+.dl-foot .act.main,.d-ban .act.main,.d-card .act.main{background:var(--btn-on);border-color:var(--btn-on-line);color:var(--on-accent)}
+.dl-foot .act.main:active:not(:disabled),.dl-foot .btn.main:active:not(:disabled){filter:brightness(.92)}
+.dl-foot .btn.main{background:var(--btn-on);border-color:var(--btn-on-line);color:var(--on-accent)}
+.d-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+.d-row2{display:flex;gap:6px}
+.d-row2 .act{flex:1;min-width:0}
+.dl-foot .ft-mid{justify-content:center}
+.dl-foot .ft-info{display:block}
+/* the search field above the list */
+.d-search{max-width:640px;margin:0 auto}
+.d-search .searchbox{background:var(--surface)}
+/* players: a round letter, a dot when online */
+.d-ava{position:relative;width:38px;height:38px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--btn);border:1px solid var(--btn-line);color:var(--btn-fg);font-weight:700;font-size:16px}
+.d-ava.me{background:var(--btn-on);border-color:var(--btn-on-line);color:var(--on-accent)}
+.d-ava .dot{position:absolute;right:-1px;bottom:-1px;width:12px;height:12px;border-radius:50%;background:var(--missed);border:2px solid var(--surface)}
+.d-ava .dot.on{background:var(--green)}
+[dir="rtl"] .d-ava .dot{right:auto;left:-1px}
+.d-list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:5px;background:var(--surface);overflow:hidden}
+.d-list:empty{display:none}
+.d-pl{display:flex;align-items:center;gap:11px;min-height:58px;padding:8px 10px}
+.d-pl+.d-pl{border-top:1px solid var(--line-soft)}
+.d-pl .mtxt{flex:1;min-width:0;font-size:16px;font-weight:600;line-height:1.28;overflow-wrap:anywhere}
+.d-pl .mtxt small{display:block;margin-top:2px;font-size:13px;font-weight:500;color:var(--muted)}
+.d-pl .act{flex:none;height:38px;padding:0 12px;font-size:15px}
+.d-tag{display:inline-block;margin-inline-start:4px;padding:1px 6px;border-radius:3px;background:var(--soft-star);color:var(--text);font-size:11.5px;font-weight:600;vertical-align:1px}
+.d-label{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 2px 0;font-size:13.5px;font-weight:600;color:var(--muted)}
+.d-empty{padding:18px 12px;text-align:center;font-size:14.5px;color:var(--muted);line-height:1.45;text-wrap:pretty}
+.d-me{margin:4px 2px 0;font-size:13px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
+/* invitation cards: in, out, with a bar running out */
+.d-card{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:10px 11px;padding:10px 10px 12px;border:1px solid var(--accent-line);border-radius:5px;background:var(--soft-accent);overflow:hidden;animation:d-rise .24s var(--ease-out)}
+.d-card .mtxt{flex:1;min-width:0;font-size:15.5px;font-weight:600;line-height:1.3;overflow-wrap:anywhere}
+.d-card .mtxt small{display:block;margin-top:2px;font-size:13px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
+.d-card .d-row2{flex-basis:100%}
+.d-card .act{height:40px;font-size:15px}
+.d-left{position:absolute;inset:auto 0 0 0;height:3px;background:var(--line-soft)}
+.d-left span{display:block;height:100%;background:var(--accent-btn);transform-origin:left;transition:transform .25s linear}
+.d-part{display:contents}
+.d-me:empty{display:none}
+[dir="rtl"] .d-left span{transform-origin:right}
+.d-note{padding:10px 12px;border-radius:5px;background:var(--head-soft);border:1px solid var(--line-soft);font-size:14px;color:var(--text);line-height:1.4;text-align:center}
+.d-note.warn{background:var(--soft-red);border-color:var(--red-line)}
+.d-note .act{margin-top:8px}
+/* the room: you against them */
+.d-vs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:6px;max-width:640px;margin:0 auto;padding:8px 6px;border:1px solid var(--line);border-radius:5px;background:var(--surface)}
+.d-side{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;text-align:center}
+.d-side b{max-width:100%;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.d-side small{max-width:100%;font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-variant-numeric:tabular-nums}
+.d-side small.off{color:var(--red)}
+.d-x{font-size:15px;font-weight:700;color:var(--accent);letter-spacing:.04em}
+.d-h{margin:4px 2px 0;font-size:15px;font-weight:700;color:var(--ink)}
+.d-h small{display:block;margin-top:2px;font-size:13px;font-weight:500;color:var(--muted)}
+.d-files{display:flex;flex-direction:column;gap:6px}
+.d-files .d-course{margin:8px 2px 0;font-size:12.5px;font-weight:600;color:var(--muted)}
+.d-files .pick{min-height:44px;padding:9px 12px;font-size:15.5px}
+.d-files .pick .spinner{width:18px;height:18px;border-width:2px}
+.d-kv{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:5px;background:var(--surface);font-size:15px}
+.d-kv span{color:var(--muted)}
+.d-kv b{text-align:end;overflow-wrap:anywhere}
+.d-n{display:flex;align-items:baseline;gap:8px;font-size:15px}
+.d-n label{color:var(--muted)}
+.d-n output{font-size:20px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;min-width:2.2ch}
+.d-n small{margin-inline-start:auto;color:var(--muted);font-size:13px}
+.d-range{width:100%;accent-color:var(--btn-on);height:28px;margin:0}
+.d-range:disabled{opacity:.6}
+/* 3 · 2 · 1 */
+.d-count{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:52vh;text-align:center}
+.d-num{font-size:104px;font-weight:700;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+.d-num.go{animation:d-pop .5s var(--ease-out)}
+@keyframes d-pop{from{opacity:0;transform:scale(.6)}}
+.d-count p{margin:0;font-size:15px;color:var(--muted)}
+/* the race: both players' progress, live */
+.d-race{max-width:838px;margin:0 auto;display:flex;flex-direction:column;gap:5px;padding:7px 10px;border:1px solid var(--line);border-radius:5px;background:var(--surface)}
+.d-lane{display:grid;grid-template-columns:minmax(0,7.5em) minmax(0,1fr) auto;align-items:center;gap:8px;font-size:13.5px}
+.d-lane .nm{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.d-lane.me .nm{color:var(--accent)}
+.d-track{height:8px;border-radius:4px;background:var(--line-soft);overflow:hidden}
+.d-fill{display:block;height:100%;background:var(--accent-btn);transform-origin:left;transition:transform .35s var(--ease-out)}
+.d-lane:not(.me) .d-fill{background:var(--radio-off)}
+[dir="rtl"] .d-fill{transform-origin:right}
+.d-sc{font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+.d-sc b{color:var(--green)}
+.d-lane .st{grid-column:1/-1;margin-top:-2px;font-size:12px;color:var(--muted)}
+.d-lane .st.off{color:var(--red)}
+.d-q .q.done .choice,.d-q .q.done .sbox,.d-q .q.done .dd-btn{opacity:.75}
+.d-q .verdict{font-weight:700}
+.d-q .verdict.flash{animation:d-rise .2s var(--ease-out)}
+/* results */
+.d-hero{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px 6px;text-align:center;animation:d-hero .34s var(--ease-out)}
+@keyframes d-hero{from{opacity:0;transform:scale(.96)}}
+.d-cup{width:58px;height:58px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--btn);border:1px solid var(--btn-line);color:var(--btn-fg);font-size:28px}
+.win .d-cup{background:var(--soft-star);border-color:var(--star);color:var(--star)}
+.lose .d-cup{color:var(--muted)}
+.d-hero h2{margin:0;font-size:24px;line-height:1.2}
+.win .d-hero h2{color:var(--green)}
+.lose .d-hero h2{color:var(--red)}
+.d-hero p{margin:0;font-size:14.5px;color:var(--muted);max-width:36ch;text-wrap:pretty}
+.d-tab{width:100%;border-collapse:collapse;table-layout:fixed;background:var(--surface);border:1px solid var(--line);border-radius:5px;font-size:15px;font-variant-numeric:tabular-nums}
+.d-tab th,.d-tab td{padding:8px 10px;border-bottom:1px solid var(--line-soft);text-align:center;overflow-wrap:anywhere}
+.d-tab th{font-size:13.5px;color:var(--ink);background:var(--head)}
+.d-tab th:first-child,.d-tab td:first-child{text-align:start;color:var(--muted);font-weight:400;width:38%}
+.d-tab tr:last-child td{border-bottom:0}
+.d-tab td.best{font-weight:700;color:var(--green)}
+.d-tab tbody tr{animation:d-rise .26s var(--ease-out) both}
+.d-rvs{display:flex;flex-direction:column;gap:6px}
+.d-rv{border:1px solid var(--line);border-radius:5px;background:var(--surface)}
+.d-rv summary{display:flex;align-items:flex-start;gap:8px;padding:9px 10px;cursor:pointer;list-style:none;font-size:14.5px;line-height:1.35}
+.d-rv summary::-webkit-details-marker{display:none}
+.d-rv .n{flex:none;min-width:1.6em;color:var(--muted);font-variant-numeric:tabular-nums}
+.d-rv .p{flex:1;min-width:0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.d-rv[open] .p{display:block}
+.d-rv .s{flex:none;font-size:17px}
+.d-rv.ok .s{color:var(--green)}
+.d-rv.bad .s{color:var(--wrong)}
+.d-rv.miss .s,.d-rv.none .s{color:var(--missed)}
+.d-rv .b{padding:0 10px 10px;font-size:calc(15px * var(--fs))}
+.d-rv .ctx{margin:0 0 8px;padding:6px 8px;border-radius:3px;background:var(--head-soft);font-size:.93em}
+.d-rv .choice{margin-bottom:4px}
+.d-rv .choice.right .ctext{color:var(--green);font-weight:700}
+.d-rv .choice.wrong .ctext{color:var(--wrong);text-decoration:line-through}
+.d-rv .choice .i{color:var(--green);margin-inline-start:6px}
+.d-rv td.wrong{color:var(--wrong);text-decoration:line-through}
+.d-rv td.right{color:var(--green);font-weight:700}
+.d-rv .sub{margin:8px 0 4px;font-size:12.5px;font-weight:600;color:var(--muted)}
+/* an invitation over whatever is open */
+.d-ban{position:fixed;left:50%;top:calc(8px + env(safe-area-inset-top,0px));z-index:70;width:min(520px,calc(100% - 16px));display:flex;flex-wrap:wrap;align-items:center;gap:10px 11px;padding:11px 12px 13px;border:1px solid var(--accent-line);border-radius:6px;background:var(--surface);box-shadow:0 10px 30px var(--shadow);overflow:hidden;transform:translate(-50%,calc(-100% - 20px));opacity:0;visibility:hidden;transition:transform .3s var(--ease-out),opacity .2s,visibility 0s .3s}
+.d-ban.on{transform:translate(-50%,0);opacity:1;visibility:visible;transition:transform .3s var(--ease-out),opacity .2s,visibility 0s}
+.d-ban .mtxt{flex:1;min-width:0;font-size:15.5px;font-weight:600;line-height:1.3;overflow-wrap:anywhere}
+.d-ban .mtxt small{display:block;margin-top:2px;font-size:13px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
+.d-ban .d-row2{flex-basis:100%}
+.d-ban .act{height:40px;font-size:15px}
+.mrow .d-badge{background:var(--btn-on);color:var(--on-accent)}
+@media (min-width:960px){ .duel-layer{padding:14px} }
+@media (prefers-reduced-motion: reduce){
+  .duel-layer,.duel-layer.closing,.d-body.enter,.d-card,.d-hero,.d-tab tbody tr,.d-q .verdict.flash{animation-name:fade}
+  .duel-layer.closing{animation-direction:reverse}
+  .d-num.go{animation-name:fade}
+  .d-ban,.d-ban.on{transform:translate(-50%,0)}
+  .d-fill{transition:none}
+  .d-net.wait i{animation:none}
+}
 </style>
 
 <div class="app" id="app">
@@ -1459,7 +1626,138 @@ const TR = {
   "Ваш курс": ["Your year", "سنتك الدراسية"],
   "Покажем тесты этого курса": ["We'll show this year's tests", "سنعرض اختبارات هذه السنة"],
   "Файлов пока нет": ["No files yet", "لا توجد ملفات بعد"],
-  "Поменять можно в меню": ["You can change it in the menu", "يمكن تغييرها من القائمة"]
+  "Поменять можно в меню": ["You can change it in the menu", "يمكن تغييرها من القائمة"],
+  // Дуэль
+  "{0}: приглашение отклонено": ["{0} declined the invitation", "{0}: تم رفض الدعوة"],
+  "{0} не ответил(а) на приглашение": ["No reply from {0}", "لا رد من {0} على الدعوة"],
+  "{0} сейчас не в сети": ["{0} is offline now", "{0} غير متصل الآن"],
+  "{0} уже в другой дуэли": ["{0} is already in another duel", "{0} في مبارزة أخرى بالفعل"],
+  "{0} отменяет приглашение": ["{0} cancelled the invitation", "ألغى {0} الدعوة"],
+  "Дуэль": ["Duel", "مبارزة"],
+  "в сети": ["online", "متصل"],
+  "подключаюсь…": ["connecting…", "جارٍ الاتصال…"],
+  "нет связи": ["offline", "لا اتصال"],
+  "Выйти из комнаты": ["Leave the room", "مغادرة الغرفة"],
+  "Закрыть дуэль": ["Close the duel", "إغلاق المبارزة"],
+  "Сдаться": ["Give up", "استسلام"],
+  "Кто ответит больше и быстрее": ["Who gets more right, faster", "من يجيب أكثر وأسرع"],
+  "Имя соперника": ["Opponent's name", "اسم المنافس"],
+  "Найти соперника по имени": ["Find an opponent by name", "ابحث عن منافس بالاسم"],
+  "В аккаунте нет имени — откройте профиль и задайте его": ["Your account has no name — open the profile and set one", "لا يوجد اسم في حسابك — افتح الملف الشخصي وأضف اسمًا"],
+  "Нет связи с сервером дуэлей — пробую снова": ["No connection to the duel server — trying again", "لا اتصال بخادم المبارزات — جارٍ إعادة المحاولة"],
+  "Сервер дуэлей недоступен. Попробуйте позже": ["The duel server is unavailable. Try again later", "خادم المبارزات غير متاح. حاول لاحقًا"],
+  "Повторить": ["Retry", "إعادة المحاولة"],
+  "Подключаюсь к серверу дуэлей…": ["Connecting to the duel server…", "جارٍ الاتصال بخادم المبارزات…"],
+  "Ждём ответа: {0}": ["Waiting for {0}", "بانتظار رد {0}"],
+  "Приглашение действует ещё": ["The invitation expires in", "تنتهي الدعوة خلال"],
+  "Отменить": ["Cancel", "إلغاء"],
+  "Найдено": ["Found", "النتائج"],
+  "Сейчас в сети": ["Online now", "متصلون الآن"],
+  "в дуэли": ["in a duel", "في مبارزة"],
+  "{0} поб. / {1} пор.": ["{0} W / {1} L", "{0} فوز / {1} خسارة"],
+  "не в сети": ["offline", "غير متصل"],
+  "Ждём…": ["Waiting…", "بالانتظار…"],
+  "Позвать": ["Invite", "دعوة"],
+  "Никого не нашли. Имя ищется с начала любого слова: «Ив» найдёт «Иван Петров» и «Анна Иванова».": ["Nobody found. Names are matched from the start of any word: “Iv” finds “Ivan Petrov” and “Anna Ivanova”.", "لم يُعثر على أحد. يُبحث عن الاسم من بداية أي كلمة: «Iv» يجد «Ivan Petrov» و«Anna Ivanova»."],
+  "Сейчас никого нет в сети. Найдите друга по имени — позвать можно того, у кого открыт тренажёр.": ["Nobody is online right now. Find a friend by name — you can invite anyone who has the trainer open.", "لا أحد متصل الآن. ابحث عن صديق بالاسم — يمكنك دعوة من لديه المدرب مفتوحًا."],
+  "Ваши дуэли: побед {0}, поражений {1}, ничьих {2}": ["Your duels: {0} won, {1} lost, {2} drawn", "مبارزاتك: {0} فوز، {1} خسارة، {2} تعادل"],
+  "{0} зовёт на дуэль": ["{0} invites you to a duel", "{0} يدعوك إلى مبارزة"],
+  "Отклонить": ["Decline", "رفض"],
+  "Принять": ["Accept", "قبول"],
+  "Вы · пригласили": ["You · invited", "أنت · صاحب الدعوة"],
+  "Вы": ["You", "أنت"],
+  "вышел(а)": ["left", "غادر"],
+  "Файл: {0}": ["File: {0}", "الملف: {0}"],
+  "Настройка дуэли": ["Setting up the duel", "إعداد المبارزة"],
+  "Файл с вопросами": ["Question file", "ملف الأسئلة"],
+  "{0}: у каждого игрока будут свои случайные вопросы из этого файла": ["{0}: each player gets their own random questions from this file", "{0}: لكل لاعب أسئلته العشوائية الخاصة من هذا الملف"],
+  "Без курса": ["No year", "بدون سنة"],
+  "{0} выбирает файл и число вопросов. Дуэль начнётся у вас обоих одновременно.": ["{0} is choosing the file and the number of questions. The duel starts for both of you at the same moment.", "{0} يختار الملف وعدد الأسئلة. ستبدأ المبارزة لديكما في اللحظة نفسها."],
+  "Файл": ["File", "الملف"],
+  "Вопросов": ["Questions", "الأسئلة"],
+  "из {0}": ["of {0}", "من {0}"],
+  "Приготовьтесь": ["Get ready", "استعد"],
+  "вышел(а) из дуэли": ["left the duel", "غادر المبارزة"],
+  "ответил(а) на все вопросы": ["answered every question", "أجاب عن كل الأسئلة"],
+  "нет связи — ждём ещё": ["offline — waiting another", "لا اتصال — ننتظر"],
+  "Прогресс игроков": ["Players' progress", "تقدّم اللاعبين"],
+  "Осталось": ["Left", "المتبقي"],
+  "Ответить": ["Answer", "إجابة"],
+  "Ждём соперника": ["Waiting for the opponent", "بانتظار المنافس"],
+  "Вы вышли из дуэли": ["You left the duel", "لقد غادرت المبارزة"],
+  "Вы ответили на все вопросы": ["You answered every question", "أجبت عن كل الأسئلة"],
+  "Верно {0} из {1}": ["{0} of {1} right", "{0} صحيحة من {1}"],
+  "время {0}": ["time {0}", "الوقت {0}"],
+  "Ждём, пока {0} закончит. Итоги появятся сами.": ["Waiting for {0} to finish. The results will appear by themselves.", "بانتظار أن ينهي {0}. ستظهر النتائج تلقائيًا."],
+  "Свернуть — итоги придут сюда": ["Minimise — the results will come here", "تصغير — ستصلك النتائج هنا"],
+  "Итоги · {0}": ["Results · {0}", "النتائج · {0}"],
+  "Победа!": ["Victory!", "فوز!"],
+  "Поражение": ["Defeat", "خسارة"],
+  "Ничья": ["Draw", "تعادل"],
+  "Без победителя": ["No winner", "بلا فائز"],
+  "У вас больше верных ответов": ["You got more answers right", "إجاباتك الصحيحة أكثر"],
+  "У соперника больше верных ответов": ["Your opponent got more answers right", "إجابات المنافس الصحيحة أكثر"],
+  "Верных поровну, но вы закончили быстрее": ["Equal right answers, but you finished faster", "الإجابات الصحيحة متساوية، لكنك أنهيت أسرع"],
+  "Верных поровну, но соперник закончил быстрее": ["Equal right answers, but your opponent finished faster", "الإجابات الصحيحة متساوية، لكن المنافس أنهى أسرع"],
+  "Поровну верных ответов и одинаковое время": ["Equal right answers and the same time", "إجابات صحيحة متساوية ووقت متساوٍ"],
+  "{0} сдался(лась)": ["{0} gave up", "استسلم {0}"],
+  "Вы сдались": ["You gave up", "لقد استسلمت"],
+  "{0} потерял(а) связь": ["{0} lost the connection", "انقطع اتصال {0}"],
+  "Вы потеряли связь": ["You lost the connection", "انقطع اتصالك"],
+  "Оба игрока вышли из дуэли": ["Both players left the duel", "غادر اللاعبان المبارزة"],
+  "Верно": ["Right", "صحيحة"],
+  "Неверно": ["Wrong", "خاطئة"],
+  "Пропущено": ["Skipped", "متروكة"],
+  "Не успели": ["Not reached", "لم يُجب عنها"],
+  "Точность": ["Accuracy", "الدقة"],
+  "Время": ["Time", "الوقت"],
+  "{0} предлагает реванш: тот же файл, {1} новых вопросов": ["{0} offers a rematch: the same file, {1} new questions", "{0} يعرض مباراة ثأرية: الملف نفسه، {1} أسئلة جديدة"],
+  "Ждём, согласится ли {0} на реванш…": ["Waiting to see if {0} accepts the rematch…", "بانتظار موافقة {0} على المباراة الثأرية…"],
+  "{0} отказывается от реванша": ["{0} declined the rematch", "رفض {0} المباراة الثأرية"],
+  "{0} закрыл(а) итоги — реванш уже не начать": ["{0} closed the results — a rematch is no longer possible", "أغلق {0} النتائج — لم تعد المباراة الثأرية ممكنة"],
+  "Разбор ваших ответов": ["Your answers, reviewed", "مراجعة إجاباتك"],
+  "Отказаться": ["Decline", "رفض"],
+  "Принять реванш": ["Accept the rematch", "قبول المباراة الثأرية"],
+  "Реванш": ["Rematch", "مباراة ثأرية"],
+  "Дуэль отменена": ["Duel cancelled", "أُلغيت المبارزة"],
+  "Вы вышли из комнаты": ["You left the room", "لقد غادرت الغرفة"],
+  "{0} выходит из комнаты": ["{0} left the room", "غادر {0} الغرفة"],
+  "Связь пропала, пока шла настройка": ["The connection dropped during the setup", "انقطع الاتصال أثناء الإعداد"],
+  "Настройка заняла больше 10 минут": ["The setup took more than 10 minutes", "استغرق الإعداد أكثر من 10 دقائق"],
+  "Выйти из комнаты?": ["Leave the room?", "مغادرة الغرفة؟"],
+  "Дуэль отменится для обоих игроков.": ["The duel will be cancelled for both players.", "ستُلغى المبارزة لكلا اللاعبين."],
+  "Сдаться?": ["Give up?", "استسلام؟"],
+  "Победа достанется сопернику. Вернуться в эту дуэль будет нельзя.": ["Your opponent will win. You won't be able to return to this duel.", "سيفوز منافسك. لن تتمكن من العودة إلى هذه المبارزة."],
+  "Играть дальше": ["Keep playing", "متابعة اللعب"],
+  "Дуэль идёт": ["A duel is on", "المبارزة جارية"],
+  "с соперником: {0}": ["against {0}", "ضد {0}"],
+  "Вернуться": ["Return", "عودة"],
+  "{0} предлагает реванш": ["{0} offers a rematch", "{0} يعرض مباراة ثأرية"],
+  "Дуэль окончена": ["The duel is over", "انتهت المبارزة"],
+  "Итоги": ["Results", "النتائج"],
+  "Войдите, чтобы играть с друзьями": ["Sign in to play with friends", "سجّل الدخول للعب مع الأصدقاء"],
+  "Идёт дуэль — вернуться": ["A duel is on — return", "مبارزة جارية — عودة"],
+  "Вас зовёт: {0}": ["Invited by {0}", "يدعوك: {0}"],
+  "Побед {0} · поражений {1}": ["{0} won · {1} lost", "{0} فوز · {1} خسارة"],
+  "Дуэль с другом": ["Duel with a friend", "مبارزة مع صديق"],
+  "Не успели ответить": ["Not reached", "لم يُجب عنه"],
+  "Ваш порядок": ["Your order", "ترتيبك"],
+  "Игрок сейчас не в сети": ["This player is offline now", "هذا اللاعب غير متصل الآن"],
+  "Игрок сейчас в другой дуэли": ["This player is in another duel", "هذا اللاعب في مبارزة أخرى"],
+  "Сначала закончите текущую дуэль": ["Finish your current duel first", "أنهِ مبارزتك الحالية أولًا"],
+  "Слишком часто — подождите немного": ["Too often — wait a little", "بسرعة كبيرة — انتظر قليلًا"],
+  "Игрок не найден": ["Player not found", "اللاعب غير موجود"],
+  "Приглашение уже не действует": ["The invitation is no longer valid", "لم تعد الدعوة صالحة"],
+  "Соперник сейчас не в сети": ["Your opponent is offline now", "منافسك غير متصل الآن"],
+  "Соперник уже вышел": ["Your opponent has already left", "غادر منافسك بالفعل"],
+  "Сначала выберите файл": ["Choose a file first", "اختر ملفًا أولًا"],
+  "В этом файле нет вопросов для дуэли": ["This file has no questions for a duel", "لا توجد في هذا الملف أسئلة للمبارزة"],
+  "Файл не открылся — попробуйте другой": ["The file didn't open — try another one", "لم يُفتح الملف — جرّب ملفًا آخر"],
+  "Настраивает тот, кто пригласил": ["The one who invited sets it up", "يتولى الإعداد صاحب الدعوة"],
+  "Нет связи с сервером дуэлей": ["No connection to the duel server", "لا اتصال بخادم المبارزات"],
+  "Сервер дуэлей не отвечает": ["The duel server isn't answering", "خادم المبارزات لا يستجيب"],
+  "Не получилось — попробуйте ещё раз": ["That didn't work — try again", "لم ينجح ذلك — حاول مرة أخرى"],
+  "Покинуть": ["Leave", "مغادرة"]
 };
 // T('Вопрос {0} из {1}', 3, 20) → the phrase in the chosen language, {n} filled in
 function T(s, ...a) {
@@ -1591,6 +1889,8 @@ const I = {
   trash: sv('<path d="M4 7h16M10 11v6M14 11v6M9 7V4.5h6V7M6 7l1 13h10l1-13"/>'),
   flag: sv('<path d="M5 21V4h11l-2 4 2 4H5"/>'),
   play: sv('<path d="M8 5v14l11-7Z"/>', true),
+  duel: sv('<path d="M14.5 17.5 3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2M14.5 6.5 18 3h3v3l-3.5 3.5M5 14l4 4M7 17l-3 3M3 19l2 2"/>'),
+  trophy: sv('<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.7V17c0 .6-.5 1-1 1.2C7.9 18.8 7 20.2 7 22M14 14.7V17c0 .6.5 1 1 1.2 1.1.6 2 2 2 3.8M18 2H6v7a6 6 0 0 0 12 0Z"/>'),
   lock: sv('<rect x="5" y="10.5" width="14" height="10.5" rx="2.5"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/>'),
   user: sv('<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/>'),
   gear: sv('<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>'),
@@ -1911,8 +2211,9 @@ function rebuildSets() {
 
 /* ---------- answer records ---------- */
 const EMPTY_REC = Object.freeze({ sel: null, multi: Object.freeze([]), dd: Object.freeze({}), order: null, text: '', shuf: null, checked: false, reveal: false });
-const rec = id => S.answers[akey(id)] || EMPTY_REC;
+const rec = id => (isDuelQ(id) ? Duel.recs[id] : S.answers[akey(id)]) || EMPTY_REC;
 function mut(id, fn) {
+  if (isDuelQ(id)) { const r = Duel.recs[id] || (Duel.recs[id] = { sel: null, multi: [], dd: {}, order: null, text: '', shuf: null, checked: false, reveal: false }); fn(r); return; }
   const k = akey(id);
   if (!S.answers[k]) S.answers[k] = { sel: null, multi: [], dd: {}, order: null, text: '', shuf: null, checked: false, reveal: false };
   fn(S.answers[k]);
@@ -2141,6 +2442,7 @@ function jumpTo(i) {
 
 /* ---------- answering ---------- */
 function answerChanged(qid) {
+  if (isDuelQ(qid)) return;
   checkSeq++;
   const it = currentItem();
   if (it && it.kind === 'case' && it.id !== qid && subsOfCase(it).some(s => s.id === qid)) {
@@ -2148,25 +2450,25 @@ function answerChanged(qid) {
   }
 }
 function pick(qid, i) {
-  if (isLocked(currentItem())) return;
-  const q = QMAP.get(qid);
+  if (frozen(qid)) return;
+  const q = qById(qid);
   if (!q) return;
   if (q.kind === 'single') mut(qid, r => { r.sel = i; r.checked = false; r.reveal = false; });
   else mut(qid, r => { const s = new Set(r.multi); s.has(i) ? s.delete(i) : s.add(i); r.multi = [...s]; r.checked = false; r.reveal = false; });
   answerChanged(qid);
 }
 function setDD(qid, row, value) {
-  if (isLocked(currentItem())) return;
+  if (frozen(qid)) return;
   mut(qid, r => { if (value) r.dd[row] = value; else delete r.dd[row]; r.checked = false; r.reveal = false; });
   answerChanged(qid);
 }
 function setOrder(qid, order) {
-  if (isLocked(currentItem())) return;
+  if (frozen(qid)) return;
   mut(qid, r => { r.order = order; r.moved = true; r.checked = false; r.reveal = false; });
   answerChanged(qid);
 }
 function setText(qid, text) {
-  if (isLocked(currentItem())) return;
+  if (frozen(qid)) return;
   mut(qid, r => { r.text = text; r.checked = false; r.reveal = false; });
   answerChanged(qid);
 }
@@ -2387,6 +2689,7 @@ function render() {
   if (sidebarShown()) renderMenuBody();
   tourSoon();
   if (FIREBASE_DB) Presence.touch();
+  Duel.sync();
 }
 
 function renderTop() {
@@ -2776,7 +3079,7 @@ function menuHTML() {
     h += menuCatsHTML() + menuStarHTML();
     if (!S.test) h += menuTestHTML();
   }
-  h += menuFilesHTML() + menuSettingsHTML();
+  h += duelMenuHTML() + menuFilesHTML() + menuSettingsHTML();
   return tgPromoHTML() + h + creditHTML();
 }
 // «Made by TG @ziplogo»: its words fall once each time the menu is opened, when they come into view,
@@ -3061,7 +3364,7 @@ function haptic() {
 
 /* ---------- specific sheets ---------- */
 function openDDPicker(qid, row) {
-  const q = QMAP.get(qid);
+  const q = qById(qid);
   if (!q) return;
   const cur = rec(qid).dd[row] || '';
   const order = ensureShuf(qid, q.choices.length);
@@ -3069,7 +3372,7 @@ function openDDPicker(qid, row) {
     order.map(i => { const v = q.choices[i], on = v === cur; return `<button type="button" class="pick${on ? ' on' : ''}" data-s="pick" data-ci="${i}"><span>${esc(v)}</span>${on ? I.check : ''}</button>`; }).join('') + '</div>';
   openSheet({
     html,
-    onClick: (id, el, e, close) => { const ci = +el.dataset.ci; setDD(qid, row, ci < 0 ? '' : q.choices[ci]); close(); render(); }
+    onClick: (id, el, e, close) => { const ci = +el.dataset.ci; setDD(qid, row, ci < 0 ? '' : q.choices[ci]); close(); repaint(qid); }
   });
 }
 function openGoTo() {
@@ -3642,7 +3945,7 @@ function openAddSub(caseId) {
 const ACT = {
   'menu': () => (docked() ? setDockOff(!dockOff) : openDrawer()),
   'm-close': () => (docked() ? setDockOff(true) : closeDrawer()),
-  'pick': el => { pick(el.dataset.qid, +el.dataset.i); render(); },
+  'pick': el => { pick(el.dataset.qid, +el.dataset.i); repaint(el.dataset.qid); },
   'dd-open': el => openDDPicker(el.dataset.qid, +el.dataset.row),
   'check': () => { if (needsSignup()) return openAuth(); check(); },
   'reveal': () => { if (needsSignup()) return openAuth(); reveal(); render(); },
@@ -3654,6 +3957,7 @@ const ACT = {
     const was = drawerOpen; closeDrawer();
     setTimeout(() => tgWait({ code }), was ? 300 : 0);
   },
+  'm-duel': () => { const was = drawerOpen; closeDrawer(); setTimeout(() => (Account.user ? Duel.show() : openAuth({ dismissible: true, mode: 'in' })), was ? 300 : 0); },
   'm-profile': () => { const was = drawerOpen; closeDrawer(); setTimeout(() => (Account.user ? openProfile() : openAuth({ dismissible: true, mode: 'in' })), was ? 300 : 0); },
   'finish': () => openFinish(),
   'star': () => {
@@ -3738,6 +4042,7 @@ document.addEventListener('keydown', e => {
   const lbl = e.target.closest && e.target.closest('label[role="button"]');
   if (lbl && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); lbl.click(); return; }
   if (anySheet() || drawerOpen) { if (drawerOpen && e.key === 'Escape') closeDrawer(); return; }
+  if (Duel.open) { Duel.key(e); return; }
   if (e.key === 'Escape' && e.target === elSearch) { elSearch.blur(); return; }
   if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
   if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -3851,25 +4156,26 @@ elDrawer.addEventListener('touchend', e => {
 
 /* sortable drag */
 let drag = null;
-elContent.addEventListener('pointerdown', e => {
+function dragStart(e, sc) {
   const h = e.target.closest('[data-handle]');
   if (!h || drag) return;
   const row = h.closest('.sort-row'), list = row && row.parentElement;
-  const q = list && QMAP.get(list.dataset.qid);
+  const q = list && qById(list.dataset.qid);
   if (!q) return;
   e.preventDefault();
   const rows = [...list.children];
   const rects = rows.map(r => r.getBoundingClientRect());
   const from = rows.indexOf(row);
   const gap = rows.length > 1 ? Math.max(0, rects[1].top - rects[0].bottom) : 8;
-  drag = { q, rows, rects, from, to: from, startY: e.clientY, y: e.clientY, startScroll: elScroller.scrollTop, step: rects[from].height + gap, id: e.pointerId, raf: 0 };
+  drag = { q, sc, rows, rects, from, to: from, startY: e.clientY, y: e.clientY, startScroll: sc.scrollTop, step: rects[from].height + gap, id: e.pointerId, raf: 0 };
   row.classList.add('dragging');
   try { h.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
   drag.raf = requestAnimationFrame(dragTick);
-});
+}
+elContent.addEventListener('pointerdown', e => dragStart(e, elScroller));
 function layoutDrag() {
   const d = drag;
-  const dy = (d.y - d.startY) + (elScroller.scrollTop - d.startScroll);
+  const dy = (d.y - d.startY) + (d.sc.scrollTop - d.startScroll);
   const r0 = d.rects[d.from];
   // A neighbour gives way once the dragged row's leading edge passes its middle (as on iOS).
   const top = r0.top + dy, bottom = r0.bottom + dy;
@@ -3890,11 +4196,11 @@ function layoutDrag() {
 }
 function dragTick() {
   if (!drag) return;
-  const sr = elScroller.getBoundingClientRect(), edge = 60;
+  const sc = drag.sc, sr = sc.getBoundingClientRect(), edge = 60;
   let v = 0;
   if (drag.y < sr.top + edge) v = -Math.ceil((sr.top + edge - drag.y) / 5);
   else if (drag.y > sr.bottom - edge) v = Math.ceil((drag.y - (sr.bottom - edge)) / 5);
-  if (v) { const before = elScroller.scrollTop; elScroller.scrollTop += v; if (elScroller.scrollTop !== before) layoutDrag(); }
+  if (v) { const before = sc.scrollTop; sc.scrollTop += v; if (sc.scrollTop !== before) layoutDrag(); }
   drag.raf = requestAnimationFrame(dragTick);
 }
 document.addEventListener('pointermove', e => { if (drag && e.pointerId === drag.id) { drag.y = e.clientY; layoutDrag(); } }, { passive: true });
@@ -3909,7 +4215,7 @@ function endDrag(e) {
     order.splice(d.to, 0, moved);
     setOrder(d.q.id, order);
   }
-  render();
+  repaint(d.q.id);
 }
 document.addEventListener('pointerup', endDrag);
 document.addEventListener('pointercancel', endDrag);
@@ -4963,6 +5269,834 @@ function normalizeState(st) {
   if (!S.profile || typeof S.profile.name !== 'string' || !S.profile.name.trim()) S.profile = null;
   S.checks = Math.max(0, Math.floor(+S.checks || 0));
 }
+/* =========================================================
+   Дуэль: two players, one course file, each their own random questions, live progress, a winner.
+   The server (duel-worker/) is the judge: it deals the questions, keeps the keys, grades every answer
+   by its own clock and names the winner. This page only shows what it is sent and passes on what was chosen,
+   so nothing changed in the browser can turn into a win.
+   ========================================================= */
+const DUEL_URL = (() => {
+  // a test server on this computer, only for a page opened from this computer
+  try {
+    const v = localStorage.getItem('TestTrainer.duelDev');
+    if (v && /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && /^http:\/\/(localhost|127\.0\.0\.1):\d{2,5}$/.test(v)) return v;
+  } catch (e) {}
+  return 'https://trainer-duel.zsasqzsasq.workers.dev';
+})();
+const DUEL_Q = 'duel~'; // ids of duel questions: their answers live in Duel.recs, not in the saved progress
+const isDuelQ = id => typeof id === 'string' && id.startsWith(DUEL_Q);
+const qById = id => QMAP.get(id) || (isDuelQ(id) ? Duel.qmap.get(id) : undefined);
+// a duel question is closed while its answer is on the way and once it is graded
+const frozen = qid => (isDuelQ(qid) ? Duel.frozen(qid) : isLocked(currentItem()));
+const repaint = qid => (isDuelQ(qid) ? Duel.paintQ() : render());
+// set a part of the screen only when its markup has changed: no flicker, focus and scroll stay
+const put = (el, h) => { if (el && el._h !== h) { el._h = h; el.innerHTML = h; } };
+const fmtT = ms => {
+  const s = Math.max(0, Math.floor(ms / 1000)), m = Math.floor(s / 60);
+  return m >= 60 ? Math.floor(m / 60) + ':' + String(m % 60).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0') : m + ':' + String(s % 60).padStart(2, '0');
+};
+const fmtLeft = ms => fmtT(Math.ceil(Math.max(0, ms) / 1000) * 1000);
+const dFac = id => { const f = facOf(id); return f ? f.name : ''; };
+const dWho = c => [c.course ? T('{0} курс', c.course) : '', dFac(c.fac)].filter(Boolean).join(' · ');
+const dAva = (c, me, dot) => `<span class="d-ava${me ? ' me' : ''}" aria-hidden="true">${esc((String(c.name || '?').trim()[0] || '?').toUpperCase())}${dot == null ? '' : `<i class="dot${dot ? ' on' : ''}"></i>`}</span>`;
+// what the server's refusal means for the person
+function dErr(code) {
+  const M = {
+    OFFLINE: 'Игрок сейчас не в сети', BUSY: 'Игрок сейчас в другой дуэли', BUSY_ME: 'Сначала закончите текущую дуэль',
+    RATE: 'Слишком часто — подождите немного', NO_USER: 'Игрок не найден', GONE: 'Приглашение уже не действует',
+    PEER_OFFLINE: 'Соперник сейчас не в сети', PEER_LEFT: 'Соперник уже вышел', NO_FILE: 'Сначала выберите файл',
+    EMPTY: 'В этом файле нет вопросов для дуэли', FILE: 'Файл не открылся — попробуйте другой', SETS: 'Файл не открылся — попробуйте другой',
+    NOT_HOST: 'Настраивает тот, кто пригласил', NETWORK: 'Нет связи с сервером дуэлей', TIMEOUT: 'Сервер дуэлей не отвечает'
+  };
+  return T(M[code] || 'Не получилось — попробуйте ещё раз');
+}
+// a question as the server sent it (no key) → the shape the trainer's own drawing code knows
+function duelQ(v, id) {
+  const q = { kind: v.kind, id, prompt: String(v.prompt || ''), context: v.context || null };
+  if (v.kind === 'single' || v.kind === 'multiple') q.options = (v.options || []).map(t => ({ text: String(t), correct: false }));
+  else if (v.kind === 'dropdown') { q.rows = (v.rows || []).map(l => ({ left: String(l), value: '' })); q.choices = (v.choices || []).map(String); }
+  else if (v.kind === 'sortable') q.order = (v.items || []).map(String);
+  return q;
+}
+// what was chosen, in the server's words; nothing chosen → an empty answer, i.e. «пропущен»
+function duelAnswer(q) {
+  const r = rec(q.id);
+  if (q.kind === 'single') return r.sel != null ? { sel: r.sel } : {};
+  if (q.kind === 'multiple') return { multi: r.multi.slice().sort((a, b) => a - b) };
+  if (q.kind === 'dropdown') return { dd: Object.assign({}, r.dd) };
+  if (q.kind === 'sortable') return r.moved && r.order ? { order: r.order.slice() } : {};
+  return {};
+}
+
+const Duel = {
+  ws: null, conn: 'off', err: '', connecting: false, tries: 0, retryT: 0, idleT: 0, pingT: 0, tickT: 0, advT: 0, lastMsg: 0,
+  off: 0, seq: 0, rids: new Map(),
+  me: null, invIn: [], invOut: null, d: null, qs: null, review: null,
+  recs: {}, qmap: new Map(), at: 0, pend: null, flashI: null, done: new Set(),
+  open: false, el: null, shown: '', qKey: '', search: { q: '', list: null, busy: false }, searchSeq: 0, searchT: 0, searchAt: 0,
+  pendFile: '', nDrag: 0, nSendT: 0, autoFile: '', menuSig: '', banSig: '',
+  now() { return Date.now() + this.off; },
+  uid() { return Account.user ? Account.user.uid : ''; },
+  want() { return !!(Account.ready() && Account.user && !Account.blocked()); },
+  active() { const d = this.d; return !!d && (d.status === 'setup' || d.status === 'play'); },
+  peer() { const d = this.d; return d ? d.players[d.a === this.uid() ? d.b : d.a] : null; },
+  mine() { const d = this.d; return d ? d.players[this.uid()] : null; },
+  host() { return !!this.d && this.d.a === this.uid(); },
+  // the service worker reloads into a new version only when no duel would be cut short
+  busy() { return this.active() || !!this.invOut; },
+
+  /* ---------- connection: ticket by the Firebase token, then one WebSocket ---------- */
+  sync() {
+    if (!this.want()) { if (this.ws || this.open || this.d || this.invIn.length || this.me) this.reset(); return; }
+    if (!this.ws && !this.connecting && !this.retryT && document.visibilityState !== 'hidden') this.connect();
+  },
+  reset() { // signed out or blocked: nothing of that person stays on the page
+    this.hang(); clearTimeout(this.retryT); this.retryT = 0; this.tries = 0;
+    this.me = null; this.invIn = []; this.invOut = null; this.d = null; this.qs = null; this.review = null; this.recs = {}; this.qmap = new Map();
+    if (this.open) this.hide(true);
+    this.changed();
+  },
+  async connect() {
+    this.connecting = true; this.err = '';
+    const uid = this.uid();
+    let tk;
+    try {
+      const t = await Account.token();
+      if (!t) throw new Error('NO_TOKEN');
+      let r;
+      try { r = await fetch(DUEL_URL + '/duel/ticket', { method: 'POST', headers: { Authorization: 'Bearer ' + t }, cache: 'no-store' }); }
+      catch (e) { throw new Error('NETWORK'); }
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok || !j.ticket) throw new Error(j.error || 'HTTP_' + r.status);
+      tk = j;
+    } catch (e) {
+      this.connecting = false;
+      if (e.gone) { this.fail('GONE'); return; } // the account is gone: Account.sync signs out
+      if (e.message === 'BAD_TOKEN') Account.idt = ''; // a fresh token next time
+      this.fail(e.message);
+      return;
+    }
+    this.connecting = false;
+    if (!this.want() || this.uid() !== uid) return;
+    let ws;
+    try { ws = new WebSocket(DUEL_URL.replace(/^http/, 'ws') + '/duel/ws?ticket=' + encodeURIComponent(tk.ticket)); }
+    catch (e) { this.fail('NETWORK'); return; }
+    this.ws = ws; this.conn = 'wait'; this.lastMsg = Date.now();
+    ws.onmessage = e => { if (this.ws === ws) this.onMsg(e.data); };
+    ws.onclose = () => { if (this.ws === ws) this.dropped(); };
+    ws.onerror = () => {};
+    this.changed();
+  },
+  fail(code) {
+    this.conn = 'off'; this.err = code || 'NETWORK';
+    const hard = /^(NO_NAME|BLOCKED|ORIGIN|DENIED|GONE)$/.test(this.err);
+    const wait = hard ? 60000 : Math.min(30000, 1000 * 2 ** this.tries) + Math.random() * 500;
+    this.tries++;
+    clearTimeout(this.retryT);
+    this.retryT = setTimeout(() => { this.retryT = 0; this.sync(); }, wait);
+    this.changed();
+  },
+  dropped() {
+    const was = this.conn === 'on';
+    this.ws = null; this.conn = 'off';
+    clearInterval(this.pingT); this.pingT = 0;
+    for (const w of this.rids.values()) w.bad(new Error('NETWORK'));
+    this.rids.clear();
+    this.pend = null;
+    if (was) this.tries = 0;
+    this.fail('NETWORK');
+  },
+  hang() {
+    const w = this.ws;
+    this.ws = null; this.conn = 'off';
+    clearInterval(this.pingT); this.pingT = 0;
+    for (const x of this.rids.values()) x.bad(new Error('NETWORK'));
+    this.rids.clear();
+    if (w) { try { w.close(1000); } catch (e) {} }
+  },
+  send(m) { if (this.ws && this.ws.readyState === 1) { try { this.ws.send(JSON.stringify(m)); return true; } catch (e) {} } return false; },
+  req(m, ms = 12000) {
+    return new Promise((ok, bad) => {
+      if (this.conn !== 'on') return bad(new Error('NETWORK'));
+      const rid = ++this.seq;
+      const t = setTimeout(() => { this.rids.delete(rid); bad(new Error('TIMEOUT')); }, ms);
+      this.rids.set(rid, { ok: v => { clearTimeout(t); ok(v); }, bad: e => { clearTimeout(t); bad(e); } });
+      if (!this.send(Object.assign({}, m, { rid }))) { this.rids.delete(rid); clearTimeout(t); bad(new Error('NETWORK')); }
+    });
+  },
+  // fire and forget, with the refusal shown
+  ask(m) { return this.req(m).catch(e => { if (!/^(STATE|NO_DUEL)$/.test(e.message)) toast(dErr(e.message)); else this.send({ t: 'sync' }); throw e; }); },
+  ping() {
+    clearInterval(this.pingT);
+    this.pingT = setInterval(() => {
+      // a socket that went quiet (a phone asleep, a dead Wi-Fi) is dropped and opened again
+      if (Date.now() - this.lastMsg > 65000) { const w = this.ws; this.dropped(); try { w && w.close(); } catch (e) {} return; }
+      if (this.ws && this.ws.readyState === 1) { try { this.ws.send('{"t":"ping"}'); } catch (e) {} }
+    }, 25000);
+  },
+  clock() {
+    const t0 = Date.now();
+    this.req({ t: 'time' }).then(r => { const t1 = Date.now(); if (t1 - t0 < 5000) { this.off = r.now - (t0 + t1) / 2; this.paint(); } }).catch(() => {});
+  },
+  onMsg(raw) {
+    this.lastMsg = Date.now();
+    let m;
+    try { m = JSON.parse(raw); } catch (e) { return; }
+    if (!m || typeof m.t !== 'string' || m.t === 'pong') return;
+    const w = m.rid != null ? this.rids.get(m.rid) : null;
+    if (w) {
+      this.rids.delete(m.rid);
+      if (m.t === 'error') { const e = new Error(m.code); e.at = m.at; w.bad(e); return; }
+      w.ok(m);
+      if (m.t === 'ok' || m.t === 'search' || m.t === 'time') return;
+    }
+    const f = this.on[m.t];
+    if (f) f.call(this, m);
+  },
+  on: {
+    hello(m) {
+      this.conn = 'on'; this.err = ''; this.tries = 0;
+      if (Number.isFinite(m.now)) this.off = m.now - Date.now();
+      this.me = m.me || this.me;
+      this.invIn = Array.isArray(m.invIn) ? m.invIn : [];
+      this.invOut = m.invOut || null;
+      this.setDuel(m.duel || null, true);
+      if (m.qs) this.setQs(m.qs);
+      if (m.review && this.d && m.review.id === this.d.id) this.review = m.review;
+      this.ping(); this.clock();
+      if (this.open && this.phase() === 'lobby') this.find(true);
+      this.changed();
+    },
+    'invite-in'(m) {
+      if (!m.inv) return;
+      this.invIn = this.invIn.filter(v => v.id !== m.inv.id && v.from.uid !== m.inv.from.uid).concat(m.inv);
+      haptic();
+      this.changed();
+    },
+    'invite-out'(m) { this.invOut = m.inv || null; this.changed(); },
+    'invite-gone'(m) {
+      const inn = this.invIn.find(v => v.id === m.id);
+      this.invIn = this.invIn.filter(v => v.id !== m.id);
+      if (this.invOut && this.invOut.id === m.id) {
+        const n = this.invOut.to.name;
+        this.invOut = null;
+        const say = { declined: T('{0}: приглашение отклонено', n), expired: T('{0} не ответил(а) на приглашение', n), offline: T('{0} сейчас не в сети', n), busy: T('{0} уже в другой дуэли', n) }[m.why];
+        if (say && !this.active()) toast(say);
+      } else if (inn && m.why === 'cancelled') toast(T('{0} отменяет приглашение', inn.from.name));
+      this.changed();
+    },
+    duel(m) { this.setDuel(m.duel); this.changed(); },
+    qs(m) { this.setQs(m); this.changed(); },
+    graded(m) {
+      const s = this.qs;
+      if (!s || s.id !== m.id) return;
+      s.ans[m.i] = { ok: !!m.ok, empty: !!m.empty };
+      if (this.pend === m.i) this.pend = null;
+      if (m.i === this.at) {
+        // the verdict shows for a moment, then the next question
+        this.flashI = m.i;
+        if (m.ok) haptic();
+        clearTimeout(this.advT);
+        this.advT = setTimeout(() => { this.flashI = null; this.at = Math.max(this.at, m.i + 1); this.paint(); }, 750);
+      } else this.at = Math.max(this.at, s.ans.length);
+      this.changed();
+    },
+    review(m) { if (this.d && m.id === this.d.id) { this.review = m; this.changed(); } },
+    error(m) { if (m.code === 'RATE') toast(dErr('RATE')); }
+  },
+  setDuel(v, hello) {
+    const cur = this.d;
+    if (!v) { if (hello) { this.d = null; this.qs = null; this.review = null; } return; }
+    const isNew = !cur || cur.id !== v.id;
+    if (isNew && cur) {
+      // a newer duel (a rematch, a fresh invitation) replaces the old one; late news about an old one is ignored
+      const fresh = v.status === 'setup' || v.status === 'play';
+      if (!fresh && !hello && (this.active() || (cur.endAt || 0) > (v.endAt || 0))) return;
+    }
+    if (isNew) {
+      this.qs = null; this.review = null; this.recs = {}; this.qmap = new Map(); this.at = 0; this.pend = null; this.flashI = null;
+      clearTimeout(this.advT); this.qKey = ''; this.autoFile = '';
+    }
+    const was = cur && cur.id === v.id ? cur.status : '';
+    this.d = v;
+    // an accepted invitation or a rematch opens the duel on both phones at once
+    if ((v.status === 'setup' || v.status === 'play') && (isNew || !was) && !this.open && !hello) this.show();
+    else if ((v.status === 'setup' || v.status === 'play') && hello && !this.open && this.tucked !== v.id) this.show(); // back after a reload
+    if (v.status === 'over' && was === 'play') { haptic(); if (!this.open) this.banner(); }
+  },
+  setQs(m) {
+    if (!m || !Array.isArray(m.qs)) return;
+    const list = m.qs.map((v, i) => duelQ(v, DUEL_Q + m.id + '~' + i));
+    const ans = Array.isArray(m.ans) ? m.ans.slice() : [];
+    this.qs = { id: m.id, list, ans };
+    this.qmap = new Map(list.map(q => [q.id, q]));
+    // the server's order is the order shown: no shuffling here
+    for (const q of list) {
+      if (this.recs[q.id]) continue;
+      const n = q.kind === 'dropdown' ? q.choices.length : q.options ? q.options.length : 0;
+      this.recs[q.id] = { sel: null, multi: [], dd: {}, order: q.kind === 'sortable' ? range(q.order.length) : null, text: '', shuf: range(n), checked: false, reveal: false };
+    }
+    this.at = ans.length; this.pend = null; this.flashI = null; clearTimeout(this.advT);
+  },
+  frozen(qid) {
+    const s = this.qs;
+    if (!s || !this.d || this.d.status !== 'play') return true;
+    const i = s.list.findIndex(q => q.id === qid);
+    return i !== this.at || this.pend === i || s.ans[i] != null || this.now() < this.d.startAt - 200;
+  },
+
+  /* ---------- what is on screen ---------- */
+  phase() {
+    const d = this.d, me = this.uid();
+    if (!d) return 'lobby';
+    if (d.status === 'setup') return 'room';
+    if (d.status === 'play') {
+      const p = d.players[me];
+      if (p && p.left) return 'wait';
+      if (!this.qs || this.qs.id !== d.id || this.now() < d.startAt) return 'count';
+      if (this.qs.ans.length >= this.qs.list.length && this.flashI == null) return 'wait';
+      return 'play';
+    }
+    if (this.done.has(d.id) || (d.closed || []).includes(me)) return 'lobby';
+    return d.status === 'over' ? 'over' : 'cancelled';
+  },
+  show() {
+    if (!this.want()) return;
+    if (tour) endTour();
+    if (drawerOpen) closeDrawer();
+    if (this.el && this.el.classList.contains('closing')) { this.el.remove(); this.el = null; }
+    if (!this.el) {
+      const el = document.createElement('div');
+      el.className = 'duel-layer'; el.id = 'duel';
+      el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'dTitle');
+      el.innerHTML = `<div class="d-frame"><header class="d-top"><button type="button" class="icon-btn" data-d="back" id="dBack"></button><div class="d-ttl"><b id="dTitle">${T('Дуэль')}</b><small id="dSub"></small></div><span class="d-net" id="dNet"><i></i><span></span></span></header><div class="d-strip" id="dStrip"></div><main class="scroller" id="dScroller"><div class="content d-body" id="dBody"></div></main><footer class="dl-foot" id="dFoot"></footer></div>`;
+      document.body.appendChild(el);
+      this.el = el;
+      el.addEventListener('click', e => this.click(e));
+      el.addEventListener('input', e => this.input(e));
+      el.addEventListener('change', e => this.input(e, true));
+      el.addEventListener('pointerdown', e => { if (e.target.id === 'dN') this.nDrag = Date.now(); });
+      const body = el.querySelector('#dBody');
+      body.addEventListener('pointerdown', e => dragStart(e, el.querySelector('#dScroller')));
+    }
+    this.open = true; this.shown = '';
+    $('#app').inert = true; $('#drawer').inert = true;
+    this.paint();
+    const b = $('#dBack'); if (b) b.focus({ preventScroll: true });
+    this.changed();
+  },
+  hide(now) {
+    if (!this.open) return;
+    this.open = false; this.shown = '';
+    clearTimeout(this.searchT);
+    const el = this.el;
+    this.el = null;
+    if (el) { if (now || RM.matches) el.remove(); else { el.classList.add('closing'); setTimeout(() => el.remove(), 190); } }
+    if (!drawerOpen) $('#app').inert = false;
+    $('#drawer').inert = false;
+    if (drag) { cancelAnimationFrame(drag.raf); drag = null; }
+    this.changed();
+  },
+  // something changed: the screen, the invitation banner, the menu row and the timers follow
+  changed() {
+    this.paint();
+    this.banner();
+    const sig = this.menuState().sig;
+    if (sig !== this.menuSig) { this.menuSig = sig; if (drawerOpen || sidebarShown()) renderMenuBody(); }
+    const need = this.open || !!this.invOut || this.invIn.length > 0;
+    if (need && !this.tickT) this.tickT = setInterval(() => this.tick(), 250);
+    else if (!need && this.tickT) { clearInterval(this.tickT); this.tickT = 0; }
+  },
+  times() {
+    const now = this.now();
+    document.querySelectorAll('[data-until]').forEach(el => { const t = fmtLeft(+el.dataset.until - now); if (el.textContent !== t) el.textContent = t; });
+    document.querySelectorAll('[data-since]').forEach(el => { const t = fmtT(now - +el.dataset.since); if (el.textContent !== t) el.textContent = t; });
+    document.querySelectorAll('[data-bar]').forEach(el => { const [a, b] = el.dataset.bar.split('-').map(Number); el.style.transform = `scaleX(${clamp((b - now) / Math.max(1, b - a), 0, 1).toFixed(4)})`; });
+  },
+  tick() {
+    this.times();
+    const now = this.now();
+    // invitations run out here too, without waiting for the server's word
+    const live = this.invIn.filter(v => v.exp > now - 1500);
+    if (live.length !== this.invIn.length) { this.invIn = live; this.changed(); return; }
+    if (!this.open) return;
+    const ph = this.phase();
+    if (ph !== this.shown) { this.paint(); return; }
+    if (ph === 'count') this.countTick();
+    if (ph === 'lobby' && !this.search.q && !this.search.busy && Date.now() - this.searchAt > 15000) this.find(true);
+  },
+  paint() {
+    if (!this.open || !this.el) return;
+    const ph = this.phase(), fresh = ph !== this.shown;
+    const body = $('#dBody'), strip = $('#dStrip'), foot = $('#dFoot');
+    if (fresh) {
+      this.shown = ph; this.qKey = '';
+      this.el.dataset.ph = ph;
+      put(strip, ''); put(foot, ''); put(body, ''); body.removeAttribute('dir');
+      $('#dScroller').scrollTop = 0;
+      body.classList.remove('enter'); void body.offsetWidth; body.classList.add('enter');
+    }
+    body.classList.toggle('top', ph === 'lobby' || ph === 'room' || ph === 'over');
+    const net = $('#dNet');
+    net.className = 'd-net ' + this.conn;
+    net.lastChild.textContent = this.conn === 'on' ? T('в сети') : this.conn === 'wait' ? T('подключаюсь…') : T('нет связи');
+    net.title = net.lastChild.textContent;
+    const back = $('#dBack'), closeOnly = ph === 'lobby' || ph === 'over' || ph === 'cancelled' || ph === 'wait';
+    put(back, closeOnly || ph === 'room' ? I.x : I.flag);
+    back.setAttribute('aria-label', ph === 'room' ? T('Выйти из комнаты') : closeOnly ? T('Закрыть дуэль') : T('Сдаться'));
+    this['p_' + ph](fresh, body, strip, foot);
+    this.times();
+  },
+  setSub(html) { put($('#dSub'), html); },
+
+  /* lobby: find someone by name, invitations in and out */
+  p_lobby(fresh, body, strip) {
+    this.setSub(esc(T('Кто ответит больше и быстрее')));
+    if (fresh) {
+      put(strip, `<div class="d-search"><label class="searchbox" for="dQ">${I.search}<input id="dQ" type="search" placeholder="${T('Имя соперника')}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" aria-label="${T('Найти соперника по имени')}" value="${esc(this.search.q)}"></label></div>`);
+      put(body, '<div class="d-wrap"><div class="d-part" id="dLNote"></div><div class="d-part" id="dLInv"></div><div class="d-label" id="dLLabel"></div><div class="d-part" id="dLList"></div><p class="d-me" id="dLMe"></p></div>');
+      // fresh numbers (wins after a duel) and invitations; the answer runs the search
+      this.send({ t: 'sync' });
+    }
+    let h = '';
+    if (this.conn !== 'on') {
+      h += this.conn === 'off' && this.err && (this.err !== 'NETWORK' || this.tries >= 3)
+        ? `<div class="d-note warn">${esc(this.err === 'NO_NAME' ? T('В аккаунте нет имени — откройте профиль и задайте его') : this.err === 'NETWORK' ? T('Нет связи с сервером дуэлей — пробую снова') : T('Сервер дуэлей недоступен. Попробуйте позже'))}<br><button type="button" class="act" data-d="retry">${T('Повторить')}</button></div>`
+        : `<div class="d-note"><span class="spinner" style="display:inline-block;width:16px;height:16px;border-width:2px;vertical-align:-3px;margin-inline-end:8px"></span>${T('Подключаюсь к серверу дуэлей…')}</div>`;
+    }
+    put($('#dLNote'), h);
+    h = '';
+    for (const v of this.invIn) h += this.inCard(v);
+    if (this.invOut) {
+      const v = this.invOut;
+      h += `<div class="d-card out">${dAva(v.to, false, true)}<span class="mtxt">${T('Ждём ответа: {0}', esc(v.to.name))}<small>${T('Приглашение действует ещё')} <span data-until="${v.exp}"></span></small></span><button type="button" class="act" data-d="cancel" data-id="${esc(v.id)}">${T('Отменить')}</button><span class="d-left" aria-hidden="true"><span data-bar="${v.now || v.exp - 60000}-${v.exp}"></span></span></div>`;
+    }
+    put($('#dLInv'), h);
+    const s = this.search;
+    put($('#dLLabel'), `<span>${s.q ? T('Найдено') : T('Сейчас в сети')}</span>${s.busy ? '<span class="spinner" style="width:14px;height:14px;border-width:2px"></span>' : ''}`);
+    h = '';
+    if (s.list && s.list.length) {
+      h += '<div class="d-list">' + s.list.map(u => {
+        const out = this.invOut && this.invOut.to.uid === u.uid;
+        const can = u.on && !u.busy && !out && this.conn === 'on';
+        const why = u.busy ? `<span class="d-tag">${T('в дуэли')}</span>` : '';
+        const rec = u.wins || u.losses || u.draws ? ' · ' + T('{0} поб. / {1} пор.', u.wins, u.losses) : '';
+        return `<div class="d-pl">${dAva(u, false, !!u.on)}<span class="mtxt">${esc(u.name)}${why}<small>${esc(dWho(u))}${rec}${u.on ? '' : ' · ' + T('не в сети')}</small></span><button type="button" class="act${can ? ' main' : ''}" data-d="invite" data-uid="${esc(u.uid)}"${can ? '' : ' disabled'}>${out ? T('Ждём…') : T('Позвать')}</button></div>`;
+      }).join('') + '</div>';
+    } else if (s.list) {
+      h += `<div class="d-empty">${s.q ? T('Никого не нашли. Имя ищется с начала любого слова: «Ив» найдёт «Иван Петров» и «Анна Иванова».') : T('Сейчас никого нет в сети. Найдите друга по имени — позвать можно того, у кого открыт тренажёр.')}</div>`;
+    }
+    put($('#dLList'), h);
+    put($('#dLMe'), this.me ? T('Ваши дуэли: побед {0}, поражений {1}, ничьих {2}', this.me.wins || 0, this.me.losses || 0, this.me.draws || 0) : '');
+    this.times();
+  },
+  inCard(v) {
+    return `<div class="d-card in">${dAva(v.from, false, true)}<span class="mtxt">${T('{0} зовёт на дуэль', esc(v.from.name))}<small>${esc(dWho(v.from))} · <span data-until="${v.exp}"></span></small></span><div class="d-row2"><button type="button" class="act" data-d="no" data-id="${esc(v.id)}">${T('Отклонить')}</button><button type="button" class="act main" data-d="yes" data-id="${esc(v.id)}">${T('Принять')}</button></div></div>`;
+  },
+  find(now) {
+    clearTimeout(this.searchT);
+    const go = async () => {
+      const inp = $('#dQ'), q = inp ? inp.value.trim() : this.search.q;
+      const seq = ++this.searchSeq;
+      this.search.q = q; this.search.busy = true; this.searchAt = Date.now();
+      if (this.shown === 'lobby') this.paint();
+      try { const r = await this.req({ t: 'search', q }); if (seq === this.searchSeq) this.search = { q, list: Array.isArray(r.list) ? r.list : [], busy: false }; }
+      catch (e) { if (seq === this.searchSeq) this.search.busy = false; }
+      if (seq === this.searchSeq && this.shown === 'lobby') this.paint();
+    };
+    if (this.conn !== 'on') return;
+    if (now) go(); else this.searchT = setTimeout(go, 230);
+  },
+  vsHTML() {
+    const d = this.d, me = this.mine(), p = this.peer();
+    const side = (c, mine) => {
+      const away = !c.on && c.back;
+      const st = mine ? (d.a === c.uid ? T('Вы · пригласили') : T('Вы')) : c.left ? T('вышел(а)') : away ? `${T('нет связи')} · <span data-until="${c.back}"></span>` : c.on ? T('в сети') : T('не в сети');
+      return `<div class="d-side">${dAva(c, mine, !!c.on)}<b>${esc(c.name)}</b><small${!mine && !c.on ? ' class="off"' : ''}>${st}</small></div>`;
+    };
+    return `<div class="d-vs">${side(me, true)}<span class="d-x">VS</span>${side(p, false)}</div>`;
+  },
+  /* the room: the one who invited picks a file and the number of questions; the other sees it live */
+  p_room(fresh, body, strip, foot) {
+    const d = this.d, host = this.host(), p = this.peer();
+    this.setSub(esc(d.file ? T('Файл: {0}', d.title) : T('Настройка дуэли')));
+    put(strip, this.vsHTML());
+    if (host && !d.file && this.autoFile !== d.id) {
+      // the file open in the trainer is the natural first choice
+      this.autoFile = d.id;
+      const s = curSet(), b = s && s.bundled && BUNDLED.find(x => x.id === s.id);
+      if (b) this.pickFile(b.file);
+    }
+    let h = '<div class="d-wrap">';
+    if (host) {
+      const fac = curFac(), files = BUNDLED.filter(b => b.fac === fac.id).sort((x, y) => (x.course - y.course) || x.title.localeCompare(y.title, 'ru'));
+      h += `<div class="d-h">${T('Файл с вопросами')}<small>${T('{0}: у каждого игрока будут свои случайные вопросы из этого файла', esc(fac.name))}</small></div><div class="d-files" role="radiogroup">`;
+      let c = -1;
+      for (const b of files) {
+        if (b.course !== c) { c = b.course; h += `<div class="d-course">${c ? T('{0} курс', c) : T('Без курса')}</div>`; }
+        const on = (this.pendFile || d.file) === b.file, wait = this.pendFile === b.file;
+        h += `<button type="button" class="pick${on ? ' on' : ''}" role="radio" aria-checked="${on}" data-d="file" data-file="${esc(b.file)}"><span>${esc(b.title)}</span>${wait ? '<span class="spinner"></span>' : on ? I.check : ''}</button>`;
+      }
+      if (!files.length) h += `<div class="d-empty">${T('Для {0} тестов пока нет', esc(fac.gen))}</div>`;
+      h += '</div>';
+    } else {
+      h += `<div class="d-note">${T('{0} выбирает файл и число вопросов. Дуэль начнётся у вас обоих одновременно.', esc(p.name))}</div>`;
+      h += `<div class="d-kv"><span>${T('Файл')}</span><b>${d.file ? esc(d.title) : '—'}</b></div>`;
+    }
+    put(body, h + '</div>');
+    // the slider stays put while it is being dragged; the server's number follows when the finger is up
+    const max = d.max || MAX_DUEL_N, dragging = Date.now() - this.nDrag < 600;
+    let r = $('#dN');
+    if (!r) {
+      put(foot, `<div class="d-col"><div class="d-n"><label for="dN">${T('Вопросов')}</label><output id="dNv" for="dN"></output><small id="dNmax"></small></div><input type="range" class="d-range" id="dN" min="1" step="1"><div class="d-row2"><button type="button" class="act" data-d="leave">${T('Покинуть')}</button><button type="button" class="act main" data-d="start" id="dStart">${I.play}${T('Начать')}</button></div></div>`);
+      r = $('#dN');
+    }
+    r.max = String(max);
+    r.disabled = !host || !d.file;
+    if (!dragging || !host) { r.value = String(d.n); $('#dNv').textContent = d.n; }
+    $('#dNmax').textContent = d.file ? T('из {0}', max) : '';
+    const st = $('#dStart');
+    st.hidden = !host;
+    st.disabled = !d.file || !p.on || !!this.pendFile || this.conn !== 'on';
+  },
+  pickFile(file) {
+    if (!this.d || this.pendFile) return;
+    this.pendFile = file; this.paint();
+    this.ask({ t: 'setup', id: this.d.id, file }).catch(() => {}).finally(() => { this.pendFile = ''; this.paint(); });
+  },
+  // the other player watches the number move: sent while dragging, at most ~8 times a second
+  sendN(n, final) {
+    this.nWant = n;
+    const go = () => { this.nSendT = 0; if (this.d && this.d.status === 'setup' && this.host()) this.send({ t: 'setup', id: this.d.id, n: this.nWant }); };
+    if (final) { clearTimeout(this.nSendT); go(); } else if (!this.nSendT) this.nSendT = setTimeout(go, 120);
+  },
+  /* 3 · 2 · 1 by the server's clock — both phones start together */
+  p_count(fresh, body, strip, foot) {
+    const d = this.d;
+    this.setSub(esc(T('Приготовьтесь')));
+    put(strip, this.vsHTML());
+    if (fresh) {
+      put(body, `<div class="d-count"><div class="d-num" id="dNum" aria-live="assertive"></div><p>${esc(d.title)} · ${d.n} ${plural(d.n, 'вопрос', 'вопроса', 'вопросов')}</p><p id="dCountNote"></p></div>`);
+      put(foot, `<div class="d-row2" style="flex:1"><button type="button" class="act" data-d="surrender">${I.flag}${T('Сдаться')}</button></div>`);
+    }
+    this.countTick();
+  },
+  countTick() {
+    const d = this.d, el = $('#dNum');
+    if (!d || !el) return;
+    const left = d.startAt - this.now(), n = Math.max(0, Math.ceil(left / 1000));
+    const txt = n > 0 ? String(n) : '';
+    const note = $('#dCountNote');
+    if (note) note.textContent = n > 0 ? '' : T('Загружаю вопросы…');
+    if (el.textContent !== txt) { el.textContent = txt; el.classList.remove('go'); void el.offsetWidth; if (txt) el.classList.add('go'); }
+  },
+  raceHTML() {
+    const d = this.d, n = d.n, me = this.mine(), p = this.peer();
+    const mineDone = this.qs ? this.qs.ans.length : me.done, mineOk = this.qs ? this.qs.ans.filter(x => x && x.ok).length : me.ok;
+    const lane = (c, mine, done, ok) => {
+      let st = '';
+      if (!mine) {
+        if (c.left) st = `<span class="st off">${T('вышел(а) из дуэли')}</span>`;
+        else if (c.fin != null) st = `<span class="st">${T('ответил(а) на все вопросы')}</span>`;
+        else if (!c.on && c.back) st = `<span class="st off">${T('нет связи — ждём ещё')} <span data-until="${c.back}"></span></span>`;
+      }
+      return `<div class="d-lane${mine ? ' me' : ''}"><span class="nm">${mine ? T('Вы') : esc(c.name)}</span><span class="d-track"><span class="d-fill" style="transform:scaleX(${(n ? done / n : 0).toFixed(3)})"></span></span><span class="d-sc" dir="ltr"><b>✓ ${ok}</b> · ${done}/${n}</span>${st}</div>`;
+    };
+    return `<div class="d-race" aria-label="${T('Прогресс игроков')}">${lane(me, true, mineDone, mineOk)}${lane(p, false, p.done, p.ok)}</div>`;
+  },
+  curQ() { return this.qs && this.qs.list[this.flashI != null ? this.flashI : this.at] || null; },
+  /* the game: the trainer's own question drawing, answered one by one */
+  p_play(fresh, body, strip, foot) {
+    const d = this.d;
+    put(strip, this.raceHTML());
+    this.setSub(`${T('Вопрос {0} из {1}', Math.min((this.flashI != null ? this.flashI : this.at) + 1, d.n), d.n)} · <span data-since="${d.startAt}"></span>`);
+    if (fresh) put(foot, `<button type="button" class="btn fin" data-d="surrender" aria-label="${T('Сдаться')}" title="${T('Сдаться')}">${I.flag}<span class="lbl">${T('Сдаться')}</span></button><div class="ft-mid"><div class="ft-info" id="dLeft"></div></div><button type="button" class="btn nx" data-d="answer" id="dGo"><span class="lbl"></span>${I.chevR}</button>`);
+    const q = this.curQ();
+    if (fresh || (q && this.qSig !== this.sigOf(q))) { if (!drag) this.paintQ(); }
+    else this.paintLeft();
+  },
+  sigOf(q) { const i = this.qs.list.indexOf(q), g = this.qs.ans[i]; return [this.qs.id, i, this.frozen(q.id), g ? (g.ok ? 1 : g.empty ? 2 : 3) : 0, this.conn].join('|'); },
+  paintLeft() {
+    const left = $('#dLeft'), q = this.curQ();
+    if (!left || !q) return;
+    const r = this.d.deadline - this.now();
+    put(left, r < 60000 ? `${T('Осталось')} <span data-until="${this.d.deadline}"></span>` : `<span dir="ltr">${this.qs.list.indexOf(q) + 1} / ${this.d.n}</span>`);
+  },
+  paintQ() {
+    if (!this.open || this.shown !== 'play') { if (this.open) this.paint(); return; }
+    const q = this.curQ(), body = $('#dBody');
+    if (!q) return;
+    const i = this.qs.list.indexOf(q), g = this.qs.ans[i], key = this.qs.id + '|' + i;
+    this.qSig = this.sigOf(q);
+    const top = $('#dScroller').scrollTop;
+    QMAP.set(q.id, q);
+    let h = (q.context ? contextHTML(q.context) : '') + panelHTML(q, qHTML(q, { lock: this.frozen(q.id) }));
+    body.setAttribute('dir', textDir(q.prompt));
+    body._h = ''; body.innerHTML = `<div class="d-q">${h}</div>`;
+    if (g) {
+      const sec = body.querySelector('.q');
+      sec.classList.add('done');
+      const word = g.ok ? T('Верный ответ') : g.empty ? T('Вопрос пропущен') : T('Неверный ответ');
+      sec.querySelector('.prompt').insertAdjacentHTML('afterend', `<div class="verdict flash ${g.ok ? 'ok' : g.empty ? 'miss' : 'bad'}">${word}</div>`);
+    }
+    body.querySelectorAll('.choice[data-act]').forEach((b, k) => { if (k < 9) b.dataset.key = String(k + 1); });
+    if (key !== this.qKey) { this.qKey = key; $('#dScroller').scrollTop = 0; body.classList.remove('enter'); void body.offsetWidth; body.classList.add('enter'); }
+    else $('#dScroller').scrollTop = top;
+    const go = $('#dGo');
+    if (go) {
+      const has = answered(q);
+      go.querySelector('.lbl').textContent = has ? T('Ответить') : T('Пропустить');
+      go.disabled = this.frozen(q.id) || this.conn !== 'on';
+      go.classList.toggle('main', has);
+    }
+    this.paintLeft();
+    this.times();
+  },
+  submit() {
+    const q = this.curQ();
+    if (!q || this.frozen(q.id) || this.conn !== 'on') return;
+    const i = this.at;
+    this.pend = i; this.paintQ();
+    this.req({ t: 'answer', id: this.d.id, i, a: duelAnswer(q) }).catch(e => {
+      if (this.pend !== i) return;
+      this.pend = null;
+      if (/^(ORDER|DONE|STATE|NO_DUEL|EARLY)$/.test(e.message)) this.send({ t: 'sync' }); // the server knows better: take its state
+      else toast(dErr(e.message));
+      this.paintQ();
+    });
+  },
+  /* all answered: the other one is still playing */
+  p_wait(fresh, body, strip, foot) {
+    const d = this.d, me = this.mine(), p = this.peer();
+    put(strip, this.raceHTML());
+    this.setSub(esc(T('Ждём соперника')));
+    const ok = this.qs ? this.qs.ans.filter(x => x && x.ok).length : me.ok;
+    put(body, `<div class="state"><div class="big" style="color:var(--green)">${I.ok}</div><h2>${me.left ? T('Вы вышли из дуэли') : T('Вы ответили на все вопросы')}</h2><p>${T('Верно {0} из {1}', ok, d.n)}${me.fin != null ? ' · ' + T('время {0}', fmtT(me.fin)) : ''}</p><p>${T('Ждём, пока {0} закончит. Итоги появятся сами.', esc(p.name))}</p></div>`);
+    if (fresh) put(foot, `<button type="button" class="act" data-d="hide">${T('Свернуть — итоги придут сюда')}</button>`);
+  },
+  /* the end: who won, how, and every answer */
+  p_over(fresh, body, strip, foot) {
+    const d = this.d, me = this.uid(), r = d.result || { winner: null, reason: 'draw', stats: {} };
+    const o = d.a === me ? d.b : d.a, pn = esc(d.players[o].name);
+    const S1 = r.stats[me] || {}, S2 = r.stats[o] || {};
+    const res = r.reason === 'abandoned' ? 'none' : r.winner == null ? 'draw' : r.winner === me ? 'win' : 'lose';
+    const won = res === 'win';
+    this.setSub(esc(T('Итоги · {0}', d.title)));
+    const title = { win: T('Победа!'), lose: T('Поражение'), draw: T('Ничья'), none: T('Без победителя') }[res];
+    const why = {
+      score: won ? T('У вас больше верных ответов') : T('У соперника больше верных ответов'),
+      time: won ? T('Верных поровну, но вы закончили быстрее') : T('Верных поровну, но соперник закончил быстрее'),
+      draw: T('Поровну верных ответов и одинаковое время'),
+      left: won ? T('{0} сдался(лась)', pn) : T('Вы сдались'),
+      dropped: won ? T('{0} потерял(а) связь', pn) : T('Вы потеряли связь'),
+      abandoned: T('Оба игрока вышли из дуэли')
+    }[r.reason] || '';
+    const row = (label, a, b, better, k) => {
+      const bestA = better && a.v !== b.v && better(a.v, b.v), bestB = better && a.v !== b.v && better(b.v, a.v);
+      return `<tr style="animation-delay:${k * 40}ms"><td>${label}</td><td${bestA ? ' class="best"' : ''}>${a.t}</td><td${bestB ? ' class="best"' : ''}>${b.t}</td></tr>`;
+    };
+    const val = (s, k) => ({ v: s[k] || 0, t: String(s[k] || 0) });
+    const tm = s => ({ v: s.time == null || !s.finished ? Infinity : s.time, t: s.time == null ? '—' : fmtT(s.time) });
+    const more = (x, y) => x > y, less = (x, y) => x < y;
+    let h = `<div class="d-wrap ${res}"><div class="d-hero"><span class="d-cup">${res === 'win' ? I.trophy : res === 'lose' ? I.flag : I.duel}</span><h2>${title}</h2><p>${why}</p></div>`;
+    h += `<table class="d-tab"><thead><tr><th></th><th>${T('Вы')}</th><th>${pn}</th></tr></thead><tbody>`;
+    h += row(T('Верно'), val(S1, 'ok'), val(S2, 'ok'), more, 0);
+    h += row(T('Неверно'), { v: (S1.wrong || 0) - (S1.skipped || 0), t: String((S1.wrong || 0) - (S1.skipped || 0)) }, { v: (S2.wrong || 0) - (S2.skipped || 0), t: String((S2.wrong || 0) - (S2.skipped || 0)) }, less, 1);
+    h += row(T('Пропущено'), val(S1, 'skipped'), val(S2, 'skipped'), null, 2);
+    h += row(T('Не успели'), val(S1, 'unanswered'), val(S2, 'unanswered'), null, 3);
+    h += row(T('Точность'), { v: S1.acc || 0, t: (S1.acc || 0) + '%' }, { v: S2.acc || 0, t: (S2.acc || 0) + '%' }, more, 4);
+    h += row(T('Время'), tm(S1), tm(S2), less, 5);
+    h += '</tbody></table>';
+    const peerGone = (d.closed || []).includes(o);
+    if (d.rematch === o) h += `<div class="d-note">${T('{0} предлагает реванш: тот же файл, {1} новых вопросов', pn, d.n)}</div>`;
+    else if (d.rematch === me) h += `<div class="d-note">${T('Ждём, согласится ли {0} на реванш…', pn)}</div>`;
+    else if (d.rematchNo === o) h += `<div class="d-note">${T('{0} отказывается от реванша', pn)}</div>`;
+    else if (peerGone) h += `<div class="d-note">${T('{0} закрыл(а) итоги — реванш уже не начать', pn)}</div>`;
+    h += `<div class="d-h">${T('Разбор ваших ответов')}</div>`;
+    if (this.review && this.review.id === d.id) {
+      const opened = new Set([...body.querySelectorAll('details[open]')].map(x => x.dataset.i));
+      h += '<div class="d-rvs">' + this.review.items.map((x, i) => rvHTML(x, i, opened.has(String(i)))).join('') + '</div>';
+    } else h += '<div class="d-empty"><span class="spinner" style="display:inline-block"></span></div>';
+    const top = $('#dScroller').scrollTop;
+    put(body, h + '</div>');
+    $('#dScroller').scrollTop = top;
+    let f;
+    if (d.rematch === o) f = `<button type="button" class="act" data-d="rematch-no">${T('Отказаться')}</button><button type="button" class="act main" data-d="rematch">${I.duel}${T('Принять реванш')}</button>`;
+    else f = `<button type="button" class="act" data-d="done">${T('Готово')}</button><button type="button" class="act main" data-d="rematch"${d.rematch === me || peerGone || !d.players[o].on ? ' disabled' : ''}>${I.duel}${d.rematch === me ? T('Ждём…') : T('Реванш')}</button>`;
+    put(foot, f);
+  },
+  p_cancelled(fresh, body, strip, foot) {
+    const d = this.d, mine = d.by === this.uid(), pn = esc(this.peer().name);
+    this.setSub(esc(T('Дуэль отменена')));
+    const why = d.why === 'left' ? (mine ? T('Вы вышли из комнаты') : T('{0} выходит из комнаты', pn))
+      : d.why === 'gone' ? (mine ? T('Связь пропала, пока шла настройка') : T('{0} потерял(а) связь', pn))
+        : d.why === 'timeout' ? T('Настройка заняла больше 10 минут') : '';
+    put(body, `<div class="state"><div class="big">${I.xCircle}</div><h2>${T('Дуэль отменена')}</h2>${why ? `<p>${why}</p>` : ''}</div>`);
+    if (fresh) put(foot, `<button type="button" class="act main" data-d="done">${T('Готово')}</button>`);
+  },
+
+  /* ---------- what the person does ---------- */
+  async click(e) {
+    const b = e.target.closest('[data-d]');
+    if (!b || b.disabled || !this.el || !this.el.contains(b)) return;
+    const a = b.dataset.d, d = this.d, id = b.dataset.id;
+    if (a === 'back') return this.back();
+    if (a === 'retry') { clearTimeout(this.retryT); this.retryT = 0; this.tries = 0; this.err = ''; this.sync(); this.paint(); return; }
+    if (a === 'invite') { b.disabled = true; this.ask({ t: 'invite', to: b.dataset.uid }).catch(() => {}).finally(() => this.paint()); return; }
+    if (a === 'cancel') { this.ask({ t: 'cancel', id }).catch(() => {}); return; }
+    if (a === 'yes' || a === 'no') return this.reply(id, a === 'yes');
+    if (a === 'file') { if (this.host() && d.file !== b.dataset.file) this.pickFile(b.dataset.file); return; }
+    if (a === 'start') { b.disabled = true; this.ask({ t: 'start', id: d.id }).catch(() => {}).finally(() => this.paint()); return; }
+    if (a === 'leave') return this.leave();
+    if (a === 'surrender') return this.surrender();
+    if (a === 'answer') return this.submit();
+    if (a === 'hide') { this.tucked = d && d.id; return this.hide(); } // tucked away while waiting: a reconnect doesn't pop it up again
+    if (a === 'rematch') { b.disabled = true; this.ask({ t: 'rematch', id: d.id }).catch(() => {}).finally(() => this.paint()); return; }
+    if (a === 'rematch-no') { this.ask({ t: 'rematch-no', id: d.id }).catch(() => {}); return; }
+    if (a === 'done') return this.finishUp();
+  },
+  input(e, final) {
+    if (e.target.id === 'dQ' && !final) { this.find(false); return; }
+    if (e.target.id === 'dN' && this.host()) {
+      const n = clamp(Math.round(+e.target.value) || 1, 1, MAX_DUEL_N);
+      this.nDrag = final ? Date.now() - 300 : Date.now();
+      $('#dNv').textContent = n;
+      this.sendN(n, final);
+    }
+  },
+  reply(id, ok) {
+    const v = this.invIn.find(x => x.id === id);
+    this.invIn = this.invIn.filter(x => x.id !== id);
+    this.changed();
+    if (!v) return;
+    this.ask({ t: 'reply', id, ok }).catch(() => {});
+  },
+  back() {
+    const ph = this.phase();
+    if (ph === 'room') return this.leave();
+    if (ph === 'play' || ph === 'count') return this.surrender();
+    if (ph === 'over' || ph === 'cancelled') return this.finishUp();
+    this.hide();
+  },
+  async leave() {
+    const d = this.d;
+    if (!d || d.status !== 'setup') return;
+    const r = await dialog({ title: T('Выйти из комнаты?'), message: T('Дуэль отменится для обоих игроков.'), buttons: [{ id: 'cancel', label: T('Остаться') }, { id: 'ok', label: T('Покинуть'), kind: 'danger' }] });
+    if (r.id !== 'ok' || this.d !== d && (!this.d || this.d.id !== d.id)) return;
+    this.ask({ t: 'leave', id: d.id }).catch(() => {});
+  },
+  async surrender() {
+    const d = this.d;
+    if (!d || d.status !== 'play') return;
+    const r = await dialog({ title: T('Сдаться?'), message: T('Победа достанется сопернику. Вернуться в эту дуэль будет нельзя.'), buttons: [{ id: 'cancel', label: T('Играть дальше') }, { id: 'ok', label: T('Сдаться'), kind: 'danger' }] });
+    if (r.id !== 'ok' || !this.d || this.d.id !== d.id || this.d.status !== 'play') return;
+    this.ask({ t: 'leave', id: d.id }).catch(() => {});
+  },
+  // «Готово»: the results are closed for good (no rematch after that); a cancelled room goes back to the search
+  finishUp() {
+    const d = this.d;
+    if (!d) return this.hide();
+    this.done.add(d.id);
+    this.send({ t: 'close', id: d.id });
+    if (d.status === 'over') this.hide(); else this.paint();
+    this.changed();
+  },
+  key(e) {
+    if (e.key === 'Escape') { e.preventDefault(); this.back(); return; }
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (this.shown !== 'play') return;
+    const press = sel => { const b = this.el && this.el.querySelector(sel); if (b && !b.disabled) { e.preventDefault(); b.click(); } };
+    if (/^[1-9]$/.test(e.key)) press(`#dBody .choice[data-key="${e.key}"]`);
+    else if (e.key === 'Enter') { const t = e.target.closest && e.target.closest('button, a, summary, [role="button"]'); if (!t || t.classList.contains('choice')) press('#dGo'); }
+  },
+
+  /* ---------- an invitation (or a rematch, or the results) over whatever is open ---------- */
+  banner() {
+    let el = document.getElementById('duelBan');
+    const d = this.d, me = this.uid();
+    let h = '', sig = '';
+    if (this.want()) {
+      const v = this.invIn[this.invIn.length - 1];
+      // an invitation shows over anything but the search screen, where it is listed (e.g. over the results of the last duel)
+      if (v && (!this.open || this.shown !== 'lobby')) { sig = 'in' + v.id; h = `${dAva(v.from, false, true)}<span class="mtxt">${T('{0} зовёт на дуэль', esc(v.from.name))}<small>${esc(dWho(v.from))} · <span data-until="${v.exp}"></span></small></span><div class="d-row2"><button type="button" class="act" data-b="no" data-id="${esc(v.id)}">${T('Отклонить')}</button><button type="button" class="act main" data-b="yes" data-id="${esc(v.id)}">${T('Принять')}</button></div>`; }
+      else if (this.open) { /* the duel screen is up: nothing to remind of */ }
+      else if (d && this.active()) { sig = 'act' + d.id; h = `<span class="d-cup" style="width:38px;height:38px;font-size:19px">${I.duel}</span><span class="mtxt">${T('Дуэль идёт')}<small>${esc(T('с соперником: {0}', this.peer().name))}</small></span><button type="button" class="act main" data-b="open">${T('Вернуться')}</button>`; }
+      else if (d && d.status === 'over' && this.phase() === 'over') {
+        const o = this.peer();
+        sig = 'over' + d.id + (d.rematch || '');
+        h = d.rematch === o.uid
+          ? `<span class="d-cup" style="width:38px;height:38px;font-size:19px">${I.duel}</span><span class="mtxt">${T('{0} предлагает реванш', esc(o.name))}<small>${esc(d.title)}</small></span><button type="button" class="act main" data-b="open">${T('Открыть')}</button>`
+          : `<span class="d-cup" style="width:38px;height:38px;font-size:19px">${I.trophy}</span><span class="mtxt">${T('Дуэль окончена')}<small>${d.result && d.result.winner === me ? T('Победа!') : d.result && d.result.winner ? T('Поражение') : T('Ничья')}</small></span><button type="button" class="act main" data-b="open">${T('Итоги')}</button>`;
+      }
+    }
+    if (!h) { if (el) { el.classList.remove('on'); el.inert = true; } this.banSig = ''; return; }
+    if (!el) {
+      el = document.createElement('div');
+      el.className = 'd-ban'; el.id = 'duelBan'; el.setAttribute('role', 'alert');
+      document.body.appendChild(el);
+      el.addEventListener('click', e => {
+        const b = e.target.closest('[data-b]');
+        if (!b) return;
+        if (b.dataset.b === 'open') this.show();
+        else this.reply(b.dataset.id, b.dataset.b === 'yes');
+      });
+      void el.offsetWidth;
+    }
+    if (sig !== this.banSig) { el.innerHTML = h; this.banSig = sig; this.times(); }
+    el.inert = false;
+    el.classList.add('on');
+  },
+  // the menu row: an invitation waiting, a duel going on, or the way in
+  menuState() {
+    const u = Account.user;
+    if (!u) return { sig: 'guest', small: T('Войдите, чтобы играть с друзьями'), badge: 0, on: false };
+    if (this.active()) return { sig: 'act' + this.d.status, small: T('Идёт дуэль — вернуться'), badge: 0, on: true };
+    if (this.invIn.length) return { sig: 'in' + this.invIn.length, small: T('Вас зовёт: {0}', esc(this.invIn[this.invIn.length - 1].from.name)), badge: this.invIn.length, on: true };
+    const m = this.me;
+    return { sig: 'idle' + (m ? m.wins + '/' + m.losses : ''), small: m && (m.wins || m.losses || m.draws) ? T('Побед {0} · поражений {1}', m.wins, m.losses) : T('Кто ответит больше и быстрее'), badge: 0, on: false };
+  }
+};
+const MAX_DUEL_N = 100;
+function duelMenuHTML() {
+  if (!Account.ready()) return '';
+  const st = Duel.menuState();
+  return `<section class="msec"><div class="sec-label">${T('Дуэль')}</div><button type="button" class="mrow box${st.on ? ' test-on' : ''}" data-act="m-duel"><span class="mico">${I.duel}</span><span class="mtxt">${T('Дуэль с другом')}<small>${st.small}</small></span>${st.badge ? `<span class="badge d-badge">${st.badge}</span>` : ''}<span class="mico">${I.chevR}</span></button></section>`;
+}
+// a question of the review: what was chosen against the key
+function rvHTML(x, i, open) {
+  const st = x.none ? 'none' : x.ok ? 'ok' : x.empty ? 'miss' : 'bad';
+  const word = x.none ? T('Не успели ответить') : x.ok ? T('Верный ответ') : x.empty ? T('Вопрос пропущен') : T('Неверный ответ');
+  let b = x.context ? `<div class="ctx">${esc(x.context)}</div>` : '';
+  b += `<div class="verdict ${st === 'none' ? 'miss' : st}">${word}</div>`;
+  const a = x.a || {};
+  if (x.kind === 'single' || x.kind === 'multiple') {
+    const single = x.kind === 'single', chosen = new Set(single ? (a.sel != null ? [a.sel] : []) : a.multi || []);
+    b += '<div class="choices ro">' + (x.options || []).map((t, k) => {
+      const right = (x.key || []).includes(k), mine = chosen.has(k);
+      return `<div class="choice${right ? ' right' : mine ? ' wrong' : ''}" role="${single ? 'radio' : 'checkbox'}" aria-checked="${mine}" aria-disabled="true">${single ? RB.r : RB.c}<span class="ctext">${esc(t)}</span>${right ? I.check : ''}</div>`;
+    }).join('') + '</div>';
+  } else if (x.kind === 'dropdown') {
+    const mine = Array.isArray(a.dd) ? a.dd : [];
+    b += `<table class="selt"><tbody>` + (x.rows || []).map((l, k) => {
+      const v = mine[k] || '', ok = v === x.key[k];
+      return `<tr><td class="l">${esc(l)}</td><td class="l${v ? (ok ? ' right' : ' wrong') : ''}">${v ? esc(v) : '—'}</td>${ok ? '' : `<td class="l right">${esc(x.key[k])}</td>`}</tr>`;
+    }).join('') + '</tbody></table>';
+  } else if (x.kind === 'sortable') {
+    const items = x.items || [];
+    if (Array.isArray(a.order) && !x.ok) b += `<div class="sub">${T('Ваш порядок')}</div><div class="sort-list ro">` + a.order.map((oi, p) => `<div class="sort-row"><span class="num">${p + 1}.</span><span class="sbox"><span class="handle">${SORT_ICO}</span><span class="stext">${esc(items[oi])}</span></span></div>`).join('') + '</div>';
+    b += `<div class="sub">${T('Правильный порядок')}</div><div class="sort-list ro">` + (x.key || []).map((t, p) => `<div class="sort-row"><span class="num">${p + 1}.</span><span class="sbox"><span class="handle">${SORT_ICO}</span><span class="stext">${esc(t)}</span></span></div>`).join('') + '</div>';
+  }
+  const ico = x.ok ? I.ok : x.none || x.empty ? I.minus : I.bad;
+  return `<details class="d-rv ${st}" data-i="${i}"${open ? ' open' : ''}><summary><span class="n">${i + 1}.</span><span class="p" dir="auto">${esc(x.prompt)}</span><span class="s" aria-label="${word}">${ico}</span></summary><div class="b" dir="${textDir(x.prompt)}">${b}</div></details>`;
+}
+document.addEventListener('visibilitychange', () => {
+  clearTimeout(Duel.idleT);
+  if (document.visibilityState === 'visible') { Duel.sync(); return; }
+  // nobody waits for this tab: let the socket go after a while (a duel or an invitation keeps it)
+  Duel.idleT = setTimeout(() => { if (document.visibilityState === 'hidden' && !Duel.busy()) Duel.hang(); }, 30000);
+});
+window.addEventListener('online', () => { clearTimeout(Duel.retryT); Duel.retryT = 0; Duel.tries = 0; Duel.sync(); });
+
 async function boot() {
   const gBack = Account.takeGoogle(); // back from Google's sign-in page
   const gDone = gBack && !gBack.error ? busy(T('Вход через Google…')) : null;
@@ -5003,7 +6137,7 @@ async function boot() {
     if (hadSW) navigator.serviceWorker.addEventListener('controllerchange', () => {
       const go = () => {
         const typing = document.activeElement && /^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName);
-        if (document.visibilityState === 'visible' && (tour || anySheet() || typing || document.querySelector('.busy'))) return setTimeout(go, 1500);
+        if (document.visibilityState === 'visible' && (tour || anySheet() || typing || document.querySelector('.busy') || Duel.busy() || Duel.open)) return setTimeout(go, 1500);
         flush();
         location.reload();
       };
