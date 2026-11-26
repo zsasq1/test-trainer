@@ -1,3 +1,4 @@
+<script>/* the chosen theme before the first paint (Settings → Тема; the admin page shares it) */try{var t=localStorage.getItem('TestTrainer.theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <title>Тренажёр тестов</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1003,6 +1004,8 @@ function applyTheme() {
 }
 applyTheme();
 if (mqDark.addEventListener) mqDark.addEventListener('change', applyTheme); else if (mqDark.addListener) mqDark.addListener(applyTheme);
+// chosen in another tab (the admin page shares the setting)
+window.addEventListener('storage', e => { if (e.key === THEME_KEY) { THEME = THEMES.includes(e.newValue) ? e.newValue : 'auto'; applyTheme(); if (typeof renderMenuBody === 'function') renderMenuBody(); } });
 const LANG_KEY = 'TestTrainer.lang'; // this device's choice: known before the saved state loads
 let langStored = false;
 let LANG = (() => { try { const v = localStorage.getItem(LANG_KEY); if (isLang(v)) { langStored = true; return v; } } catch (e) {} return 'ru'; })();
