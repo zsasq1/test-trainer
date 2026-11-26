@@ -10,7 +10,7 @@
    After «Проверить»: a green or red line above the answer and, if it was wrong, «Правильный ответ:» with the right one. */
 :root{
   color-scheme:light;
-  --bg:#FBFBFD; --frame:#F5F5FF; --surface:#FFFFFF; --line:#B1D2EB; --line-soft:#D0E4F3; --tline:#A2C1D8;
+  --bg:#FBFBFD; --frame:#F5F5FF; --surface:#FFFFFF; --field:#FFFFFF; --prog:#F9FAFB; --dim:#8FB3CC; --line:#B1D2EB; --line-soft:#D0E4F3; --tline:#A2C1D8;
   --text:#222222; --ink:#362B36; --q:#000000; --muted:#66667A;
   --ink-soft:#EEF6FC; --ink-line:#74B2E2;
   --accent:#2779AA; --accent-btn:#62BBE8; --soft-accent:#E3F1FA; --accent-line:#B1D2EB;
@@ -34,6 +34,50 @@
   --ease-out:cubic-bezier(0.23,1,0.32,1);  /* strong ease-out for things that appear */
   --ease-in-out:cubic-bezier(0.77,0,0.175,1);  /* strong ease-in-out for things moving on screen */
   --ease-ios:cubic-bezier(0.32,0.72,0,1);  /* iOS sheet curve for things that glide */
+}
+/* dark: the same frame at night — deep navy, steel-blue lines, the same pale-blue buttons turned down.
+   Follows the phone or computer unless a theme is chosen in Settings (data-theme on <html>). */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12161C; --frame:#181E26; --surface:#1E252E; --field:#232B35; --prog:#1B232D; --dim:#4E6E87; --line:#35516B; --line-soft:#2A3B4D; --tline:#3D5A75;
+    --text:#E3E8EF; --ink:#E6E9F0; --q:#EEF1F5; --muted:#9AA6B5;
+    --ink-soft:#22364A; --ink-line:#5A93C2;
+    --accent:#7CC0EC; --accent-btn:#3D93C9; --soft-accent:#1F3447; --accent-line:#35516B;
+    --btn:#1F3447; --btn-line:#35587A; --btn-fg:#8FCBF2;
+    --btn-h:#274361; --btn-h-line:#5A93C2; --btn-h-fg:#B1DBF8;
+    --btn-on:#3D93C9; --btn-on-line:#56A8DC; --on-accent:#FFFFFF;
+    --head:#1F3447; --head-soft:#1B232D; --focus:#6FB0DE;
+    --radio:#82B6DA; --radio-off:#58798F; --radio-hover:#263240;
+    --sort:#1F3245; --sort-off:#1B2530; --sort-ico:#6F9EC3;
+    --green:#5FD068; --green-btn:#3D93C9; --soft-green:#1E3322; --green-line:rgba(95,208,104,.4);
+    --red:#FF7070; --wrong:#FF6B6B; --missed:#9A9A9A; --soft-red:#3A2226; --red-line:rgba(255,112,112,.45);
+    --gray-btn:#232B35; --star:#F2C14E; --soft-star:rgba(242,193,78,.14);
+    --switch-off:#3A4B5C; --knob:#FFFFFF;
+    --scrim:rgba(0,0,0,.55); --shadow:rgba(0,0,0,.45); --bar:#181E26; --btn-shadow:0 1px 3px rgba(0,0,0,.45);
+    --toast-bg:#26303B; --toast-fg:#E3E8EF; --glow:rgba(95,208,104,.3);
+    --side:#1E252E; --side-sel:#1F3447; --side-hover:#24303C;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+    --bg:#12161C; --frame:#181E26; --surface:#1E252E; --field:#232B35; --prog:#1B232D; --dim:#4E6E87; --line:#35516B; --line-soft:#2A3B4D; --tline:#3D5A75;
+    --text:#E3E8EF; --ink:#E6E9F0; --q:#EEF1F5; --muted:#9AA6B5;
+    --ink-soft:#22364A; --ink-line:#5A93C2;
+    --accent:#7CC0EC; --accent-btn:#3D93C9; --soft-accent:#1F3447; --accent-line:#35516B;
+    --btn:#1F3447; --btn-line:#35587A; --btn-fg:#8FCBF2;
+    --btn-h:#274361; --btn-h-line:#5A93C2; --btn-h-fg:#B1DBF8;
+    --btn-on:#3D93C9; --btn-on-line:#56A8DC; --on-accent:#FFFFFF;
+    --head:#1F3447; --head-soft:#1B232D; --focus:#6FB0DE;
+    --radio:#82B6DA; --radio-off:#58798F; --radio-hover:#263240;
+    --sort:#1F3245; --sort-off:#1B2530; --sort-ico:#6F9EC3;
+    --green:#5FD068; --green-btn:#3D93C9; --soft-green:#1E3322; --green-line:rgba(95,208,104,.4);
+    --red:#FF7070; --wrong:#FF6B6B; --missed:#9A9A9A; --soft-red:#3A2226; --red-line:rgba(255,112,112,.45);
+    --gray-btn:#232B35; --star:#F2C14E; --soft-star:rgba(242,193,78,.14);
+    --switch-off:#3A4B5C; --knob:#FFFFFF;
+    --scrim:rgba(0,0,0,.55); --shadow:rgba(0,0,0,.45); --bar:#181E26; --btn-shadow:0 1px 3px rgba(0,0,0,.45);
+    --toast-bg:#26303B; --toast-fg:#E3E8EF; --glow:rgba(95,208,104,.3);
+    --side:#1E252E; --side-sel:#1F3447; --side-hover:#24303C;
+    color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -90,7 +134,7 @@ button:disabled{cursor:default}
 .ft-left{margin-inline-end:5px}
 .ft-right{margin-inline-start:5px}
 .ft-mid{flex:1;min-width:0;display:flex;align-items:center;justify-content:flex-end;gap:8px}
-.ft-prog{display:none;flex:1;min-width:0;height:45px;background:#F9FAFB;border:1px solid var(--line);border-radius:4px;box-shadow:var(--btn-shadow);overflow:hidden}
+.ft-prog{display:none;flex:1;min-width:0;height:45px;background:var(--prog);border:1px solid var(--line);border-radius:4px;box-shadow:var(--btn-shadow);overflow:hidden}
 .ft-prog>span{display:block;height:100%;width:0;background:var(--head);border-inline-end:1px solid var(--line);transition:width .25s var(--ease-out)}
 .ft-info{flex:none;min-width:0;padding:0 2px;font-size:15px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
 .ft-info:empty{display:none}
@@ -124,7 +168,7 @@ button:disabled{cursor:default}
 .choices .rb.cb+.ctext{padding-inline-start:9px}
 /* radio and checkbox drawn as in INDIGO: steel-blue outline on white, a dot or a tick when chosen */
 .rb{flex:none;width:20px;height:20px;margin-top:max(0px,calc((var(--lh) * 1em - 20px) / 2));overflow:visible}
-.rb .o{fill:#fff;stroke:var(--radio);stroke-width:1.5}
+.rb .o{fill:var(--field);stroke:var(--radio);stroke-width:1.5}
 .rb.cb .o{stroke-width:1.5}
 .rb .d{visibility:hidden;fill:var(--radio)}
 .rb.cb .d{fill:none;stroke:var(--radio);stroke-width:3}
@@ -143,9 +187,9 @@ button:disabled{cursor:default}
 .selt td{width:50%;border:1px solid var(--tline);vertical-align:middle;overflow-wrap:anywhere}
 .selt td.l{padding:4px 7px}
 .selt td.r{padding:1px}
-.dd-btn{width:100%;min-height:calc(var(--lh) * 1em + 6px);display:flex;align-items:center;gap:6px;padding:2px 6px;text-align:start;background:#fff;border:1px solid #fff;border-radius:0;font-size:1em;font-weight:400;line-height:inherit;color:var(--q)}
+.dd-btn{width:100%;min-height:calc(var(--lh) * 1em + 6px);display:flex;align-items:center;gap:6px;padding:2px 6px;text-align:start;background:var(--field);border:1px solid var(--field);border-radius:0;font-size:1em;font-weight:400;line-height:inherit;color:var(--q)}
 .dd-btn>span{flex:1;min-width:0;overflow-wrap:anywhere}
-.dd-btn .i{width:12px;height:12px;stroke-width:3;color:#333}
+.dd-btn .i{width:12px;height:12px;stroke-width:3;color:var(--text)}
 .dd-val{display:block;padding:3px 6px}
 /* order: numbers on the left, pale-blue bars with ↕ */
 .sort-list{position:relative;margin:0 0 8px}
@@ -163,7 +207,7 @@ button:disabled{cursor:default}
 .done .handle,.ro .handle{opacity:.6}
 .ro .handle{cursor:default}
 /* a written answer */
-.txt{width:100%;display:block;resize:none;overflow:hidden;padding:6px 8px;margin:0 0 5px;border-radius:3px;background:#fff;border:1px solid var(--tline);font-size:max(16px,1em);line-height:1.35;min-height:38px;color:var(--q)}
+.txt{width:100%;display:block;resize:none;overflow:hidden;padding:6px 8px;margin:0 0 5px;border-radius:3px;background:var(--field);border:1px solid var(--tline);font-size:max(16px,1em);line-height:1.35;min-height:38px;color:var(--q)}
 .txt:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 1px var(--focus)}
 .txt:disabled{opacity:1;-webkit-text-fill-color:var(--q);color:var(--q)}
 .done .txt{border-color:var(--line-soft)}
@@ -662,6 +706,9 @@ a.tg-btn{text-decoration:none}
 .su-who{font-size:14px;color:var(--muted);overflow-wrap:anywhere}
 .su-who b{color:var(--text);font-weight:600}
 @media (hover:hover) and (pointer:fine){ .g-btn:hover{background:#F8F9FA} }
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .g-btn{background:#131314;border-color:#8E918F;color:#E3E3E3}:root:not([data-theme="light"]) .g-btn:active,:root:not([data-theme="light"]) .g-btn:hover{background:#2A2A2C}}
+:root[data-theme="dark"] .g-btn{background:#131314;border-color:#8E918F;color:#E3E3E3}
+:root[data-theme="dark"] .g-btn:active,:root[data-theme="dark"] .g-btn:hover{background:#2A2A2C}
 .dlg-btn:disabled{opacity:.6}
 .pf-head{display:flex;align-items:center;gap:12px}
 .pf-av{width:52px;height:52px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--text);color:var(--bg);font-size:19px;font-weight:700}
@@ -746,10 +793,10 @@ a.tg-btn{text-decoration:none}
 .act.green,.act.red{background:var(--btn);color:var(--btn-fg)}
 .act .i{font-size:18px}
 .act.wide{width:100%}
-.act.gray{background:#fff;color:var(--btn-fg);box-shadow:var(--btn-shadow)}
+.act.gray{background:var(--field);color:var(--btn-fg);box-shadow:var(--btn-shadow)}
 .act:active:not(:disabled),.act.gray:active:not(:disabled){filter:none;background:var(--btn-on);border-color:var(--btn-on-line);color:#fff}
 .act:disabled{opacity:.35}
-.dlg-btn{height:44px;border-radius:4px;background:#fff;border:1px solid var(--btn-line);color:var(--btn-fg);font-size:15.5px;font-weight:700;box-shadow:var(--btn-shadow)}
+.dlg-btn{height:44px;border-radius:4px;background:var(--field);border:1px solid var(--btn-line);color:var(--btn-fg);font-size:15.5px;font-weight:700;box-shadow:var(--btn-shadow)}
 .dlg-btn.primary{background:var(--btn);border-color:var(--btn-line);color:var(--btn-fg)}
 .dlg-btn:active,.dlg-btn.primary:active{filter:none;background:var(--btn-on);border-color:var(--btn-on-line);color:#fff}
 .dlg-btn.danger{color:var(--red)}
@@ -762,13 +809,13 @@ a.tg-btn{text-decoration:none}
 .head-title,.mt-htitle{font-weight:700;color:var(--text)}
 .head-btn{color:var(--accent);font-weight:700}
 .sheet-foot,.mt-foot{background:var(--frame);border-top-color:var(--line)}
-.mt-x{border-radius:4px;background:#fff;border-color:var(--line);color:var(--accent)}
+.mt-x{border-radius:4px;background:var(--field);border-color:var(--line);color:var(--accent)}
 .pick-title{font-size:15.5px;font-weight:700}
-.pick{border-radius:4px;background:#fff;border:1px solid var(--line);font-weight:400}
+.pick{border-radius:4px;background:var(--field);border:1px solid var(--line);font-weight:400}
 .pick:active{background:var(--btn-h)}
 .pick.on{background:var(--side-sel);border-color:var(--ink-line);box-shadow:none;color:var(--accent);font-weight:700}
 .pick .i{color:var(--accent)}
-.fac-opt{border-radius:5px;background:#fff;border:1px solid var(--line)}
+.fac-opt{border-radius:5px;background:var(--field);border:1px solid var(--line)}
 .fac-opt:active{background:var(--btn-h)}
 .fac-opt.on{background:var(--side-sel);border-color:var(--ink-line);box-shadow:none}
 .fac-ico{border-radius:4px;background:var(--btn);border:1px solid var(--line);color:var(--accent)}
@@ -781,7 +828,7 @@ a.tg-btn{text-decoration:none}
 .yr-opt:active b,.yr-opt:active small{color:#fff}
 /* menu */
 .drawer{background:var(--surface)}
-.searchbox{height:40px;gap:8px;padding:0 10px;border-radius:3px;background:#fff;border:1px solid var(--line);color:#8A9AA8}
+.searchbox{height:40px;gap:8px;padding:0 10px;border-radius:3px;background:var(--field);border:1px solid var(--line);color:var(--muted)}
 .searchbox:focus-within{border-color:var(--focus);box-shadow:0 0 0 1px var(--focus)}
 .searchbox input{font-size:16px}
 .d-head .icon-btn{width:40px;height:40px}
@@ -801,24 +848,24 @@ a.tg-btn{text-decoration:none}
 .mrow.test-on .mtxt small{color:var(--accent)}
 .mrow.star-on{border-color:rgba(224,161,0,.35)}
 .badge{border-radius:3px;background:var(--head-soft);border:1px solid var(--line-soft);font-size:12.5px;font-weight:400;color:var(--muted)}
-.mrow.on .badge,.mrow.star-on .badge{background:#fff}
+.mrow.on .badge,.mrow.star-on .badge{background:var(--field)}
 .mmore,.mx{border-radius:4px;color:var(--sort-ico);border:1px solid transparent}
 .mmore:active,.mx:active{background:var(--btn-h)}
 .mlink{color:var(--accent);font-weight:700}
 .mbtn{border-radius:4px;background:var(--btn);border:1px solid var(--line);color:var(--accent);font-weight:700;box-shadow:var(--btn-shadow)}
 .mbtn:active{background:var(--btn-on);border-color:var(--btn-on-line);color:#fff}
-.mgroup{border-radius:5px;background:#fff;border:1px solid var(--line)}
+.mgroup{border-radius:5px;background:var(--field);border:1px solid var(--line)}
 .mgroup>*+*{border-top-color:var(--line-soft)}
 .sec-chip{border-radius:4px;background:var(--btn);border:1px solid var(--line);color:var(--accent);font-weight:700}
 .sec-chip:active{background:var(--btn-on);color:#fff}
 .course{border-radius:4px;background:var(--btn);border:1px solid var(--line);color:var(--accent);font-weight:700;box-shadow:var(--btn-shadow)}
-.course.empty{color:#8FB3CC}
+.course.empty{color:var(--dim)}
 .course.on{background:var(--btn-on);border-color:var(--btn-on-line);color:#fff}
 .sq-btn{border-radius:4px;background:var(--btn);border:1px solid var(--line);color:var(--accent);box-shadow:var(--btn-shadow)}
 .sq-btn:active:not(:disabled){background:var(--btn-on);border-color:var(--btn-on-line);color:#fff}
 .fs-head{font-weight:400}
 .fs-row input{accent-color:var(--radio)}
-.sres{border-radius:4px;background:#fff;border:1px solid var(--line-soft)}
+.sres{border-radius:4px;background:var(--field);border:1px solid var(--line-soft)}
 .sres:active{border-color:var(--line)}
 .sres.cur{background:var(--side-sel);border-color:var(--line)}
 .sres-title{font-size:14.5px;font-weight:700}
@@ -827,7 +874,7 @@ a.tg-btn{text-decoration:none}
 .fa-ico{border-radius:4px;background:var(--btn);border:1px solid var(--line);color:var(--accent)}
 .fa-name b{font-weight:700}
 .fa-chip{border-radius:3px;background:var(--head-soft);border-color:var(--line-soft);font-weight:400}
-.fa-list{border-radius:5px;background:#fff;border-color:var(--line)}
+.fa-list{border-radius:5px;background:var(--field);border-color:var(--line)}
 .fa-row{font-size:15px;font-weight:400}
 .fa-row+.fa-row{border-top-color:var(--line-soft)}
 .fa-row:active{background:var(--btn-h)}
@@ -838,16 +885,16 @@ a.tg-btn{text-decoration:none}
 .mt-size b{font-size:19px;color:var(--accent)}
 .mt-size.on{background:var(--btn-on);border-color:var(--btn-on-line);color:#fff}
 .mt-size.on b{color:#fff}
-.mt-list,.mt-arow,.mt-now,.exist,.f-card{border-radius:5px;background:#fff;border-color:var(--line)}
+.mt-list,.mt-arow,.mt-now,.exist,.f-card{border-radius:5px;background:var(--field);border-color:var(--line)}
 .mt-row+.mt-row{border-top-color:var(--line-soft)}
-.mt-box{width:20px;height:20px;border-radius:2px;border:1.5px solid var(--radio);background:#fff;font-size:14px}
-.mt-row.on .mt-box{background:#fff;border-color:var(--radio);color:var(--radio)}
+.mt-box{width:20px;height:20px;border-radius:2px;border:1.5px solid var(--radio);background:var(--field);font-size:14px}
+.mt-row.on .mt-box{background:var(--field);border-color:var(--radio);color:var(--radio)}
 .mt-row.on .mt-box .i{stroke-width:3.4}
 .mt-name{font-size:15px;font-weight:700}
 .mt-start{height:48px;font-size:17px}
 .mt-more,.f-add{color:var(--accent);font-weight:700}
 .mt-end{color:var(--red);font-weight:700}
-.f-in,.num-in{border-radius:3px;background:#fff;border:1px solid var(--tline)}
+.f-in,.num-in{border-radius:3px;background:var(--field);border:1px solid var(--tline)}
 .f-in:focus,.num-in:focus{border-color:var(--focus);box-shadow:0 0 0 1px var(--focus)}
 .f-sel{border-radius:3px;background:var(--head-soft)}
 .f-sel select{border-radius:3px;border-color:var(--tline)}
@@ -872,7 +919,7 @@ a.tg-btn{text-decoration:none}
 .tour-pop{border-radius:6px;box-shadow:0 10px 32px rgba(0,0,0,.22),0 0 0 1px var(--line)}
 .tour-body h2{font-size:16.5px;font-weight:700;color:var(--ink)}
 .tour-body p{font-size:14.5px}
-.tour-btn{height:38px;border-radius:4px;background:#fff;border:1px solid var(--btn-line);color:var(--btn-fg);font-size:14.5px;font-weight:700;box-shadow:var(--btn-shadow)}
+.tour-btn{height:38px;border-radius:4px;background:var(--field);border:1px solid var(--btn-line);color:var(--btn-fg);font-size:14.5px;font-weight:700;box-shadow:var(--btn-shadow)}
 .tour-btn.pri{background:var(--btn);color:var(--btn-fg)}
 .tour-btn:active{background:var(--btn-on);color:#fff}
 .tour-dots span.on{background:var(--accent)}
@@ -938,12 +985,37 @@ const LANGS = [
 ];
 const isLang = id => LANGS.some(l => l.id === id);
 const langOf = id => LANGS.find(l => l.id === id) || LANGS[0];
+// Theme: as on the device (dark when the phone or computer is dark), or always light / always dark. Kept on this device.
+const THEME_KEY = 'TestTrainer.theme', THEMES = ['auto', 'light', 'dark'];
+const THEME_OPT = {
+  auto: { name: 'Как на устройстве', note: 'Днём светлая, ночью тёмная — вместе с телефоном', ico: 'half' },
+  light: { name: 'Светлая', note: 'Как в системе тестирования', ico: 'sun' },
+  dark: { name: 'Тёмная', note: 'Тёмный фон, голубые кнопки — для вечера', ico: 'moon' }
+};
+let THEME = (() => { try { const v = localStorage.getItem(THEME_KEY); return THEMES.includes(v) ? v : 'auto'; } catch (e) { return 'auto'; } })();
+const mqDark = window.matchMedia('(prefers-color-scheme: dark)');
+function applyTheme() {
+  const r = document.documentElement;
+  if (THEME === 'auto') r.removeAttribute('data-theme'); else r.setAttribute('data-theme', THEME);
+  const dark = THEME === 'dark' || (THEME === 'auto' && mqDark.matches);
+  // the iPhone status bar follows the page
+  document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute('content', dark ? '#12161C' : '#FBFBFD'));
+}
+applyTheme();
+if (mqDark.addEventListener) mqDark.addEventListener('change', applyTheme); else if (mqDark.addListener) mqDark.addListener(applyTheme);
 const LANG_KEY = 'TestTrainer.lang'; // this device's choice: known before the saved state loads
 let langStored = false;
 let LANG = (() => { try { const v = localStorage.getItem(LANG_KEY); if (isLang(v)) { langStored = true; return v; } } catch (e) {} return 'ru'; })();
 const isRtl = () => !!langOf(LANG).rtl;
 // Russian text → [English, Arabic]. A missing entry shows the Russian text.
 const TR = {
+  "Тема": ["Theme", "المظهر"],
+  "Как на устройстве": ["Same as device", "مثل الجهاز"],
+  "Светлая": ["Light", "فاتح"],
+  "Тёмная": ["Dark", "داكن"],
+  "Днём светлая, ночью тёмная — вместе с телефоном": ["Light or dark, together with your phone", "فاتح أو داكن مع إعداد هاتفك"],
+  "Как в системе тестирования": ["As in the testing system", "كما في نظام الاختبار"],
+  "Тёмный фон, голубые кнопки — для вечера": ["Dark background, blue buttons — for the evening", "خلفية داكنة وأزرار زرقاء — للمساء"],
   "Закончить": ["Finish", "إنهاء"],
   "Вопрос №{0} из {1}": ["Question #{0} of {1}", "السؤال رقم {0} من {1}"],
   "Верный ответ": ["Correct answer", "إجابة صحيحة"],
@@ -1496,6 +1568,9 @@ function firstSentence(t) { const s = String(t).trim(); return s.length > 96 ? s
 const sv = (body, filled) => `<svg class="i${filled ? ' f' : ''}" viewBox="0 0 24 24" aria-hidden="true">${body}</svg>`;
 const I = {
   menu: sv('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+  sun: sv('<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M2.5 12h2M19.5 12h2M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>'),
+  moon: sv('<path d="M20 14.6A8.2 8.2 0 1 1 9.4 4a6.6 6.6 0 0 0 10.6 10.6Z"/>'),
+  half: sv('<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17Z" class="fillc"/>'),
   sidebar: sv('<rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M9.5 4.5v15"/>').replace('class="i', 'class="i fl'),
   x: sv('<path d="M6 6l12 12M18 6 6 18"/>'),
   chevL: sv('<path d="m15 18-6-6 6-6"/>').replace('class="i', 'class="i fl'),
@@ -2876,7 +2951,7 @@ function menuSettingsHTML() {
   const pct = Math.round(S.fontScale * 100);
   return `<section class="msec m-set${settingsOpen ? ' open' : ''}"><button type="button" class="mrow set-toggle" data-act="m-settings" aria-expanded="${settingsOpen}" aria-controls="setBody"><span class="mico">${I.gear}</span><span class="mtxt">${T('Настройки')}</span><span class="go">${I.chevD}</span></button>
 <div class="set-body" id="setBody"><div class="set-inner"><div class="mgroup">
-${accountRowHTML()}${isAdmin() ? `<a class="mrow" href="admin.html"><span class="mtxt">${T('Админка')}<small>${T('Онлайн и файлы курсов')}</small></span><span class="go">${I.chevR}</span></a>` : ''}<button type="button" class="mrow" data-act="m-fac"><span class="mtxt">${T('Факультет')}<small>${esc(curFac().name)}</small></span><span class="go">${I.chevR}</span></button><button type="button" class="mrow" data-act="m-lang"><span class="mtxt">${T('Язык')}<small lang="${LANG}">${langOf(LANG).name}</small></span><span class="go">${I.chevR}</span></button>
+${accountRowHTML()}${isAdmin() ? `<a class="mrow" href="admin.html"><span class="mtxt">${T('Админка')}<small>${T('Онлайн и файлы курсов')}</small></span><span class="go">${I.chevR}</span></a>` : ''}<button type="button" class="mrow" data-act="m-fac"><span class="mtxt">${T('Факультет')}<small>${esc(curFac().name)}</small></span><span class="go">${I.chevR}</span></button><button type="button" class="mrow" data-act="m-lang"><span class="mtxt">${T('Язык')}<small lang="${LANG}">${langOf(LANG).name}</small></span><span class="go">${I.chevR}</span></button><button type="button" class="mrow" data-act="m-theme"><span class="mtxt">${T('Тема')}<small>${T(THEME_OPT[THEME].name)}</small></span><span class="go">${I.chevR}</span></button>
 <button type="button" class="mrow" data-act="m-tour"><span class="mtxt">${T('Обучение')}<small>${T('Показать подсказки ещё раз')}</small></span><span class="go">${I.chevR}</span></button>
 <div class="mrow static"><span class="mtxt">${T('Автопереход')}<small>${T('После верного ответа — следующий вопрос')}</small></span><button type="button" class="switch" role="switch" aria-checked="${S.autoAdvance}" data-act="toggle-auto" aria-label="${T('Автопереход')}"><span></span></button></div>
 <div class="fs-block"><div class="fs-head"><span>${T('Размер текста')}</span><span class="fs-val"><span id="fontPct">${pct}%</span>${pct !== 100 ? T('<button type="button" class="mlink" data-act="m-font-reset">Сбросить</button>') : ''}</span></div><div class="fs-row"><button type="button" class="sq-btn a-sm" data-act="m-font-dec" aria-label="${T('Мельче')}"${S.fontScale <= 0.5 ? ' disabled' : ''}>A</button><input type="range" id="fontRange" min="50" max="160" step="5" value="${pct}" aria-label="${T('Масштаб текста вопросов')}"><button type="button" class="sq-btn a-lg" data-act="m-font-inc" aria-label="${T('Крупнее')}"${S.fontScale >= 1.6 ? ' disabled' : ''}>A</button></div></div>
@@ -3088,6 +3163,29 @@ function setLang(l) {
   renderAll();
 }
 // «Язык». First visit: the very first sheet, titled in all three languages, can't be skipped.
+function setTheme(t) {
+  if (!THEMES.includes(t)) return;
+  THEME = t;
+  try { if (t === 'auto') localStorage.removeItem(THEME_KEY); else localStorage.setItem(THEME_KEY, t); } catch (e) {}
+  applyTheme();
+  renderMenuBody();
+}
+function openTheme() {
+  if (anySheet() || Account.blocked()) return;
+  if (tour) endTour();
+  const opt = id => {
+    const o = THEME_OPT[id], on = id === THEME;
+    return `<button type="button" class="fac-opt${on ? ' on' : ''}" data-s="theme" data-t="${id}" role="radio" aria-checked="${on}"><span class="fac-ico" aria-hidden="true">${I[o.ico]}</span><span class="fac-txt"><b>${T(o.name)}</b><small>${T(o.note)}</small></span>${on ? I.check : I.chevR}</button>`;
+  };
+  return openSheet({
+    cls: 'dialog',
+    html: `<div class="dlg fac"><div class="fac-head"><div class="dlg-title" id="themeTitle">${T('Тема')}</div></div><div class="fac-list" role="radiogroup" aria-labelledby="themeTitle">${THEMES.map(opt).join('')}</div><button type="button" class="dlg-btn" data-s="cancel">${T('Отмена')}</button></div>`,
+    onClick: (act, el, e, close) => {
+      if (act === 'cancel') return close();
+      if (act === 'theme') { setTheme(el.dataset.t); close(); }
+    }
+  });
+}
 function openLang({ first = false } = {}) {
   if (anySheet() || Account.blocked()) return;
   if (tour) endTour();
@@ -3609,6 +3707,7 @@ const ACT = {
   'm-course': el => { S.course = +el.dataset.c; save(); renderMenuBody(); },
   'm-fac': () => { const was = drawerOpen; closeDrawer(); setTimeout(() => openFac(), was ? 300 : 0); }, // let the menu slide away first
   'm-lang': () => { const was = drawerOpen; closeDrawer(); setTimeout(() => openLang(), was ? 300 : 0); },
+  'm-theme': () => { const was = drawerOpen; closeDrawer(); setTimeout(() => openTheme(), was ? 300 : 0); },
   'm-settings': el => {
     settingsOpen = !settingsOpen;
     const sec = el.closest('.m-set');
