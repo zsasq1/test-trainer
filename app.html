@@ -5951,7 +5951,8 @@ const Duel = {
     if (a === 'surrender') return this.surrender();
     if (a === 'answer') return this.submit();
     if (a === 'hide') { this.tucked = d && d.id; return this.hide(); } // tucked away while waiting: a reconnect doesn't pop it up again
-    if (a === 'rematch') { b.disabled = true; this.ask({ t: 'rematch', id: d.id }).catch(() => {}).finally(() => this.paint()); return; }
+    // offering (nobody has yet): «Ждём…» at once, without waiting for the server's reply
+    if (a === 'rematch') { b.disabled = true; if (!d.rematch) b.innerHTML = I.duel + T('Ждём…'); this.ask({ t: 'rematch', id: d.id }).catch(() => {}).finally(() => this.paint()); return; }
     if (a === 'rematch-no') { this.ask({ t: 'rematch-no', id: d.id }).catch(() => {}); return; }
     if (a === 'done') return this.finishUp();
   },

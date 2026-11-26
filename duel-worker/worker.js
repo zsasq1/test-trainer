@@ -13,7 +13,8 @@
 //   GET  /duel/health  — жив ли сервер
 //
 // Переменные (wrangler.toml): ALLOWED_ORIGIN, SITE_URL, FIREBASE_DB, FIREBASE_PROJECT.
-// Только для тестов на своём компьютере (wrangler dev, адрес localhost): TEST_JWKS — ключи вместо Google,
+// Только для тестов: TEST_JWKS — ключи вместо Google и TEST_USERS — игроки вместо Firebase. Действуют на своём компьютере
+// (wrangler dev, адрес localhost) или на временной копии сервера, выложенной тестом с STAGING=1 (npm run test:live).
 // INVITE_TTL_MS, GRACE_MS, COUNTDOWN_MS, PER_Q_MS, SETUP_MAX_MS, KEEP_MS — сроки покороче.
 
 import { DurableObject } from 'cloudflare:workers';
@@ -41,7 +42,7 @@ const b64u = s => { s = String(s).replace(/-/g, '+').replace(/_/g, '/'); while (
 const jpart = s => JSON.parse(new TextDecoder().decode(b64u(s)));
 let KEYS = { at: 0, ttl: 0, src: '', map: new Map() };
 async function keys(env, local, force) {
-  const src = local && env.TEST_JWKS ? 'test' : 'google'; // тестовые ключи — только на своём компьютере
+  const src = local && env.TEST_JWKS ? 'test' : 'google'; // тестовые ключи — только на своём компьютере или на временной копии для проверки
   if (!force && KEYS.src === src && Date.now() - KEYS.at < KEYS.ttl) return KEYS.map;
   let jwks, ttl = 3600e3;
   if (src === 'test') jwks = JSON.parse(env.TEST_JWKS);
@@ -81,11 +82,15 @@ export async function verifyToken(token, env, local) {
   return p.sub;
 }
 // Имя и факультет — из базы, тем же токеном: правила пускают в users/<uid> только самого владельца.
-async function profile(uid, token, env) {
+// Временная копия для проверки (STAGING) берёт тестовых игроков из TEST_USERS и в Firebase не ходит.
+async function profile(uid, token, env, test) {
+  if (test && env.TEST_USERS) return person(uid, JSON.parse(env.TEST_USERS)[uid] || null);
   const r = await fetch(String(env.FIREBASE_DB).replace(/\/+$/, '') + '/users/' + encodeURIComponent(uid) + '.json?auth=' + encodeURIComponent(token));
   if (r.status === 401 || r.status === 403) return { error: 'DENIED' };
   if (!r.ok) return { error: 'DB' };
-  const u = await r.json().catch(() => null);
+  return person(uid, await r.json().catch(() => null));
+}
+function person(uid, u) {
   if (!u || typeof u.name !== 'string' || !u.name.trim()) return { error: 'NO_NAME' };
   if (u.blocked === true) return { error: 'BLOCKED' };
   return { uid, name: u.name.trim().slice(0, 40), fac: /^(lech|ped|stom)$/.test(u.fac) ? u.fac : 'lech', course: Number.isInteger(u.course) && u.course >= 0 && u.course <= 6 ? u.course : 0 };
@@ -93,7 +98,10 @@ async function profile(uid, token, env) {
 
 export default {
   async fetch(req, env) {
-    const url = new URL(req.url), local = LOCAL.has(url.hostname);
+    const url = new URL(req.url);
+    // тестовые ключи и игроки: на своём компьютере (wrangler dev) или на временной копии сервера с STAGING=1;
+    // у настоящего сервера этой переменной нет — там только ключи Google и база Firebase
+    const local = !!env.TEST_JWKS && (LOCAL.has(url.hostname) || env.STAGING === '1');
     const allowed = String(env.ALLOWED_ORIGIN || '').split(',').map(s => s.trim()).filter(Boolean);
     const origin = req.headers.get('Origin') || '';
     const okOrigin = allowed.includes(origin);
@@ -118,7 +126,7 @@ export default {
       let uid;
       try { uid = await verifyToken(m[1], env, local); } catch (e) { return out({ error: 'KEYS' }, 503); }
       if (!uid) return out({ error: 'BAD_TOKEN' }, 401);
-      const p = await profile(uid, m[1], env).catch(() => ({ error: 'DB' }));
+      const p = await profile(uid, m[1], env, local).catch(() => ({ error: 'DB' }));
       if (p.error) return out({ error: p.error }, p.error === 'DB' ? 503 : 403);
       return out(await arena().ticket(p));
     }

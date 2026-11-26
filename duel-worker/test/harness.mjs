@@ -3,7 +3,7 @@
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:http';
 import { generateKeyPairSync, sign } from 'node:crypto';
-import { readFile, rm, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, rm, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { parsePool } from '../game.js';
@@ -73,6 +73,49 @@ export async function startStand({ port = 8788, dbPort = 8790, sitePort = 8791, 
     BASE, WS: 'ws://127.0.0.1:' + port, ORIGIN, log: () => log,
     async stop() { wr.kill('SIGTERM'); await new Promise(r => { wr.once('exit', r); setTimeout(r, 3000); }); db.close(); web.close(); }
   };
+}
+
+/* ---------- временная копия сервера на Cloudflare (для npm run test:live) ----------
+   Тот же worker.js под другим именем (trainer-duel-e2e), свой отдельный Durable Object. Вместо Google и Firebase —
+   тестовые ключи и игроки из USERS (STAGING=1); настоящий trainer-duel не трогаем. После прогона копия удаляется. */
+const sh = (args, opts = {}) => new Promise(ok => {
+  const p = spawn('npx', args, { cwd: WORKER_DIR, env: { ...process.env, WRANGLER_SEND_METRICS: 'false', NO_COLOR: '1' }, stdio: ['ignore', 'pipe', 'pipe'], ...opts });
+  let log = '';
+  p.stdout.on('data', d => { log += d; }); p.stderr.on('data', d => { log += d; });
+  p.on('exit', code => ok({ code, log }));
+});
+export const STAGE_NAME = 'trainer-duel-e2e';
+export async function deployStaging({ name = STAGE_NAME, vars = {} } = {}) {
+  if (!/-e2e$/.test(name)) throw new Error('имя временной копии должно кончаться на -e2e: ' + name);
+  const dir = path.join(WORKER_DIR, '.test-live');
+  await rm(dir, { recursive: true, force: true }); await mkdir(dir, { recursive: true });
+  // своя конфигурация: другое имя Worker'а, worker.js тот же; так боевой trainer-duel перезаписать нельзя
+  let toml = await readFile(path.join(WORKER_DIR, 'wrangler.toml'), 'utf8');
+  if (!/^name = "trainer-duel"$/m.test(toml) || !/^main = "worker\.js"$/m.test(toml) || !/^\[vars\]$/m.test(toml)) throw new Error('wrangler.toml изменился — поправьте deployStaging');
+  const all = { STAGING: '1', TEST_JWKS: JWKS, TEST_USERS: JSON.stringify(USERS), ...vars };
+  for (const v of Object.values(all)) if (String(v).includes("'''")) throw new Error('значение переменной нельзя записать в TOML');
+  toml = toml.replace(/^name = .*$/m, `name = "${name}"`).replace(/^main = .*$/m, 'main = "../worker.js"')
+    .replace(/^\[vars\]$/m, '[vars]\n' + Object.entries(all).map(([k, v]) => `${k} = '''${v}'''`).join('\n'));
+  const cfg = path.join(dir, 'wrangler.toml');
+  await writeFile(cfg, toml);
+  const d = await sh(['wrangler', 'deploy', '-c', cfg]);
+  const m = new RegExp('https://' + name + '\\.[a-z0-9-]+\\.workers\\.dev').exec(d.log);
+  if (d.code !== 0 || !m) throw new Error('wrangler deploy не удался:\n' + d.log.slice(-3000));
+  const BASE = m[0];
+  async function stop() {
+    const r = await sh(['wrangler', 'delete', '-c', cfg, '--force']);
+    await rm(dir, { recursive: true, force: true });
+    if (r.code !== 0) console.log('  ! временную копию удалить не удалось — удалите вручную: npx wrangler delete ' + name + '\n' + r.log.slice(-800));
+    else console.log('  временная копия ' + name + ' удалена');
+    return r.code === 0;
+  }
+  // новый адрес *.workers.dev начинает отвечать не сразу
+  for (let i = 0; ; i++) {
+    try { const r = await fetch(BASE + '/duel/health'); if (r.ok) break; } catch (e) { /* not yet */ }
+    if (i > 120) { await stop(); throw new Error('временная копия не ответила: ' + BASE); }
+    await new Promise(r => setTimeout(r, 1000));
+  }
+  return { BASE, WS: BASE.replace(/^https/, 'wss'), name, log: () => d.log, stop };
 }
 
 /* ---------- правильный ответ на вопрос, который видит игрок (ключ берём из того же файла) ---------- */

@@ -5,11 +5,17 @@
 //
 // Запуск: npm run test:e2e   (нужен playwright-core и WebKit для него; путь к браузеру — PW_WEBKIT)
 // Сначала соберите сайт: python3 собрать.py (тест открывает index.html).
+//
+// npm run test:live — тот же сценарий на настоящей инфраструктуре: сайт — опубликованный на GitHub Pages,
+// сервер — временная копия worker.js на Cloudflare (trainer-duel-e2e, удаляется после прогона).
+// Вход Google/Firebase подменён тестовыми ключами (настоящих аккаунтов у теста нет): в Firebase ничего не уходит,
+// любые запросы мимо сайта и сервера дуэлей браузер не делает (перехватываются).
 import { createRequire } from 'node:module';
+import WebSocket from 'ws';
 import { existsSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import { startStand, addUser, token, keyFor, solve, USERS, DIR } from './harness.mjs';
+import { startStand, deployStaging, addUser, token, keyFor, solve, USERS, DIR } from './harness.mjs';
 
 const require = createRequire(import.meta.url);
 let pw;
@@ -31,20 +37,32 @@ const errors = [];
 function ok(cond, msg) { if (cond) { passed++; console.log('  ✓ ' + msg); } else { failed++; console.log('  ✗ ' + msg); } return cond; }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-const A = addUser('alice-uid', 'Алиса Смирнова');
-const B = addUser('boris-uid', 'Борис Иванов');
+const LIVE = process.env.E2E_TARGET === 'live';
+// на живом сервере у каждого прогона свои игроки (статистика побед начинается с нуля)
+const RUN = LIVE ? '-' + Date.now().toString(36) : '-uid';
+const A = addUser('alice' + RUN, 'Алиса Смирнова');
+const B = addUser('boris' + RUN, 'Борис Иванов');
 
-const stand = await startStand({ port: 8796, dbPort: 8797, sitePort: 8798, vars: { INVITE_TTL_MS: '30000', COUNTDOWN_MS: '2000', GRACE_MS: '20000', PER_Q_MS: '60000' } });
+// адрес сервера дуэлей, зашитый в сайт: на живом прогоне браузер стучится туда, а тест передаёт это временной копии
+const PROD = 'https://trainer-duel.zsasqzsasq.workers.dev';
+const stand = LIVE ? await deployStaging()
+  : await startStand({ port: 8796, dbPort: 8797, sitePort: 8798, vars: { INVITE_TTL_MS: '30000', COUNTDOWN_MS: '2000', GRACE_MS: '20000', PER_Q_MS: '60000' } });
+const SITE = LIVE ? 'https://zsasq1.github.io/test-trainer/' : stand.ORIGIN + '/index.html';
+const SITE_ORIGIN = new URL(SITE).origin;
+console.log(LIVE ? `Живой прогон: сайт ${SITE}, сервер ${stand.BASE} (копия ${PROD.replace('https://', '')})` : `Локальный прогон: сайт ${SITE}, сервер ${stand.BASE}`);
 const pool = await keyFor(FILE);
 const browser = await pw.webkit.launch(WEBKIT ? { executablePath: WEBKIT } : {});
 
 // one person: their own browser profile, signed in, the duel server pointed at the local one
 async function person(uid, { lang, phone, scheme = 'light' }) {
   const u = USERS[uid] || { name: 'Гость без аккаунта', login: '', key: '' };
-  const ctx = await browser.newContext(phone
+  const ctx = await browser.newContext({ ...(phone
     ? { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, hasTouch: true, isMobile: true, colorScheme: scheme }
-    : { viewport: { width: 1280, height: 820 }, colorScheme: scheme });
-  await ctx.route(/identitytoolkit|workers\.dev|fonts\.(googleapis|gstatic)\.com/, r => r.fulfill({ status: 404, body: '{}' }));
+    : { viewport: { width: 1280, height: 820 }, colorScheme: scheme }), ...(LIVE ? { serviceWorkers: 'block' } : {}) });
+  // всё, что не сайт и не сервер дуэлей, — мимо (Google, Firebase, шрифты): правила ниже отвечают за нужное
+  const mine = [SITE_ORIGIN + '/', ...(LIVE ? [] : [stand.BASE + '/'])];
+  const outside = [];
+  await ctx.route(url => !mine.some(m => url.href.startsWith(m)), r => { outside.push(r.request().url()); return r.fulfill({ status: 404, body: '{}' }); });
   const cors = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': '*', 'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS' };
   // Firebase: the token is signed by the test key the local server trusts; the base answers from USERS
   await ctx.route(/securetoken\.googleapis\.com/, r => r.request().method() === 'OPTIONS' ? r.fulfill({ status: 204, headers: cors })
@@ -55,10 +73,12 @@ async function person(uid, { lang, phone, scheme = 'light' }) {
     const own = new URL(q.url()).pathname === '/users/' + uid + '.json';
     return r.fulfill({ status: 200, headers: { ...cors, 'Content-Type': 'application/json' }, body: q.method() === 'GET' && own ? JSON.stringify(u) : 'null' });
   });
+  const frames = [];
+  if (LIVE) await viaStaging(ctx, frames);
 
   const ls = {
     'TestTrainer.lang': lang,
-    'TestTrainer.duelDev': stand.BASE,
+    ...(LIVE ? {} : { 'TestTrainer.duelDev': stand.BASE }),
     'TestTrainer.user': uid ? JSON.stringify({ uid, rt: 'rt-' + uid, login: u.login, name: u.name, key: u.key, course: 3, fac: 'lech', renamed: false, blocked: false }) : 'null',
     'TestTrainer.web.v1': JSON.stringify({ lang, fac: 'lech', setId: 'bundle.3/topka', course: 3, tour: { intro: 1, main: 1, menu: 1, test: 1 }, checks: 0, starred: {}, autoAdvance: false })
   };
@@ -76,11 +96,47 @@ async function person(uid, { lang, phone, scheme = 'light' }) {
   page.on('console', m => { if (m.type() === 'error' && !/Failed to load resource|WebSocket connection/.test(m.text())) errors.push(who + ' console: ' + m.text()); });
   // everything the server sends this person: to check that no key ever reaches the browser
   if (process.env.DEBUG_NET) page.on('response', r => { if (/duel|securetoken/.test(r.url())) r.text().then(x => console.log('    [net]', who, r.status(), r.url().slice(0, 80), x.slice(0, 120))).catch(() => {}); });
-  const frames = [];
-  page.on('websocket', ws => ws.on('framereceived', f => { try { frames.push(JSON.parse(f.payload)); } catch (e) { /* ping */ } }));
-  await page.goto(stand.ORIGIN + '/index.html');
-  await page.waitForSelector('#content .q', { timeout: 15000 });
-  return { ctx, page, frames, uid, name: u.name, phone };
+  if (LIVE) page.on('request', r => { if (r.isNavigationRequest() && r.frame() === page.mainFrame()) for (const s of ctx.__up || []) s.terminate(); });
+  else page.on('websocket', ws => ws.on('framereceived', f => { try { frames.push(JSON.parse(f.payload)); } catch (e) { /* ping */ } }));
+  // ждём сам документ, а не все картинки и шрифты: сеть до GitHub Pages иногда подолгу держит мелкие файлы
+  await page.goto(SITE, { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.waitForSelector('#content .q', { timeout: 30000 });
+  return { ctx, page, frames, uid, name: u.name, phone, outside };
+}
+
+// Живой прогон: сайт обращается к боевому адресу сервера дуэлей; тест передаёт запросы временной копии
+// тем же путём, как их отправил бы браузер (заголовок Origin сайта, токен, тело), и возвращает ответы как есть.
+async function viaStaging(ctx, frames) {
+  const host = new URL(PROD).host;
+  ctx.__up = new Set();
+  await ctx.route(url => url.host === host && url.pathname === '/duel/ticket', async r => {
+    const q = r.request(), h = q.headers();
+    const fwd = { Origin: SITE_ORIGIN };
+    for (const k of ['authorization', 'content-type', 'access-control-request-method', 'access-control-request-headers']) if (h[k]) fwd[k] = h[k];
+    try {
+      const res = await fetch(stand.BASE + '/duel/ticket', { method: q.method(), headers: fwd, body: q.method() === 'POST' ? q.postData() || '' : undefined });
+      const headers = {};
+      res.headers.forEach((v, k) => { if (/^(access-control-|content-type$|cache-control$|vary$)/.test(k)) headers[k] = v; });
+      return r.fulfill({ status: res.status, headers, body: res.status === 204 ? '' : await res.text() });
+    } catch (e) { return r.abort('connectionfailed'); }
+  });
+  const code = c => (c === 1000 || (c >= 3000 && c <= 4999) ? c : 1000);
+  await ctx.routeWebSocket(url => url.host === host && url.pathname === '/duel/ws', ws => {
+    const up = new WebSocket(stand.WS + '/duel/ws' + new URL(ws.url()).search, { origin: SITE_ORIGIN });
+    ctx.__up.add(up);
+    const queue = [];
+    up.on('open', () => { for (const m of queue.splice(0)) up.send(m); });
+    up.on('message', (data, bin) => {
+      const s = bin ? data : data.toString();
+      if (!bin) try { frames.push(JSON.parse(s)); } catch (e) { /* — */ }
+      try { ws.send(s); } catch (e) { /* page gone */ }
+    });
+    up.on('unexpected-response', (req, res) => { ctx.__up.delete(up); try { ws.close({ code: 1000, reason: 'http ' + res.statusCode }); } catch (e) { /* — */ } });
+    up.on('close', (c, why) => { ctx.__up.delete(up); try { ws.close({ code: code(c), reason: String(why || '') }); } catch (e) { /* — */ } });
+    up.on('error', () => { /* close follows */ });
+    ws.onMessage(m => (up.readyState === WebSocket.OPEN ? up.send(m) : up.readyState === WebSocket.CONNECTING && queue.push(m)));
+    ws.onClose((c, why) => { ctx.__up.delete(up); if (up.readyState === WebSocket.OPEN) up.close(code(c), why); else up.terminate(); });
+  });
 }
 const ph = (p, want, ms = 10000) => p.page.waitForFunction(w => { const d = document.getElementById('duel'); return !!d && d.dataset.ph === w; }, want, { timeout: ms });
 const text = (p, sel) => p.page.$eval(sel, el => el.textContent.trim()).catch(() => '');
@@ -136,6 +192,14 @@ let A1, B1;
 try {
   A1 = await person(A, { lang: 'ru', phone: false });
   B1 = await person(B, { lang: BL, phone: true, scheme: BS });
+
+  if (LIVE) {
+    const html = await (await fetch(SITE, { cache: 'no-store' })).text();
+    ok(html.includes(PROD) && html.includes('Дуэль с другом'), 'опубликованный сайт — с дуэлями и с адресом боевого сервера');
+  }
+  await B1.page.waitForFunction(() => document.getElementById('menuBtn') != null);
+  for (let i = 0; i < 100 && !B1.frames.some(m => m.t === 'hello'); i++) await sleep(100);
+  ok(B1.frames.some(m => m.t === 'hello'), 'Борис при запуске сайта подключился к серверу дуэлей (он в сети)');
 
   console.log('\n1. Меню → Дуэль → поиск соперника по имени');
   ok(await A1.page.$('[data-act="m-duel"]') != null, 'в меню (боковой панели) есть «Дуэль»');
@@ -203,7 +267,11 @@ try {
   if (v1.kind === 'single' || v1.kind === 'multiple') {
     const right = solve(pool, v1), pickI = v1.kind === 'single' ? (right.sel === 0 ? 1 : 0) : null;
     if (pickI != null) await B1.page.click(`#dBody .choice[data-i="${pickI}"]`);
-    else { for (let i = 0; i < v1.options.length; i++) await B1.page.click(`#dBody .choice[data-i="${i}"]`); }
+    else {
+      // заведомо неверно: верный набор с одним переключённым вариантом (бывают вопросы, где верны все варианты)
+      const want = new Set(right.multi), flip = want.size === 1 && want.has(0) ? 1 : 0;
+      for (let i = 0; i < v1.options.length; i++) if (want.has(i) !== (i === flip)) await B1.page.click(`#dBody .choice[data-i="${i}"]`);
+    }
     ok(en((await text(B1, '#dGo')).includes('Answer')), 'после выбора кнопка — «Answer»');
   }
   await press(B1);
@@ -252,7 +320,7 @@ try {
   await B1.page.click('#dFoot [data-d="rematch"]');
   await A1.page.waitForFunction(() => /предлагает реванш/.test(document.getElementById('dBody').textContent), null, { timeout: 4000 });
   ok(true, 'у Алисы: «Борис Иванов предлагает реванш»');
-  ok(en((await text(B1, '#dFoot [data-d="rematch"]')).includes('Waiting')), 'у Бориса: «Waiting…»');
+  ok(en(await B1.page.waitForFunction(() => /Waiting/.test(document.querySelector('#dFoot [data-d="rematch"]').textContent), null, { timeout: 4000 }).then(() => true, () => false)), 'у Бориса: «Waiting…»');
   await A1.page.click('#dFoot [data-d="rematch"]');
   await Promise.all([ph(A1, 'count'), ph(B1, 'count')]);
   await Promise.all([ph(A1, 'play', 8000), ph(B1, 'play', 8000)]);
@@ -310,6 +378,15 @@ try {
   const miss = await B1.page.evaluate(() => [...window.__trMiss]);
   ok(miss.length === 0, (BL === 'en' ? 'английский' : BL) + ': все строки переведены' + (miss.length ? ': ' + JSON.stringify(miss) : ''));
   ok(errors.length === 0, 'ошибок JavaScript нет' + (errors.length ? ': ' + JSON.stringify(errors) : ''));
+  const outHosts = [...new Set([A1, B1].flatMap(p => p.outside).map(u => new URL(u).host))];
+  console.log('    перехвачено и не отправлено:', outHosts.join(', ') || '—');
+
+  if (LIVE) {
+    console.log('\n14. Боевой сервер тестовым ключам не верит');
+    const r = await fetch(PROD + '/duel/ticket', { method: 'POST', headers: { Authorization: 'Bearer ' + token(A), Origin: SITE_ORIGIN } });
+    const body = await r.json().catch(() => ({}));
+    ok(r.status === 401 && body.error === 'BAD_TOKEN', `${PROD.replace('https://', '')}: тот же «токен» — ${r.status} ${body.error}`);
+  }
 } catch (e) {
   failed++;
   console.log('  ✗ ' + (e && e.stack || e));

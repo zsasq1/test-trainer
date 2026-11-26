@@ -10,7 +10,8 @@
     "test": "node --test test/game.test.mjs && node test/arena.test.mjs",
     "test:unit": "node --test test/game.test.mjs",
     "test:server": "node test/arena.test.mjs",
-    "test:e2e": "node test/e2e.test.mjs"
+    "test:e2e": "node test/e2e.test.mjs",
+    "test:live": "E2E_TARGET=live node test/e2e.test.mjs"
   },
   "devDependencies": {
     "wrangler": "4.158.0",

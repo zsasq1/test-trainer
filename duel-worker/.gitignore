@@ -2,3 +2,4 @@ node_modules/
 .wrangler/
 .build/
 .test-state/
+.test-live/
