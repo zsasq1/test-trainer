@@ -19,7 +19,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..700&family=Literata:opsz,wght@7..72,500..700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..700&family=Noto+Sans+Arabic:wght@400..700&family=Literata:opsz,wght@7..72,500..700&display=swap">
 <style>
 /* Layout: one-screen trainer — top bar, scrolling question, thumb-zone controls at the bottom; menu slides in from the left.
    Look: Claude-style warm ivory and near-black, clay accent for actions. Ink marks what you chose, green is right, crimson is wrong. */
@@ -34,8 +34,8 @@
   --scrim:rgba(31,30,29,.32); --shadow:rgba(31,30,29,.13); --bar:rgba(245,244,237,.92);
   --toast-bg:#1F1E1D; --toast-fg:#F5F4ED; --glow:rgba(62,122,53,.3);
   --side:#EDEBE2; --side-sel:rgba(31,30,29,.075); --side-hover:rgba(31,30,29,.045);
-  --font:"Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-  --serif:"Literata",Georgia,"Times New Roman",serif;
+  --font:"Golos Text","Noto Sans Arabic",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --serif:"Literata","Noto Sans Arabic",Georgia,"Times New Roman",serif;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   --fs:1;
   --ease-out:cubic-bezier(0.23,1,0.32,1);  /* strong ease-out for things that appear */
@@ -90,7 +90,7 @@ button:disabled{cursor:default}
 .icon-btn{width:42px;height:42px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;background:var(--surface);border:1px solid var(--line);color:var(--text);font-size:17px}
 .icon-btn:active:not(:disabled){background:var(--ink-soft)}
 .icon-btn:disabled{opacity:.38}
-.titles{flex:1;min-width:0;min-height:44px;display:flex;flex-direction:column;justify-content:center;text-align:left;padding:0 6px;border-radius:10px}
+.titles{flex:1;min-width:0;min-height:44px;display:flex;flex-direction:column;justify-content:center;text-align:start;padding:0 6px;border-radius:10px}
 .titles:active:not(:disabled){background:var(--ink-soft)}
 .topbar .icon-btn{width:40px;height:40px;position:relative}
 .topbar .icon-btn::after{content:'';position:absolute;inset:-3px}
@@ -148,7 +148,7 @@ button:disabled{cursor:default}
 .label{font-size:13px;font-weight:600;color:var(--muted)}
 .ctx{font-size:calc(16px * var(--fs));line-height:1.48;white-space:pre-wrap;overflow-wrap:anywhere}
 .choices,.dd-list{display:flex;flex-direction:column;gap:10px}
-.choice{width:100%;display:flex;align-items:flex-start;gap:12px;padding:13px 14px;text-align:left;border-radius:14px;background:var(--surface);border:1px solid var(--line);font-size:calc(16px * var(--fs));line-height:1.42;transition:background-color .15s,border-color .15s,box-shadow .15s,transform .12s}
+.choice{width:100%;display:flex;align-items:flex-start;gap:12px;padding:13px 14px;text-align:start;border-radius:14px;background:var(--surface);border:1px solid var(--line);font-size:calc(16px * var(--fs));line-height:1.42;transition:background-color .15s,border-color .15s,box-shadow .15s,transform .12s}
 .choice:active{transform:scale(.99)}
 .choice .ico{width:24px;height:calc(22px * var(--fs));min-height:22px;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);font-size:20px;flex:none}
 .choice.is-sel{background:var(--ink-soft);border-color:var(--ink-line);box-shadow:inset 0 0 0 1px var(--ink-line)}
@@ -167,7 +167,7 @@ button:disabled{cursor:default}
 .dd-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(118px,44%);gap:12px;align-items:start;padding:12px 12px 12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line)}
 .dd-left{font-size:calc(16px * var(--fs));font-weight:600;line-height:1.4;overflow-wrap:anywhere}
 .dd-right{min-width:0;display:flex;flex-direction:column;gap:6px}
-.dd-btn{width:100%;display:flex;align-items:flex-start;gap:8px;padding:8px 10px;text-align:left;border-radius:10px;background:var(--bg);border:1px solid var(--line);font-size:calc(16px * var(--fs));font-weight:600;line-height:1.35}
+.dd-btn{width:100%;display:flex;align-items:flex-start;gap:8px;padding:8px 10px;text-align:start;border-radius:10px;background:var(--bg);border:1px solid var(--line);font-size:calc(16px * var(--fs));font-weight:600;line-height:1.35}
 .dd-btn:active{background:var(--ink-soft)}
 .dd-btn>span{flex:1;min-width:0;overflow-wrap:anywhere}
 .dd-btn .ph{color:var(--muted);font-weight:500}
@@ -249,7 +249,7 @@ button:disabled{cursor:default}
 .msec-note{margin:0;padding:6px 4px;font-size:15px;color:var(--muted)}
 .m-note{margin:0 4px 4px;font-size:13px;line-height:1.35;color:var(--muted)}
 .mline{display:flex;align-items:center;gap:2px}
-.mrow{width:100%;min-height:46px;display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:12px;text-align:left;font-size:16px;font-weight:600}
+.mrow{width:100%;min-height:46px;display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:12px;text-align:start;font-size:16px;font-weight:600}
 .mrow:active{background:var(--bg)}
 .mrow.on{background:var(--ink-soft)}
 .mrow .mico{width:22px;display:inline-flex;justify-content:center;color:var(--muted);font-size:18px;flex:none}
@@ -286,7 +286,7 @@ button:disabled{cursor:default}
 .sres-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;min-width:0}
 .sres-head .sec-label{flex:none}
 .sres-file{min-width:0;font-size:13px;font-weight:500;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sres{width:100%;display:flex;flex-direction:column;gap:4px;padding:10px 12px 11px;border-radius:12px;background:var(--bg);border:1px solid transparent;text-align:left}
+.sres{width:100%;display:flex;flex-direction:column;gap:4px;padding:10px 12px 11px;border-radius:12px;background:var(--bg);border:1px solid transparent;text-align:start}
 .sres:active{border-color:var(--line)}
 .sres.cur{border-color:var(--ink-line);background:var(--ink-soft)}
 .sres-meta{display:flex;align-items:center;gap:6px;min-width:0;font-size:12.5px;font-weight:600;color:var(--muted);line-height:1.2}
@@ -406,7 +406,7 @@ button:disabled{cursor:default}
 .fa-chip .i{width:15px;height:15px;color:var(--muted)}
 .fa-chip b{color:var(--text);font-variant-numeric:tabular-nums}
 .fa-list{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--line);background:var(--bg);overflow:hidden}
-.fa-row{display:flex;align-items:center;gap:12px;min-height:50px;padding:8px 14px;text-align:left;font-size:16px;font-weight:500}
+.fa-row{display:flex;align-items:center;gap:12px;min-height:50px;padding:8px 14px;text-align:start;font-size:16px;font-weight:500}
 .fa-row+.fa-row{border-top:1px solid var(--line)}
 .fa-row:active{background:var(--line)}
 .fa-row .i{color:var(--accent);font-size:19px}
@@ -416,7 +416,7 @@ button:disabled{cursor:default}
 .fa-done{width:100%}
 .pick-title{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--text);margin-bottom:12px;overflow-wrap:anywhere}
 .pick-list{display:flex;flex-direction:column;gap:8px}
-.pick{width:100%;min-height:48px;display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--bg);border:1px solid var(--line);text-align:left;font-size:calc(16px * var(--fs));font-weight:600;line-height:1.35}
+.pick{width:100%;min-height:48px;display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--bg);border:1px solid var(--line);text-align:start;font-size:calc(16px * var(--fs));font-weight:600;line-height:1.35}
 .pick>span{flex:1;min-width:0;overflow-wrap:anywhere}
 .pick:active{background:var(--ink-soft)}
 .pick.on{background:var(--ink-soft);border-color:var(--ink-line);box-shadow:inset 0 0 0 1px var(--ink-line)}
@@ -426,7 +426,7 @@ button:disabled{cursor:default}
 .fac{gap:14px}
 .fac-head{display:flex;flex-direction:column;gap:4px;padding:0 2px}
 .fac-list{display:flex;flex-direction:column;gap:8px}
-.fac-opt{width:100%;min-height:64px;display:flex;align-items:center;gap:12px;padding:9px 14px 9px 10px;border-radius:14px;background:var(--bg);border:1px solid var(--line);text-align:left;transition:background-color .15s ease,border-color .15s ease,transform .12s var(--ease-out)}
+.fac-opt{width:100%;min-height:64px;display:flex;align-items:center;gap:12px;padding:9px 14px 9px 10px;border-radius:14px;background:var(--bg);border:1px solid var(--line);text-align:start;transition:background-color .15s ease,border-color .15s ease,transform .12s var(--ease-out)}
 .fac-opt:active{background:var(--ink-soft);transform:scale(.985)}
 .fac-opt.on{background:var(--ink-soft);border-color:var(--ink-line);box-shadow:inset 0 0 0 1px var(--ink-line)}
 .fac-ico{width:44px;height:44px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;background:var(--surface);color:var(--accent);font-size:22px}
@@ -444,7 +444,7 @@ textarea.f-in{resize:vertical;min-height:84px}
 .f-line{display:flex;align-items:center;gap:10px}
 .f-mark{width:30px;height:30px;flex:none;display:inline-flex;align-items:center;justify-content:center;font-size:21px;color:var(--muted)}
 .f-mark[aria-pressed="true"]{color:var(--green)}
-.f-num{width:24px;flex:none;text-align:right;font-weight:700;color:var(--muted)}
+.f-num{width:24px;flex:none;text-align:end;font-weight:700;color:var(--muted)}
 .f-del{width:32px;height:32px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:var(--red);font-size:16px}
 .f-add{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:14px;font-weight:600;padding:6px 2px}
 .f-card{display:flex;flex-direction:column;gap:8px;padding:10px 12px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
@@ -486,7 +486,7 @@ textarea.f-in{resize:vertical;min-height:84px}
 .mt-list{display:flex;flex-direction:column;border-radius:14px;background:var(--surface);border:1px solid var(--line);overflow:hidden}
 .mt-row{display:flex;align-items:center;gap:8px;padding:6px 10px 6px 0;min-height:62px}
 .mt-row+.mt-row{border-top:1px solid var(--line)}
-.mt-pick{flex:1;min-width:0;align-self:stretch;display:flex;align-items:center;gap:11px;padding:6px 0 6px 12px;text-align:left}
+.mt-pick{flex:1;min-width:0;align-self:stretch;display:flex;align-items:center;gap:11px;padding:6px 0 6px 12px;text-align:start}
 .mt-box{width:24px;height:24px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:7px;border:2px solid var(--line);color:transparent;font-size:15px;transition:background-color .15s ease,border-color .15s ease,color .15s ease}
 .mt-row.on .mt-box{background:var(--accent-btn);border-color:transparent;color:var(--on-accent)}
 .mt-name{min-width:0;font-size:16px;font-weight:600;line-height:1.25;overflow-wrap:anywhere}
@@ -709,6 +709,46 @@ a.tg-btn{text-decoration:none}
   .tour-pop,.tour.out .tour-pop{transform:none}
   .tour.ready .tour-hole,.tour.ready .tour-card{transition:none}
 }
+/* ---------- language & year sheets ---------- */
+.lang-ico{font-family:var(--serif);font-size:17px;font-weight:650;color:var(--text)}
+.lang-ico[lang="ar"]{font-family:"Noto Sans Arabic",var(--font);font-size:22px;line-height:1}
+.yr-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.yr-opt{min-width:0;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 6px;border-radius:14px;background:var(--bg);border:1px solid var(--line);transition:background-color .15s ease,border-color .15s ease,transform .12s var(--ease-out)}
+.yr-opt b{font-family:var(--serif);font-size:26px;font-weight:650;line-height:1.1;font-variant-numeric:tabular-nums;color:var(--text)}
+.yr-opt small{font-size:12.5px;color:var(--muted);text-align:center;line-height:1.25;overflow-wrap:anywhere}
+.yr-opt.empty b{color:var(--muted)}
+.yr-opt:active{background:var(--ink-soft);transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){ .yr-opt:hover{border-color:var(--ink-line)} }
+/* ---------- Arabic: the interface reads right to left (a question keeps the direction of its own text) ---------- */
+[dir="rtl"] .i.fl{transform:scaleX(-1)}
+[dir="rtl"] .drawer{left:auto;right:0;box-shadow:-8px 0 28px var(--shadow);transform:translateX(106%);padding-left:var(--dpad);padding-right:max(var(--dpad),env(safe-area-inset-right,0px))}
+[dir="rtl"] .drawer.open{transform:none}
+[dir="rtl"] .menu-body{margin-right:0;padding-right:0;margin-left:calc(-1 * var(--dpad));padding-left:var(--dpad)}
+[dir="rtl"] .switch span{left:auto;right:2px}
+[dir="rtl"] .switch[aria-checked="true"] span{transform:translateX(-18px)}
+[dir="rtl"] .progress span+span{margin-left:0;margin-right:9px}
+.progress>span{unicode-bidi:isolate} /* «1 من 102» and a Russian file name: each keeps its own order */
+/* Russian titles and question text inside the Arabic menu: ordered by their own first letter, aligned with the interface */
+[dir="rtl"] .mrow .mtxt,[dir="rtl"] .fa-name b,[dir="rtl"] .sres-title,[dir="rtl"] .sres-snip,[dir="rtl"] .sec-chip span{unicode-bidi:plaintext;text-align:right}
+[dir="rtl"] .sres-num{direction:ltr;unicode-bidi:isolate}
+[dir="rtl"] .sres-now{margin-left:0;margin-right:auto}
+[dir="rtl"] .kbd{margin-left:0;margin-right:4px}
+[dir="rtl"] .tour-x{right:auto;left:9px}
+[dir="rtl"] .su-pass .f-in{padding-right:12px;padding-left:50px}
+[dir="rtl"] .su-eye{right:auto;left:4px}
+[dir="rtl"] .chips{margin-right:0;padding-right:0;margin-left:-16px;padding-left:16px}
+[dir="rtl"] .sec-chip{padding:3px 10px 3px 6px}
+[dir="rtl"] .fac-opt{padding:9px 10px 9px 14px}
+[dir="rtl"] .mt-pick{padding:6px 12px 6px 0}
+[dir="rtl"] .tg-btn svg,[dir="rtl"] .tg-promo-ico svg{margin-left:0;margin-right:-2px}
+[dir="rtl"] .su-ico.tg svg{margin-left:0;margin-right:-3px}
+@media (max-width:340px){ [dir="rtl"] .fac-opt{padding-right:10px;padding-left:12px} }
+@media (max-width:360px){ [dir="rtl"] .mt-pick{padding-left:0;padding-right:10px} }
+@media (min-width:960px){
+  [dir="rtl"] .drawer{transform:none;box-shadow:none;border-right:0;border-left:1px solid var(--line);padding-left:var(--dpad);padding-right:var(--dpad)}
+  [dir="rtl"] .toast{left:calc(50% - 160px)}
+  [dir="rtl"] .dock-off .toast{left:50%}
+}
 </style>
 
 <div class="app" id="app">
@@ -752,10 +792,482 @@ a.tg-btn{text-decoration:none}
 'use strict';
 
 /* =========================================================
+   Interface language: Русский (the source text), English, العربية (right to left).
+   Only the interface is translated — questions stay in the language of the file.
+   ========================================================= */
+const LANGS = [
+  { id: 'ru', name: 'Русский', note: 'Интерфейс на русском', badge: 'Рус' },
+  { id: 'en', name: 'English', note: 'Interface in English', badge: 'En' },
+  { id: 'ar', name: 'العربية', note: 'الواجهة باللغة العربية', badge: 'ع', rtl: true }
+];
+const isLang = id => LANGS.some(l => l.id === id);
+const langOf = id => LANGS.find(l => l.id === id) || LANGS[0];
+const LANG_KEY = 'TestTrainer.lang'; // this device's choice: known before the saved state loads
+let langStored = false;
+let LANG = (() => { try { const v = localStorage.getItem(LANG_KEY); if (isLang(v)) { langStored = true; return v; } } catch (e) {} return 'ru'; })();
+const isRtl = () => !!langOf(LANG).rtl;
+// Russian text → [English, Arabic]. A missing entry shows the Russian text.
+const TR = {
+  "Несколько ответов": ["Multiple answers", "إجابات متعددة"],
+  "Один ответ": ["Single answer", "إجابة واحدة"],
+  "Выпадающий список": ["Drop-down list", "قائمة منسدلة"],
+  "Правильный порядок": ["Correct order", "الترتيب الصحيح"],
+  "Текстовый ответ": ["Text answer", "إجابة نصية"],
+  "Кейсы": ["Cases", "الحالات"],
+  "Один": ["Single", "واحدة"],
+  "Один правильный ответ": ["One correct answer", "إجابة صحيحة واحدة"],
+  "Несколько": ["Multiple", "متعددة"],
+  "Несколько правильных ответов": ["Several correct answers", "عدة إجابات صحيحة"],
+  "Список": ["List", "قائمة"],
+  "Порядок": ["Order", "ترتيب"],
+  "Текст": ["Text", "نص"],
+  "Написать текст": ["Type the answer", "كتابة الإجابة"],
+  "Лечебное дело": ["General Medicine", "الطب العام"],
+  "лечебного дела": ["General Medicine", "الطب العام"],
+  "Педиатрия": ["Pediatrics", "طب الأطفال"],
+  "педиатрии": ["Pediatrics", "طب الأطفال"],
+  "Стоматология": ["Dentistry", "طب الأسنان"],
+  "стоматологии": ["Dentistry", "طب الأسنان"],
+  "Ожидался объект вида {\"Текст вопроса\": {\"type\": \"single\", \"all_options\": [...]}}.": ["Expected an object like {\"Question text\": {\"type\": \"single\", \"all_options\": [...]}}.", "كان المتوقع كائنًا بالشكل {\"نص السؤال\": {\"type\": \"single\", \"all_options\": [...]}}."],
+  "Не удалось сохранить прогресс в аккаунте. Он сохранится в этом браузере.": ["Couldn't save progress to your account. It will be saved in this browser.", "تعذّر حفظ التقدّم في الحساب. سيُحفظ في هذا المتصفح."],
+  "Память браузера недоступна (частный режим?). Файл не сохранился.": ["Browser storage is unavailable (private mode?). The file wasn't saved.", "ذاكرة المتصفح غير متاحة (وضع التصفح الخاص؟). لم يُحفظ الملف."],
+  "Файл не открылся из аккаунта (код {0}). Загрузите его заново.": ["The file didn't open from your account (code {0}). Please upload it again.", "تعذّر فتح الملف من الحساب (الرمز {0}). حمّله من جديد."],
+  "Файла нет в памяти этого браузера. Загрузите его заново.": ["This file isn't in this browser's storage. Please upload it again.", "هذا الملف غير موجود في ذاكرة هذا المتصفح. حمّله من جديد."],
+  "не найден": ["not found", "غير موجودة"],
+  "Правильный ответ не найден.": ["The correct answer wasn't found.", "لم يتم العثور على الإجابة الصحيحة."],
+  "нет верных вариантов": ["no correct options", "لا توجد خيارات صحيحة"],
+  "Правильный ответ не указан в JSON.": ["The correct answer isn't given in the JSON.", "الإجابة الصحيحة غير مذكورة في ملف JSON."],
+  "Ответ:": ["Answer:", "الإجابة:"],
+  "Ваш вопрос {0}": ["Your question {0}", "سؤالك {0}"],
+  "Факультет: {0}": ["Faculty: {0}", "الكلية: {0}"],
+  "Курс": ["Year", "السنة"],
+  "{0} курс": ["Year {0}", "السنة {0}"],
+  "Тест {0}": ["Test {0}", "اختبار {0}"],
+  "Встроенный файл не открылся (код {0}).": ["The built-in file didn't open (code {0}).", "تعذّر فتح الملف المدمج (الرمز {0})."],
+  "Неизвестная ошибка": ["Unknown error", "خطأ غير معروف"],
+  "Не удалось прочитать файл": ["Couldn't read the file", "تعذّرت قراءة الملف"],
+  "вопросы": ["questions", "أسئلة"],
+  "Это не JSON": ["This isn't JSON", "هذا ليس ملف JSON"],
+  "«{0}» не читается как JSON: {1}": ["“{0}” can't be read as JSON: {1}", "تعذّرت قراءة «{0}» بصيغة JSON: {1}"],
+  "Проверьте, что файл скопирован целиком.": ["Make sure the whole file was copied.", "تأكّد من نسخ الملف كاملًا."],
+  "Формат не подходит": ["Unsupported format", "الصيغة غير مناسبة"],
+  "В файле нет вопросов": ["The file has no questions", "لا توجد أسئلة في الملف"],
+  "Ожидается объект вида {\"Текст вопроса\": {\"type\": \"single\", \"all_options\": [...]}}. Поддерживаются типы single, multiple, dropdown, sortable, text_input и drag_and_drop.": ["Expected an object like {\"Question text\": {\"type\": \"single\", \"all_options\": [...]}}. Supported types: single, multiple, dropdown, sortable, text_input and drag_and_drop.", "المتوقع كائن بالشكل {\"نص السؤال\": {\"type\": \"single\", \"all_options\": [...]}}. الأنواع المدعومة: single وmultiple وdropdown وsortable وtext_input وdrag_and_drop."],
+  "«{0}» уже загружен — открыл его": ["“{0}” is already uploaded — opened it", "«{0}» محمّل مسبقًا — تم فتحه"],
+  "Файл «{0}» уже есть": ["“{0}” already exists", "الملف «{0}» موجود مسبقًا"],
+  "Обновить его этой версией? Прогресс и избранное сохранятся у совпадающих вопросов.": ["Replace it with this version? Progress and favorites are kept for matching questions.", "هل تريد تحديثه بهذه النسخة؟ سيبقى التقدّم والمفضلة للأسئلة المتطابقة."],
+  "Обновить": ["Update", "تحديث"],
+  "Добавить отдельным файлом": ["Add as a separate file", "إضافته كملف منفصل"],
+  "Отмена": ["Cancel", "إلغاء"],
+  "Сохраняю файл…": ["Saving the file…", "جارٍ حفظ الملف…"],
+  "Файл не сохранился": ["The file wasn't saved", "لم يُحفظ الملف"],
+  ", пропущено {0}": [", skipped {0}", "، تم تخطي {0}"],
+  "Обновлено: «{0}» — {1}": ["Updated: “{0}” — {1}", "تم التحديث: «{0}» — {1}"],
+  "Загружено в «Мои файлы»: «{0}» — {1}": ["Added to My files: “{0}” — {1}", "أُضيف إلى «ملفاتي»: «{0}» — {1}"],
+  "Тест": ["Test", "اختبار"],
+  "Тренажёр тестов": ["Test Trainer", "مدرّب الاختبارات"],
+  "Загрузка…": ["Loading…", "جارٍ التحميل…"],
+  "Выберите факультет": ["Choose your faculty", "اختر الكلية"],
+  "Нет файлов": ["No files", "لا توجد ملفات"],
+  "{0}, загрузка…": ["{0}, loading…", "{0}، جارٍ التحميل…"],
+  "{0} из {1}": ["{0} of {1}", "{0} من {1}"],
+  "б.": ["pts", "نقطة"],
+  "Добавить свой вопрос к кейсу": ["Add your own question to the case", "أضف سؤالك إلى الحالة"],
+  "Автопереход к следующему вопросу": ["Auto-advance to the next question", "الانتقال التلقائي إلى السؤال التالي"],
+  "Убрать из избранного": ["Remove from favorites", "إزالة من المفضلة"],
+  "Добавить в избранное": ["Add to favorites", "إضافة إلى المفضلة"],
+  "Загружаю вопросы…": ["Loading questions…", "جارٍ تحميل الأسئلة…"],
+  "Для {0} тестов пока нет": ["No tests for {0} yet", "لا توجد اختبارات لـ{0} بعد"],
+  "Их скоро добавят. А пока можно загрузить свой JSON с вопросами — из «Файлов», iCloud Drive или Telegram.": ["They'll be added soon. Meanwhile you can upload your own JSON with questions — from Files, iCloud Drive or Telegram.", "ستُضاف قريبًا. وحتى ذلك الحين يمكنك تحميل ملف JSON خاص بك يحتوي على أسئلة — من «الملفات» أو iCloud Drive أو Telegram."],
+  "Загрузить JSON": ["Upload JSON", "تحميل ملف JSON"],
+  "Сменить факультет": ["Change faculty", "تغيير الكلية"],
+  "Файлы не выбраны": ["No files selected", "لم يتم اختيار ملفات"],
+  "Загрузите JSON с вопросами: из «Файлов», iCloud Drive или после сохранения из Telegram.": ["Upload a JSON with questions: from Files, iCloud Drive or after saving it from Telegram.", "حمّل ملف JSON يحتوي على أسئلة: من «الملفات» أو iCloud Drive أو بعد حفظه من Telegram."],
+  "Открываю «{0}»…": ["Opening “{0}”…", "جارٍ فتح «{0}»…"],
+  "Файл не открылся": ["The file didn't open", "تعذّر فتح الملف"],
+  "Загрузить заново": ["Upload again", "تحميل من جديد"],
+  "Действия с файлом": ["File actions", "إجراءات الملف"],
+  "В избранном этой категории пусто.": ["No favorites in this category yet.", "لا توجد مفضلة في هذه الفئة."],
+  "В этом файле нет вопросов такого типа. Выберите другую категорию в меню.": ["This file has no questions of this type. Choose another category in the menu.", "لا توجد أسئلة من هذا النوع في هذا الملف. اختر فئة أخرى من القائمة."],
+  "В этой категории нет вопросов": ["No questions in this category", "لا توجد أسئلة في هذه الفئة"],
+  "Открыть меню": ["Open menu", "فتح القائمة"],
+  "Вопрос {0}": ["Question {0}", "السؤال {0}"],
+  "Удалить ваш вопрос {0}": ["Delete your question {0}", "حذف سؤالك {0}"],
+  "Условие": ["Case", "المعطيات"],
+  "Выбрать ответ для «{0}»": ["Choose the answer for “{0}”", "اختر الإجابة لـ«{0}»"],
+  "Выбрать": ["Choose", "اختيار"],
+  "Тяните за значок справа, чтобы менять порядок": ["Drag the handle on the right to reorder", "اسحب المقبض على اليمين لتغيير الترتيب"],
+  "Перетащить": ["Drag", "سحب"],
+  "Ваш ответ": ["Your answer", "إجابتك"],
+  "Введите ответ": ["Type your answer", "اكتب إجابتك"],
+  "Скрыть": ["Hide", "إخفاء"],
+  "Подглядеть": ["Peek", "إظهار"],
+  "Скрыть ответ": ["Hide the answer", "إخفاء الإجابة"],
+  "Подглядеть ответ": ["Peek at the answer", "إظهار الإجابة"],
+  "П": ["G", "G"],
+  "Проверить": ["Check", "تحقّق"],
+  "Закончить тест": ["Finish the test", "إنهاء الاختبار"],
+  "Показать меню": ["Show menu", "إظهار القائمة"],
+  "Скрыть меню": ["Hide menu", "إخفاء القائمة"],
+  "Закрыть меню": ["Close menu", "إغلاق القائمة"],
+  "Вопрос кейса": ["Case question", "سؤال الحالة"],
+  "Кейс": ["Case", "حالة"],
+  "Пара": ["Pair", "زوج"],
+  "Пункт": ["Item", "بند"],
+  "Ответ": ["Answer", "إجابة"],
+  "Вариант": ["Option", "خيار"],
+  "Админка": ["Admin", "لوحة الإدارة"],
+  "Только для владельца сайта": ["For the site owner only", "لمالك الموقع فقط"],
+  "Сначала выберите файл с вопросами.": ["Choose a file with questions first.", "اختر ملف الأسئلة أولًا."],
+  "Сначала загрузите файл с вопросами.": ["Upload a file with questions first.", "حمّل ملف الأسئلة أولًا."],
+  "в «{0}»": ["in “{0}”", "في «{0}»"],
+  "Найдено: {0}": ["Found: {0}", "النتائج: {0}"],
+  "Поиск": ["Search", "بحث"],
+  "Ничего не найдено": ["Nothing found", "لا توجد نتائج"],
+  "Проверьте написание или введите начало слова — например, «сердц» вместо «сердечный».": ["Check the spelling or type the beginning of a word — the questions are in Russian, e.g. «сердц» instead of «сердечный».", "تحقّق من الكتابة أو اكتب بداية الكلمة — الأسئلة باللغة الروسية، مثلًا «сердц» بدلًا من «сердечный»."],
+  "Ищу в вопросах и вариантах ответов этого файла.": ["Searching this file's questions and answer options.", "يتم البحث في أسئلة هذا الملف وخيارات إجاباتها."],
+  "<p class=\"m-note\">Переход к найденному вопросу завершит текущий тест.</p>": ["<p class=\"m-note\">Opening a found question will end the current test.</p>", "<p class=\"m-note\">الانتقال إلى السؤال الذي تم العثور عليه سينهي الاختبار الحالي.</p>"],
+  "В избранном": ["In favorites", "في المفضلة"],
+  "<span class=\"sres-now\">открыт</span>": ["<span class=\"sres-now\">open</span>", "<span class=\"sres-now\">مفتوح</span>"],
+  "Показаны первые {0}. Уточните запрос — добавьте ещё слово.": ["Showing the first {0}. Narrow it down — add another word.", "تُعرض أول {0} نتيجة. حدّد البحث أكثر — أضف كلمة أخرى."],
+  "Жалобы и предложения — Made by TG @ziplogo": ["Feedback and suggestions — Made by TG @ziplogo", "الشكاوى والاقتراحات — Made by TG @ziplogo"],
+  "Жалобы и предложения": ["Feedback and suggestions", "الشكاوى والاقتراحات"],
+  "Категории": ["Categories", "الفئات"],
+  "Файл «{0}» — к списку файлов": ["File “{0}” — go to the file list", "الملف «{0}» — إلى قائمة الملفات"],
+  "<p class=\"m-note\">Выбор категории завершит текущий тест.</p>": ["<p class=\"m-note\">Choosing a category will end the current test.</p>", "<p class=\"m-note\">اختيار فئة سينهي الاختبار الحالي.</p>"],
+  "{0} верно": ["{0} correct", "{0} صحيحة"],
+  "<section class=\"msec\"><div class=\"sec-label\">Избранное</div>": ["<section class=\"msec\"><div class=\"sec-label\">Favorites</div>", "<section class=\"msec\"><div class=\"sec-label\">المفضلة</div>"],
+  "Очистить избранное в категории «{0}»": ["Clear favorites in “{0}”", "مسح المفضلة في فئة «{0}»"],
+  "<section class=\"msec\"><div class=\"sec-label\">Тест</div>": ["<section class=\"msec\"><div class=\"sec-label\">Test</div>", "<section class=\"msec\"><div class=\"sec-label\">اختبار</div>"],
+  "Продолжить тест": ["Continue the test", "متابعة الاختبار"],
+  "Вопрос {0} из {1}": ["Question {0} of {1}", "السؤال {0} من {1}"],
+  "Новый тест": ["New test", "اختبار جديد"],
+  "Или завершить текущий": ["Or finish the current one", "أو إنهاء الاختبار الحالي"],
+  "Сделать тест": ["Make a test", "إنشاء اختبار"],
+  "Случайные вопросы, как на экзамене": ["Random questions, like in an exam", "أسئلة عشوائية كما في الامتحان"],
+  "{0} вопр.": ["{0} q.", "{0} سؤال"],
+  "Удалить «{0}»": ["Delete “{0}”", "حذف «{0}»"],
+  "Мои файлы": ["My files", "ملفاتي"],
+  "Курсы": ["Years", "السنوات"],
+  "Факультет: {0} — сменить": ["Faculty: {0} — change", "الكلية: {0} — تغيير"],
+  "Для {0} тестов пока нет — их скоро добавят.": ["No tests for {0} yet — they'll be added soon.", "لا توجد اختبارات لـ{0} بعد — ستُضاف قريبًا."],
+  "Для {0} курса файлов пока нет.": ["No files for year {0} yet.", "لا توجد ملفات للسنة {0} بعد."],
+  "Действия с файлом «{0}»": ["Actions for “{0}”", "إجراءات الملف «{0}»"],
+  "Войти через Telegram": ["Sign in with Telegram", "تسجيل الدخول عبر Telegram"],
+  "аккаунт": ["account", "الحساب"],
+  "Войти": ["Sign in", "تسجيل الدخول"],
+  "Через Telegram — в одно нажатие": ["With Telegram — in one tap", "عبر Telegram — بنقرة واحدة"],
+  "Или зарегистрироваться": ["Or sign up", "أو إنشاء حساب"],
+  "Настройки": ["Settings", "الإعدادات"],
+  "Онлайн и файлы курсов": ["Who's online and course files", "المتصلون الآن وملفات السنوات"],
+  "Факультет": ["Faculty", "الكلية"],
+  "Обучение": ["Tutorial", "الشرح التعريفي"],
+  "Показать подсказки ещё раз": ["Show the tips again", "عرض التلميحات مرة أخرى"],
+  "Автопереход": ["Auto-advance", "الانتقال التلقائي"],
+  "После верного ответа — следующий вопрос": ["After a correct answer — the next question", "بعد الإجابة الصحيحة — السؤال التالي"],
+  "Размер текста": ["Text size", "حجم النص"],
+  "<button type=\"button\" class=\"mlink\" data-act=\"m-font-reset\">Сбросить</button>": ["<button type=\"button\" class=\"mlink\" data-act=\"m-font-reset\">Reset</button>", "<button type=\"button\" class=\"mlink\" data-act=\"m-font-reset\">إعادة الضبط</button>"],
+  "Мельче": ["Smaller", "أصغر"],
+  "Масштаб текста вопросов": ["Question text size", "حجم نص الأسئلة"],
+  "Крупнее": ["Larger", "أكبر"],
+  "Понятно": ["Got it", "حسنًا"],
+  "Не выбрано": ["Not chosen", "غير محدد"],
+  "Перейти к вопросу": ["Go to question", "الانتقال إلى سؤال"],
+  "Введите номер от 1 до {0}": ["Enter a number from 1 to {0}", "أدخل رقمًا من 1 إلى {0}"],
+  "Перейти": ["Go", "انتقال"],
+  "Результат: {0} из {1}": ["Result: {0} of {1}", "النتيجة: {0} من {1}"],
+  "Верно: {0} из {1}": ["Correct: {0} of {1}", "الإجابات الصحيحة: {0} من {1}"],
+  "Не проверено: {0}": ["Not checked: {0}", "لم يتم التحقق: {0}"],
+  "Тест завершён": ["Test finished", "انتهى الاختبار"],
+  "Остаться": ["Stay", "البقاء"],
+  "Закрыть тест": ["Close the test", "إغلاق الاختبار"],
+  "Ваш факультет": ["Your faculty", "كليتك"],
+  "От него зависят курсы и тесты": ["It decides which years and tests you see", "تحدد السنوات والاختبارات التي تظهر لك"],
+  "<div class=\"su-note\">Поменять можно в настройках</div>": ["<div class=\"su-note\">You can change it in Settings</div>", "<div class=\"su-note\">يمكن تغييرها من الإعدادات</div>"],
+  "<button type=\"button\" class=\"dlg-btn\" data-s=\"cancel\">Отмена</button>": ["<button type=\"button\" class=\"dlg-btn\" data-s=\"cancel\">Cancel</button>", "<button type=\"button\" class=\"dlg-btn\" data-s=\"cancel\">إلغاء</button>"],
+  "Файл не открылся (код {0}).": ["The file didn't open (code {0}).", "تعذّر فتح الملف (الرمز {0})."],
+  "Подождите секунду и попробуйте ещё раз": ["Wait a second and try again", "انتظر لحظة وحاول مرة أخرى"],
+  "Здесь не получилось сохранить файл": ["Couldn't save the file here", "تعذّر حفظ الملف هنا"],
+  "Скачивается «{0}»": ["Downloading “{0}”", "جارٍ تنزيل «{0}»"],
+  "Мой файл": ["My file", "ملفي"],
+  ", ": [", ", "، "],
+  ", в аккаунте": [", in your account", "، في الحساب"],
+  ", считаю вопросы…": [", counting questions…", "، جارٍ عدّ الأسئلة…"],
+  ", не открылся": [", didn't open", "، تعذّر فتحه"],
+  "Открыть": ["Open", "فتح"],
+  "Переименовать": ["Rename", "إعادة التسمية"],
+  "Отправить JSON": ["Share JSON", "إرسال ملف JSON"],
+  "В «Файлы», AirDrop, Telegram": ["To Files, AirDrop, Telegram", "إلى «الملفات» أو AirDrop أو Telegram"],
+  "Сбросить ответы": ["Reset answers", "إعادة ضبط الإجابات"],
+  " с ответами": [" answered", " مُجاب عنها"],
+  "Удалить файл": ["Delete file", "حذف الملف"],
+  "Готово": ["Done", "تم"],
+  "Не получилось прочитать файл. Попробуйте загрузить его заново.": ["Couldn't read the file. Try uploading it again.", "تعذّرت قراءة الملف. حاول تحميله من جديد."],
+  "Переименовать файл": ["Rename file", "إعادة تسمية الملف"],
+  "Название меняется только в приложении.": ["The name changes only in the app.", "يتغيّر الاسم داخل التطبيق فقط."],
+  "Название": ["Name", "الاسم"],
+  "Сохранить": ["Save", "حفظ"],
+  "Название сохранено": ["Name saved", "تم حفظ الاسم"],
+  "Сбросить ответы?": ["Reset answers?", "إعادة ضبط الإجابات؟"],
+  "Отмеченные ответы и проверки в «{0}» очистятся — можно решать заново. Избранное и сохранённые тесты останутся.": ["Marked answers and checks in “{0}” will be cleared so you can start over. Favorites and saved tests stay.", "ستُمسح الإجابات المحددة ونتائج التحقق في «{0}» — ويمكنك الحل من جديد. ستبقى المفضلة والاختبارات المحفوظة."],
+  "Сбросить": ["Reset", "إعادة الضبط"],
+  "Ответы сброшены": ["Answers reset", "تمت إعادة ضبط الإجابات"],
+  "Удалить файл?": ["Delete the file?", "حذف الملف؟"],
+  "Файл «{0}», его прогресс, избранное и сохранённые тесты будут удалены.": ["The file “{0}”, its progress, favorites and saved tests will be deleted.", "سيُحذف الملف «{0}» مع تقدّمه ومفضلته واختباراته المحفوظة."],
+  "Удалить": ["Delete", "حذف"],
+  "Файл удалён": ["File deleted", "تم حذف الملف"],
+  "выбрать все верные": ["choose all correct", "اختيار كل الإجابات الصحيحة"],
+  "выбрать один верный": ["choose one correct", "اختيار إجابة صحيحة واحدة"],
+  "выбрать ответ из списка": ["choose from a list", "اختيار الإجابة من قائمة"],
+  "расставить по порядку": ["put in order", "الترتيب بالتسلسل"],
+  "вписать ответ самому": ["type the answer", "كتابة الإجابة بنفسك"],
+  "задача с несколькими вопросами": ["a task with several questions", "مسألة بعدة أسئلة"],
+  "Сначала выберите файл с вопросами": ["Choose a file with questions first", "اختر ملف الأسئلة أولًا"],
+  "В этом файле нет вопросов": ["This file has no questions", "لا توجد أسئلة في هذا الملف"],
+  "За каждый верный ответ — {0}.": ["Each correct answer — {0}.", "لكل إجابة صحيحة — {0}."],
+  "За разные вопросы — разные баллы.": ["Different questions give different points.", "تختلف النقاط باختلاف الأسئلة."],
+  "{0}: меньше": ["{0}: fewer", "{0}: أقل"],
+  "{0}: больше": ["{0}: more", "{0}: أكثر"],
+  "Сейчас идёт тест": ["A test is in progress", "يوجد اختبار جارٍ الآن"],
+  "вопрос {0} из {1}. Новый тест заменит его.": ["question {0} of {1}. A new test will replace it.", "السؤال {0} من {1}. سيحلّ الاختبار الجديد محله."],
+  "Завершить текущий тест": ["Finish the current test", "إنهاء الاختبار الحالي"],
+  "Сколько вопросов?": ["How many questions?", "كم عدد الأسئلة؟"],
+  "Выпадут случайно из файла «{0}»": ["Picked at random from “{0}”", "ستُختار عشوائيًا من الملف «{0}»"],
+  "Сколько вопросов": ["How many questions", "عدد الأسئلة"],
+  "вопр.": ["q.", "سؤال"],
+  "Все": ["All", "الكل"],
+  "Какие вопросы?": ["Which questions?", "أي الأسئلة؟"],
+  "Снимите галочку, если такие не нужны": ["Untick the ones you don't need", "أزل العلامة عمّا لا تحتاجه"],
+  "в файле {0}": ["{0} in the file", "في الملف {0}"],
+  "Сколько вопросов: {0}": ["How many questions: {0}", "عدد الأسئلة: {0}"],
+  "Баллы": ["Points", "النقاط"],
+  "Можно не менять": ["Optional", "يمكن تركها كما هي"],
+  "Изменить баллы и порядок": ["Change points and order", "تغيير النقاط والترتيب"],
+  "Изменить баллы": ["Change points", "تغيير النقاط"],
+  "<div class=\"mt-advhint\">Разделы идут в тесте в этом порядке — сверху вниз.</div>": ["<div class=\"mt-advhint\">Sections come in the test in this order, top to bottom.</div>", "<div class=\"mt-advhint\">تأتي الأقسام في الاختبار بهذا الترتيب — من الأعلى إلى الأسفل.</div>"],
+  "«{0}» раньше": ["“{0}” earlier", "«{0}» أولًا"],
+  "«{0}» позже": ["“{0}” later", "«{0}» لاحقًا"],
+  "Баллов за вопрос": ["Points per question", "النقاط لكل سؤال"],
+  "Баллов за вопрос: {0}": ["Points per question: {0}", "النقاط لكل سؤال: {0}"],
+  "Закрыть": ["Close", "إغلاق"],
+  "Начать тест": ["Start the test", "بدء الاختبار"],
+  "Тест начат: {0}": ["Test started: {0}", "بدأ الاختبار: {0}"],
+  "Нужен хотя бы один вид вопросов": ["Pick at least one kind of question", "اختر نوعًا واحدًا من الأسئلة على الأقل"],
+  "максимум {0}": ["up to {0}", "بحد أقصى {0}"],
+  "Выберите, сколько вопросов": ["Choose how many questions", "اختر عدد الأسئلة"],
+  "Тип вопроса": ["Question type", "نوع السؤال"],
+  "Вопрос": ["Question", "السؤال"],
+  "Текст вопроса": ["Question text", "نص السؤال"],
+  "Варианты (отметьте один верный)": ["Options (mark the correct one)", "الخيارات (حدّد الخيار الصحيح)"],
+  "Варианты (отметьте верные)": ["Options (mark the correct ones)", "الخيارات (حدّد الخيارات الصحيحة)"],
+  "Верный вариант {0}": ["Correct option {0}", "الخيار الصحيح {0}"],
+  "Вариант {0}": ["Option {0}", "الخيار {0}"],
+  "Удалить вариант": ["Delete option", "حذف الخيار"],
+  "Добавить вариант": ["Add option", "إضافة خيار"],
+  "<div class=\"sec-label\">Элементы в правильном порядке</div>": ["<div class=\"sec-label\">Items in the correct order</div>", "<div class=\"sec-label\">العناصر بالترتيب الصحيح</div>"],
+  "Элемент {0}": ["Item {0}", "العنصر {0}"],
+  "Удалить элемент": ["Delete item", "حذف العنصر"],
+  "Добавить элемент": ["Add item", "إضافة عنصر"],
+  "<div class=\"sec-label\">Все варианты в выпадающем списке</div>": ["<div class=\"sec-label\">All options in the drop-down list</div>", "<div class=\"sec-label\">كل خيارات القائمة المنسدلة</div>"],
+  "Вариант выбора {0}": ["Choice {0}", "خيار القائمة {0}"],
+  "Удалить вариант выбора": ["Delete choice", "حذف خيار القائمة"],
+  "Добавить вариант выбора": ["Add choice", "إضافة خيار للقائمة"],
+  "Строки": ["Rows", "الصفوف"],
+  "Строка {0}": ["Row {0}", "الصف {0}"],
+  "Удалить строку": ["Delete row", "حذف الصف"],
+  "Текст слева, например «Кислород —»": ["Text on the left, e.g. “Oxygen —”", "النص على اليسار، مثلًا «الأكسجين —»"],
+  "Текст строки {0}": ["Row {0} text", "نص الصف {0}"],
+  "Правильный выбор:": ["Correct choice:", "الخيار الصحيح:"],
+  "Правильный выбор для строки {0}": ["Correct choice for row {0}", "الخيار الصحيح للصف {0}"],
+  "<span class=\"f-warn\">Добавьте варианты выше</span>": ["<span class=\"f-warn\">Add choices above</span>", "<span class=\"f-warn\">أضف الخيارات في الأعلى</span>"],
+  "Добавить строку": ["Add row", "إضافة صف"],
+  "<div class=\"sec-label\">Варианты правильного ответа</div>": ["<div class=\"sec-label\">Accepted answers</div>", "<div class=\"sec-label\">صيغ الإجابة الصحيحة</div>"],
+  "Ответ {0}": ["Answer {0}", "الإجابة {0}"],
+  "Удалить ответ": ["Delete answer", "حذف الإجابة"],
+  "Добавить правильный ответ": ["Add a correct answer", "إضافة إجابة صحيحة"],
+  "Ваши вопросы": ["Your questions", "أسئلتك"],
+  "Удалить вопрос": ["Delete question", "حذف السؤال"],
+  "Добавить вопрос": ["Add question", "إضافة سؤال"],
+  "Добавить": ["Add", "إضافة"],
+  "Вопрос добавлен в кейс": ["Question added to the case", "أُضيف السؤال إلى الحالة"],
+  "Нет связи с интернетом": ["No internet connection", "لا يوجد اتصال بالإنترنت"],
+  "Автопереход включён: после верного ответа — следующий вопрос": ["Auto-advance on: after a correct answer — the next question", "الانتقال التلقائي مفعّل: بعد الإجابة الصحيحة — السؤال التالي"],
+  "Автопереход выключен: после верного ответа вопрос перемешается": ["Auto-advance off: after a correct answer the question is reshuffled", "الانتقال التلقائي متوقف: بعد الإجابة الصحيحة يُعاد خلط السؤال"],
+  "Удалить ваш вопрос?": ["Delete your question?", "حذف سؤالك؟"],
+  "Очистить избранное?": ["Clear favorites?", "مسح المفضلة؟"],
+  "Звёздочки в категории «{0}» будут сняты.": ["Stars in “{0}” will be removed.", "ستُزال النجوم في فئة «{0}»."],
+  "Очистить": ["Clear", "مسح"],
+  "Файл этого теста удалён": ["This test's file was deleted", "تم حذف ملف هذا الاختبار"],
+  "Файл теста не открылся": ["The test's file didn't open", "تعذّر فتح ملف الاختبار"],
+  "Удалить «{0}»?": ["Delete “{0}”?", "حذف «{0}»؟"],
+  "Откройте любой вопрос — и обучение покажет, как заниматься": ["Open any question and the tutorial will show you how it works", "افتح أي سؤال وسيعرض لك الشرح طريقة الاستخدام"],
+  "Отпустите JSON, чтобы загрузить": ["Drop the JSON to upload it", "أفلت ملف JSON لتحميله"],
+  "Здесь правильных ответов несколько — отметьте все. Попробуйте прямо сейчас.": ["There are several correct answers here — mark them all. Try it now.", "هنا عدة إجابات صحيحة — حدّدها كلها. جرّب الآن."],
+  "Впишите ответ в поле. Заглавные буквы и лишние пробелы не важны.": ["Type the answer in the field. Capital letters and extra spaces don't matter.", "اكتب الإجابة في الحقل. الأحرف الكبيرة والمسافات الزائدة لا تهم."],
+  "Для каждой строки выберите ответ из списка.": ["For each row, choose the answer from the list.", "لكل صف اختر الإجابة من القائمة."],
+  "Расставьте пункты по порядку: тяните за значок справа.": ["Put the items in order: drag the handle on the right.", "رتّب البنود بالتسلسل: اسحب المقبض على اليمين."],
+  "Кейс: общее условие и несколько вопросов к нему. Ответьте на каждый.": ["A case: shared details and several questions about them. Answer each one.", "الحالة: معطيات مشتركة وعدة أسئلة عنها. أجب عن كل سؤال."],
+  "Нажмите на вариант, чтобы выбрать. Попробуйте прямо сейчас.": ["Tap an option to choose it. Try it now.", "اضغط على خيار لاختياره. جرّب الآن."],
+  "Для {0} тестов пока нет — их скоро добавят. А пока можно загрузить свой файл.": ["No tests for {0} yet — they'll be added soon. Meanwhile you can upload your own file.", "لا توجد اختبارات لـ{0} بعد — ستُضاف قريبًا. وحتى ذلك الحين يمكنك تحميل ملفك الخاص."],
+  "Сначала загрузим файл.": ["Let's upload a file first.", "لنحمّل ملفًا أولًا."],
+  "Начать": ["Start", "ابدأ"],
+  "Загрузите файл": ["Upload a file", "حمّل ملفًا"],
+  "Выберите JSON в «Файлах», iCloud Drive или сохранённый из Telegram. Можно сразу несколько.": ["Choose a JSON in Files, iCloud Drive or one saved from Telegram. You can pick several at once.", "اختر ملف JSON من «الملفات» أو iCloud Drive أو ملفًا محفوظًا من Telegram. يمكنك اختيار عدة ملفات معًا."],
+  "Как заниматься": ["How it works", "طريقة الاستخدام"],
+  "Покажу главное за полминуты. Обучение всегда можно открыть снова в настройках.": ["Here's the main stuff in half a minute. You can reopen the tutorial any time in Settings.", "سأعرض لك الأساسيات في نصف دقيقة. يمكنك فتح الشرح مجددًا في أي وقت من الإعدادات."],
+  "Показать": ["Show me", "اعرض"],
+  "Проверить и подглядеть": ["Check and peek", "التحقق والإظهار"],
+  "«Проверить» подсветит верные ответы зелёным, ошибки — красным. Глаз покажет ответ без проверки.": ["“Check” highlights correct answers in green and mistakes in red. The eye shows the answer without checking.", "«تحقّق» يلوّن الإجابات الصحيحة بالأخضر والأخطاء بالأحمر. وزر العين يُظهر الإجابة دون تحقق."],
+  "Клавиши: Enter и П.": ["Keys: Enter and G.", "المفاتيح: Enter وG."],
+  "Дальше": ["Next", "التالي"],
+  "Листайте стрелками здесь или клавишами ← и →. Если держать кнопку, вопросы листаются быстро.": ["Use the arrows here or the ← and → keys. Hold a button to flip through quickly.", "تنقّل بالأسهم هنا أو بالمفتاحين ← و→. اضغط مطولًا على الزر للتنقل بسرعة."],
+  "Листайте стрелками или свайпом по вопросу. Если держать кнопку, вопросы листаются быстро.": ["Use the arrows or swipe the question. Hold a button to flip through quickly.", "تنقّل بالأسهم أو بالسحب على السؤال. اضغط مطولًا على الزر للتنقل بسرعة."],
+  "Номер вопроса": ["Question number", "رقم السؤال"],
+  "Здесь видно, какой это вопрос и из какого файла. Нажмите, чтобы перейти к вопросу по номеру.": ["This shows which question it is and from which file. Tap to jump to a question by number.", "هنا يظهر رقم السؤال واسم الملف. اضغط للانتقال إلى سؤال برقمه."],
+  "Автопереход и избранное": ["Auto-advance and favorites", "الانتقال التلقائي والمفضلة"],
+  "Переключатель после верного ответа сразу открывает следующий вопрос. Звёздочка добавляет вопрос в избранное.": ["The switch opens the next question right after a correct answer. The star adds the question to favorites.", "المفتاح يفتح السؤال التالي فور الإجابة الصحيحة. والنجمة تضيف السؤال إلى المفضلة."],
+  "Меню": ["Menu", "القائمة"],
+  "Слева — категории, поиск, избранное, тесты, файлы и настройки. Клавиша / сразу открывает поиск.": ["On the left — categories, search, favorites, tests, files and settings. The / key opens search.", "على اليمين — الفئات والبحث والمفضلة والاختبارات والملفات والإعدادات. المفتاح / يفتح البحث مباشرة."],
+  "Эта кнопка показывает и прячет боковую панель: категории, поиск, избранное, тесты, файлы и настройки.": ["This button shows and hides the side panel: categories, search, favorites, tests, files and settings.", "هذا الزر يُظهر اللوحة الجانبية ويخفيها: الفئات والبحث والمفضلة والاختبارات والملفات والإعدادات."],
+  "Категории, поиск, избранное, тесты, файлы и настройки. Меню открывается и свайпом от левого края.": ["Categories, search, favorites, tests, files and settings. You can also open the menu by swiping from the left edge.", "الفئات والبحث والمفضلة والاختبارات والملفات والإعدادات. تُفتح القائمة أيضًا بالسحب من الحافة اليمنى."],
+  "Закрыть обучение": ["Close the tutorial", "إغلاق الشرح"],
+  "Назад": ["Back", "رجوع"],
+  "Пропустить": ["Skip", "تخطٍّ"],
+  "Далее": ["Next", "التالي"],
+  "Имя — минимум 3 символа": ["Name — at least 3 characters", "الاسم — 3 أحرف على الأقل"],
+  "Имя — не длиннее 24 символов": ["Name — no longer than 24 characters", "الاسم — 24 حرفًا كحد أقصى"],
+  "Только буквы, цифры, пробел, «-» и «_»": ["Only letters, digits, spaces, “-” and “_”", "أحرف وأرقام ومسافة و«-» و«_» فقط"],
+  "Это имя уже занято — выберите другое": ["This name is taken — choose another", "هذا الاسم مستخدم — اختر اسمًا آخر"],
+  "Нет пользователя с таким именем": ["No user with this name", "لا يوجد مستخدم بهذا الاسم"],
+  "Этот аккаунт входит через Google — нажмите «Продолжить с Google»": ["This account signs in with Google — tap “Continue with Google”", "هذا الحساب يسجّل الدخول عبر Google — اضغط «المتابعة عبر Google»"],
+  "Этот аккаунт входит через Telegram — нажмите «Продолжить с Telegram»": ["This account signs in with Telegram — tap “Continue with Telegram”", "هذا الحساب يسجّل الدخول عبر Telegram — اضغط «المتابعة عبر Telegram»"],
+  "Telegram не подтвердил вход. Попробуйте ещё раз": ["Telegram didn't confirm the sign-in. Try again", "لم يؤكد Telegram تسجيل الدخول. حاول مرة أخرى"],
+  "Вход через Telegram сейчас не работает ({0}). Войдите по имени или через Google": ["Telegram sign-in isn't working right now ({0}). Sign in with a name or with Google", "تسجيل الدخول عبر Telegram لا يعمل حاليًا ({0}). سجّل الدخول بالاسم أو عبر Google"],
+  "Имя уже менялось — второй раз его не поменять": ["The name was already changed — it can't be changed again", "سبق تغيير الاسم — لا يمكن تغييره مرة ثانية"],
+  "Неверный пароль": ["Wrong password", "كلمة المرور غير صحيحة"],
+  "Слишком много попыток. Подождите пару минут": ["Too many attempts. Wait a couple of minutes", "محاولات كثيرة جدًا. انتظر بضع دقائق"],
+  "Пароль — минимум 6 символов": ["Password — at least 6 characters", "كلمة المرور — 6 أحرف على الأقل"],
+  "Этот аккаунт отключён": ["This account is disabled", "هذا الحساب معطّل"],
+  "Нет связи с интернетом. Попробуйте ещё раз": ["No internet connection. Try again", "لا يوجد اتصال بالإنترنت. حاول مرة أخرى"],
+  "Не получилось ({0}). Попробуйте позже": ["Something went wrong ({0}). Try again later", "حدث خطأ ({0}). حاول لاحقًا"],
+  "ошибка": ["error", "خطأ"],
+  "Вы вышли из аккаунта — войдите снова": ["You were signed out — sign in again", "تم تسجيل خروجك — سجّل الدخول مرة أخرى"],
+  "Аккаунт удалён автором сайта": ["The account was deleted by the site's author", "حذف صاحب الموقع هذا الحساب"],
+  "Не получилось войти через Google. Попробуйте ещё раз": ["Couldn't sign in with Google. Try again", "تعذّر تسجيل الدخول عبر Google. حاول مرة أخرى"],
+  "С возвращением, {0}!": ["Welcome back, {0}!", "أهلًا بعودتك، {0}!"],
+  "Не получилось войти через Telegram. Попробуйте ещё раз": ["Couldn't sign in with Telegram. Try again", "تعذّر تسجيل الدخول عبر Telegram. حاول مرة أخرى"],
+  "Подтвердите вход в Telegram": ["Confirm the sign-in in Telegram", "أكّد تسجيل الدخول في Telegram"],
+  "Нажмите в Telegram «Запустить» и вернитесь сюда — вход произойдёт сам.": ["Tap “Start” in Telegram and come back here — you'll be signed in automatically.", "اضغط «ابدأ» في Telegram ثم عد إلى هنا — سيتم تسجيل الدخول تلقائيًا."],
+  "Ждём подтверждения…": ["Waiting for confirmation…", "بانتظار التأكيد…"],
+  "Открыть Telegram": ["Open Telegram", "فتح Telegram"],
+  "<button type=\"button\" class=\"su-link\" data-s=\"tw-phone\">Нет Telegram на этом устройстве? Войти по номеру</button>": ["<button type=\"button\" class=\"su-link\" data-s=\"tw-phone\">No Telegram on this device? Sign in with your number</button>", "<button type=\"button\" class=\"su-link\" data-s=\"tw-phone\">لا يوجد Telegram على هذا الجهاز؟ سجّل الدخول برقم الهاتف</button>"],
+  "Время вышло. Нажмите «Открыть Telegram» ещё раз": ["Time's up. Tap “Open Telegram” again", "انتهى الوقت. اضغط «فتح Telegram» مرة أخرى"],
+  "Нет связи — пробуем ещё раз…": ["No connection — trying again…", "لا يوجد اتصال — نحاول مرة أخرى…"],
+  "Вход через Telegram…": ["Signing in with Telegram…", "جارٍ تسجيل الدخول عبر Telegram…"],
+  "Доступ закрыт": ["Access closed", "تم إغلاق الوصول"],
+  "Автор сайта закрыл доступ для аккаунта «{0}».": ["The site's author closed access for the account “{0}”.", "أغلق صاحب الموقع الوصول للحساب «{0}»."],
+  "Если это ошибка, напишите: tg @ziplogo": ["If this is a mistake, write to tg @ziplogo", "إذا كان هذا خطأ، راسل: tg @ziplogo"],
+  "Все функции откроются сразу после входа.": ["Everything unlocks right after you sign in.", "ستُفتح جميع الميزات فور تسجيل الدخول."],
+  "Быстрее всего": ["Fastest", "الأسرع"],
+  "Другие способы входа": ["Other ways to sign in", "طرق أخرى لتسجيل الدخول"],
+  "Продолжить с Telegram": ["Continue with Telegram", "المتابعة عبر Telegram"],
+  "Продолжить с Google": ["Continue with Google", "المتابعة عبر Google"],
+  "<div class=\"su-or su-x\" id=\"suOr\">или по имени и паролю</div>": ["<div class=\"su-or su-x\" id=\"suOr\">or with a name and password</div>", "<div class=\"su-or su-x\" id=\"suOr\">أو بالاسم وكلمة المرور</div>"],
+  "Регистрация или вход": ["Sign up or sign in", "إنشاء حساب أو تسجيل الدخول"],
+  "Регистрация": ["Sign up", "إنشاء حساب"],
+  "Вход": ["Sign in", "تسجيل الدخول"],
+  "Имя пользователя": ["Username", "اسم المستخدم"],
+  "Пароль": ["Password", "كلمة المرور"],
+  "Показать пароль": ["Show password", "إظهار كلمة المرور"],
+  "Скрыть пароль": ["Hide password", "إخفاء كلمة المرور"],
+  "Почти готово": ["Almost done", "اقتربنا"],
+  "Лёгкая регистрация": ["Quick sign-up", "تسجيل سريع"],
+  "Вход в аккаунт": ["Sign in to your account", "تسجيل الدخول إلى الحساب"],
+  "Придумайте имя пользователя — так вас будет видеть автор сайта.": ["Choose a username — this is how the site's author will see you.", "اختر اسم مستخدم — هكذا سيراك صاحب الموقع."],
+  "Зарегистрироваться": ["Sign up", "إنشاء حساب"],
+  "Автор сайта увидит только ваш @username в Telegram.": ["The site's author will only see your Telegram @username.", "لن يرى صاحب الموقع إلا اسمك @username في Telegram."],
+  "Сменить имя потом можно один раз — в настройках.": ["You can change the name once later — in Settings.", "يمكنك تغيير الاسم مرة واحدة لاحقًا — من الإعدادات."],
+  "Пароль хранится у Google — даже автор сайта его не видит.": ["The password is kept by Google — even the site's author can't see it.", "كلمة المرور محفوظة لدى Google — حتى صاحب الموقع لا يراها."],
+  "При входе через Google автор видит вашу почту, через Telegram — ваш @username.": ["With Google the author sees your email, with Telegram — your @username.", "عند الدخول عبر Google يرى صاحب الموقع بريدك الإلكتروني، وعبر Telegram — اسمك @username."],
+  "При входе через Google автор видит вашу почту.": ["With Google the author sees your email.", "عند الدخول عبر Google يرى صاحب الموقع بريدك الإلكتروني."],
+  "При входе через Telegram автор видит ваш @username.": ["With Telegram the author sees your @username.", "عند الدخول عبر Telegram يرى صاحب الموقع اسمك @username."],
+  "Забыли пароль? Напишите автору сайта: tg @ziplogo": ["Forgot the password? Write to the site's author: tg @ziplogo", "نسيت كلمة المرور؟ راسل صاحب الموقع: tg @ziplogo"],
+  "Минимум 6 символов": ["At least 6 characters", "6 أحرف على الأقل"],
+  "Это имя уже занято": ["This name is taken", "هذا الاسم مستخدم"],
+  "Имя свободно": ["The name is free", "الاسم متاح"],
+  "Вхожу…": ["Signing in…", "جارٍ تسجيل الدخول…"],
+  "Регистрирую…": ["Signing up…", "جارٍ إنشاء الحساب…"],
+  "Регистрация сейчас не работает. Можно заниматься дальше — предложим позже.": ["Sign-up isn't working right now. Keep practicing — we'll ask again later.", "إنشاء الحساب لا يعمل حاليًا. يمكنك متابعة التدرّب — سنقترحه لاحقًا."],
+  "Продолжить": ["Continue", "متابعة"],
+  "Готово, {0}! Всё открыто": ["Done, {0}! Everything is unlocked", "تم، {0}! كل شيء متاح الآن"],
+  "Подождите…": ["Please wait…", "انتظر…"],
+  "Ваш аккаунт": ["Your account", "حسابك"],
+  "<div class=\"mrow static\"><span class=\"mtxt\">Имя уже менялось<small>Изменить его можно только один раз</small></span></div>": ["<div class=\"mrow static\"><span class=\"mtxt\">The name was already changed<small>It can be changed only once</small></span></div>", "<div class=\"mrow static\"><span class=\"mtxt\">سبق تغيير الاسم<small>يمكن تغييره مرة واحدة فقط</small></span></div>"],
+  "Изменить имя": ["Change name", "تغيير الاسم"],
+  "Можно только один раз": ["Only once", "مرة واحدة فقط"],
+  "Вход через {0}": ["Signed in with {0}", "الدخول عبر {0}"],
+  "Пароль не нужен": ["No password needed", "لا حاجة لكلمة مرور"],
+  "Сменить пароль": ["Change password", "تغيير كلمة المرور"],
+  "Выйти из аккаунта": ["Sign out", "تسجيل الخروج"],
+  "Выйти из аккаунта?": ["Sign out?", "تسجيل الخروج؟"],
+  "Чтобы снова отвечать на вопросы, понадобится войти: имя и пароль.": ["To answer questions again you'll need to sign in: name and password.", "للإجابة عن الأسئلة مجددًا ستحتاج إلى تسجيل الدخول: الاسم وكلمة المرور."],
+  "Выйти": ["Sign out", "خروج"],
+  "Вы вышли из аккаунта": ["You're signed out", "تم تسجيل الخروج"],
+  "Новое имя": ["New name", "الاسم الجديد"],
+  "Имя можно изменить только один раз — потом поменять его уже не получится.": ["The name can be changed only once — after that it can't be changed again.", "يمكن تغيير الاسم مرة واحدة فقط — ولن يمكن تغييره بعدها."],
+  "Изменить": ["Change", "تغيير"],
+  "Это ваше текущее имя": ["This is your current name", "هذا اسمك الحالي"],
+  "Теперь вы — {0}": ["You're now {0}", "اسمك الآن {0}"],
+  "Текущий пароль": ["Current password", "كلمة المرور الحالية"],
+  "Новый пароль — от 6 символов": ["New password — 6+ characters", "كلمة مرور جديدة — 6 أحرف أو أكثر"],
+  "Сменить": ["Change", "تغيير"],
+  "Введите текущий пароль": ["Enter your current password", "أدخل كلمة المرور الحالية"],
+  "Новый пароль — минимум 6 символов": ["New password — at least 6 characters", "كلمة المرور الجديدة — 6 أحرف على الأقل"],
+  "Текущий пароль неверный": ["The current password is wrong", "كلمة المرور الحالية غير صحيحة"],
+  "Пароль изменён": ["Password changed", "تم تغيير كلمة المرور"],
+  "Вход через Google…": ["Signing in with Google…", "جارٍ تسجيل الدخول عبر Google…"],
+  "Нет связи с аккаунтом — прогресс сохраняется в этом браузере": ["Can't reach your account — progress is saved in this browser", "لا يوجد اتصال بالحساب — يُحفظ التقدّم في هذا المتصفح"],
+  "Перейти к вопросу по номеру": ["Go to a question by number", "الانتقال إلى سؤال برقمه"],
+  "Предыдущий вопрос": ["Previous question", "السؤال السابق"],
+  "Следующий вопрос": ["Next question", "السؤال التالي"],
+  "Поиск по вопросам": ["Search questions", "البحث في الأسئلة"],
+  "Очистить поиск": ["Clear search", "مسح البحث"],
+  "Язык": ["Language", "اللغة"],
+  "Язык интерфейса": ["Interface language", "لغة الواجهة"],
+  "Вопросы в тестах остаются на языке файла": ["Questions stay in the language of the file", "تبقى الأسئلة بلغة الملف"],
+  "Ваш курс": ["Your year", "سنتك الدراسية"],
+  "Покажем тесты этого курса": ["We'll show this year's tests", "سنعرض اختبارات هذه السنة"],
+  "Файлов пока нет": ["No files yet", "لا توجد ملفات بعد"],
+  "Поменять можно в меню": ["You can change it in the menu", "يمكن تغييرها من القائمة"]
+};
+// T('Вопрос {0} из {1}', 3, 20) → the phrase in the chosen language, {n} filled in
+function T(s, ...a) {
+  let r = s;
+  if (LANG !== 'ru' && s) {
+    const e = TR[s];
+    if (e) r = e[LANG === 'en' ? 0 : 1] || s;
+    else if (window.__trMiss) window.__trMiss.add(s);
+  }
+  return a.length ? r.replace(/\{(\d+)\}/g, (m, i) => (a[i] == null ? '' : a[i])) : r;
+}
+// Word forms after a number, by the Russian singular: English one/other, Arabic by its six plural forms.
+const PL = {
+  'вопрос': [['question', 'questions'], { zero: 'أسئلة', one: 'سؤال', two: 'سؤالان', few: 'أسئلة', many: 'سؤالًا', other: 'سؤال' }],
+  'балл': [['point', 'points'], { zero: 'نقاط', one: 'نقطة', two: 'نقطتان', few: 'نقاط', many: 'نقطة', other: 'نقطة' }],
+  'курс': [['year', 'years'], { zero: 'سنوات', one: 'سنة', two: 'سنتان', few: 'سنوات', many: 'سنة', other: 'سنة' }]
+};
+PL['балла'] = PL['балл'];
+let arPlural = null;
+const plOther = (n, f) => {
+  if (LANG === 'en') return f[0][n === 1 ? 0 : 1];
+  try { arPlural = arPlural || new Intl.PluralRules('ar'); return f[1][arPlural.select(n)] || f[1].other; } catch (e) { return f[1].other; }
+};
+
+/* =========================================================
    Constants & small helpers
    ========================================================= */
 const CATS = ['multiple', 'single', 'dropdown', 'sortable', 'text', 'caseStudy'];
-const CAT_TITLE = {
+const CAT_TITLE_RU = {
   multiple: 'Несколько ответов', single: 'Один ответ', dropdown: 'Выпадающий список',
   sortable: 'Правильный порядок', text: 'Текстовый ответ', caseStudy: 'Кейсы'
 };
@@ -767,12 +1279,14 @@ const SUB_TYPES = [
   ['text', 'Текст', 'Написать текст']
 ];
 const SUB_TITLE = Object.fromEntries(SUB_TYPES.map(t => [t[0], t[2]]));
+// Category names in the chosen language (CAT_TITLE_RU stays for what the site owner sees in the admin page)
+const CAT_TITLE = new Proxy(CAT_TITLE_RU, { get: (o, k) => typeof k === 'string' && k in o ? T(o[k]) : o[k] });
 /* Faculties: each has its own number of courses and its own course files (admin.html uses the same ids).
    gen is «для …» — for the «no tests yet» notes. */
 const FACS = [
-  { id: 'lech', name: 'Лечебное дело', gen: 'лечебного дела', courses: 6 },
-  { id: 'ped', name: 'Педиатрия', gen: 'педиатрии', courses: 6 },
-  { id: 'stom', name: 'Стоматология', gen: 'стоматологии', courses: 5 }
+  { id: 'lech', get name() { return T('Лечебное дело'); }, get gen() { return T('лечебного дела'); }, courses: 6 },
+  { id: 'ped', get name() { return T('Педиатрия'); }, get gen() { return T('педиатрии'); }, courses: 6 },
+  { id: 'stom', get name() { return T('Стоматология'); }, get gen() { return T('стоматологии'); }, courses: 5 }
 ];
 const facOf = id => FACS.find(f => f.id === id) || null;
 const isFac = id => !!facOf(id);
@@ -800,6 +1314,7 @@ const clamp = (v, a, b) => Math.min(Math.max(v, a), b);
 const range = n => Array.from({ length: n }, (_, i) => i);
 const uniq = arr => { const s = new Set(); return arr.filter(v => !s.has(v) && s.add(v)); };
 function plural(n, one, few, many) {
+  if (LANG !== 'ru' && PL[one]) return plOther(n, PL[one]);
   const m10 = n % 10, m100 = n % 100;
   if (m10 === 1 && m100 !== 11) return one;
   if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few;
@@ -827,16 +1342,18 @@ function shuffledDifferent(values) {
 const isPerm = (arr, n) => Array.isArray(arr) && arr.length === n && new Set(arr).size === n && arr.every(v => Number.isInteger(v) && v >= 0 && v < n);
 const normText = v => String(v || '').trim().replace(/,/g, '.').split(/\s+/).filter(Boolean).join(' ').toLowerCase().replace(/ё/g, 'е');
 const norm = s => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\p{L}\p{N}\s]/gu, ' ').replace(/\s+/g, ' ').trim();
+// Reading direction of a text by its first letter: Arabic or Hebrew → rtl, anything else → ltr
+const textDir = t => { const m = String(t || '').match(/[A-Za-z\u00C0-\u024F\u0370-\u04FF\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/); return m && /[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/.test(m[0]) ? 'rtl' : 'ltr'; };
 function firstSentence(t) { const s = String(t).trim(); return s.length > 96 ? s.slice(0, 96).trimEnd() + '…' : s; }
 
 /* ---------- icons ---------- */
 const sv = (body, filled) => `<svg class="i${filled ? ' f' : ''}" viewBox="0 0 24 24" aria-hidden="true">${body}</svg>`;
 const I = {
   menu: sv('<path d="M4 7h16M4 12h16M4 17h16"/>'),
-  sidebar: sv('<rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M9.5 4.5v15"/>'),
+  sidebar: sv('<rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M9.5 4.5v15"/>').replace('class="i', 'class="i fl'),
   x: sv('<path d="M6 6l12 12M18 6 6 18"/>'),
-  chevL: sv('<path d="m15 18-6-6 6-6"/>'),
-  chevR: sv('<path d="m9 6 6 6-6 6"/>'),
+  chevL: sv('<path d="m15 18-6-6 6-6"/>').replace('class="i', 'class="i fl'),
+  chevR: sv('<path d="m9 6 6 6-6 6"/>').replace('class="i', 'class="i fl'),
   chevD: sv('<path d="m6 9 6 6 6-6"/>'),
   eye: sv('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>'),
   eyeOff: sv('<path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.1 4.1M6.6 6.6C3.8 8.4 2 12 2 12s3.6 7 10 7a9.6 9.6 0 0 0 5.3-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"/>'),
@@ -887,7 +1404,7 @@ const EMPTY_BANK = Object.freeze({ byCat: Object.fromEntries(CATS.map(c => [c, [
 const shownPrompt = k => k.replace(/\s*\[вариант \d+\]\s*$/, '');
 function buildBank(raw) {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
-    throw new Error('Ожидался объект вида {"Текст вопроса": {"type": "single", "all_options": [...]}}.');
+    throw new Error(T('Ожидался объект вида {"Текст вопроса": {"type": "single", "all_options": [...]}}.'));
   }
   const keys = Object.keys(raw);
   const keyIndex = new Map(keys.map((k, i) => [k, i]));
@@ -1063,7 +1580,7 @@ const Store = {
       await this.stateDoc().set({ json: str });
       this.lastCloud = str;
     } catch (e) {
-      if (!this.warned) { this.warned = true; toast('Не удалось сохранить прогресс в аккаунте. Он сохранится в этом браузере.'); }
+      if (!this.warned) { this.warned = true; toast(T('Не удалось сохранить прогресс в аккаунте. Он сохранится в этом браузере.')); }
     }
     this.writing = false;
     if (this.pending != null) { const p = this.pending; this.pending = null; this.writeCloud(p); }
@@ -1076,17 +1593,17 @@ const Store = {
       } catch (e) { /* fall back to this browser */ }
     }
     const ref = 'f-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-    if (!(await idbPut({ id: ref, text }))) throw new Error('Память браузера недоступна (частный режим?). Файл не сохранился.');
+    if (!(await idbPut({ id: ref, text }))) throw new Error(T('Память браузера недоступна (частный режим?). Файл не сохранился.'));
     return { store: 'local', ref };
   },
   async getFile(rec) {
     if (rec.store === 'cloud') {
       const r = await fetch('/_blob/' + rec.ref);
-      if (!r.ok) throw new Error('Файл не открылся из аккаунта (код ' + r.status + '). Загрузите его заново.');
+      if (!r.ok) throw new Error(T('Файл не открылся из аккаунта (код {0}). Загрузите его заново.', r.status));
       return r.text();
     }
     const row = await idbGet(rec.ref);
-    if (!row) throw new Error('Файла нет в памяти этого браузера. Загрузите его заново.');
+    if (!row) throw new Error(T('Файла нет в памяти этого браузера. Загрузите его заново.'));
     return row.text;
   },
   async delFile(rec) {
@@ -1118,7 +1635,9 @@ const defaults = () => ({
   setId: '', category: 'multiple', starOnly: false, index: 0, indexByScope: {}, answers: {},
   starred: {}, savedTests: [], test: null, autoAdvance: true, fontScale: 1, customSubs: {},
   sets: [], hiddenBundled: [], titles: {}, results: {}, tour: {}, course: 0, profile: null, checks: 0, mtLast: null,
-  fac: '' // '' = not chosen yet (the picker opens first)
+  fac: '', // '' = not chosen yet (the picker opens first)
+  lang: '', // interface language; '' = not chosen yet (asked before the faculty)
+  askYear: false // a newcomer has just picked the faculty: the year comes next
 });
 let S = defaults();
 let BUNDLED = [];          // [{id, file, title, fac, course}] from data/sets.json — every faculty
@@ -1237,14 +1756,14 @@ function isCorrect(q) {
 }
 function answerText(q, short) {
   switch (q.kind) {
-    case 'single': { const o = q.options.find(o => o.correct); return o ? o.text : (short ? 'не найден' : 'Правильный ответ не найден.'); }
-    case 'multiple': return q.options.filter(o => o.correct).map(o => o.text).join('\n') || 'нет верных вариантов';
+    case 'single': { const o = q.options.find(o => o.correct); return o ? o.text : (short ? T('не найден') : T('Правильный ответ не найден.')); }
+    case 'multiple': return q.options.filter(o => o.correct).map(o => o.text).join('\n') || T('нет верных вариантов');
     case 'dropdown': return q.rows.map(r => r.left + ' — ' + r.value).join('\n');
     case 'sortable': return q.order.map((v, i) => (i + 1) + '. ' + v).join('\n');
-    case 'text': return q.accepted.length ? q.accepted.join('\n') : (short ? 'не найден' : 'Правильный ответ не указан в JSON.');
+    case 'text': return q.accepted.length ? q.accepted.join('\n') : (short ? T('не найден') : T('Правильный ответ не указан в JSON.'));
     case 'case': {
-      const built = q.subs.map((s, i) => (i + 1) + '. ' + s.prompt + '\nОтвет: ' + answerText(s, true));
-      const own = customSubsOf(q.id).map((s, i) => 'Ваш вопрос ' + (i + 1) + '. ' + s.prompt + '\nОтвет: ' + answerText(subToQ(s), true));
+      const built = q.subs.map((s, i) => (i + 1) + '. ' + s.prompt + '\n' + T('Ответ:') + ' ' + answerText(s, true));
+      const own = customSubsOf(q.id).map((s, i) => T('Ваш вопрос {0}', i + 1) + '. ' + s.prompt + '\n' + T('Ответ:') + ' ' + answerText(subToQ(s), true));
       return built.concat(own).join('\n\n');
     }
   }
@@ -1329,7 +1848,7 @@ function changeFac(f, { mine = false, say = false } = {}) {
   save();
   renderAll();
   if (mine) Account.setFac(f);
-  if (say) toast('Факультет: ' + curFac().name);
+  if (say) toast(T('Факультет: {0}', curFac().name));
 }
 // Course shown in the menu: the one picked, else the open file's, else the first that has files.
 function curCourse() {
@@ -1340,7 +1859,7 @@ function curCourse() {
   return any ? any.course : 1;
 }
 // n round buttons, one per course of the faculty (5 for Стоматология)
-const coursePills = (count, cur, act, has) => `<div class="courses" role="radiogroup" aria-label="Курс">${range(count).map(i => i + 1).map(n => `<button type="button" class="course${n === cur ? ' on' : ''}${has && !has.has(n) ? ' empty' : ''}" role="radio" aria-checked="${n === cur}" ${act}="${n}" aria-label="${n} курс">${n}</button>`).join('')}</div>`;
+const coursePills = (count, cur, act, has) => `<div class="courses" role="radiogroup" aria-label="${T('Курс')}">${range(count).map(i => i + 1).map(n => `<button type="button" class="course${n === cur ? ' on' : ''}${has && !has.has(n) ? ' empty' : ''}" role="radio" aria-checked="${n === cur}" ${act}="${n}" aria-label="${T('{0} курс', n)}">${n}</button>`).join('')}</div>`;
 function selectCategory(cat) {
   endTest();
   remember();
@@ -1488,8 +2007,8 @@ function startTest(configs, shouldSave) {
   if (!ids.length) return false;
   if (shouldSave) {
     let k = S.savedTests.length + 1;
-    while (S.savedTests.some(t => t.title === 'Тест ' + k)) k++;
-    S.savedTests.unshift({ id: sid('saved-test', S.setId + '|' + k + '|' + Date.now()), title: 'Тест ' + k, setId: S.setId, setTitle: setTitle(curSet()), configs: saved, createdAt: Date.now() });
+    while (S.savedTests.some(t => t.title === T('Тест {0}', k))) k++;
+    S.savedTests.unshift({ id: sid('saved-test', S.setId + '|' + k + '|' + Date.now()), title: T('Тест {0}', k), setId: S.setId, setTitle: setTitle(curSet()), configs: saved, createdAt: Date.now() });
   }
   remember();
   S.test = { setId: S.setId, ids, points };
@@ -1513,7 +2032,7 @@ async function loadBank(entry) {
     if (entry.rec) text = await Store.getFile(entry.rec);
     else {
       const r = await fetch(bundleURL(entry.file));
-      if (!r.ok) throw new Error('Встроенный файл не открылся (код ' + r.status + ').');
+      if (!r.ok) throw new Error(T('Встроенный файл не открылся (код {0}).', r.status));
       text = await r.text();
     }
     text = text.replace(/^﻿/, '');
@@ -1527,7 +2046,7 @@ async function loadBank(entry) {
   return p;
 }
 function applyBank(b) {
-  if (!b || b.error) { bank = EMPTY_BANK; bankStatus = 'error'; bankError = (b && b.error) || 'Неизвестная ошибка'; return; }
+  if (!b || b.error) { bank = EMPTY_BANK; bankStatus = 'error'; bankError = (b && b.error) || T('Неизвестная ошибка'); return; }
   bank = b; bankStatus = 'ready'; bankError = '';
   if (S.test && (S.test.setId !== S.setId || !S.test.ids.some(id => bank.byId.has(id)))) S.test = null;
   clampIndex();
@@ -1553,41 +2072,41 @@ function uniqueTitle(t) {
 async function importFiles(files) {
   for (const f of files) {
     let text;
-    try { text = await f.text(); } catch (e) { await alertDlg('Не удалось прочитать файл', f.name); continue; }
-    await importText(text, (f.name || '').replace(/\.[^.]+$/, '').trim() || 'вопросы');
+    try { text = await f.text(); } catch (e) { await alertDlg(T('Не удалось прочитать файл'), f.name); continue; }
+    await importText(text, (f.name || '').replace(/\.[^.]+$/, '').trim() || T('вопросы'));
   }
 }
 async function importText(text, title) {
   text = String(text).replace(/^﻿/, '').trim();
-  title = (title || '').trim() || 'вопросы';
+  title = (title || '').trim() || T('вопросы');
   let raw;
   try { raw = JSON.parse(text); }
-  catch (e) { return alertDlg('Это не JSON', '«' + title + '» не читается как JSON: ' + e.message + '\n\nПроверьте, что файл скопирован целиком.'); }
+  catch (e) { return alertDlg(T('Это не JSON'), T('«{0}» не читается как JSON: {1}', title, e.message) + '\n\n' + T('Проверьте, что файл скопирован целиком.')); }
   let b;
-  try { b = buildBank(raw); } catch (e) { return alertDlg('Формат не подходит', e.message); }
-  if (!b.total) return alertDlg('В файле нет вопросов', 'Ожидается объект вида {"Текст вопроса": {"type": "single", "all_options": [...]}}. Поддерживаются типы single, multiple, dropdown, sortable, text_input и drag_and_drop.');
+  try { b = buildBank(raw); } catch (e) { return alertDlg(T('Формат не подходит'), e.message); }
+  if (!b.total) return alertDlg(T('В файле нет вопросов'), T('Ожидается объект вида {"Текст вопроса": {"type": "single", "all_options": [...]}}. Поддерживаются типы single, multiple, dropdown, sortable, text_input и drag_and_drop.'));
   const hash = cyrb53(text).toString(36);
   const same = SETS.find(s => (s.rec && s.rec.hash === hash) || s.hash === hash);
   if (same) {
     selectSet(same.id); closeDrawer(); renderAll();
-    return toast('«' + setTitle(same) + '» уже загружен — открыл его');
+    return toast(T('«{0}» уже загружен — открыл его', setTitle(same)));
   }
   let targetId = null;
   const twin = SETS.find(s => !s.bundled && setTitle(s).toLowerCase() === title.toLowerCase());
   if (twin) {
     const r = await dialog({
-      title: 'Файл «' + title + '» уже есть',
-      message: 'Обновить его этой версией? Прогресс и избранное сохранятся у совпадающих вопросов.',
-      buttons: [{ id: 'update', label: 'Обновить', kind: 'primary' }, { id: 'new', label: 'Добавить отдельным файлом' }, { id: 'cancel', label: 'Отмена' }],
+      title: T('Файл «{0}» уже есть', title),
+      message: T('Обновить его этой версией? Прогресс и избранное сохранятся у совпадающих вопросов.'),
+      buttons: [{ id: 'update', label: T('Обновить'), kind: 'primary' }, { id: 'new', label: T('Добавить отдельным файлом') }, { id: 'cancel', label: T('Отмена') }],
       vertical: true
     });
     if (r.id === 'cancel') return;
     if (r.id === 'update') targetId = twin.id; else title = uniqueTitle(title);
   }
-  const done = busy('Сохраняю файл…');
+  const done = busy(T('Сохраняю файл…'));
   let ref;
   try { ref = await Store.putFile(text); }
-  catch (e) { done(); return alertDlg('Файл не сохранился', e.message); }
+  catch (e) { done(); return alertDlg(T('Файл не сохранился'), e.message); }
   done();
   const id = targetId || ('imp-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6));
   const old = S.sets.find(r => r.id === id);
@@ -1599,8 +2118,9 @@ async function importText(text, title) {
   save();
   closeDrawer();
   renderAll();
-  const extra = b.skipped ? ', пропущено ' + b.skipped : '';
-  toast((targetId ? 'Обновлено' : 'Загружено в «Мои файлы»') + ': «' + setTitle(SETS.find(s => s.id === id)) + '» — ' + b.total + ' ' + plural(b.total, 'вопрос', 'вопроса', 'вопросов') + extra);
+  const extra = b.skipped ? T(', пропущено {0}', b.skipped) : '';
+  const nm = setTitle(SETS.find(s => s.id === id)), qn = b.total + ' ' + plural(b.total, 'вопрос', 'вопроса', 'вопросов');
+  toast((targetId ? T('Обновлено: «{0}» — {1}', nm, qn) : T('Загружено в «Мои файлы»: «{0}» — {1}', nm, qn)) + extra);
 }
 async function deleteSet(id) {
   const s = SETS.find(x => x.id === id);
@@ -1643,24 +2163,24 @@ function render() {
 
 function renderTop() {
   const items = currentItems(), it = items[S.index], s = curSet();
-  $('#title').textContent = S.test ? 'Тест' : !S.fac && bankStatus !== 'boot' ? 'Тренажёр тестов' : ((S.starOnly ? '★ ' : '') + CAT_TITLE[S.category]);
+  $('#title').textContent = S.test ? T('Тест') : !S.fac && bankStatus !== 'boot' ? T('Тренажёр тестов') : ((S.starOnly ? '★ ' : '') + CAT_TITLE[S.category]);
   let p;
-  if (bankStatus === 'boot') p = 'Загрузка…';
-  else if (!S.fac) p = 'Выберите факультет';
-  else if (!s) p = 'Нет файлов';
-  else if (bankStatus === 'loading') p = esc(setTitle(s)) + ', загрузка…';
+  if (bankStatus === 'boot') p = T('Загрузка…');
+  else if (!S.fac) p = T('Выберите факультет');
+  else if (!s) p = T('Нет файлов');
+  else if (bankStatus === 'loading') p = T('{0}, загрузка…', esc(setTitle(s)));
   else {
-    p = `<span class="p-n">${items.length ? (S.index + 1) + ' из ' + items.length : '0 из 0'}</span>`;
-    if (S.test && items.length) p += `<span>${testEarned()}/${testTotal()} б.</span>`;
+    p = `<span class="p-n">${T('{0} из {1}', items.length ? S.index + 1 : 0, items.length)}</span>`;
+    if (S.test && items.length) p += `<span>${testEarned()}/${testTotal()} ${T('б.')}</span>`;
     p += `<span>${esc(setTitle(s))}</span>`;
   }
   $('#progress').innerHTML = p;
   let h = '';
   if (it) {
-    if (it.kind === 'case') h += `<button type="button" class="plain-btn" data-act="add-sub" aria-label="Добавить свой вопрос к кейсу">${I.plus}</button>`;
-    h += `<button type="button" class="switch" role="switch" aria-checked="${S.autoAdvance}" data-act="toggle-auto" aria-label="Автопереход к следующему вопросу"><span></span></button>`;
+    if (it.kind === 'case') h += `<button type="button" class="plain-btn" data-act="add-sub" aria-label="${T('Добавить свой вопрос к кейсу')}">${I.plus}</button>`;
+    h += `<button type="button" class="switch" role="switch" aria-checked="${S.autoAdvance}" data-act="toggle-auto" aria-label="${T('Автопереход к следующему вопросу')}"><span></span></button>`;
     const st = isStarred(it.id);
-    h += `<button type="button" class="star-btn${st ? ' on' : ''}" data-act="star" aria-pressed="${st}" aria-label="${st ? 'Убрать из избранного' : 'Добавить в избранное'}">${st ? I.starF : I.star}</button>`;
+    h += `<button type="button" class="star-btn${st ? ' on' : ''}" data-act="star" aria-pressed="${st}" aria-label="${st ? T('Убрать из избранного') : T('Добавить в избранное')}">${st ? I.starF : I.star}</button>`;
   }
   $('#topActions').innerHTML = h;
 }
@@ -1673,28 +2193,30 @@ const loadBtn = label => `<label class="act green" for="fileInput" role="button"
 function renderContent() {
   QMAP = new Map();
   const it = currentItem(), s = curSet();
-  let html, key;
-  if (bankStatus === 'boot') { html = stateHTML({ spinner: true, title: 'Загружаю вопросы…' }); key = 'boot'; }
+  let html, key, qdir = '';
+  if (bankStatus === 'boot') { html = stateHTML({ spinner: true, title: T('Загружаю вопросы…') }); key = 'boot'; }
   else if (!S.fac) { html = ''; key = 'nofac'; } // the faculty picker is on top
   else if (!s && facEmpty()) {
     // Педиатрия and Стоматология start out without course files
-    html = stateHTML({ icon: FAC_ICON[curFac().id], title: 'Для ' + curFac().gen + ' тестов пока нет', text: 'Их скоро добавят. А пока можно загрузить свой JSON с вопросами — из «Файлов», iCloud Drive или Telegram.', actions: loadBtn('Загрузить JSON') + `<button type="button" class="ghost-btn" data-act="m-fac">${I.swap}Сменить факультет</button>` });
+    html = stateHTML({ icon: FAC_ICON[curFac().id], title: T('Для {0} тестов пока нет', curFac().gen), text: T('Их скоро добавят. А пока можно загрузить свой JSON с вопросами — из «Файлов», iCloud Drive или Telegram.'), actions: loadBtn(T('Загрузить JSON')) + `<button type="button" class="ghost-btn" data-act="m-fac">${I.swap}${T('Сменить факультет')}</button>` });
     key = 'nofac|' + curFac().id;
   } else if (!s) {
-    html = stateHTML({ icon: I.doc, title: 'Файлы не выбраны', text: 'Загрузите JSON с вопросами: из «Файлов», iCloud Drive или после сохранения из Telegram.', actions: loadBtn('Загрузить JSON') });
+    html = stateHTML({ icon: I.doc, title: T('Файлы не выбраны'), text: T('Загрузите JSON с вопросами: из «Файлов», iCloud Drive или после сохранения из Telegram.'), actions: loadBtn(T('Загрузить JSON')) });
     key = 'nosets';
-  } else if (bankStatus === 'loading') { html = stateHTML({ spinner: true, title: 'Открываю «' + setTitle(s) + '»…' }); key = 'loading'; }
+  } else if (bankStatus === 'loading') { html = stateHTML({ spinner: true, title: T('Открываю «{0}»…', setTitle(s)) }); key = 'loading'; }
   else if (bankStatus === 'error') {
-    html = stateHTML({ icon: I.xCircle, title: 'Файл не открылся', text: bankError, actions: loadBtn('Загрузить заново') + `<button type="button" class="ghost-btn" data-act="m-set-more" data-id="${esc(s.id)}">${I.more}Действия с файлом</button>` });
+    html = stateHTML({ icon: I.xCircle, title: T('Файл не открылся'), text: bankError, actions: loadBtn(T('Загрузить заново')) + `<button type="button" class="ghost-btn" data-act="m-set-more" data-id="${esc(s.id)}">${I.more}${T('Действия с файлом')}</button>` });
     key = 'error';
   } else if (!it) {
-    const txt = S.starOnly ? 'В избранном этой категории пусто.' : 'В этом файле нет вопросов такого типа. Выберите другую категорию в меню.';
-    html = stateHTML({ icon: I.search, title: 'В этой категории нет вопросов', text: txt, actions: `<button type="button" class="ghost-btn" data-act="menu">${I.menu}Открыть меню</button>` });
+    const txt = S.starOnly ? T('В избранном этой категории пусто.') : T('В этом файле нет вопросов такого типа. Выберите другую категорию в меню.');
+    html = stateHTML({ icon: I.search, title: T('В этой категории нет вопросов'), text: txt, actions: `<button type="button" class="ghost-btn" data-act="menu">${I.menu}${T('Открыть меню')}</button>` });
     key = 'empty|' + S.category;
   } else {
     html = itemHTML(it);
+    qdir = textDir(it.kind === 'case' ? it.mainText || (it.subs[0] && it.subs[0].prompt) : it.prompt);
     key = S.setId + '|' + it.id + (S.test ? '|t' : '');
   }
+  if (qdir) elContent.setAttribute('dir', qdir); else elContent.removeAttribute('dir');
   elContent.innerHTML = html;
   pulse = null;
   if (key !== lastItemKey) {
@@ -1714,14 +2236,14 @@ function itemHTML(it) {
   if (it.kind === 'case') {
     const forced = hlVisible(it.id);
     h += contextHTML(it.mainText);
-    it.subs.forEach((q, i) => { h += `<div class="case-sub"><div class="sublabel">Вопрос ${i + 1}</div>${qHTML(q, { inCase: true, forced, scope: it.id })}</div>`; });
+    it.subs.forEach((q, i) => { h += `<div class="case-sub"><div class="sublabel">${T('Вопрос {0}', i + 1)}</div>${qHTML(q, { inCase: true, forced, scope: it.id })}</div>`; });
     customSubsOf(it.id).forEach((sub, i) => {
-      h += `<div class="case-sub"><div class="sublabel own"><span>Ваш вопрос ${i + 1}</span><button type="button" class="mini-del" data-act="del-sub" data-case="${esc(it.id)}" data-sub="${esc(sub.id)}" aria-label="Удалить ваш вопрос ${i + 1}">${I.trash}</button></div>${qHTML(subToQ(sub), { inCase: true, forced, scope: it.id })}</div>`;
+      h += `<div class="case-sub"><div class="sublabel own"><span>${T('Ваш вопрос {0}', i + 1)}</span><button type="button" class="mini-del" data-act="del-sub" data-case="${esc(it.id)}" data-sub="${esc(sub.id)}" aria-label="${T('Удалить ваш вопрос {0}', i + 1)}">${I.trash}</button></div>${qHTML(subToQ(sub), { inCase: true, forced, scope: it.id })}</div>`;
     });
   } else h += qHTML(it, { scope: it.id });
   return h;
 }
-const contextHTML = t => `<div class="panel"><div class="label">Условие</div><div class="ctx">${esc(t)}</div></div>`;
+const contextHTML = t => `<div class="panel"><div class="label">${T('Условие')}</div><div class="ctx">${esc(t)}</div></div>`;
 
 function qHTML(q, { inCase = false, forced = false, scope } = {}) {
   QMAP.set(q.id, q);
@@ -1754,7 +2276,7 @@ function ddHTML(q, pz) {
     const sel = r.dd[i] || '';
     const ok = !sel || sel === row.value;
     const cls = 'dd-row ' + (ok ? 'st-ok' : 'st-bad') + (pz && sel === row.value ? ' pulse' : '');
-    return `<div class="${cls}"><div class="dd-left">${esc(row.left)}</div><div class="dd-right"><button type="button" class="dd-btn" data-act="dd-open" data-qid="${esc(q.id)}" data-row="${i}" aria-label="Выбрать ответ для «${esc(row.left)}»"><span class="${sel ? '' : 'ph'}">${esc(sel || 'Выбрать')}</span>${I.chevD}</button>${sel !== row.value ? `<div class="hint-correct">${esc(row.value)}</div>` : ''}</div></div>`;
+    return `<div class="${cls}"><div class="dd-left">${esc(row.left)}</div><div class="dd-right"><button type="button" class="dd-btn" data-act="dd-open" data-qid="${esc(q.id)}" data-row="${i}" aria-label="${T('Выбрать ответ для «{0}»', esc(row.left))}"><span class="${sel ? '' : 'ph'}">${esc(sel || T('Выбрать'))}</span>${I.chevD}</button>${sel !== row.value ? `<div class="hint-correct">${esc(row.value)}</div>` : ''}</div></div>`;
   }).join('') + '</div>';
 }
 function sortHTML(q, pz, scope) {
@@ -1762,15 +2284,15 @@ function sortHTML(q, pz, scope) {
   // revealed on its own or as part of a case: rows stand in the right order
   const shown = r.reveal || (scope != null && rec(scope).reveal);
   const order = shown ? range(q.order.length) : sortOrder(q);
-  return `<div class="sort-hint">Тяните за значок справа, чтобы менять порядок</div><div class="sort-list" data-qid="${esc(q.id)}">` + order.map((oi, pos) => {
+  return `<div class="sort-hint">${T('Тяните за значок справа, чтобы менять порядок')}</div><div class="sort-list" data-qid="${esc(q.id)}">` + order.map((oi, pos) => {
     const ok = q.order[oi] === q.order[pos];
-    return `<div class="sort-row ${ok ? 'st-ok' : 'st-bad'}${pz && ok ? ' pulse' : ''}" data-oi="${oi}"><span class="num">${pos + 1}</span><span class="ico status">${ok ? I.ok : I.bad}</span><span class="stext">${esc(q.order[oi])}</span><span class="handle" data-handle aria-label="Перетащить">${I.updown}</span></div>`;
+    return `<div class="sort-row ${ok ? 'st-ok' : 'st-bad'}${pz && ok ? ' pulse' : ''}" data-oi="${oi}"><span class="num">${pos + 1}</span><span class="ico status">${ok ? I.ok : I.bad}</span><span class="stext">${esc(q.order[oi])}</span><span class="handle" data-handle aria-label="${T('Перетащить')}">${I.updown}</span></div>`;
   }).join('') + '</div>';
 }
 function textHTML(q, pz) {
   const r = rec(q.id), ok = isCorrect(q);
   const id = 't-' + q.id;
-  return `<div class="field"><label class="label" for="${esc(id)}">Ваш ответ</label><textarea id="${esc(id)}" class="txt ${ok ? 'st-ok' : 'st-bad'}${pz && ok ? ' pulse' : ''}" data-text="${esc(q.id)}" rows="1" placeholder="Введите ответ" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="done">${esc(r.text)}</textarea>${ok ? '' : `<div class="hint-correct">${esc(answerText(q))}</div>`}</div>`;
+  return `<div class="field"><label class="label" for="${esc(id)}">${T('Ваш ответ')}</label><textarea id="${esc(id)}" class="txt ${ok ? 'st-ok' : 'st-bad'}${pz && ok ? ' pulse' : ''}" data-text="${esc(q.id)}" rows="1" placeholder="${T('Введите ответ')}" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="done">${esc(r.text)}</textarea>${ok ? '' : `<div class="hint-correct">${esc(answerText(q))}</div>`}</div>`;
 }
 function autosize(ta) { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight + 2, 220) + 'px'; }
 
@@ -1779,10 +2301,10 @@ function renderBottom() {
   const vis = has && rec(it.id).reveal;
   const revealOff = !has || (S.test && rec(it.id).checked);
   const lastTest = !!(S.test && items.length && S.index === items.length - 1);
-  const rv = vis ? 'Скрыть' : 'Подглядеть';
-  let a = `<button type="button" class="act gray" data-act="reveal" aria-label="${rv} ответ" title="${rv} ответ"${revealOff ? ' disabled' : ''}>${vis ? I.eyeOff : I.eye}<span class="lbl">${rv}</span><kbd class="kbd">П</kbd></button>`;
-  a += `<button type="button" class="act green" data-act="check" aria-label="Проверить"${has ? '' : ' disabled'}>${I.check}<span class="lbl">Проверить</span><kbd class="kbd">Enter</kbd></button>`;
-  if (lastTest) a += `<button type="button" class="act green" data-act="finish" aria-label="Закончить тест" title="Закончить тест"${has ? '' : ' disabled'}>${I.flag}</button>`;
+  const rv = vis ? T('Скрыть') : T('Подглядеть'), rvA = vis ? T('Скрыть ответ') : T('Подглядеть ответ');
+  let a = `<button type="button" class="act gray" data-act="reveal" aria-label="${rvA}" title="${rvA}"${revealOff ? ' disabled' : ''}>${vis ? I.eyeOff : I.eye}<span class="lbl">${rv}</span><kbd class="kbd">${T('П')}</kbd></button>`;
+  a += `<button type="button" class="act green" data-act="check" aria-label="${T('Проверить')}"${has ? '' : ' disabled'}>${I.check}<span class="lbl">${T('Проверить')}</span><kbd class="kbd">Enter</kbd></button>`;
+  if (lastTest) a += `<button type="button" class="act green" data-act="finish" aria-label="${T('Закончить тест')}" title="${T('Закончить тест')}"${has ? '' : ' disabled'}>${I.flag}</button>`;
   const row = $('#actionsRow');
   row.className = 'actions-row' + (lastTest ? ' last' : '');
   row.innerHTML = a;
@@ -1810,9 +2332,9 @@ function applyDock() {
   // wide screen: «hide» sits next to the search, «show» in the top bar while the sidebar is hidden
   const mb = $('#menuBtn'), cb = $('#closeBtn'), d = docked();
   mb.innerHTML = d ? I.sidebar : I.menu;
-  mb.setAttribute('aria-label', d ? 'Показать меню' : 'Открыть меню');
+  mb.setAttribute('aria-label', d ? T('Показать меню') : T('Открыть меню'));
   cb.innerHTML = d ? I.sidebar : I.x;
-  cb.setAttribute('aria-label', d ? 'Скрыть меню' : 'Закрыть меню');
+  cb.setAttribute('aria-label', d ? T('Скрыть меню') : T('Закрыть меню'));
   for (const b of [mb, cb]) { if (d) b.title = b.getAttribute('aria-label'); else b.removeAttribute('title'); }
   if (docked()) {
     if (drawerOpen) { drawerOpen = false; elDrawer.classList.remove('open'); elScrim.classList.remove('on'); $('#app').removeAttribute('inert'); }
@@ -1925,11 +2447,11 @@ function titleHTML(title, toks) {
 }
 function searchFields(it) {
   switch (it.kind) {
-    case 'case': return it.subs.map(s => ({ label: 'Вопрос кейса', text: s.prompt })).concat([{ label: 'Кейс', text: it.mainText }]);
-    case 'dropdown': return it.rows.map(r => ({ label: 'Пара', text: r.left + ' — ' + r.value }));
-    case 'sortable': return it.order.map(t => ({ label: 'Пункт', text: t }));
-    case 'text': return it.accepted.map(t => ({ label: 'Ответ', text: t }));
-    default: return (it.options || []).map(o => ({ label: 'Вариант', text: o.text }));
+    case 'case': return it.subs.map(s => ({ label: T('Вопрос кейса'), text: s.prompt })).concat([{ label: T('Кейс'), text: it.mainText }]);
+    case 'dropdown': return it.rows.map(r => ({ label: T('Пара'), text: r.left + ' — ' + r.value }));
+    case 'sortable': return it.order.map(t => ({ label: T('Пункт'), text: t }));
+    case 'text': return it.accepted.map(t => ({ label: T('Ответ'), text: t }));
+    default: return (it.options || []).map(o => ({ label: T('Вариант'), text: o.text }));
   }
 }
 // A short piece of text around the first match, when the match is not in the question itself.
@@ -1955,17 +2477,17 @@ function snippetHTML(it, toks) {
   return `<span class="sres-snip"><em>${best.label}:</em> ${markHTML(text, matchRanges(text, rest))}</span>`;
 }
 function searchHTML(q) {
-  if (/^(admin|админ|админка)$/i.test(q.trim())) return `<section class="msec"><a class="mrow" href="admin.html"><span class="mico">${I.gear}</span><span class="mtxt">Админка<small>Только для владельца сайта</small></span><span class="go">${I.chevR}</span></a></section>`;
-  if (!bankReady() || !curSet()) return `<section class="msec"><p class="msec-note">Сначала ${SETS.length ? 'выберите' : 'загрузите'} файл с вопросами.</p></section>`;
+  if (/^(admin|админ|админка)$/i.test(q.trim())) return `<section class="msec"><a class="mrow" href="admin.html"><span class="mico">${I.gear}</span><span class="mtxt">${T('Админка')}<small>${T('Только для владельца сайта')}</small></span><span class="go">${I.chevR}</span></a></section>`;
+  if (!bankReady() || !curSet()) return `<section class="msec"><p class="msec-note">${SETS.length ? T('Сначала выберите файл с вопросами.') : T('Сначала загрузите файл с вопросами.')}</p></section>`;
   const res = searchBank(bank, q);
   const toks = norm(q).split(' ').filter(Boolean);
   const set = curSet();
-  const file = set ? `<span class="sres-file">в «${esc(setTitle(set))}»</span>` : '';
-  let h = `<section class="msec"><div class="sres-head"><div class="sec-label">${res.length ? 'Найдено: ' + res.length + (res.length >= SRES_MAX ? '+' : '') : 'Поиск'}</div>${file}</div>`;
+  const file = set ? `<span class="sres-file">${T('в «{0}»', esc(setTitle(set)))}</span>` : '';
+  let h = `<section class="msec"><div class="sres-head"><div class="sec-label">${res.length ? T('Найдено: {0}', res.length + (res.length >= SRES_MAX ? '+' : '')) : T('Поиск')}</div>${file}</div>`;
   if (!res.length) {
-    return h + `<div class="sres-empty">${I.search}<b>Ничего не найдено</b><span>Проверьте написание или введите начало слова — например, «сердц» вместо «сердечный».</span><span>Ищу в вопросах и вариантах ответов этого файла.</span></div></section>`;
+    return h + `<div class="sres-empty">${I.search}<b>${T('Ничего не найдено')}</b><span>${T('Проверьте написание или введите начало слова — например, «сердц» вместо «сердечный».')}</span><span>${T('Ищу в вопросах и вариантах ответов этого файла.')}</span></div></section>`;
   }
-  if (S.test) h += '<p class="m-note">Переход к найденному вопросу завершит текущий тест.</p>';
+  if (S.test) h += T('<p class="m-note">Переход к найденному вопросу завершит текущий тест.</p>');
   const cur = !S.test ? currentItem() : null;
   const starred = new Set(S.starred[S.setId] || []);
   h += res.map(it => {
@@ -1973,9 +2495,9 @@ function searchHTML(q) {
     const num = list.indexOf(it) + 1;
     const extra = it.kind === 'case' ? ', ' + it.subs.length + ' ' + plural(it.subs.length, 'вопрос', 'вопроса', 'вопросов') : '';
     const now = cur && cur.id === it.id;
-    return `<button type="button" class="sres${now ? ' cur' : ''}" data-act="m-result" data-cat="${it.category}" data-id="${esc(it.id)}"><span class="sres-meta">${I.cat[it.category]}<span class="sres-cat">${CAT_TITLE[it.category]}${extra}</span>${num ? `<span class="sres-num">№ ${num}</span>` : ''}${starred.has(it.id) ? `<span class="sres-star" aria-label="В избранном">${I.starF}</span>` : ''}${now ? '<span class="sres-now">открыт</span>' : ''}</span><span class="sres-title">${titleHTML(it.title, toks)}</span>${snippetHTML(it, toks)}</button>`;
+    return `<button type="button" class="sres${now ? ' cur' : ''}" data-act="m-result" data-cat="${it.category}" data-id="${esc(it.id)}"><span class="sres-meta">${I.cat[it.category]}<span class="sres-cat">${CAT_TITLE[it.category]}${extra}</span>${num ? `<span class="sres-num">№ ${num}</span>` : ''}${starred.has(it.id) ? `<span class="sres-star" aria-label="${T('В избранном')}">${I.starF}</span>` : ''}${now ? T('<span class="sres-now">открыт</span>') : ''}</span><span class="sres-title">${titleHTML(it.title, toks)}</span>${snippetHTML(it, toks)}</button>`;
   }).join('');
-  if (res.length >= SRES_MAX) h += `<div class="sres-more">Показаны первые ${SRES_MAX}. Уточните запрос — добавьте ещё слово.</div>`;
+  if (res.length >= SRES_MAX) h += `<div class="sres-more">${T('Показаны первые {0}. Уточните запрос — добавьте ещё слово.', SRES_MAX)}</div>`;
   return h + '</section>';
 }
 /* Menu order: what is used most comes first — categories (or the running test), favourites,
@@ -2043,7 +2565,7 @@ function creditHTML() {
     const bits = fall ? CRED_BITS.map(([x, y], k) => `<i class="bit" style="--px:${x + (i % 2 ? 3 : -3) * (k % 2)}px;--py:${y}px"></i>`).join('') : '';
     return w.pl ? `<span class="w pl" ${st}>${TG_LOGO}${tearHTML(i)}${bits}</span>` : `<${w.b ? 'b' : 'span'} class="w" aria-hidden="true" ${st}>${w.b ? `<span class="zl" data-t="${esc(w.t)}">${esc(w.t)}</span>` : esc(w.t)}${tearHTML(i)}${bits}</${w.b ? 'b' : 'span'}>`;
   }).join('');
-  return `<div class="d-foot"><a class="cred${fall ? ' pre' : ''}" href="https://t.me/ziplogo" target="_blank" rel="noopener" aria-label="Жалобы и предложения — Made by TG @ziplogo"><span class="note" aria-hidden="true">Жалобы и предложения</span>${words}</a></div>`;
+  return `<div class="d-foot" dir="ltr"><a class="cred${fall ? ' pre' : ''}" href="https://t.me/ziplogo" target="_blank" rel="noopener" aria-label="${T('Жалобы и предложения — Made by TG @ziplogo')}"><span class="note" aria-hidden="true">${T('Жалобы и предложения')}</span>${words}</a></div>`;
 }
 // The words fall only when the whole line is on screen, the scrolling has stopped and the menu has finished
 // sliding in — so the person is actually looking at it.
@@ -2086,8 +2608,8 @@ function dropCredit(el) {
 }
 function menuCatsHTML() {
   const cs = curSet();
-  let h = `<section class="msec"><div class="sec-row"><div class="sec-label">Категории</div><button type="button" class="sec-chip" data-jump="m-files" aria-label="Файл «${esc(setTitle(cs))}» — к списку файлов"><span>${esc(setTitle(cs))}</span>${I.chevD}</button></div>`;
-  if (S.test) h += '<p class="m-note">Выбор категории завершит текущий тест.</p>';
+  let h = `<section class="msec"><div class="sec-row"><div class="sec-label">${T('Категории')}</div><button type="button" class="sec-chip" data-jump="m-files" aria-label="${T('Файл «{0}» — к списку файлов', esc(setTitle(cs)))}"><span>${esc(setTitle(cs))}</span>${I.chevD}</button></div>`;
+  if (S.test) h += T('<p class="m-note">Выбор категории завершит текущий тест.</p>');
   for (const c of CATS) {
     const n = (bank.byCat[c] || []).length;
     const on = !S.test && !S.starOnly && S.category === c;
@@ -2100,31 +2622,31 @@ function menuCatsHTML() {
 function catResultsHTML(c) {
   let ok = 0;
   for (const it of bank.byCat[c] || []) if (resultOf(it.id) === 1) ok++;
-  return ok ? `<small class="m-res"><span class="ok">${ok} верно</span></small>` : '';
+  return ok ? `<small class="m-res"><span class="ok">${T('{0} верно', ok)}</span></small>` : '';
 }
 function menuStarHTML() {
   const st = new Set(S.starred[S.setId] || []);
   const starCats = CATS.map(c => [c, (bank.byCat[c] || []).filter(it => st.has(it.id)).length]).filter(x => x[1] > 0);
   if (!starCats.length) return '';
-  let h = '<section class="msec"><div class="sec-label">Избранное</div>';
+  let h = T('<section class="msec"><div class="sec-label">Избранное</div>');
   for (const [c, n] of starCats) {
     const on = !S.test && S.starOnly && S.category === c;
-    h += `<div class="mline"><button type="button" class="mrow${on ? ' star-on' : ''}" data-act="m-star-cat" data-cat="${c}"><span class="mico">${on ? I.starF : I.star}</span><span class="mtxt">${CAT_TITLE[c]}</span><span class="badge">${n}</span></button><button type="button" class="mx" data-act="m-star-clear" data-cat="${c}" aria-label="Очистить избранное в категории «${CAT_TITLE[c]}»">${I.x}</button></div>`;
+    h += `<div class="mline"><button type="button" class="mrow${on ? ' star-on' : ''}" data-act="m-star-cat" data-cat="${c}"><span class="mico">${on ? I.starF : I.star}</span><span class="mtxt">${CAT_TITLE[c]}</span><span class="badge">${n}</span></button><button type="button" class="mx" data-act="m-star-clear" data-cat="${c}" aria-label="${T('Очистить избранное в категории «{0}»', CAT_TITLE[c])}">${I.x}</button></div>`;
   }
   return h + '</section>';
 }
 function menuTestHTML() {
-  let h = '<section class="msec"><div class="sec-label">Тест</div>';
+  let h = T('<section class="msec"><div class="sec-label">Тест</div>');
   if (S.test) {
     const n = currentItems().length, tot = testTotal();
-    h += `<button type="button" class="mrow test-on" data-act="m-close"><span class="mico">${I.play}</span><span class="mtxt">Продолжить тест<small>Вопрос ${Math.min(S.index + 1, n)} из ${n}, ${testEarned()}/${tot} ${plural(tot, 'балл', 'балла', 'баллов')}</small></span><span class="mico">${I.chevR}</span></button>`;
-    h += `<button type="button" class="mrow" data-act="m-maketest"><span class="mico">${I.test}</span><span class="mtxt">Новый тест<small>Или завершить текущий</small></span><span class="mico">${I.chevR}</span></button>`;
+    h += `<button type="button" class="mrow test-on" data-act="m-close"><span class="mico">${I.play}</span><span class="mtxt">${T('Продолжить тест')}<small>${T('Вопрос {0} из {1}', Math.min(S.index + 1, n), n)}, ${testEarned()}/${tot} ${plural(tot, 'балл', 'балла', 'баллов')}</small></span><span class="mico">${I.chevR}</span></button>`;
+    h += `<button type="button" class="mrow" data-act="m-maketest"><span class="mico">${I.test}</span><span class="mtxt">${T('Новый тест')}<small>${T('Или завершить текущий')}</small></span><span class="mico">${I.chevR}</span></button>`;
   } else {
-    h += `<button type="button" class="mrow box" data-act="m-maketest"><span class="mico">${I.test}</span><span class="mtxt">Сделать тест<small>Случайные вопросы, как на экзамене</small></span><span class="mico">${I.chevR}</span></button>`;
+    h += `<button type="button" class="mrow box" data-act="m-maketest"><span class="mico">${I.test}</span><span class="mtxt">${T('Сделать тест')}<small>${T('Случайные вопросы, как на экзамене')}</small></span><span class="mico">${I.chevR}</span></button>`;
   }
   for (const t of S.savedTests.filter(t => SETS.some(s => s.id === t.setId))) { // not another faculty's files
     const n = t.configs.reduce((a, c) => a + c.count, 0), pts = t.configs.reduce((a, c) => a + c.count * c.points, 0);
-    h += `<div class="mline"><button type="button" class="mrow" data-act="m-saved" data-id="${esc(t.id)}"><span class="mico">${I.play}</span><span class="mtxt">${esc(t.title)}<small>${esc(t.setTitle)}, ${n} вопр., ${pts} ${plural(pts, 'балл', 'балла', 'баллов')}</small></span></button><button type="button" class="mx" data-act="m-saved-del" data-id="${esc(t.id)}" aria-label="Удалить «${esc(t.title)}»">${I.trash}</button></div>`;
+    h += `<div class="mline"><button type="button" class="mrow" data-act="m-saved" data-id="${esc(t.id)}"><span class="mico">${I.play}</span><span class="mtxt">${esc(t.title)}<small>${esc(t.setTitle)}, ${T('{0} вопр.', n)}, ${pts} ${plural(pts, 'балл', 'балла', 'баллов')}</small></span></button><button type="button" class="mx" data-act="m-saved-del" data-id="${esc(t.id)}" aria-label="${T('Удалить «{0}»', esc(t.title))}">${I.trash}</button></div>`;
   }
   return h + '</section>';
 }
@@ -2133,7 +2655,7 @@ function menuFilesHTML() {
   let h = S.fac ? menuCoursesHTML() : '';
   // «Мои файлы» only lists files someone already uploaded (so they aren't lost); the menu no longer offers uploading
   const mine = SETS.filter(s => !s.bundled);
-  if (mine.length) h += `<section class="msec" id="m-mine"><div class="sec-label">Мои файлы</div>${mine.map(fileRowHTML).join('')}</section>`;
+  if (mine.length) h += `<section class="msec" id="m-mine"><div class="sec-label">${T('Мои файлы')}</div>${mine.map(fileRowHTML).join('')}</section>`;
   return h;
 }
 // The faculty sits next to «Курсы», so it is clear whose files these are; a tap on it changes the faculty.
@@ -2141,35 +2663,35 @@ function menuCoursesHTML() {
   const c = curCourse(), fac = curFac(), course = SETS.filter(s => s.bundled);
   const has = new Set(course.map(s => s.course));
   const list = course.filter(s => s.course === c || !s.course);
-  let h = `<section class="msec" id="m-files"><div class="sec-row"><div class="sec-label">Курсы</div><button type="button" class="sec-chip" data-act="m-fac" aria-label="Факультет: ${esc(fac.name)} — сменить"><span>${esc(fac.name)}</span>${I.chevD}</button></div>${coursePills(fac.courses, c, 'data-act="m-course" data-c', has)}`;
-  if (facEmpty()) h += `<p class="msec-note">Для ${esc(fac.gen)} тестов пока нет — их скоро добавят.</p>`;
-  else if (!list.length) h += `<p class="msec-note">Для ${c} курса файлов пока нет.</p>`;
+  let h = `<section class="msec" id="m-files"><div class="sec-row"><div class="sec-label">${T('Курсы')}</div><button type="button" class="sec-chip" data-act="m-fac" aria-label="${T('Факультет: {0} — сменить', esc(fac.name))}"><span>${esc(fac.name)}</span>${I.chevD}</button></div>${coursePills(fac.courses, c, 'data-act="m-course" data-c', has)}`;
+  if (facEmpty()) h += `<p class="msec-note">${T('Для {0} тестов пока нет — их скоро добавят.', esc(fac.gen))}</p>`;
+  else if (!list.length) h += `<p class="msec-note">${T('Для {0} курса файлов пока нет.', c)}</p>`;
   return h + list.map(fileRowHTML).join('') + '</section>';
 }
 function fileRowHTML(s) {
   const on = s.id === S.setId;
-  return `<div class="mline"><button type="button" class="mrow${on ? ' on' : ''}" data-act="m-set" data-id="${esc(s.id)}"${on ? ' aria-current="true"' : ''}><span class="mico">${I.doc}</span><span class="mtxt">${esc(setTitle(s))}</span>${on ? `<span class="mtick">${I.check}</span>` : ''}</button><button type="button" class="mmore" data-act="m-set-more" data-id="${esc(s.id)}" aria-label="Действия с файлом «${esc(setTitle(s))}»">${I.more}</button></div>`;
+  return `<div class="mline"><button type="button" class="mrow${on ? ' on' : ''}" data-act="m-set" data-id="${esc(s.id)}"${on ? ' aria-current="true"' : ''}><span class="mico">${I.doc}</span><span class="mtxt">${esc(setTitle(s))}</span>${on ? `<span class="mtick">${I.check}</span>` : ''}</button><button type="button" class="mmore" data-act="m-set-more" data-id="${esc(s.id)}" aria-label="${T('Действия с файлом «{0}»', esc(setTitle(s)))}">${I.more}</button></div>`;
 }
 // «Войти через Telegram» on top of the menu: one tap opens the bot straight away
 function tgPromoHTML() {
   if (Account.user || Account.works !== true || !tgOneTap()) return '';
-  return `<a class="tg-promo shine" data-act="m-tg" href="${tgLink(rid(24))}" target="_blank" rel="noopener"><span class="tg-promo-ico">${TG_LOGO}</span><span class="mtxt">Войти через Telegram</span><span class="go">${I.chevR}</span></a>`;
+  return `<a class="tg-promo shine" data-act="m-tg" href="${tgLink(rid(24))}" target="_blank" rel="noopener"><span class="tg-promo-ico">${TG_LOGO}</span><span class="mtxt">${T('Войти через Telegram')}</span><span class="go">${I.chevR}</span></a>`;
 }
 function accountRowHTML() {
   const u = Account.user;
   if (!Account.ready() || (!u && Account.works !== true)) return '';
   return u
-    ? `<button type="button" class="mrow" data-act="m-profile"><span class="mtxt">${esc(u.name)}<small>${u.course ? u.course + ' курс · ' : ''}аккаунт</small></span><span class="go">${I.chevR}</span></button>`
-    : `<button type="button" class="mrow" data-act="m-profile"><span class="mtxt">Войти<small>${tgOneTap() ? 'Через Telegram — в одно нажатие' : 'Или зарегистрироваться'}</small></span><span class="go">${I.chevR}</span></button>`;
+    ? `<button type="button" class="mrow" data-act="m-profile"><span class="mtxt">${esc(u.name)}<small>${u.course ? T('{0} курс', u.course) + ' · ' : ''}${T('аккаунт')}</small></span><span class="go">${I.chevR}</span></button>`
+    : `<button type="button" class="mrow" data-act="m-profile"><span class="mtxt">${T('Войти')}<small>${tgOneTap() ? T('Через Telegram — в одно нажатие') : T('Или зарегистрироваться')}</small></span><span class="go">${I.chevR}</span></button>`;
 }
 function menuSettingsHTML() {
   const pct = Math.round(S.fontScale * 100);
-  return `<section class="msec m-set${settingsOpen ? ' open' : ''}"><button type="button" class="mrow set-toggle" data-act="m-settings" aria-expanded="${settingsOpen}" aria-controls="setBody"><span class="mico">${I.gear}</span><span class="mtxt">Настройки</span><span class="go">${I.chevD}</span></button>
+  return `<section class="msec m-set${settingsOpen ? ' open' : ''}"><button type="button" class="mrow set-toggle" data-act="m-settings" aria-expanded="${settingsOpen}" aria-controls="setBody"><span class="mico">${I.gear}</span><span class="mtxt">${T('Настройки')}</span><span class="go">${I.chevD}</span></button>
 <div class="set-body" id="setBody"><div class="set-inner"><div class="mgroup">
-${accountRowHTML()}${isAdmin() ? `<a class="mrow" href="admin.html"><span class="mtxt">Админка<small>Онлайн и файлы курсов</small></span><span class="go">${I.chevR}</span></a>` : ''}<button type="button" class="mrow" data-act="m-fac"><span class="mtxt">Факультет<small>${esc(curFac().name)}</small></span><span class="go">${I.chevR}</span></button>
-<button type="button" class="mrow" data-act="m-tour"><span class="mtxt">Обучение<small>Показать подсказки ещё раз</small></span><span class="go">${I.chevR}</span></button>
-<div class="mrow static"><span class="mtxt">Автопереход<small>После верного ответа — следующий вопрос</small></span><button type="button" class="switch" role="switch" aria-checked="${S.autoAdvance}" data-act="toggle-auto" aria-label="Автопереход"><span></span></button></div>
-<div class="fs-block"><div class="fs-head"><span>Размер текста</span><span class="fs-val"><span id="fontPct">${pct}%</span>${pct !== 100 ? '<button type="button" class="mlink" data-act="m-font-reset">Сбросить</button>' : ''}</span></div><div class="fs-row"><button type="button" class="sq-btn a-sm" data-act="m-font-dec" aria-label="Мельче"${S.fontScale <= 0.5 ? ' disabled' : ''}>A</button><input type="range" id="fontRange" min="50" max="160" step="5" value="${pct}" aria-label="Масштаб текста вопросов"><button type="button" class="sq-btn a-lg" data-act="m-font-inc" aria-label="Крупнее"${S.fontScale >= 1.6 ? ' disabled' : ''}>A</button></div></div>
+${accountRowHTML()}${isAdmin() ? `<a class="mrow" href="admin.html"><span class="mtxt">${T('Админка')}<small>${T('Онлайн и файлы курсов')}</small></span><span class="go">${I.chevR}</span></a>` : ''}<button type="button" class="mrow" data-act="m-fac"><span class="mtxt">${T('Факультет')}<small>${esc(curFac().name)}</small></span><span class="go">${I.chevR}</span></button><button type="button" class="mrow" data-act="m-lang"><span class="mtxt">${T('Язык')}<small lang="${LANG}">${langOf(LANG).name}</small></span><span class="go">${I.chevR}</span></button>
+<button type="button" class="mrow" data-act="m-tour"><span class="mtxt">${T('Обучение')}<small>${T('Показать подсказки ещё раз')}</small></span><span class="go">${I.chevR}</span></button>
+<div class="mrow static"><span class="mtxt">${T('Автопереход')}<small>${T('После верного ответа — следующий вопрос')}</small></span><button type="button" class="switch" role="switch" aria-checked="${S.autoAdvance}" data-act="toggle-auto" aria-label="${T('Автопереход')}"><span></span></button></div>
+<div class="fs-block"><div class="fs-head"><span>${T('Размер текста')}</span><span class="fs-val"><span id="fontPct">${pct}%</span>${pct !== 100 ? T('<button type="button" class="mlink" data-act="m-font-reset">Сбросить</button>') : ''}</span></div><div class="fs-row"><button type="button" class="sq-btn a-sm" data-act="m-font-dec" aria-label="${T('Мельче')}"${S.fontScale <= 0.5 ? ' disabled' : ''}>A</button><input type="range" id="fontRange" min="50" max="160" step="5" value="${pct}" aria-label="${T('Масштаб текста вопросов')}"><button type="button" class="sq-btn a-lg" data-act="m-font-inc" aria-label="${T('Крупнее')}"${S.fontScale >= 1.6 ? ' disabled' : ''}>A</button></div></div>
 </div></div></div></section>`;
 }
 let settingsOpen = false;
@@ -2227,7 +2749,7 @@ function dialog({ title, message = '', input = null, buttons, vertical = false }
     }
   });
 }
-const alertDlg = (title, message) => dialog({ title, message, buttons: [{ id: 'ok', label: 'Понятно', kind: 'primary' }] });
+const alertDlg = (title, message) => dialog({ title, message, buttons: [{ id: 'ok', label: T('Понятно'), kind: 'primary' }] });
 
 let toastTimer = 0;
 function toast(msg) {
@@ -2277,7 +2799,7 @@ function openDDPicker(qid, row) {
   if (!q) return;
   const cur = rec(qid).dd[row] || '';
   const order = ensureShuf(qid, q.choices.length);
-  const html = `<div class="pick-title">${esc(q.rows[row].left)}</div><div class="pick-list"><button type="button" class="pick none${cur ? '' : ' on'}" data-s="pick" data-ci="-1"><span>Не выбрано</span></button>` +
+  const html = `<div class="pick-title">${esc(q.rows[row].left)}</div><div class="pick-list"><button type="button" class="pick none${cur ? '' : ' on'}" data-s="pick" data-ci="-1"><span>${T('Не выбрано')}</span></button>` +
     order.map(i => { const v = q.choices[i], on = v === cur; return `<button type="button" class="pick${on ? ' on' : ''}" data-s="pick" data-ci="${i}"><span>${esc(v)}</span>${on ? I.check : ''}</button>`; }).join('') + '</div>';
   openSheet({
     html,
@@ -2287,7 +2809,7 @@ function openDDPicker(qid, row) {
 function openGoTo() {
   const n = currentItems().length;
   if (!n) return;
-  dialog({ title: 'Перейти к вопросу', message: 'Введите номер от 1 до ' + n, input: { numeric: true, placeholder: '1 – ' + n }, buttons: [{ id: 'cancel', label: 'Отмена' }, { id: 'go', label: 'Перейти', kind: 'primary' }] })
+  dialog({ title: T('Перейти к вопросу'), message: T('Введите номер от 1 до {0}', n), input: { numeric: true, placeholder: '1 – ' + n }, buttons: [{ id: 'cancel', label: T('Отмена') }, { id: 'go', label: T('Перейти'), kind: 'primary' }] })
     .then(r => { const k = parseInt(String(r.value).replace(/\D/g, ''), 10); if (r.id === 'go' && k) { jumpTo(k - 1); render(); } });
 }
 function openFinish() {
@@ -2295,9 +2817,9 @@ function openFinish() {
   const okN = items.filter(it => rec(it.id).checked && isCorrect(it)).length;
   const doneN = items.filter(it => rec(it.id).checked).length;
   const total = testTotal();
-  let msg = (total ? 'Результат: ' + testEarned() + ' из ' + total + ' ' + plural(total, 'балла', 'баллов', 'баллов') + '\n' : '') + 'Верно: ' + okN + ' из ' + items.length;
-  if (doneN < items.length) msg += '\nНе проверено: ' + (items.length - doneN);
-  dialog({ title: 'Тест завершён', message: msg, buttons: [{ id: 'stay', label: 'Остаться' }, { id: 'close', label: 'Закрыть тест', kind: 'primary' }] })
+  let msg = (total ? T('Результат: {0} из {1}', testEarned(), total) + ' ' + plural(total, 'балла', 'баллов', 'баллов') + '\n' : '') + T('Верно: {0} из {1}', okN, items.length);
+  if (doneN < items.length) msg += '\n' + T('Не проверено: {0}', items.length - doneN);
+  dialog({ title: T('Тест завершён'), message: msg, buttons: [{ id: 'stay', label: T('Остаться') }, { id: 'close', label: T('Закрыть тест'), kind: 'primary' }] })
     .then(r => { if (r.id === 'close') { endTest(); renderAll(); } });
 }
 /* ---------- faculty ---------- */
@@ -2317,9 +2839,9 @@ function openFac({ first = false } = {}) {
     return `<button type="button" class="fac-opt${on ? ' on' : ''}" data-s="fac" data-f="${f.id}" role="radio" aria-checked="${on}"><span class="fac-ico">${FAC_ICON[f.id]}</span><span class="fac-txt"><b>${esc(f.name)}</b><small>${f.courses} ${plural(f.courses, 'курс', 'курса', 'курсов')}</small></span>${on ? I.check : I.chevR}</button>`;
   };
   const html = `<div class="dlg fac">
-<div class="fac-head"><div class="dlg-title" id="facTitle">Ваш факультет</div><div class="dlg-msg">От него зависят курсы и тесты</div></div>
+<div class="fac-head"><div class="dlg-title" id="facTitle">${T('Ваш факультет')}</div><div class="dlg-msg">${T('От него зависят курсы и тесты')}</div></div>
 <div class="fac-list" role="radiogroup" aria-labelledby="facTitle">${FACS.map(opt).join('')}</div>
-${first ? '<div class="su-note">Поменять можно в настройках</div>' : '<button type="button" class="dlg-btn" data-s="cancel">Отмена</button>'}
+${first ? T('<div class="su-note">Поменять можно в настройках</div>') : T('<button type="button" class="dlg-btn" data-s="cancel">Отмена</button>')}
 </div>`;
   const sh = openSheet({
     cls: 'dialog', html, dismissible: !first,
@@ -2328,16 +2850,105 @@ ${first ? '<div class="su-note">Поменять можно в настройк�
       if (act !== 'fac') return;
       const f = el.dataset.f;
       close();
+      if (first) S.askYear = true;
       if (f !== S.fac) changeFac(f, { mine: true, say: !first });
+      else if (first) save();
+      if (first) nextGate();
     },
     onClose: () => { if (facSheet === sh) facSheet = null; }
   });
   facSheet = sh;
   return sh;
 }
-// Not chosen yet → the picker. Not over the block screen; called again when a block is lifted.
+// A newcomer answers three questions before anything else: language, faculty, year — one sheet after another.
+// Not over the block screen; called again when a block is lifted.
+const onboarding = () => !S.lang || !S.fac || S.askYear;
 function facGate() {
-  if (!S.fac && bankStatus !== 'boot' && !Account.blocked() && !anySheet()) openFac({ first: true });
+  if (bankStatus === 'boot' || Account.blocked() || anySheet()) return;
+  if (!S.lang) openLang({ first: true });
+  else if (!S.fac) openFac({ first: true });
+  else if (S.askYear) openYear();
+}
+const nextGate = () => setTimeout(facGate, 220); // once the sheet before has slid away
+/* ---------- language ---------- */
+function storeLang() { try { localStorage.setItem(LANG_KEY, LANG); langStored = true; } catch (e) {} }
+// The parts of the page that are plain HTML, not drawn by render()
+function applyLang() {
+  const h = document.documentElement;
+  h.lang = LANG;
+  h.dir = isRtl() ? 'rtl' : 'ltr';
+  document.title = T('Тренажёр тестов');
+  $('#counter').title = T('Перейти к вопросу по номеру');
+  $('#prevBtn').setAttribute('aria-label', T('Предыдущий вопрос'));
+  $('#nextBtn').setAttribute('aria-label', T('Следующий вопрос'));
+  $('#drawer').setAttribute('aria-label', T('Меню'));
+  $('#searchInput').placeholder = T('Поиск по вопросам');
+  $('#searchClear').setAttribute('aria-label', T('Очистить поиск'));
+}
+function setLang(l) {
+  if (!isLang(l)) return;
+  LANG = l;
+  S.lang = l;
+  storeLang();
+  applyLang();
+  applyDock();
+  save();
+  renderAll();
+}
+// «Язык». First visit: the very first sheet, titled in all three languages, can't be skipped.
+function openLang({ first = false } = {}) {
+  if (anySheet() || Account.blocked()) return;
+  if (tour) endTour();
+  const opt = l => {
+    const on = !first && l.id === LANG;
+    return `<button type="button" class="fac-opt${on ? ' on' : ''}" data-s="lang" data-l="${l.id}" role="radio" aria-checked="${on}"><span class="fac-ico lang-ico" lang="${l.id}" aria-hidden="true">${l.badge}</span><span class="fac-txt" lang="${l.id}"><b>${l.name}</b><small>${l.note}</small></span>${on ? I.check : I.chevR}</button>`;
+  };
+  const head = first
+    ? '<div class="dlg-title" id="langTitle">Язык · Language · <span lang="ar">اللغة</span></div>'
+    : `<div class="dlg-title" id="langTitle">${T('Язык интерфейса')}</div><div class="dlg-msg">${T('Вопросы в тестах остаются на языке файла')}</div>`;
+  const html = `<div class="dlg fac">
+<div class="fac-head">${head}</div>
+<div class="fac-list" role="radiogroup" aria-labelledby="langTitle">${LANGS.map(opt).join('')}</div>
+${first ? '' : `<button type="button" class="dlg-btn" data-s="cancel">${T('Отмена')}</button>`}
+</div>`;
+  return openSheet({
+    cls: 'dialog', html, dismissible: !first,
+    onClick: (act, el, e, close) => {
+      if (act === 'cancel') return close();
+      if (act !== 'lang') return;
+      const l = el.dataset.l;
+      close();
+      if (l !== S.lang) setLang(l);
+      if (first) nextGate();
+    }
+  });
+}
+/* ---------- year (only right after a newcomer picks the faculty; later it's the pills in the menu) ---------- */
+function openYear() {
+  if (anySheet() || Account.blocked()) return;
+  if (tour) endTour();
+  const fac = curFac(), has = new Set(SETS.filter(x => x.bundled && x.course).map(x => x.course));
+  const tile = n => `<button type="button" class="yr-opt${has.has(n) ? '' : ' empty'}" data-s="yr" data-c="${n}" role="radio" aria-checked="false" aria-label="${T('{0} курс', n)}"><b>${n}</b><small>${has.has(n) ? esc(T('{0} курс', n).replace(/\s*\d+\s*/, '')) : T('Файлов пока нет')}</small></button>`;
+  const html = `<div class="dlg fac">
+<div class="fac-head"><div class="dlg-title" id="yrTitle">${T('Ваш курс')}</div><div class="dlg-msg">${esc(fac.name)} · ${T('Покажем тесты этого курса')}</div></div>
+<div class="yr-grid" role="radiogroup" aria-labelledby="yrTitle">${range(fac.courses).map(i => tile(i + 1)).join('')}</div>
+<div class="su-note">${T('Поменять можно в меню')}</div>
+</div>`;
+  return openSheet({
+    cls: 'dialog', html, dismissible: false,
+    onClick: (act, el, e, close) => {
+      if (act !== 'yr') return;
+      const c = +el.dataset.c;
+      close();
+      S.course = c;
+      S.askYear = false;
+      const n = facFirstSet(), cur = curSet();
+      if (n && n.id !== S.setId && (!cur || cur.bundled)) selectSet(n.id);
+      save();
+      renderAll();
+      if (Account.user && !Account.user.blocked && Account.user.course !== c) Account.setCourse(c).catch(() => {});
+    }
+  });
 }
 // Signed in: the account's faculty wins (like the course); an account without one gets this device's.
 function facAfterSignIn(u) {
@@ -2347,7 +2958,7 @@ function facAfterSignIn(u) {
 }
 /* ---------- file «…» actions ---------- */
 const FA_ICON = {
-  open: sv('<path d="M5 12h14M13 6l6 6-6 6"/>'),
+  open: sv('<path d="M5 12h14M13 6l6 6-6 6"/>').replace('class="i', 'class="i fl'),
   rename: sv('<path d="M4 20h4L19 9l-4-4L4 16Z"/><path d="m13.5 6.5 4 4"/>'),
   share: sv('<path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>'),
   reset: sv('<path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/>')
@@ -2356,10 +2967,10 @@ const FA_SHORT = { multiple: 'Несколько', single: 'Один', dropdown:
 const setFileText = async s => {
   if (s.rec) return Store.getFile(s.rec);
   const r = await fetch(bundleURL(s.file));
-  if (!r.ok) throw new Error('Файл не открылся (код ' + r.status + ').');
+  if (!r.ok) throw new Error(T('Файл не открылся (код {0}).', r.status));
   return r.text();
 };
-const setFileName = s => (setTitle(s).replace(/[\\/:*?"<>|\u0000-\u001f]+/g, ' ').replace(/\s+/g, ' ').trim() || 'вопросы').replace(/\.json$/i, '') + '.json';
+const setFileName = s => (setTitle(s).replace(/[\\/:*?"<>|\u0000-\u001f]+/g, ' ').replace(/\s+/g, ' ').trim() || T('вопросы')).replace(/\.json$/i, '') + '.json';
 // Questions of this file that have an answer (not just a remembered option order).
 function answeredCount(id) {
   let n = 0;
@@ -2380,7 +2991,7 @@ async function shareSetFile(s, text) {
     catch (e) {
       const code = e && e.code;
       if (code === 'declined') return;
-      toast(code === 'rate_limited' ? 'Подождите секунду и попробуйте ещё раз' : 'Здесь не получилось сохранить файл');
+      toast(code === 'rate_limited' ? T('Подождите секунду и попробуйте ещё раз') : T('Здесь не получилось сохранить файл'));
     }
     return;
   }
@@ -2393,7 +3004,7 @@ async function shareSetFile(s, text) {
   a.href = url; a.download = name; a.rel = 'noopener';
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 60000);
-  toast('Скачивается «' + name + '»');
+  toast(T('Скачивается «{0}»', name));
 }
 async function openSetActions(id) {
   const s = SETS.find(x => x.id === id);
@@ -2403,48 +3014,48 @@ async function openSetActions(id) {
   // Read the file now, so «Отправить» can open the share sheet right on the tap.
   let fileText = null;
   const textP = setFileText(s).then(t => (fileText = t)).catch(() => null);
-  const src = (s.bundled ? (s.course ? s.course + ' курс' : 'Курс') : 'Мой файл') + (s.rec && s.rec.store === 'cloud' ? ', в аккаунте' : '');
+  const src = (s.bundled ? (s.course ? T('{0} курс', s.course) : T('Курс')) : T('Мой файл')) + (s.rec && s.rec.store === 'cloud' ? T(', в аккаунте') : '');
   const infoHTML = b => {
-    if (!b) return [src + ', считаю вопросы…', ''];
-    if (b.error) return [src + ', не открылся', ''];
+    if (!b) return [src + T(', считаю вопросы…'), ''];
+    if (b.error) return [src + T(', не открылся'), ''];
     const chips = CATS.map(c => [c, (b.byCat[c] || []).length]).filter(x => x[1] > 0)
-      .map(([c, n]) => `<span class="fa-chip" title="${CAT_TITLE[c]}">${I.cat[c]}${FA_SHORT[c]} <b>${n}</b></span>`).join('');
-    return [src + ', ' + b.total + ' ' + plural(b.total, 'вопрос', 'вопроса', 'вопросов'), chips];
+      .map(([c, n]) => `<span class="fa-chip" title="${CAT_TITLE[c]}">${I.cat[c]}${T(FA_SHORT[c])} <b>${n}</b></span>`).join('');
+    return [src + T(', ') + b.total + ' ' + plural(b.total, 'вопрос', 'вопроса', 'вопросов'), chips];
   };
   const [sub0, chips0] = infoHTML(BANKS.get(id));
   const row = (act, icon, label, small = '', cls = '') => `<button type="button" class="fa-row${cls}" data-s="${act}">${icon}<span>${label}${small ? `<small>${small}</small>` : ''}</span></button>`;
   const html = `<div class="fa"><div class="fa-head"><span class="fa-ico">${I.doc}</span><span class="fa-name"><b>${esc(setTitle(s))}</b><small id="faSub">${esc(sub0)}</small></span></div>
 <div class="fa-cats" id="faCats">${chips0}</div>
-<div class="fa-list">${isCur ? '' : row('open', FA_ICON.open, 'Открыть')}${s.bundled ? '' : row('rename', FA_ICON.rename, 'Переименовать')}${row('share', FA_ICON.share, 'Отправить JSON', 'В «Файлы», AirDrop, Telegram')}${answered ? row('reset', FA_ICON.reset, 'Сбросить ответы', answered + ' ' + plural(answered, 'вопрос', 'вопроса', 'вопросов') + ' с ответами') : ''}${s.bundled ? '' : row('delete', I.trash, 'Удалить файл', '', ' danger')}</div>
-<button type="button" class="dlg-btn fa-done" data-s="close">Готово</button></div>`;
+<div class="fa-list">${isCur ? '' : row('open', FA_ICON.open, T('Открыть'))}${s.bundled ? '' : row('rename', FA_ICON.rename, T('Переименовать'))}${row('share', FA_ICON.share, T('Отправить JSON'), T('В «Файлы», AirDrop, Telegram'))}${answered ? row('reset', FA_ICON.reset, T('Сбросить ответы'), answered + ' ' + plural(answered, 'вопрос', 'вопроса', 'вопросов') + T(' с ответами')) : ''}${s.bundled ? '' : row('delete', I.trash, T('Удалить файл'), '', ' danger')}</div>
+<button type="button" class="dlg-btn fa-done" data-s="close">${T('Готово')}</button></div>`;
   const sh = openSheet({
     cls: 'dialog', html,
     onClick: async (act, el, e, close) => {
       if (act === 'close') return close();
       if (act === 'share') {
         if (fileText == null) await textP;
-        if (fileText == null) return alertDlg('Файл не открылся', 'Не получилось прочитать файл. Попробуйте загрузить его заново.');
+        if (fileText == null) return alertDlg(T('Файл не открылся'), T('Не получилось прочитать файл. Попробуйте загрузить его заново.'));
         return shareSetFile(s, fileText);
       }
       close();
       if (act === 'open') { selectSet(id); elSearch.value = ''; renderAll(); return; }
       if (act === 'rename') {
-        const r2 = await dialog({ title: 'Переименовать файл', message: 'Название меняется только в приложении.', input: { value: setTitle(s), placeholder: 'Название' }, buttons: [{ id: 'cancel', label: 'Отмена' }, { id: 'ok', label: 'Сохранить', kind: 'primary' }] });
+        const r2 = await dialog({ title: T('Переименовать файл'), message: T('Название меняется только в приложении.'), input: { value: setTitle(s), placeholder: T('Название') }, buttons: [{ id: 'cancel', label: T('Отмена') }, { id: 'ok', label: T('Сохранить'), kind: 'primary' }] });
         const v = r2.value.trim();
-        if (r2.id === 'ok' && v) { S.titles[id] = v; save(); renderAll(); toast('Название сохранено'); }
+        if (r2.id === 'ok' && v) { S.titles[id] = v; save(); renderAll(); toast(T('Название сохранено')); }
         return;
       }
       if (act === 'reset') {
-        const r2 = await dialog({ title: 'Сбросить ответы?', message: 'Отмеченные ответы и проверки в «' + setTitle(s) + '» очистятся — можно решать заново. Избранное и сохранённые тесты останутся.', buttons: [{ id: 'cancel', label: 'Отмена' }, { id: 'ok', label: 'Сбросить', kind: 'danger' }] });
+        const r2 = await dialog({ title: T('Сбросить ответы?'), message: T('Отмеченные ответы и проверки в «{0}» очистятся — можно решать заново. Избранное и сохранённые тесты останутся.', setTitle(s)), buttons: [{ id: 'cancel', label: T('Отмена') }, { id: 'ok', label: T('Сбросить'), kind: 'danger' }] });
         if (r2.id !== 'ok') return;
         for (const k of Object.keys(S.answers)) if (k.startsWith(id + '|')) delete S.answers[k];
         dropResults(id);
-        save(); renderAll(); toast('Ответы сброшены');
+        save(); renderAll(); toast(T('Ответы сброшены'));
         return;
       }
       if (act === 'delete' && !s.bundled) {
-        const r2 = await dialog({ title: 'Удалить файл?', message: 'Файл «' + setTitle(s) + '», его прогресс, избранное и сохранённые тесты будут удалены.', buttons: [{ id: 'cancel', label: 'Отмена' }, { id: 'ok', label: 'Удалить', kind: 'danger' }] });
-        if (r2.id === 'ok') { await deleteSet(id); toast('Файл удалён'); }
+        const r2 = await dialog({ title: T('Удалить файл?'), message: T('Файл «{0}», его прогресс, избранное и сохранённые тесты будут удалены.', setTitle(s)), buttons: [{ id: 'cancel', label: T('Отмена') }, { id: 'ok', label: T('Удалить'), kind: 'danger' }] });
+        if (r2.id === 'ok') { await deleteSet(id); toast(T('Файл удалён')); }
       }
     }
   });
@@ -2466,10 +3077,10 @@ const MT_HINT = {
   sortable: 'расставить по порядку', text: 'вписать ответ самому', caseStudy: 'задача с несколькими вопросами'
 };
 function openMakeTest() {
-  if (!bankReady() || !curSet()) return toast('Сначала выберите файл с вопросами');
+  if (!bankReady() || !curSet()) return toast(T('Сначала выберите файл с вопросами'));
   const avail = c => (bank.byCat[c] || []).length;
   const kinds = CATS.filter(c => avail(c) > 0);
-  if (!kinds.length) return toast('В этом файле нет вопросов');
+  if (!kinds.length) return toast(T('В этом файле нет вопросов'));
   const last = S.mtLast && typeof S.mtLast === 'object' ? S.mtLast : {};
   const st = { size: 20, on: {}, counts: {}, points: {}, order: kinds.slice(), more: false };
   if (Array.isArray(last.order)) st.order = last.order.filter(c => kinds.includes(c)).concat(kinds.filter(c => !last.order.includes(c)));
@@ -2506,43 +3117,43 @@ function openMakeTest() {
   function fitSize() { if (typeof st.size === 'number' && st.size > room()) st.size = 'all'; }
   fitSize(); spread();
   const qw = n => n + ' ' + plural(n, 'вопрос', 'вопроса', 'вопросов');
-  const ptsText = () => { const p = picked().map(c => st.points[c]); return p.every(x => x === p[0]) ? 'За каждый верный ответ — ' + bw(p[0]) + '.' : 'За разные вопросы — разные баллы.'; };
+  const ptsText = () => { const p = picked().map(c => st.points[c]); return p.every(x => x === p[0]) ? T('За каждый верный ответ — {0}.', bw(p[0])) : T('За разные вопросы — разные баллы.'); };
   const bw = n => n + ' ' + plural(n, 'балл', 'балла', 'баллов');
-  const num = (kind, c, v, max, label) => `<span class="mt-num"><button type="button" class="sq-btn" data-s="${kind}-" data-cat="${c}" aria-label="${label}: меньше"${v <= 0 ? ' disabled' : ''}>${I.minus}</button><input class="num-in" data-num="${kind}" data-cat="${c}" inputmode="numeric" pattern="[0-9]*" value="${v}" aria-label="${label}"><button type="button" class="sq-btn" data-s="${kind}+" data-cat="${c}" aria-label="${label}: больше"${v >= max ? ' disabled' : ''}>${I.plus}</button></span>`;
+  const num = (kind, c, v, max, label) => `<span class="mt-num"><button type="button" class="sq-btn" data-s="${kind}-" data-cat="${c}" aria-label="${T('{0}: меньше', label)}"${v <= 0 ? ' disabled' : ''}>${I.minus}</button><input class="num-in" data-num="${kind}" data-cat="${c}" inputmode="numeric" pattern="[0-9]*" value="${v}" aria-label="${label}"><button type="button" class="sq-btn" data-s="${kind}+" data-cat="${c}" aria-label="${T('{0}: больше', label)}"${v >= max ? ' disabled' : ''}>${I.plus}</button></span>`;
   const head = (n, t, sub = '') => `<div class="mt-h"><span class="mt-n">${n}</span><span>${t}${sub ? `<small>${sub}</small>` : ''}</span></div>`;
   const bodyHTML = () => {
     const k = picked(), max = room();
     let h = '';
     if (S.test) {
       const n = currentItems().length;
-      h += `<div class="mt-now"><div><b>Сейчас идёт тест</b> — вопрос ${Math.min(S.index + 1, n)} из ${n}. Новый тест заменит его.</div><button type="button" class="mt-end" data-s="end">Завершить текущий тест</button></div>`;
+      h += `<div class="mt-now"><div><b>${T('Сейчас идёт тест')}</b> — ${T('вопрос {0} из {1}. Новый тест заменит его.', Math.min(S.index + 1, n), n)}</div><button type="button" class="mt-end" data-s="end">${T('Завершить текущий тест')}</button></div>`;
     }
     // 1. how many
-    h += `<section class="mt-sec">${head(1, 'Сколько вопросов?', 'Выпадут случайно из файла «' + esc(setTitle(curSet())) + '»')}<div class="mt-sizes" role="radiogroup" aria-label="Сколько вопросов">`;
-    for (const n of MT_SIZES) h += `<button type="button" class="mt-size${st.size === n ? ' on' : ''}" data-s="size" data-n="${n}" role="radio" aria-checked="${st.size === n}"${n > max ? ' disabled' : ''}><b>${n}</b><small>вопр.</small></button>`;
-    h += `<button type="button" class="mt-size${st.size === 'all' ? ' on' : ''}" data-s="size" data-n="all" role="radio" aria-checked="${st.size === 'all'}"><b>Все</b><small>${max}</small></button></div></section>`;
+    h += `<section class="mt-sec">${head(1, T('Сколько вопросов?'), T('Выпадут случайно из файла «{0}»', esc(setTitle(curSet()))))}<div class="mt-sizes" role="radiogroup" aria-label="${T('Сколько вопросов')}">`;
+    for (const n of MT_SIZES) h += `<button type="button" class="mt-size${st.size === n ? ' on' : ''}" data-s="size" data-n="${n}" role="radio" aria-checked="${st.size === n}"${n > max ? ' disabled' : ''}><b>${n}</b><small>${T('вопр.')}</small></button>`;
+    h += `<button type="button" class="mt-size${st.size === 'all' ? ' on' : ''}" data-s="size" data-n="all" role="radio" aria-checked="${st.size === 'all'}"><b>${T('Все')}</b><small>${max}</small></button></div></section>`;
     // 2. which kinds
-    h += `<section class="mt-sec">${head(2, 'Какие вопросы?', kinds.length > 1 ? 'Снимите галочку, если такие не нужны' : '')}<div class="mt-list">`;
+    h += `<section class="mt-sec">${head(2, T('Какие вопросы?'), kinds.length > 1 ? T('Снимите галочку, если такие не нужны') : '')}<div class="mt-list">`;
     for (const c of kinds) {
       const on = st.on[c];
-      h += `<div class="mt-row${on ? ' on' : ''}" data-row="${c}"><button type="button" class="mt-pick" data-s="pick" data-cat="${c}" role="checkbox" aria-checked="${on}"${on && k.length === 1 ? ' aria-disabled="true"' : ''}><span class="mt-box">${I.check}</span><span class="mt-name">${CAT_TITLE[c]}<small>${MT_HINT[c]}<span class="mt-av"> · в файле ${avail(c)}</span></small></span></button>${on ? num('cnt', c, st.counts[c], avail(c), 'Сколько вопросов: ' + CAT_TITLE[c]) : ''}</div>`;
+      h += `<div class="mt-row${on ? ' on' : ''}" data-row="${c}"><button type="button" class="mt-pick" data-s="pick" data-cat="${c}" role="checkbox" aria-checked="${on}"${on && k.length === 1 ? ' aria-disabled="true"' : ''}><span class="mt-box">${I.check}</span><span class="mt-name">${CAT_TITLE[c]}<small>${T(MT_HINT[c])}<span class="mt-av"> · ${T('в файле {0}', avail(c))}</span></small></span></button>${on ? num('cnt', c, st.counts[c], avail(c), T('Сколько вопросов: {0}', CAT_TITLE[c])) : ''}</div>`;
     }
     h += '</div></section>';
     // 3. points (and the order of the kinds) — most people never need it
-    h += `<section class="mt-sec">${head(3, 'Баллы', 'Можно не менять')}<div class="mt-pts" id="mtPts">${ptsText()}</div>`;
-    h += `<button type="button" class="mt-more" data-s="more" aria-expanded="${st.more}">${st.more ? 'Скрыть' : 'Изменить баллы' + (k.length > 1 ? ' и порядок' : '')}${st.more ? I.up : I.chevD}</button>`;
+    h += `<section class="mt-sec">${head(3, T('Баллы'), T('Можно не менять'))}<div class="mt-pts" id="mtPts">${ptsText()}</div>`;
+    h += `<button type="button" class="mt-more" data-s="more" aria-expanded="${st.more}">${st.more ? T('Скрыть') : k.length > 1 ? T('Изменить баллы и порядок') : T('Изменить баллы')}${st.more ? I.up : I.chevD}</button>`;
     if (st.more) {
-      h += `<div class="mt-adv">${k.length > 1 ? '<div class="mt-advhint">Разделы идут в тесте в этом порядке — сверху вниз.</div>' : ''}`;
+      h += `<div class="mt-adv">${k.length > 1 ? T('<div class="mt-advhint">Разделы идут в тесте в этом порядке — сверху вниз.</div>') : ''}`;
       k.forEach((c, i) => {
-        h += `<div class="mt-arow" data-arow="${c}"><div class="mt-atop"><span class="mt-aname">${CAT_TITLE[c]}</span>${k.length > 1 ? `<span class="mt-ord"><button type="button" class="sq-btn" data-s="up" data-cat="${c}" aria-label="«${CAT_TITLE[c]}» раньше"${i === 0 ? ' disabled' : ''}>${I.up}</button><button type="button" class="sq-btn" data-s="down" data-cat="${c}" aria-label="«${CAT_TITLE[c]}» позже"${i === k.length - 1 ? ' disabled' : ''}>${I.down}</button></span>` : ''}</div><div class="mt-apts"><span>Баллов за вопрос</span>${num('pts', c, st.points[c], 100, 'Баллов за вопрос: ' + CAT_TITLE[c])}</div></div>`;
+        h += `<div class="mt-arow" data-arow="${c}"><div class="mt-atop"><span class="mt-aname">${CAT_TITLE[c]}</span>${k.length > 1 ? `<span class="mt-ord"><button type="button" class="sq-btn" data-s="up" data-cat="${c}" aria-label="${T('«{0}» раньше', CAT_TITLE[c])}"${i === 0 ? ' disabled' : ''}>${I.up}</button><button type="button" class="sq-btn" data-s="down" data-cat="${c}" aria-label="${T('«{0}» позже', CAT_TITLE[c])}"${i === k.length - 1 ? ' disabled' : ''}>${I.down}</button></span>` : ''}</div><div class="mt-apts"><span>${T('Баллов за вопрос')}</span>${num('pts', c, st.points[c], 100, T('Баллов за вопрос: {0}', CAT_TITLE[c]))}</div></div>`;
       });
       h += '</div>';
     }
     return h + '</section>';
   };
-  const html = `<div class="sheet-head"><button type="button" class="mt-x" data-s="close" aria-label="Закрыть">${I.x}</button><div class="mt-htitle">Новый тест<small>${esc(setTitle(curSet()))}</small></div><span></span></div>
+  const html = `<div class="sheet-head"><button type="button" class="mt-x" data-s="close" aria-label="${T('Закрыть')}">${I.x}</button><div class="mt-htitle">${T('Новый тест')}<small>${esc(setTitle(curSet()))}</small></div><span></span></div>
 <div class="sheet-body mt-body" id="mtBody"></div>
-<div class="mt-foot"><div class="mt-sum" id="mtSum" aria-live="polite"></div><button type="button" class="act green wide mt-start" data-s="start" id="mtStart">${I.play}Начать тест</button></div>`;
+<div class="mt-foot"><div class="mt-sum" id="mtSum" aria-live="polite"></div><button type="button" class="act green wide mt-start" data-s="start" id="mtStart">${I.play}${T('Начать тест')}</button></div>`;
   const sh = openSheet({
     cls: 'full mt', html,
     onClick: (id, el, e, close) => {
@@ -2553,12 +3164,12 @@ function openMakeTest() {
         const [q] = totals();
         if (!q) return;
         S.mtLast = { size: st.size, off: kinds.filter(x => !st.on[x]), counts: { ...st.counts }, points: { ...st.points }, order: st.order.slice() };
-        if (startTest(picked().map(cat => ({ cat, count: st.counts[cat], points: st.points[cat] })), true)) { close(); closeDrawer(); renderAll(); toast('Тест начат: ' + qw(currentItems().length)); }
+        if (startTest(picked().map(cat => ({ cat, count: st.counts[cat], points: st.points[cat] })), true)) { close(); closeDrawer(); renderAll(); toast(T('Тест начат: {0}', qw(currentItems().length))); }
         return;
       }
       if (id === 'size') { st.size = el.dataset.n === 'all' ? 'all' : +el.dataset.n; spread(); }
       if (id === 'pick') {
-        if (st.on[c] && picked().length === 1) return toast('Нужен хотя бы один вид вопросов');
+        if (st.on[c] && picked().length === 1) return toast(T('Нужен хотя бы один вид вопросов'));
         st.on[c] = !st.on[c];
         if (st.size === null) st.counts[c] = st.on[c] ? Math.min(avail(c), 5) : 0;
         fitSize(); spread();
@@ -2582,7 +3193,7 @@ function openMakeTest() {
   const sum = sh.panel.querySelector('#mtSum'), go = sh.panel.querySelector('#mtStart');
   const sync = () => {
     const [q, p] = totals();
-    sum.textContent = q ? qw(q) + ' · максимум ' + bw(p) : 'Выберите, сколько вопросов';
+    sum.textContent = q ? qw(q) + ' · ' + T('максимум {0}', bw(p)) : T('Выберите, сколько вопросов');
     const pt = body.querySelector('#mtPts'); if (pt) pt.textContent = ptsText();
     go.disabled = !q;
     // −/+ in place (no redraw, so a tap right after typing is not lost); sizes follow a typed count
@@ -2639,35 +3250,35 @@ function openAddSub(caseId) {
   const add = (act, label) => `<button type="button" class="f-add" data-s="${act}">${I.plus}${label}</button>`;
   const del = (act, i, label) => `<button type="button" class="f-del" data-s="${act}" data-i="${i}" aria-label="${label}">${I.minus}</button>`;
   const bodyHTML = () => {
-    let h = '<div class="sec-label">Тип вопроса</div><div class="chips">' + SUB_TYPES.map(([t, short]) => `<button type="button" class="chip${type === t ? ' on' : ''}" data-s="type" data-t="${t}" aria-pressed="${type === t}">${I.sub[t]}<span>${short}</span></button>`).join('') + '</div>';
-    h += `<div class="sec-label">Вопрос</div><textarea class="f-in f-prompt" data-f="prompt" rows="2" placeholder="Текст вопроса" aria-label="Текст вопроса">${esc(m.prompt)}</textarea>`;
+    let h = '<div class="sec-label">' + T('Тип вопроса') + '</div><div class="chips">' + SUB_TYPES.map(([t, short]) => `<button type="button" class="chip${type === t ? ' on' : ''}" data-s="type" data-t="${t}" aria-pressed="${type === t}">${I.sub[t]}<span>${T(short)}</span></button>`).join('') + '</div>';
+    h += `<div class="sec-label">${T('Вопрос')}</div><textarea class="f-in f-prompt" data-f="prompt" rows="2" placeholder="${T('Текст вопроса')}" aria-label="${T('Текст вопроса')}">${esc(m.prompt)}</textarea>`;
     if (type === 'single' || type === 'multiple') {
-      h += `<div class="sec-label">${type === 'single' ? 'Варианты (отметьте один верный)' : 'Варианты (отметьте верные)'}</div>`;
-      h += m.options.map((o, i) => `<div class="f-line"><button type="button" class="f-mark" data-s="opt-ok" data-i="${i}" aria-pressed="${o.correct}" aria-label="Верный вариант ${i + 1}">${type === 'single' ? (o.correct ? I.radioOn : I.radioOff) : (o.correct ? I.boxOn : I.boxOff)}</button><input class="f-in" data-f="opt" data-i="${i}" value="${esc(o.text)}" placeholder="Вариант ${i + 1}" aria-label="Вариант ${i + 1}">${m.options.length > 2 ? del('opt-del', i, 'Удалить вариант') : ''}</div>`).join('');
-      h += add('opt-add', 'Добавить вариант');
+      h += `<div class="sec-label">${type === 'single' ? T('Варианты (отметьте один верный)') : T('Варианты (отметьте верные)')}</div>`;
+      h += m.options.map((o, i) => `<div class="f-line"><button type="button" class="f-mark" data-s="opt-ok" data-i="${i}" aria-pressed="${o.correct}" aria-label="${T('Верный вариант {0}', i + 1)}">${type === 'single' ? (o.correct ? I.radioOn : I.radioOff) : (o.correct ? I.boxOn : I.boxOff)}</button><input class="f-in" data-f="opt" data-i="${i}" value="${esc(o.text)}" placeholder="${T('Вариант {0}', i + 1)}" aria-label="${T('Вариант {0}', i + 1)}">${m.options.length > 2 ? del('opt-del', i, T('Удалить вариант')) : ''}</div>`).join('');
+      h += add('opt-add', T('Добавить вариант'));
     } else if (type === 'sortable') {
-      h += '<div class="sec-label">Элементы в правильном порядке</div>';
-      h += m.order.map((v, i) => `<div class="f-line"><span class="f-num">${i + 1}.</span><input class="f-in" data-f="ord" data-i="${i}" value="${esc(v)}" placeholder="Элемент ${i + 1}" aria-label="Элемент ${i + 1}">${m.order.length > 2 ? del('ord-del', i, 'Удалить элемент') : ''}</div>`).join('');
-      h += add('ord-add', 'Добавить элемент');
+      h += T('<div class="sec-label">Элементы в правильном порядке</div>');
+      h += m.order.map((v, i) => `<div class="f-line"><span class="f-num">${i + 1}.</span><input class="f-in" data-f="ord" data-i="${i}" value="${esc(v)}" placeholder="${T('Элемент {0}', i + 1)}" aria-label="${T('Элемент {0}', i + 1)}">${m.order.length > 2 ? del('ord-del', i, T('Удалить элемент')) : ''}</div>`).join('');
+      h += add('ord-add', T('Добавить элемент'));
     } else if (type === 'dropdown') {
       const ch = uniq(m.choices.map(tr).filter(Boolean));
-      h += '<div class="sec-label">Все варианты в выпадающем списке</div>';
-      h += m.choices.map((v, i) => `<div class="f-line"><input class="f-in" data-f="choice" data-i="${i}" value="${esc(v)}" placeholder="Вариант выбора ${i + 1}" aria-label="Вариант выбора ${i + 1}">${m.choices.length > 1 ? del('ch-del', i, 'Удалить вариант выбора') : ''}</div>`).join('');
-      h += add('ch-add', 'Добавить вариант выбора') + '<div class="f-hr"></div><div class="sec-label">Строки</div>';
-      h += m.rows.map((r, i) => `<div class="f-card"><div class="f-card-head"><span>Строка ${i + 1}</span>${m.rows.length > 1 ? `<button type="button" data-s="row-del" data-i="${i}">Удалить строку</button>` : ''}</div><input class="f-in" data-f="left" data-i="${i}" value="${esc(r.left)}" placeholder="Текст слева, например «Кислород —»" aria-label="Текст строки ${i + 1}"><div class="f-sel"><span>Правильный выбор:</span>${ch.length ? `<select data-f="val" data-i="${i}" aria-label="Правильный выбор для строки ${i + 1}"><option value="">Выбрать</option>${ch.map(c => `<option value="${esc(c)}"${c === tr(r.value) ? ' selected' : ''}>${esc(c)}</option>`).join('')}</select>` : '<span class="f-warn">Добавьте варианты выше</span>'}</div></div>`).join('');
-      h += add('row-add', 'Добавить строку');
+      h += T('<div class="sec-label">Все варианты в выпадающем списке</div>');
+      h += m.choices.map((v, i) => `<div class="f-line"><input class="f-in" data-f="choice" data-i="${i}" value="${esc(v)}" placeholder="${T('Вариант выбора {0}', i + 1)}" aria-label="${T('Вариант выбора {0}', i + 1)}">${m.choices.length > 1 ? del('ch-del', i, T('Удалить вариант выбора')) : ''}</div>`).join('');
+      h += add('ch-add', T('Добавить вариант выбора')) + '<div class="f-hr"></div><div class="sec-label">' + T('Строки') + '</div>';
+      h += m.rows.map((r, i) => `<div class="f-card"><div class="f-card-head"><span>${T('Строка {0}', i + 1)}</span>${m.rows.length > 1 ? `<button type="button" data-s="row-del" data-i="${i}">${T('Удалить строку')}</button>` : ''}</div><input class="f-in" data-f="left" data-i="${i}" value="${esc(r.left)}" placeholder="${T('Текст слева, например «Кислород —»')}" aria-label="${T('Текст строки {0}', i + 1)}"><div class="f-sel"><span>${T('Правильный выбор:')}</span>${ch.length ? `<select data-f="val" data-i="${i}" aria-label="${T('Правильный выбор для строки {0}', i + 1)}"><option value="">${T('Выбрать')}</option>${ch.map(c => `<option value="${esc(c)}"${c === tr(r.value) ? ' selected' : ''}>${esc(c)}</option>`).join('')}</select>` : T('<span class="f-warn">Добавьте варианты выше</span>')}</div></div>`).join('');
+      h += add('row-add', T('Добавить строку'));
     } else {
-      h += '<div class="sec-label">Варианты правильного ответа</div>';
-      h += m.answers.map((v, i) => `<div class="f-line"><input class="f-in" data-f="ans" data-i="${i}" value="${esc(v)}" placeholder="Ответ ${i + 1}" autocapitalize="off" aria-label="Ответ ${i + 1}">${m.answers.length > 1 ? del('ans-del', i, 'Удалить ответ') : ''}</div>`).join('');
-      h += add('ans-add', 'Добавить правильный ответ');
+      h += T('<div class="sec-label">Варианты правильного ответа</div>');
+      h += m.answers.map((v, i) => `<div class="f-line"><input class="f-in" data-f="ans" data-i="${i}" value="${esc(v)}" placeholder="${T('Ответ {0}', i + 1)}" autocapitalize="off" aria-label="${T('Ответ {0}', i + 1)}">${m.answers.length > 1 ? del('ans-del', i, T('Удалить ответ')) : ''}</div>`).join('');
+      h += add('ans-add', T('Добавить правильный ответ'));
     }
     const existing = customSubsOf(caseId);
     if (existing.length) {
-      h += '<div class="sec-label">Ваши вопросы</div>' + existing.map(s => `<div class="exist"><div class="exist-txt"><b>${esc(s.prompt)}</b><span>${esc(SUB_TITLE[s.type] || '')}. Ответ: ${esc(answerText(subToQ(s), true).replace(/\n/g, '; '))}</span></div><button type="button" class="f-del" data-s="exist-del" data-id="${esc(s.id)}" aria-label="Удалить вопрос">${I.trash}</button></div>`).join('');
+      h += '<div class="sec-label">' + T('Ваши вопросы') + '</div>' + existing.map(s => `<div class="exist"><div class="exist-txt"><b>${esc(s.prompt)}</b><span>${esc(T(SUB_TITLE[s.type] || ''))}. ${T('Ответ:')} ${esc(answerText(subToQ(s), true).replace(/\n/g, '; '))}</span></div><button type="button" class="f-del" data-s="exist-del" data-id="${esc(s.id)}" aria-label="${T('Удалить вопрос')}">${I.trash}</button></div>`).join('');
     }
     return h;
   };
-  const html = `<div class="sheet-head"><button type="button" class="head-btn" data-s="close">Закрыть</button><div class="head-title">Добавить вопрос</div><button type="button" class="head-btn end" data-s="add" id="asTop">Добавить</button></div><div class="sheet-body" id="asBody"></div><div class="sheet-foot"><button type="button" class="act green wide" data-s="add" id="asBtn">${I.plus}Добавить вопрос</button></div>`;
+  const html = `<div class="sheet-head"><button type="button" class="head-btn" data-s="close">${T('Закрыть')}</button><div class="head-title">${T('Добавить вопрос')}</div><button type="button" class="head-btn end" data-s="add" id="asTop">${T('Добавить')}</button></div><div class="sheet-body" id="asBody"></div><div class="sheet-foot"><button type="button" class="act green wide" data-s="add" id="asBtn">${I.plus}${T('Добавить вопрос')}</button></div>`;
   const sh = openSheet({
     cls: 'full', html,
     onClick: (id, el, e, close) => {
@@ -2704,7 +3315,7 @@ function openAddSub(caseId) {
           if (it && it.id === caseId) mut(caseId, r => { r.checked = false; r.reveal = false; });
           m = fresh();
           save(); render();
-          toast('Вопрос добавлен в кейс');
+          toast(T('Вопрос добавлен в кейс'));
           break;
         }
       }
@@ -2744,7 +3355,7 @@ const ACT = {
   'reveal': () => { if (needsSignup()) return openAuth(); reveal(); render(); },
   'm-tg': (el, e) => {
     // the link opens Telegram; this page waits for «Запустить»
-    if (navigator.onLine === false) { e.preventDefault(); return toast('Нет связи с интернетом'); }
+    if (navigator.onLine === false) { e.preventDefault(); return toast(T('Нет связи с интернетом')); }
     const code = new URL(el.href).searchParams.get('start');
     tgPending(code);
     const was = drawerOpen; closeDrawer();
@@ -2759,11 +3370,11 @@ const ACT = {
   },
   'toggle-auto': () => {
     S.autoAdvance = !S.autoAdvance; save(); renderAll();
-    toast(S.autoAdvance ? 'Автопереход включён: после верного ответа — следующий вопрос' : 'Автопереход выключен: после верного ответа вопрос перемешается');
+    toast(S.autoAdvance ? T('Автопереход включён: после верного ответа — следующий вопрос') : T('Автопереход выключен: после верного ответа вопрос перемешается'));
   },
   'add-sub': () => { const it = currentItem(); if (it && it.kind === 'case') openAddSub(it.id); },
   'del-sub': async el => {
-    const r = await dialog({ title: 'Удалить ваш вопрос?', buttons: [{ id: 'cancel', label: 'Отмена' }, { id: 'ok', label: 'Удалить', kind: 'danger' }] });
+    const r = await dialog({ title: T('Удалить ваш вопрос?'), buttons: [{ id: 'cancel', label: T('Отмена') }, { id: 'ok', label: T('Удалить'), kind: 'danger' }] });
     if (r.id !== 'ok') return;
     const c = el.dataset.case;
     S.customSubs[c] = customSubsOf(c).filter(s => s.id !== el.dataset.sub);
@@ -2776,7 +3387,7 @@ const ACT = {
   'm-star-cat': el => { selectStarred(el.dataset.cat); closeDrawer(); render(); },
   'm-star-clear': async el => {
     const c = el.dataset.cat;
-    const r = await dialog({ title: 'Очистить избранное?', message: 'Звёздочки в категории «' + CAT_TITLE[c] + '» будут сняты.', buttons: [{ id: 'cancel', label: 'Отмена' }, { id: 'ok', label: 'Очистить', kind: 'danger' }] });
+    const r = await dialog({ title: T('Очистить избранное?'), message: T('Звёздочки в категории «{0}» будут сняты.', CAT_TITLE[c]), buttons: [{ id: 'cancel', label: T('Отмена') }, { id: 'ok', label: T('Очистить'), kind: 'danger' }] });
     if (r.id !== 'ok') return;
     const ids = new Set((bank.byCat[c] || []).map(it => it.id));
     const left = (S.starred[S.setId] || []).filter(id => !ids.has(id));
@@ -2788,15 +3399,15 @@ const ACT = {
   'm-saved': async el => {
     const t = S.savedTests.find(x => x.id === el.dataset.id);
     if (!t) return;
-    if (!SETS.some(s => s.id === t.setId)) return toast('Файл этого теста удалён');
+    if (!SETS.some(s => s.id === t.setId)) return toast(T('Файл этого теста удалён'));
     if (S.setId !== t.setId) { selectSet(t.setId); render(); await loadingPromise; }
-    if (!bankReady()) return toast('Файл теста не открылся');
+    if (!bankReady()) return toast(T('Файл теста не открылся'));
     if (startTest(t.configs, false)) { closeDrawer(); renderAll(); toast(t.title + ': ' + currentItems().length + ' ' + plural(currentItems().length, 'вопрос', 'вопроса', 'вопросов')); }
   },
   'm-saved-del': async el => {
     const t = S.savedTests.find(x => x.id === el.dataset.id);
     if (!t) return;
-    const r = await dialog({ title: 'Удалить «' + t.title + '»?', buttons: [{ id: 'cancel', label: 'Отмена' }, { id: 'ok', label: 'Удалить', kind: 'danger' }] });
+    const r = await dialog({ title: T('Удалить «{0}»?', t.title), buttons: [{ id: 'cancel', label: T('Отмена') }, { id: 'ok', label: T('Удалить'), kind: 'danger' }] });
     if (r.id === 'ok') { S.savedTests = S.savedTests.filter(x => x.id !== t.id); save(); renderMenuBody(); }
   },
   'm-result': el => { selectItem(el.dataset.cat, el.dataset.id); elSearch.value = ''; closeDrawer(); render(); },
@@ -2805,6 +3416,7 @@ const ACT = {
   'm-font-reset': () => setFont(1),
   'm-course': el => { S.course = +el.dataset.c; save(); renderMenuBody(); },
   'm-fac': () => { const was = drawerOpen; closeDrawer(); setTimeout(() => openFac(), was ? 300 : 0); }, // let the menu slide away first
+  'm-lang': () => { const was = drawerOpen; closeDrawer(); setTimeout(() => openLang(), was ? 300 : 0); },
   'm-settings': el => {
     settingsOpen = !settingsOpen;
     const sec = el.closest('.m-set');
@@ -2814,7 +3426,7 @@ const ACT = {
   },
   'm-tour': () => {
     const name = TOURS.main.when() ? 'main' : TOURS.intro.when() ? 'intro' : '';
-    if (!name) return toast('Откройте любой вопрос — и обучение покажет, как заниматься');
+    if (!name) return toast(T('Откройте любой вопрос — и обучение покажет, как заниматься'));
     const wasOpen = drawerOpen;
     closeDrawer();
     setTimeout(() => startTour(name), wasOpen ? 300 : 0); // let the menu slide away first
@@ -2836,8 +3448,8 @@ document.addEventListener('keydown', e => {
   if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   const press = sel => { const b = document.querySelector(sel); if (b && !b.disabled) { e.preventDefault(); b.click(); } };
-  if (e.key === 'ArrowRight') { goNext(); render(); }
-  else if (e.key === 'ArrowLeft') { goPrev(); render(); }
+  if (e.key === (isRtl() ? 'ArrowLeft' : 'ArrowRight')) { goNext(); render(); }
+  else if (e.key === (isRtl() ? 'ArrowRight' : 'ArrowLeft')) { goPrev(); render(); }
   else if (/^[1-9]$/.test(e.key)) press(`#content .choice[data-key="${e.key}"]`);
   // Enter checks — unless focus is on some other button, which Enter should press as usual.
   else if (e.key === 'Enter') { const t = e.target.closest && e.target.closest('button, a, label, summary, [role="button"]'); if (!t || t.classList.contains('choice')) press('[data-act="check"]'); }
@@ -2857,7 +3469,7 @@ let dropEl = null;
 window.addEventListener('dragover', e => {
   if (!e.dataTransfer || ![...e.dataTransfer.types].includes('Files')) return;
   e.preventDefault();
-  if (!dropEl) { dropEl = document.createElement('div'); dropEl.className = 'dropzone'; dropEl.textContent = 'Отпустите JSON, чтобы загрузить'; document.body.appendChild(dropEl); }
+  if (!dropEl) { dropEl = document.createElement('div'); dropEl.className = 'dropzone'; dropEl.textContent = T('Отпустите JSON, чтобы загрузить'); document.body.appendChild(dropEl); }
 });
 window.addEventListener('dragleave', e => { if (dropEl && (e.clientX <= 0 || e.clientY <= 0 || e.clientX >= innerWidth || e.clientY >= innerHeight)) { dropEl.remove(); dropEl = null; } });
 window.addEventListener('drop', e => {
@@ -2925,7 +3537,7 @@ elScroller.addEventListener('touchstart', e => {
 }, { passive: true });
 elScroller.addEventListener('touchend', e => {
   if (!sw) return;
-  const t = e.changedTouches[0], dx = t.clientX - sw.x, dy = t.clientY - sw.y, x0 = sw.x;
+  const t = e.changedTouches[0], r = isRtl(), dx = (t.clientX - sw.x) * (r ? -1 : 1), dy = t.clientY - sw.y, x0 = r ? innerWidth - sw.x : sw.x;
   sw = null;
   if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
   if (dx > 0 && x0 < 28) { openDrawer(); return; }
@@ -2937,7 +3549,7 @@ let dsw = null;
 elDrawer.addEventListener('touchstart', e => { const t = e.touches[0]; dsw = { x: t.clientX, y: t.clientY }; }, { passive: true });
 elDrawer.addEventListener('touchend', e => {
   if (!dsw) return;
-  const t = e.changedTouches[0], dx = t.clientX - dsw.x, dy = t.clientY - dsw.y;
+  const t = e.changedTouches[0], dx = (t.clientX - dsw.x) * (isRtl() ? -1 : 1), dy = t.clientY - dsw.y;
   dsw = null;
   if (dx < -60 && Math.abs(dx) > Math.abs(dy) * 1.3) closeDrawer();
 }, { passive: true });
@@ -3026,18 +3638,18 @@ const KB = window.matchMedia('(hover: hover) and (pointer: fine)');
 const RM = window.matchMedia('(prefers-reduced-motion: reduce)');
 const questionHint = () => {
   const it = currentItem(), k = it && it.kind;
-  if (k === 'multiple') return 'Здесь правильных ответов несколько — отметьте все. Попробуйте прямо сейчас.';
-  if (k === 'text') return 'Впишите ответ в поле. Заглавные буквы и лишние пробелы не важны.';
-  if (k === 'dropdown') return 'Для каждой строки выберите ответ из списка.';
-  if (k === 'sortable') return 'Расставьте пункты по порядку: тяните за значок справа.';
-  if (k === 'case') return 'Кейс: общее условие и несколько вопросов к нему. Ответьте на каждый.';
-  return 'Нажмите на вариант, чтобы выбрать. Попробуйте прямо сейчас.';
+  if (k === 'multiple') return T('Здесь правильных ответов несколько — отметьте все. Попробуйте прямо сейчас.');
+  if (k === 'text') return T('Впишите ответ в поле. Заглавные буквы и лишние пробелы не важны.');
+  if (k === 'dropdown') return T('Для каждой строки выберите ответ из списка.');
+  if (k === 'sortable') return T('Расставьте пункты по порядку: тяните за значок справа.');
+  if (k === 'case') return T('Кейс: общее условие и несколько вопросов к нему. Ответьте на каждый.');
+  return T('Нажмите на вариант, чтобы выбрать. Попробуйте прямо сейчас.');
 };
 const TOURS = {
   intro: {
     when: () => bankStatus !== 'boot' && !SETS.length,
     steps: [
-      { title: 'Тренажёр тестов', text: () => facEmpty() ? 'Для ' + curFac().gen + ' тестов пока нет — их скоро добавят. А пока можно загрузить свой файл.' : 'Сначала загрузим файл.', go: 'Начать' },
+      { title: 'Тренажёр тестов', text: () => facEmpty() ? T('Для {0} тестов пока нет — их скоро добавят. А пока можно загрузить свой файл.', curFac().gen) : T('Сначала загрузим файл.'), go: 'Начать' },
       { el: '#content .state label.act', title: 'Загрузите файл', text: 'Выберите JSON в «Файлах», iCloud Drive или сохранённый из Telegram. Можно сразу несколько.', allow: 'label', end: true }
     ]
   },
@@ -3046,11 +3658,11 @@ const TOURS = {
     steps: [
       { title: 'Как заниматься', text: 'Покажу главное за полминуты. Обучение всегда можно открыть снова в настройках.', go: 'Показать' },
       { el: () => (currentItem() || {}).kind === 'case' ? '#content' : '#content .q', clip: '#scroller', title: 'Вопрос', text: questionHint, allow: '.choice, textarea' },
-      { el: '#actionsRow', title: 'Проверить и подглядеть', text: () => '«Проверить» подсветит верные ответы зелёным, ошибки — красным. Глаз покажет ответ без проверки.' + (KB.matches ? ' Клавиши: Enter и П.' : ''), allow: '[data-act="check"], [data-act="reveal"]' },
-      { el: '#nextBtn', title: 'Дальше', text: () => KB.matches ? 'Листайте стрелками здесь или клавишами ← и →. Если держать кнопку, вопросы листаются быстро.' : 'Листайте стрелками или свайпом по вопросу. Если держать кнопку, вопросы листаются быстро.', allow: '#nextBtn' },
+      { el: '#actionsRow', title: 'Проверить и подглядеть', text: () => T('«Проверить» подсветит верные ответы зелёным, ошибки — красным. Глаз покажет ответ без проверки.') + (KB.matches ? ' ' + T('Клавиши: Enter и П.') : ''), allow: '[data-act="check"], [data-act="reveal"]' },
+      { el: '#nextBtn', title: 'Дальше', text: () => KB.matches ? T('Листайте стрелками здесь или клавишами ← и →. Если держать кнопку, вопросы листаются быстро.') : T('Листайте стрелками или свайпом по вопросу. Если держать кнопку, вопросы листаются быстро.'), allow: '#nextBtn' },
       { el: '#counter', title: 'Номер вопроса', text: 'Здесь видно, какой это вопрос и из какого файла. Нажмите, чтобы перейти к вопросу по номеру.' },
       { el: '#topActions', title: 'Автопереход и избранное', text: 'Переключатель после верного ответа сразу открывает следующий вопрос. Звёздочка добавляет вопрос в избранное.', allow: '[data-act="toggle-auto"], [data-act="star"]' },
-      { el: () => sidebarShown() ? '#drawer' : '#menuBtn', title: 'Меню', text: () => sidebarShown() ? 'Слева — категории, поиск, избранное, тесты, файлы и настройки. Клавиша / сразу открывает поиск.' : docked() ? 'Эта кнопка показывает и прячет боковую панель: категории, поиск, избранное, тесты, файлы и настройки.' : 'Категории, поиск, избранное, тесты, файлы и настройки. Меню открывается и свайпом от левого края.', allow: '#menuBtn', end: true }
+      { el: () => sidebarShown() ? '#drawer' : '#menuBtn', title: 'Меню', text: () => sidebarShown() ? T('Слева — категории, поиск, избранное, тесты, файлы и настройки. Клавиша / сразу открывает поиск.') : docked() ? T('Эта кнопка показывает и прячет боковую панель: категории, поиск, избранное, тесты, файлы и настройки.') : T('Категории, поиск, избранное, тесты, файлы и настройки. Меню открывается и свайпом от левого края.'), allow: '#menuBtn', end: true }
     ]
   }
 };
@@ -3058,7 +3670,7 @@ let tour = null, tourTimer = 0;
 const tourFree = () => !tour && !drawerOpen && !anySheet() && !document.querySelector('.busy') && document.visibilityState === 'visible';
 // Called after every render: start a tour the person hasn't seen yet, once the screen has settled.
 function tourSoon() {
-  if (tour || tourTimer || bankStatus === 'boot' || Account.blocked()) return;
+  if (tour || tourTimer || bankStatus === 'boot' || Account.blocked() || onboarding()) return;
   const name = !S.tour.intro && TOURS.intro.when() ? 'intro' : !S.tour.main && TOURS.main.when() ? 'main' : '';
   if (!name) return;
   tourTimer = setTimeout(() => { tourTimer = 0; if (!S.tour[name] && TOURS[name].when() && tourFree()) startTour(name); }, 700);
@@ -3073,7 +3685,7 @@ function startTour(name) {
   root.setAttribute('aria-modal', 'true');
   root.setAttribute('aria-labelledby', 'tourTitle');
   root.innerHTML = `<div class="tour-safe"></div><div class="tour-hole none"></div><div class="tour-card"><div class="tour-pop">
-<button type="button" class="tour-x" data-tour="skip" aria-label="Закрыть обучение">${I.x}</button>
+<button type="button" class="tour-x" data-tour="skip" aria-label="${T('Закрыть обучение')}">${I.x}</button>
 <div class="tour-body" aria-live="polite"><h2 id="tourTitle"></h2><p></p></div>
 <div class="tour-foot"><div class="tour-dots" aria-hidden="true">${steps.map(() => '<span></span>').join('')}</div><div class="tour-btns"><button type="button" class="tour-btn" data-tour="back"></button><button type="button" class="tour-btn pri" data-tour="next"></button></div></div>
 </div></div>`;
@@ -3097,15 +3709,15 @@ function startTour(name) {
 function tourShow(i, dir) {
   const t = tour, st = t.steps[i], n = t.steps.length;
   t.i = i;
-  t.root.querySelector('h2').textContent = st.title;
-  t.root.querySelector('.tour-body p').textContent = typeof st.text === 'function' ? st.text() : st.text;
+  t.root.querySelector('h2').textContent = T(st.title);
+  t.root.querySelector('.tour-body p').textContent = typeof st.text === 'function' ? st.text() : T(st.text);
   const back = t.root.querySelector('[data-tour="back"]'), next = t.root.querySelector('[data-tour="next"]');
-  back.textContent = i ? 'Назад' : 'Пропустить';
-  next.textContent = i === n - 1 ? 'Готово' : (st.go || 'Далее');
+  back.textContent = i ? T('Назад') : T('Пропустить');
+  next.textContent = i === n - 1 ? T('Готово') : st.go ? T(st.go) : T('Далее');
   t.root.querySelector('.tour-x').hidden = i === 0;
   t.root.querySelectorAll('.tour-dots span').forEach((d, k) => d.classList.toggle('on', k === i));
   if (dir && t.body.animate) {
-    const from = RM.matches ? { opacity: 0 } : { opacity: 0, transform: `translateX(${dir * 16}px)` };
+    const from = RM.matches ? { opacity: 0 } : { opacity: 0, transform: `translateX(${dir * (isRtl() ? -16 : 16)}px)` };
     t.body.animate([from, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' });
   }
   t.last = '';
@@ -3203,8 +3815,8 @@ window.addEventListener('keydown', e => {
   if (e.key === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); endTour(); return; }
   if (!inTour && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return; // typing an answer during the tour
   e.stopImmediatePropagation();
-  if (e.key === 'ArrowRight') { e.preventDefault(); tourNext(); }
-  else if (e.key === 'ArrowLeft') { e.preventDefault(); if (tour.i) tourBack(); }
+  if (e.key === (isRtl() ? 'ArrowLeft' : 'ArrowRight')) { e.preventDefault(); tourNext(); }
+  else if (e.key === (isRtl() ? 'ArrowRight' : 'ArrowLeft')) { e.preventDefault(); if (tour.i) tourBack(); }
   else if (e.key === 'Enter' && !inTour) { e.preventDefault(); tourNext(); }
   else if (e.key === 'Tab') {
     e.preventDefault();
@@ -3223,9 +3835,9 @@ const cleanName = s => String(s || '').normalize('NFC').replace(/\s+/g, ' ').tri
 const nameKey = s => cleanName(s).toLowerCase().replace(/ё/g, 'е'); // «Иван», «иван» and «Иван » are one name
 const initials = n => cleanName(n).split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
 function nameProblem(n) {
-  if (n.length < 3) return 'Имя — минимум 3 символа';
-  if (n.length > 24) return 'Имя — не длиннее 24 символов';
-  if (!/^[\p{L}\p{N}](?:[\p{L}\p{N} _-]*[\p{L}\p{N}_-])?$/u.test(n)) return 'Только буквы, цифры, пробел, «-» и «_»';
+  if (n.length < 3) return T('Имя — минимум 3 символа');
+  if (n.length > 24) return T('Имя — не длиннее 24 символов');
+  if (!/^[\p{L}\p{N}](?:[\p{L}\p{N} _-]*[\p{L}\p{N}_-])?$/u.test(n)) return T('Только буквы, цифры, пробел, «-» и «_»');
   return '';
 }
 const rid = n => [...crypto.getRandomValues(new Uint8Array(n))].map(x => 'abcdefghijklmnopqrstuvwxyz0123456789'[x % 36]).join('');
@@ -3256,19 +3868,19 @@ const suggestName = n => cleanName(String(n || '').replace(/[^\p{L}\p{N} _-]+/gu
 // Firebase error code → what to tell the person, and which field it is about
 function authError(e) {
   const c = String((e && e.message) || '');
-  if (c === 'TAKEN') return { msg: 'Это имя уже занято — выберите другое', f: 'name' };
-  if (c === 'NO_USER') return { msg: 'Нет пользователя с таким именем', f: 'name' };
-  if (c === 'GOOGLE') return { msg: 'Этот аккаунт входит через Google — нажмите «Продолжить с Google»' };
-  if (c === 'TELEGRAM') return { msg: 'Этот аккаунт входит через Telegram — нажмите «Продолжить с Telegram»' };
-  if (/^TG_(BAD_HASH|EXPIRED|BAD_DATA)/.test(c)) return { msg: 'Telegram не подтвердил вход. Попробуйте ещё раз' };
-  if (c.startsWith('TG_')) return { msg: 'Вход через Telegram сейчас не работает (' + c.slice(3) + '). Войдите по имени или через Google' };
-  if (c === 'RENAMED') return { msg: 'Имя уже менялось — второй раз его не поменять' };
-  if (/INVALID_LOGIN_CREDENTIALS|INVALID_PASSWORD|EMAIL_NOT_FOUND/.test(c)) return { msg: 'Неверный пароль', f: 'pass' };
-  if (/TOO_MANY_ATTEMPTS/.test(c)) return { msg: 'Слишком много попыток. Подождите пару минут' };
-  if (/WEAK_PASSWORD/.test(c)) return { msg: 'Пароль — минимум 6 символов', f: 'pass' };
-  if (/USER_DISABLED/.test(c)) return { msg: 'Этот аккаунт отключён' };
-  if (c === 'NETWORK') return { msg: 'Нет связи с интернетом. Попробуйте ещё раз', down: true };
-  return { msg: 'Не получилось (' + (c || 'ошибка') + '). Попробуйте позже', down: true };
+  if (c === 'TAKEN') return { msg: T('Это имя уже занято — выберите другое'), f: 'name' };
+  if (c === 'NO_USER') return { msg: T('Нет пользователя с таким именем'), f: 'name' };
+  if (c === 'GOOGLE') return { msg: T('Этот аккаунт входит через Google — нажмите «Продолжить с Google»') };
+  if (c === 'TELEGRAM') return { msg: T('Этот аккаунт входит через Telegram — нажмите «Продолжить с Telegram»') };
+  if (/^TG_(BAD_HASH|EXPIRED|BAD_DATA)/.test(c)) return { msg: T('Telegram не подтвердил вход. Попробуйте ещё раз') };
+  if (c.startsWith('TG_')) return { msg: T('Вход через Telegram сейчас не работает ({0}). Войдите по имени или через Google', c.slice(3)) };
+  if (c === 'RENAMED') return { msg: T('Имя уже менялось — второй раз его не поменять') };
+  if (/INVALID_LOGIN_CREDENTIALS|INVALID_PASSWORD|EMAIL_NOT_FOUND/.test(c)) return { msg: T('Неверный пароль'), f: 'pass' };
+  if (/TOO_MANY_ATTEMPTS/.test(c)) return { msg: T('Слишком много попыток. Подождите пару минут') };
+  if (/WEAK_PASSWORD/.test(c)) return { msg: T('Пароль — минимум 6 символов'), f: 'pass' };
+  if (/USER_DISABLED/.test(c)) return { msg: T('Этот аккаунт отключён') };
+  if (c === 'NETWORK') return { msg: T('Нет связи с интернетом. Попробуйте ещё раз'), down: true };
+  return { msg: T('Не получилось ({0}). Попробуйте позже', c || T('ошибка')), down: true };
 }
 const Account = {
   user: null, // { uid, rt, login, name, key, course, fac, renamed, blocked } — rt is the Firebase refresh token; fac '' = none stored
@@ -3522,9 +4134,9 @@ const Account = {
     const asked = Date.now();
     let t, rec;
     try { t = await this.token(); rec = await this.req('users/' + u.uid, 'GET', undefined, t); }
-    catch (e) { if (e.gone && this.user === u) this.lost('Вы вышли из аккаунта — войдите снова'); return; } // offline: keep what we know
+    catch (e) { if (e.gone && this.user === u) this.lost(T('Вы вышли из аккаунта — войдите снова')); return; } // offline: keep what we know
     if (this.user !== u) return;
-    if (!rec) return this.lost('Аккаунт удалён автором сайта');
+    if (!rec) return this.lost(T('Аккаунт удалён автором сайта'));
     // a faculty chosen here while this answer was on its way is newer than the answer: keep it
     const stale = this.facAt >= asked;
     const before = JSON.stringify([u.name, u.course, u.renamed, u.blocked]), wasFac = u.fac || '', fac = stale ? wasFac : recFac(rec);
@@ -3550,7 +4162,7 @@ const needsSignup = () => Account.ready() && Account.works === true && !Account.
 async function finishGoogle(back, done) {
   if (back.error) {
     if (done) done();
-    if (back.error !== 'access_denied') toast('Не получилось войти через Google. Попробуйте ещё раз');
+    if (back.error !== 'access_denied') toast(T('Не получилось войти через Google. Попробуйте ещё раз'));
     return;
   }
   let g = null;
@@ -3566,7 +4178,7 @@ function externalDone(g) {
     if (u.course) S.course = u.course;
     facAfterSignIn(u);
     S.profile = null; save(); renderAll(); applyBlock(); Presence.live();
-    if (!u.blocked) toast('С возвращением, ' + u.name + '!');
+    if (!u.blocked) toast(T('С возвращением, {0}!', u.name));
     return;
   }
   if (tour) endTour();
@@ -3575,7 +4187,7 @@ function externalDone(g) {
 async function finishTelegram(back, done) {
   if (back.error) {
     if (done) done();
-    if (back.error === 'state') toast('Не получилось войти через Telegram. Попробуйте ещё раз');
+    if (back.error === 'state') toast(T('Не получилось войти через Telegram. Попробуйте ещё раз'));
     return;
   }
   let g = null;
@@ -3590,27 +4202,27 @@ function tgWait({ code, at = Date.now(), back = null }) {
   let timer = 0, done = false, asking = false, again = false, fails = 0;
   const html = `<div class="dlg su tgw">
 <div class="su-ico tg">${TG_LOGO}</div>
-<div class="dlg-title">Подтвердите вход в Telegram</div>
-<div class="dlg-msg">Нажмите в Telegram «Запустить» и вернитесь сюда — вход произойдёт сам.</div>
-<div class="tw-wait" id="twWait" aria-live="polite"><span class="spinner"></span><span id="twState">Ждём подтверждения…</span></div>
-<a class="tg-btn" data-s="tw-open" href="${tgLink(code)}" target="_blank" rel="noopener">${TG_LOGO}<span>Открыть Telegram</span></a>
-<button type="button" class="dlg-btn" data-s="tw-cancel">Отмена</button>
-${TG_BOT_ID ? '<button type="button" class="su-link" data-s="tw-phone">Нет Telegram на этом устройстве? Войти по номеру</button>' : ''}
+<div class="dlg-title">${T('Подтвердите вход в Telegram')}</div>
+<div class="dlg-msg">${T('Нажмите в Telegram «Запустить» и вернитесь сюда — вход произойдёт сам.')}</div>
+<div class="tw-wait" id="twWait" aria-live="polite"><span class="spinner"></span><span id="twState">${T('Ждём подтверждения…')}</span></div>
+<a class="tg-btn" data-s="tw-open" href="${tgLink(code)}" target="_blank" rel="noopener">${TG_LOGO}<span>${T('Открыть Telegram')}</span></a>
+<button type="button" class="dlg-btn" data-s="tw-cancel">${T('Отмена')}</button>
+${TG_BOT_ID ? T('<button type="button" class="su-link" data-s="tw-phone">Нет Telegram на этом устройстве? Войти по номеру</button>') : ''}
 </div>`;
   const sh = openSheet({
     cls: 'dialog', html,
     onClick: (act, el, e, close) => {
       if (act === 'tw-open') {
-        if (navigator.onLine === false) { e.preventDefault(); return state('Нет связи с интернетом', 'bad stop'); }
+        if (navigator.onLine === false) { e.preventDefault(); return state(T('Нет связи с интернетом'), 'bad stop'); }
         if (!at) { at = Date.now(); fails = 0; } // after «время вышло»: a fresh code is already in the link
         tgPending(code);
-        state('Ждём подтверждения…');
+        state(T('Ждём подтверждения…'));
         if (!timer && !asking) timer = setTimeout(poll, 2500);
         return;
       }
       if (act === 'tw-cancel') return close();
       if (act === 'tw-phone') {
-        if (navigator.onLine === false) return state('Нет связи с интернетом', 'bad stop');
+        if (navigator.onLine === false) return state(T('Нет связи с интернетом'), 'bad stop');
         finish(); close();
         Account.telegram();
       }
@@ -3635,7 +4247,7 @@ ${TG_BOT_ID ? '<button type="button" class="su-link" data-s="tw-phone">Нет Te
       // the code is old: the link gets a new one, and waiting starts again only after a tap
       at = 0; tgPending(null);
       code = rid(24); link.href = tgLink(code);
-      return state('Время вышло. Нажмите «Открыть Telegram» ещё раз', 'stop');
+      return state(T('Время вышло. Нажмите «Открыть Telegram» ещё раз'), 'stop');
     }
     if (document.visibilityState !== 'visible') return; // nothing to do in the background; wake() goes on
     asking = true;
@@ -3646,14 +4258,14 @@ ${TG_BOT_ID ? '<button type="button" class="su-link" data-s="tw-phone">Нет Te
     if (j) return enter(j);
     if (err) {
       if (err.message !== 'NETWORK' && ++fails >= 3) { at = 0; return state(authError(err).msg, 'bad stop'); }
-      state(err.message === 'NETWORK' ? 'Нет связи — пробуем ещё раз…' : 'Ждём подтверждения…');
-    } else { fails = 0; state('Ждём подтверждения…'); }
+      state(err.message === 'NETWORK' ? T('Нет связи — пробуем ещё раз…') : T('Ждём подтверждения…'));
+    } else { fails = 0; state(T('Ждём подтверждения…')); }
     if (again) { again = false; return poll(); }
     timer = setTimeout(poll, Date.now() - at < 60000 ? 2500 : 5000);
   }
   async function enter(j) {
     finish(); sh.close();
-    const end = busy('Вход через Telegram…');
+    const end = busy(T('Вход через Telegram…'));
     let g;
     try { g = await Account.tgEnter(j); }
     catch (e) { end(); toast(authError(e).msg); if (back) back(); return; }
@@ -3683,7 +4295,7 @@ function applyBlock() {
   el = document.createElement('div');
   el.className = 'blocked'; el.id = 'blockScreen';
   el.setAttribute('role', 'alertdialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'blkT');
-  el.innerHTML = `<div class="blk-card"><div class="blk-ico">${I.lock}</div><h2 id="blkT">Доступ закрыт</h2><p>Автор сайта закрыл доступ для аккаунта «${esc(Account.user.name)}».</p><p class="blk-note">Если это ошибка, напишите: tg @ziplogo</p></div>`;
+  el.innerHTML = `<div class="blk-card"><div class="blk-ico">${I.lock}</div><h2 id="blkT">${T('Доступ закрыт')}</h2><p>${T('Автор сайта закрыл доступ для аккаунта «{0}».', esc(Account.user.name))}</p><p class="blk-note">${T('Если это ошибка, напишите: tg @ziplogo')}</p></div>`;
   document.body.appendChild(el);
   Presence.off();
 }
@@ -3703,14 +4315,14 @@ function openAuth({ dismissible = false, mode = 'up', g = null } = {}) {
   const html = `<div class="dlg su">
 <div class="su-ico">${I.user}</div>
 <div class="dlg-title" id="suTitle"></div>
-<div class="dlg-msg" id="suMsg">${dismissible ? '' : 'Все функции откроются сразу после входа.'}</div>
-${hero ? `<div class="su-tg" id="suTg"><span class="tg-badge">Быстрее всего</span><a class="tg-btn big shine" data-s="tg-tap" href="${tgLink(tgCode)}" target="_blank" rel="noopener">${TG_LOGO}<span>Войти через Telegram</span></a></div>
-<button type="button" class="su-more" id="suMore" data-s="more" aria-expanded="false">Другие способы входа${I.chevD}</button>` : ''}
-${(tOn && !hero) || gOn ? `<div class="su-ext su-x" id="suExt">${tOn && !hero ? `<button type="button" class="tg-btn" data-s="telegram">${TG_LOGO}<span>Продолжить с Telegram</span></button>` : ''}${gOn ? `<button type="button" class="g-btn" data-s="google">${G_LOGO}<span>Продолжить с Google</span></button>` : ''}</div>` : ''}${extOn ? '<div class="su-or su-x" id="suOr">или по имени и паролю</div>' : ''}
-<div class="su-seg su-x" id="suSeg" role="tablist" aria-label="Регистрация или вход"><button type="button" role="tab" data-s="m-up">Регистрация</button><button type="button" role="tab" data-s="m-in">Вход</button></div>
-<div class="su-field su-x"><input id="suName" class="f-in" placeholder="Имя пользователя" maxlength="24" autocomplete="username" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" value="${esc(legacy)}" aria-label="Имя пользователя" aria-describedby="suNameHint"><div class="su-hint" id="suNameHint" aria-live="polite"></div></div>
-<div class="su-field su-x" id="suPassF"><div class="su-pass"><input id="suPass" class="f-in" type="password" placeholder="Пароль" maxlength="128" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="Пароль" aria-describedby="suPassHint"><button type="button" class="su-eye" data-s="eye" aria-label="Показать пароль" aria-pressed="false">${I.eye}</button></div><div class="su-hint" id="suPassHint"></div></div>
-<div class="su-course su-x" id="suCourse"><span>Курс</span>${coursePills(curFac().courses, course, 'data-s="su-c" data-c', null)}</div>
+<div class="dlg-msg" id="suMsg">${dismissible ? '' : T('Все функции откроются сразу после входа.')}</div>
+${hero ? `<div class="su-tg" id="suTg"><span class="tg-badge">${T('Быстрее всего')}</span><a class="tg-btn big shine" data-s="tg-tap" href="${tgLink(tgCode)}" target="_blank" rel="noopener">${TG_LOGO}<span>${T('Войти через Telegram')}</span></a></div>
+<button type="button" class="su-more" id="suMore" data-s="more" aria-expanded="false">${T('Другие способы входа')}${I.chevD}</button>` : ''}
+${(tOn && !hero) || gOn ? `<div class="su-ext su-x" id="suExt">${tOn && !hero ? `<button type="button" class="tg-btn" data-s="telegram">${TG_LOGO}<span>${T('Продолжить с Telegram')}</span></button>` : ''}${gOn ? `<button type="button" class="g-btn" data-s="google">${G_LOGO}<span>${T('Продолжить с Google')}</span></button>` : ''}</div>` : ''}${extOn ? T('<div class="su-or su-x" id="suOr">или по имени и паролю</div>') : ''}
+<div class="su-seg su-x" id="suSeg" role="tablist" aria-label="${T('Регистрация или вход')}"><button type="button" role="tab" data-s="m-up">${T('Регистрация')}</button><button type="button" role="tab" data-s="m-in">${T('Вход')}</button></div>
+<div class="su-field su-x"><input id="suName" class="f-in" placeholder="${T('Имя пользователя')}" maxlength="24" autocomplete="username" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" value="${esc(legacy)}" aria-label="${T('Имя пользователя')}" aria-describedby="suNameHint"><div class="su-hint" id="suNameHint" aria-live="polite"></div></div>
+<div class="su-field su-x" id="suPassF"><div class="su-pass"><input id="suPass" class="f-in" type="password" placeholder="${T('Пароль')}" maxlength="128" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="${T('Пароль')}" aria-describedby="suPassHint"><button type="button" class="su-eye" data-s="eye" aria-label="${T('Показать пароль')}" aria-pressed="false">${I.eye}</button></div><div class="su-hint" id="suPassHint"></div></div>
+<div class="su-course su-x" id="suCourse"><span>${T('Курс')}</span>${coursePills(curFac().courses, course, 'data-s="su-c" data-c', null)}</div>
 <div class="su-err" id="suErr" role="alert"></div>
 <button type="button" class="dlg-btn primary su-x" data-s="go"></button>
 <div class="su-note" id="suNote"></div>
@@ -3724,7 +4336,7 @@ ${(tOn && !hero) || gOn ? `<div class="su-ext su-x" id="suExt">${tOn && !hero ? 
         passInp.type = show ? 'text' : 'password';
         el.innerHTML = show ? I.eyeOff : I.eye;
         el.setAttribute('aria-pressed', String(show));
-        el.setAttribute('aria-label', show ? 'Скрыть пароль' : 'Показать пароль');
+        el.setAttribute('aria-label', show ? T('Скрыть пароль') : T('Показать пароль'));
         return;
       }
       if (act === 'su-c') {
@@ -3736,7 +4348,7 @@ ${(tOn && !hero) || gOn ? `<div class="su-ext su-x" id="suExt">${tOn && !hero ? 
       if (act === 'more') { folded = false; setMode(mode); setTimeout(() => nameInp.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 50); return; }
       if (act === 'tg-tap') {
         // the link itself opens Telegram; this page waits for «Запустить»
-        if (navigator.onLine === false) { e.preventDefault(); return fail({ msg: 'Нет связи с интернетом. Попробуйте ещё раз' }); }
+        if (navigator.onLine === false) { e.preventDefault(); return fail({ msg: T('Нет связи с интернетом. Попробуйте ещё раз') }); }
         if (busy) { e.preventDefault(); return; }
         tgPending(tgCode);
         const m = mode;
@@ -3745,7 +4357,7 @@ ${(tOn && !hero) || gOn ? `<div class="su-ext su-x" id="suExt">${tOn && !hero ? 
         return;
       }
       if (act === 'google' || act === 'telegram') {
-        if (navigator.onLine === false) return fail({ msg: 'Нет связи с интернетом. Попробуйте ещё раз' });
+        if (navigator.onLine === false) return fail({ msg: T('Нет связи с интернетом. Попробуйте ещё раз') });
         el.disabled = true;
         if (act === 'google') Account.google(); else Account.telegram();
       }
@@ -3758,9 +4370,9 @@ ${(tOn && !hero) || gOn ? `<div class="su-ext su-x" id="suExt">${tOn && !hero ? 
     mode = m;
     const gm = m === 'g'; // back from Google: only a name and a course are left
     sh.panel.querySelectorAll('.su-seg button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.s === 'm-' + m)));
-    $p('#suTitle').textContent = gm ? 'Почти готово' : m === 'up' ? (dismissible ? 'Регистрация' : 'Лёгкая регистрация') : 'Вход в аккаунт';
-    if (gm) $p('#suMsg').innerHTML = 'Придумайте имя пользователя — так вас будет видеть автор сайта.' + (g.who ? `<div class="su-who">${esc(g.via)}: <b>${esc(g.who)}</b></div>` : '');
-    btn.textContent = gm ? 'Готово' : m === 'up' ? 'Зарегистрироваться' : 'Войти';
+    $p('#suTitle').textContent = gm ? T('Почти готово') : m === 'up' ? (dismissible ? T('Регистрация') : T('Лёгкая регистрация')) : T('Вход в аккаунт');
+    if (gm) $p('#suMsg').innerHTML = T('Придумайте имя пользователя — так вас будет видеть автор сайта.') + (g.who ? `<div class="su-who">${esc(g.via)}: <b>${esc(g.who)}</b></div>` : '');
+    btn.textContent = gm ? T('Готово') : m === 'up' ? T('Зарегистрироваться') : T('Войти');
     passInp.setAttribute('autocomplete', m === 'up' ? 'new-password' : 'current-password');
     $p('#suSeg').hidden = gm; $p('#suPassF').hidden = gm;
     if ($p('#suExt')) $p('#suExt').hidden = gm;
@@ -3769,11 +4381,11 @@ ${(tOn && !hero) || gOn ? `<div class="su-ext su-x" id="suExt">${tOn && !hero ? 
     const fold = folded && !gm;
     $p('.su').classList.toggle('folded', fold);
     $p('#suCourse').hidden = m === 'in';
-    $p('#suNote').textContent = fold ? 'Автор сайта увидит только ваш @username в Telegram.'
-      : gm ? 'Сменить имя потом можно один раз — в настройках.'
-      : m === 'up' ? 'Пароль хранится у Google — даже автор сайта его не видит.' + (gOn ? ' При входе через Google автор видит вашу почту' + (tOn ? ', через Telegram — ваш @username.' : '.') : tOn ? ' При входе через Telegram автор видит ваш @username.' : '')
-      : 'Забыли пароль? Напишите автору сайта: tg @ziplogo';
-    hint($p('#suPassHint'), m === 'up' ? 'Минимум 6 символов' : '');
+    $p('#suNote').textContent = fold ? T('Автор сайта увидит только ваш @username в Telegram.')
+      : gm ? T('Сменить имя потом можно один раз — в настройках.')
+      : m === 'up' ? T('Пароль хранится у Google — даже автор сайта его не видит.') + (gOn ? ' ' + (tOn ? T('При входе через Google автор видит вашу почту, через Telegram — ваш @username.') : T('При входе через Google автор видит вашу почту.')) : tOn ? ' ' + T('При входе через Telegram автор видит ваш @username.') : '')
+      : T('Забыли пароль? Напишите автору сайта: tg @ziplogo');
+    hint($p('#suPassHint'), m === 'up' ? T('Минимум 6 символов') : '');
     err.textContent = '';
     nameInp.classList.remove('bad'); passInp.classList.remove('bad');
     checkName();
@@ -3788,7 +4400,7 @@ ${(tOn && !hero) || gOn ? `<div class="su-ext su-x" id="suExt">${tOn && !hero ? 
     const my = ++checkN;
     hint(h, '');
     checkT = setTimeout(() => {
-      Account.owner(nameKey(n)).then(o => { if (my === checkN && mode !== 'in') hint(h, o ? 'Это имя уже занято' : 'Имя свободно', o ? 'bad' : 'ok'); }, () => {});
+      Account.owner(nameKey(n)).then(o => { if (my === checkN && mode !== 'in') hint(h, o ? T('Это имя уже занято') : T('Имя свободно'), o ? 'bad' : 'ok'); }, () => {});
     }, 450);
   }
   function fail(r) {
@@ -3803,10 +4415,10 @@ ${(tOn && !hero) || gOn ? `<div class="su-ext su-x" id="suExt">${tOn && !hero ? 
     const name = cleanName(nameInp.value), pass = passInp.value;
     const np = nameProblem(name);
     if (np) return fail({ msg: np, f: 'name' });
-    if (mode !== 'g' && pass.length < 6) return fail({ msg: mode === 'up' ? 'Пароль — минимум 6 символов' : 'Неверный пароль', f: 'pass' });
+    if (mode !== 'g' && pass.length < 6) return fail({ msg: mode === 'up' ? T('Пароль — минимум 6 символов') : T('Неверный пароль'), f: 'pass' });
     busy = true; btn.disabled = true;
     const label = btn.textContent;
-    btn.textContent = mode === 'in' ? 'Вхожу…' : 'Регистрирую…';
+    btn.textContent = mode === 'in' ? T('Вхожу…') : T('Регистрирую…');
     try {
       if (mode === 'g') await Account.claimExternal(g, name, course);
       else if (mode === 'up') await Account.signUp(name, pass, course);
@@ -3817,8 +4429,8 @@ ${(tOn && !hero) || gOn ? `<div class="su-ext su-x" id="suExt">${tOn && !hero ? 
       if (r.down && !dismissible) {
         // the service is down: never lock the person out of the trainer — ask again next time
         Account.works = false; skip = true;
-        err.textContent = 'Регистрация сейчас не работает. Можно заниматься дальше — предложим позже.';
-        btn.textContent = 'Продолжить';
+        err.textContent = T('Регистрация сейчас не работает. Можно заниматься дальше — предложим позже.');
+        btn.textContent = T('Продолжить');
         return;
       }
       return fail(r);
@@ -3829,7 +4441,7 @@ ${(tOn && !hero) || gOn ? `<div class="su-ext su-x" id="suExt">${tOn && !hero ? 
     sh.close();
     facAfterSignIn(u);
     save(); renderAll(); applyBlock(); Presence.live();
-    if (!u.blocked) toast(mode === 'in' ? 'С возвращением, ' + u.name + '!' : 'Готово, ' + u.name + '! Всё открыто');
+    if (!u.blocked) toast(mode === 'in' ? T('С возвращением, {0}!', u.name) : T('Готово, {0}! Всё открыто', u.name));
   }
   nameInp.addEventListener('input', () => { nameInp.classList.remove('bad'); err.textContent = ''; checkName(); });
   passInp.addEventListener('input', () => { passInp.classList.remove('bad'); err.textContent = ''; });
@@ -3846,7 +4458,7 @@ function formSheet({ title, msg = '', fields, ok, submit }) {
 <div class="dlg-title">${esc(title)}</div>${msg ? `<div class="dlg-msg">${esc(msg)}</div>` : ''}
 ${fields.map((f, i) => `<input class="f-in" data-f="${i}" type="${f.type || 'text'}" placeholder="${esc(f.ph)}" value="${esc(f.value || '')}" maxlength="${f.max || 128}" autocomplete="${f.ac || 'off'}" autocapitalize="${f.type === 'password' ? 'off' : 'words'}" autocorrect="off" spellcheck="false" enterkeyhint="${i === fields.length - 1 ? 'done' : 'next'}" aria-label="${esc(f.ph)}">`).join('\n')}
 <div class="su-err" role="alert"></div>
-<div class="dlg-btns"><button type="button" class="dlg-btn" data-s="cancel">Отмена</button><button type="button" class="dlg-btn primary" data-s="ok">${esc(ok)}</button></div>
+<div class="dlg-btns"><button type="button" class="dlg-btn" data-s="cancel">${T('Отмена')}</button><button type="button" class="dlg-btn primary" data-s="ok">${esc(ok)}</button></div>
 </div>`;
   let busy = false;
   const sh = openSheet({
@@ -3856,7 +4468,7 @@ ${fields.map((f, i) => `<input class="f-in" data-f="${i}" type="${f.type || 'tex
       if (act !== 'ok' || busy) return;
       busy = true; el.disabled = true;
       const label = el.textContent;
-      el.textContent = 'Подождите…';
+      el.textContent = T('Подождите…');
       let r;
       try { r = await submit(inputs.map(i => i.value)); } catch (x) { r = authError(x); }
       busy = false; el.disabled = false; el.textContent = label;
@@ -3882,13 +4494,13 @@ function openProfile() {
   const u = Account.user;
   if (!u || anySheet()) return;
   const html = `<div class="dlg pf">
-<div class="pf-head"><span class="pf-av" aria-hidden="true">${esc(initials(u.name))}</span><div class="pf-id"><div class="dlg-title">${esc(u.name)}</div><div class="pf-sub">Ваш аккаунт</div></div></div>
-<div class="su-course"><span>Курс</span>${coursePills(curFac().courses, u.course || 0, 'data-s="pf-c" data-c', null)}</div>
+<div class="pf-head"><span class="pf-av" aria-hidden="true">${esc(initials(u.name))}</span><div class="pf-id"><div class="dlg-title">${esc(u.name)}</div><div class="pf-sub">${T('Ваш аккаунт')}</div></div></div>
+<div class="su-course"><span>${T('Курс')}</span>${coursePills(curFac().courses, u.course || 0, 'data-s="pf-c" data-c', null)}</div>
 <div class="mgroup">
-${u.renamed ? '<div class="mrow static"><span class="mtxt">Имя уже менялось<small>Изменить его можно только один раз</small></span></div>' : `<button type="button" class="mrow" data-s="rename"><span class="mtxt">Изменить имя<small>Можно только один раз</small></span><span class="go">${I.chevR}</span></button>`}
-${isGoogle(u) || isTelegram(u) ? `<div class="mrow static"><span class="mtxt">Вход через ${isGoogle(u) ? 'Google' : 'Telegram'}<small>Пароль не нужен</small></span></div>` : `<button type="button" class="mrow" data-s="pass"><span class="mtxt">Сменить пароль</span><span class="go">${I.chevR}</span></button>`}
+${u.renamed ? T('<div class="mrow static"><span class="mtxt">Имя уже менялось<small>Изменить его можно только один раз</small></span></div>') : `<button type="button" class="mrow" data-s="rename"><span class="mtxt">${T('Изменить имя')}<small>${T('Можно только один раз')}</small></span><span class="go">${I.chevR}</span></button>`}
+${isGoogle(u) || isTelegram(u) ? `<div class="mrow static"><span class="mtxt">${T('Вход через {0}', isGoogle(u) ? 'Google' : 'Telegram')}<small>${T('Пароль не нужен')}</small></span></div>` : `<button type="button" class="mrow" data-s="pass"><span class="mtxt">${T('Сменить пароль')}</span><span class="go">${I.chevR}</span></button>`}
 </div>
-<button type="button" class="dlg-btn danger" data-s="out">Выйти из аккаунта</button>
+<button type="button" class="dlg-btn danger" data-s="out">${T('Выйти из аккаунта')}</button>
 </div>`;
   openSheet({
     cls: 'dialog', html,
@@ -3904,9 +4516,9 @@ ${isGoogle(u) || isTelegram(u) ? `<div class="mrow static"><span class="mtxt">В
       if (act === 'rename') setTimeout(openRename, 200);
       else if (act === 'pass') setTimeout(openPassword, 200);
       else if (act === 'out') setTimeout(async () => {
-        const r = await dialog({ title: 'Выйти из аккаунта?', message: 'Чтобы снова отвечать на вопросы, понадобится войти: имя и пароль.', buttons: [{ id: 'cancel', label: 'Отмена' }, { id: 'out', label: 'Выйти', kind: 'danger' }] });
+        const r = await dialog({ title: T('Выйти из аккаунта?'), message: T('Чтобы снова отвечать на вопросы, понадобится войти: имя и пароль.'), buttons: [{ id: 'cancel', label: T('Отмена') }, { id: 'out', label: T('Выйти'), kind: 'danger' }] });
         if (r.id !== 'out') return;
-        Account.signOut(); renderAll(); Presence.live(); toast('Вы вышли из аккаунта');
+        Account.signOut(); renderAll(); Presence.live(); toast(T('Вы вышли из аккаунта'));
       }, 200);
     }
   });
@@ -3915,15 +4527,15 @@ function openRename() {
   const u = Account.user;
   if (!u || u.renamed) return;
   formSheet({
-    title: 'Новое имя', msg: 'Имя можно изменить только один раз — потом поменять его уже не получится.',
-    fields: [{ id: 'name', ph: 'Имя пользователя', value: u.name, max: 24, ac: 'username' }], ok: 'Изменить',
+    title: T('Новое имя'), msg: T('Имя можно изменить только один раз — потом поменять его уже не получится.'),
+    fields: [{ id: 'name', ph: T('Имя пользователя'), value: u.name, max: 24, ac: 'username' }], ok: T('Изменить'),
     submit: async ([v]) => {
       const n = cleanName(v);
-      if (n === u.name) return { msg: 'Это ваше текущее имя', f: 'name' };
+      if (n === u.name) return { msg: T('Это ваше текущее имя'), f: 'name' };
       const p = nameProblem(n);
       if (p) return { msg: p, f: 'name' };
       try { await Account.rename(n); } catch (e) { const r = authError(e); if (e.message === 'RENAMED') renderAll(); return r; }
-      renderAll(); Presence.live(); toast('Теперь вы — ' + n);
+      renderAll(); Presence.live(); toast(T('Теперь вы — {0}', n));
       return null;
     }
   });
@@ -3931,14 +4543,14 @@ function openRename() {
 function openPassword() {
   if (!Account.user) return;
   formSheet({
-    title: 'Сменить пароль',
-    fields: [{ id: 'old', type: 'password', ph: 'Текущий пароль', ac: 'current-password' }, { id: 'pass', type: 'password', ph: 'Новый пароль — от 6 символов', ac: 'new-password' }], ok: 'Сменить',
+    title: T('Сменить пароль'),
+    fields: [{ id: 'old', type: 'password', ph: T('Текущий пароль'), ac: 'current-password' }, { id: 'pass', type: 'password', ph: T('Новый пароль — от 6 символов'), ac: 'new-password' }], ok: T('Сменить'),
     submit: async ([oldP, newP]) => {
-      if (!oldP) return { msg: 'Введите текущий пароль', f: 'old' };
-      if (newP.length < 6) return { msg: 'Новый пароль — минимум 6 символов', f: 'pass' };
+      if (!oldP) return { msg: T('Введите текущий пароль'), f: 'old' };
+      if (newP.length < 6) return { msg: T('Новый пароль — минимум 6 символов'), f: 'pass' };
       try { await Account.password(oldP, newP); }
-      catch (e) { const r = authError(e); return /INVALID_LOGIN|INVALID_PASSWORD/.test(e.message) ? { msg: 'Текущий пароль неверный', f: 'old' } : r; }
-      toast('Пароль изменён');
+      catch (e) { const r = authError(e); return /INVALID_LOGIN|INVALID_PASSWORD/.test(e.message) ? { msg: T('Текущий пароль неверный'), f: 'old' } : r; }
+      toast(T('Пароль изменён'));
       return null;
     }
   });
@@ -3965,7 +4577,7 @@ const Presence = {
   where() {
     const s = curSet();
     if (!s || bankStatus !== 'ready') return '';
-    return (setTitle(s) + ' · ' + (S.test ? 'тест' : (S.starOnly ? '★ ' : '') + CAT_TITLE[S.category])).slice(0, 120);
+    return (setTitle(s) + ' · ' + (S.test ? 'тест' : (S.starOnly ? '★ ' : '') + CAT_TITLE_RU[S.category])).slice(0, 120);
   },
   // where the person is; with an account also who (u = uid, checked by the rules). Readable only by the site owner.
   live() {
@@ -4046,15 +4658,22 @@ function normalizeState(st) {
   // facAuto: Лечебное дело was given automatically to someone from before faculties, not chosen. It is not sent
   // to the account, so it can't overwrite a faculty this person picked on another device.
   S.facAuto = !!S.facAuto && S.fac === 'lech';
+  // Language: this device's choice wins; else the saved one; someone from before languages existed keeps Russian.
+  if (langStored) S.lang = LANG;
+  else if (!isLang(S.lang)) S.lang = !!st && typeof st === 'object' && !('lang' in st) ? 'ru' : '';
+  if (S.lang && S.lang !== LANG) { LANG = S.lang; applyLang(); }
+  if (S.lang) storeLang();
+  S.askYear = !!S.askYear && !!S.fac;
   fixCourse();
   if (!S.profile || typeof S.profile.name !== 'string' || !S.profile.name.trim()) S.profile = null;
   S.checks = Math.max(0, Math.floor(+S.checks || 0));
 }
 async function boot() {
   const gBack = Account.takeGoogle(); // back from Google's sign-in page
-  const gDone = gBack && !gBack.error ? busy('Вход через Google…') : null;
+  const gDone = gBack && !gBack.error ? busy(T('Вход через Google…')) : null;
   const tBack = Account.takeTelegram(); // back from Telegram's
-  const tDone = tBack && !tBack.error ? busy('Вход через Telegram…') : null;
+  const tDone = tBack && !tBack.error ? busy(T('Вход через Telegram…')) : null;
+  applyLang();
   applyDock();
   render();
   Account.load();
@@ -4072,7 +4691,7 @@ async function boot() {
   render();
   facGate(); // a newcomer picks a faculty before anything else: tours and sign-up wait for the sheet
   if (fresh || Store.mode === 'cloud') flush();
-  if (Store.cloudDown) toast('Нет связи с аккаунтом — прогресс сохраняется в этом браузере');
+  if (Store.cloudDown) toast(T('Нет связи с аккаунтом — прогресс сохраняется в этом браузере'));
   Presence.start();
   if (!Account.user && !isAdmin()) Account.probe();
   if (gBack) finishGoogle(gBack, gDone);
