@@ -209,12 +209,12 @@ button:disabled{cursor:default}
 .dd-btn>span{flex:1;min-width:0;overflow-wrap:anywhere}
 .dd-btn .i{width:12px;height:12px;stroke-width:3;color:var(--text)}
 .dd-val{display:block;padding:3px 6px}
-/* order: numbers on the left, pale-blue bars with ↕ */
+/* order: numbers on the left, pale-blue bars, ↕ at the right end (the thumb drags it there) */
 .sort-list{position:relative;margin:0 0 8px}
 .sort-row{display:flex;align-items:stretch;gap:4px;margin:0 0 5px;transition:transform .18s ease;position:relative}
 .sort-row.dragging{transition:none;z-index:3}
 .sort-row .num{flex:none;min-width:1.7em;padding:7px 2px 6px 0;text-align:end;font-variant-numeric:tabular-nums}
-.sbox{flex:1;min-width:0;display:flex;align-items:flex-start;padding:6px 6px 6px 0;background:var(--sort);border:1px solid var(--line);border-radius:4px}
+.sbox{flex:1;min-width:0;display:flex;align-items:flex-start;padding-block:6px;padding-inline:8px 0;background:var(--sort);border:1px solid var(--line);border-radius:4px}
 .sort-row.dragging .sbox{border-color:var(--ink-line);box-shadow:0 6px 18px var(--shadow)}
 .handle{flex:none;width:30px;align-self:stretch;margin:-6px 0;display:flex;align-items:center;justify-content:center;color:var(--sort-ico);touch-action:none;cursor:n-resize}
 .handle svg{width:15px;height:15px;display:block}
@@ -565,7 +565,7 @@ textarea.f-in{resize:vertical;min-height:84px}
   .ctext{padding-inline-start:6px}
   .sort-row{margin-bottom:4px}
   .sort-row .num{padding:6px 2px 5px 0}
-  .sbox{padding:5px 5px 5px 0}
+  .sbox{padding-block:5px;padding-inline:7px 0}
   .handle{width:28px;margin:-5px 0}
   .handle svg{width:14px;height:14px}
   .selt td.l{padding:2px 7px}
@@ -2493,7 +2493,9 @@ function check() {
   const it = currentItem();
   if (!it) return;
   // After «Подглядеть» the answer is already known, so «Проверить» doesn't grade it: the question starts over.
-  if (rec(it.id).reveal) { resetItem(it); shuffleQ(it); checkSeq++; save(); render(); return; }
+  // The same on a second «Проверить» of a checked question (not in a test, where a checked question is closed).
+  const r0 = rec(it.id);
+  if (r0.reveal || (r0.checked && !S.test)) { resetItem(it); shuffleQ(it); checkSeq++; save(); render(); return; }
   mut(it.id, r => { r.checked = true; r.reveal = false; });
   const ok = isCorrect(it);
   const seq = ++checkSeq;
@@ -2834,6 +2836,8 @@ const RB = {
   c: '<svg class="rb cb" viewBox="0 0 20 20" aria-hidden="true"><rect class="o" x=".75" y=".75" width="18.5" height="18.5" rx="2"/><path class="d" d="M5 10.2l3.8 3.8L15 5.3"/></svg>'
 };
 const SORT_ICO = '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 .6 12.7 5.3H9.6v5.4h3.1L8 15.4 3.3 10.7h3.1V5.3H3.3Z"/></svg>';
+// one bar of an order question: the text, then ↕ at the right end
+const sortBar = (txt, hAttr = '', boxAttr = '') => `<span class="sbox"${boxAttr}><span class="stext">${txt}</span><span class="handle"${hAttr}>${SORT_ICO}</span></span>`;
 const FINE = window.matchMedia('(hover: hover) and (pointer: fine)');
 function choicesHTML(q, { lock }) {
   const r = rec(q.id), single = q.kind === 'single';
@@ -2858,7 +2862,7 @@ function sortHTML(q, { lock }) {
   // a mouse drags the whole bar (as in INDIGO); a finger takes the ↕, so the page still scrolls
   const whole = FINE.matches && !lock;
   return `<div class="sort-list" data-qid="${esc(q.id)}">` + order.map((oi, pos) =>
-    `<div class="sort-row" data-oi="${oi}"><span class="num">${pos + 1}.</span><span class="sbox"${whole ? ' data-handle' : ''}><span class="handle"${lock || whole ? '' : ` data-handle aria-label="${T('Перетащить')}"`}>${SORT_ICO}</span><span class="stext">${esc(q.order[oi])}</span></span></div>`
+    `<div class="sort-row" data-oi="${oi}"><span class="num">${pos + 1}.</span>${sortBar(esc(q.order[oi]), lock || whole ? '' : ` data-handle aria-label="${T('Перетащить')}"`, whole ? ' data-handle' : '')}</div>`
   ).join('') + '</div>';
 }
 function textHTML(q, { lock }) {
@@ -2873,7 +2877,7 @@ function rightHTML(q) {
       return '<div class="choices ro">' + order.map(i => `<div class="choice" role="${single ? 'radio' : 'checkbox'}" aria-checked="${!!q.options[i].correct}" aria-disabled="true">${single ? RB.r : RB.c}<span class="ctext">${esc(q.options[i].text)}</span></div>`).join('') + '</div>';
     }
     case 'dropdown': return '<table class="selt"><tbody>' + q.rows.map(row => `<tr><td class="l">${esc(row.left)}</td><td class="l">${esc(row.value)}</td></tr>`).join('') + '</tbody></table>';
-    case 'sortable': return '<div class="sort-list ro">' + q.order.map((v, i) => `<div class="sort-row"><span class="num">${i + 1}.</span><span class="sbox"><span class="handle">${SORT_ICO}</span><span class="stext">${esc(v)}</span></span></div>`).join('') + '</div>';
+    case 'sortable': return '<div class="sort-list ro">' + q.order.map((v, i) => `<div class="sort-row"><span class="num">${i + 1}.</span>${sortBar(esc(v))}</div>`).join('') + '</div>';
     case 'text': return `<div class="ans-box">${esc(q.accepted.length ? q.accepted.join('\n') : T('Правильный ответ не указан в JSON.'))}</div>`;
   }
   return '';
@@ -6101,8 +6105,8 @@ function rvHTML(x, i, open) {
     }).join('') + '</tbody></table>';
   } else if (x.kind === 'sortable') {
     const items = x.items || [];
-    if (Array.isArray(a.order) && !x.ok) b += `<div class="sub">${T('Ваш порядок')}</div><div class="sort-list ro">` + a.order.map((oi, p) => `<div class="sort-row"><span class="num">${p + 1}.</span><span class="sbox"><span class="handle">${SORT_ICO}</span><span class="stext">${esc(items[oi])}</span></span></div>`).join('') + '</div>';
-    b += `<div class="sub">${T('Правильный порядок')}</div><div class="sort-list ro">` + (x.key || []).map((t, p) => `<div class="sort-row"><span class="num">${p + 1}.</span><span class="sbox"><span class="handle">${SORT_ICO}</span><span class="stext">${esc(t)}</span></span></div>`).join('') + '</div>';
+    if (Array.isArray(a.order) && !x.ok) b += `<div class="sub">${T('Ваш порядок')}</div><div class="sort-list ro">` + a.order.map((oi, p) => `<div class="sort-row"><span class="num">${p + 1}.</span>${sortBar(esc(items[oi]))}</div>`).join('') + '</div>';
+    b += `<div class="sub">${T('Правильный порядок')}</div><div class="sort-list ro">` + (x.key || []).map((t, p) => `<div class="sort-row"><span class="num">${p + 1}.</span>${sortBar(esc(t))}</div>`).join('') + '</div>';
   }
   const ico = x.ok ? I.ok : x.none || x.empty ? I.minus : I.bad;
   return `<details class="d-rv ${st}" data-i="${i}"${open ? ' open' : ''}><summary><span class="n">${i + 1}.</span><span class="p" dir="auto">${esc(x.prompt)}</span><span class="s" aria-label="${word}">${ico}</span></summary><div class="b" dir="${textDir(x.prompt)}">${b}</div></details>`;
