@@ -130,5 +130,11 @@
     "title": "Общая и биоорганическая химия",
     "course": 1,
     "fac": "lech"
+  },
+  {
+    "file": "1/medicinskaya-informatika.json",
+    "title": "Медицинская информатика",
+    "course": 1,
+    "fac": "lech"
   }
 ]
