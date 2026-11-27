@@ -136,5 +136,11 @@
     "title": "Медицинская информатика",
     "course": 1,
     "fac": "lech"
+  },
+  {
+    "file": "1/inostrannyy-yazyk-angliyskiy.json",
+    "title": "Иностранный язык (английский)",
+    "course": 1,
+    "fac": "lech"
   }
 ]
