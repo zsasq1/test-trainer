@@ -124,5 +124,11 @@
     "title": "История медицины",
     "course": 1,
     "fac": "lech"
+  },
+  {
+    "file": "1/obschaya-i-bioorganicheskaya-himiya.json",
+    "title": "Общая и биоорганическая химия",
+    "course": 1,
+    "fac": "lech"
   }
 ]
