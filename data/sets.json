@@ -160,5 +160,11 @@
     "title": "Иностранный язык (нем)",
     "course": 1,
     "fac": "lech"
+  },
+  {
+    "file": "1/bioetika.json",
+    "title": "Биоэтика",
+    "course": 1,
+    "fac": "lech"
   }
 ]
