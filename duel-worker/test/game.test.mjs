@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { parsePool, deal, view, grade, decide, stats, review, shuffle, randInt, isPerm, MAX_N, MAX_PLAYERS, CATS, catOf, byCat, catCounts } from '../game.js';
+import { parsePool, deal, view, grade, decide, stats, review, shuffle, randInt, isPerm, MAX_N, MAX_PLAYERS, CATS, catOf, byCat, catCounts, doneOf } from '../game.js';
 
 const raw = JSON.parse(readFileSync(new URL('../../data/3/topka.json', import.meta.url), 'utf8'));
 const pool = parsePool(raw);
@@ -175,6 +175,14 @@ test('итоги игрока: верно, неверно, пропущено, �
   const st = stats({ ans: [{ ok: true }, { ok: false, empty: true }, { ok: true }, { ok: false }], fin: T0 + 61000 }, 5, T0);
   assert.deepEqual(st, { ok: 2, wrong: 2, skipped: 1, unanswered: 1, acc: 50, time: 61000, finished: true, left: false, dropped: false });
   assert.equal(stats({ ans: [], fin: null, stop: null }, 3, T0).acc, 0);
+});
+
+test('ответы не по порядку: пустые места — вопросы, до которых ещё не дошли', () => {
+  const p = { ans: [null, { ok: true }, null, { ok: false, empty: true }], fin: null, stop: T0 + 5000 };
+  assert.equal(doneOf(p), 2);
+  assert.deepEqual(stats(p, 4, T0), { ok: 1, wrong: 1, skipped: 1, unanswered: 2, acc: 50, time: 5000, finished: false, left: false, dropped: false });
+  const rv = review(deal(pool, 4), p);
+  assert.deepEqual(rv.map(x => [x.ok, x.empty, x.none]), [[false, true, true], [true, false, false], [false, true, true], [false, true, false]]);
 });
 
 test('разбор после игры: вопрос, ответ игрока и ключ', () => {

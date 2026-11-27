@@ -224,23 +224,28 @@ try {
     assert.ok(pv.startAt > pv.now, 'обратный отсчёт по часам сервера');
     g = { id: d.id, qa: qa.qs, qb: qb.qs, startAt: pv.startAt, now: pv.now };
   });
-  await step('игра: раньше старта не принимается; ответы строго по порядку и по одному разу', async () => {
+  await step('игра: раньше старта не принимается; вопросы в любом порядке, но каждый — один раз', async () => {
     await err(a.req({ t: 'answer', id: g.id, i: 0, a: right(g.qa[0]) }), 'EARLY');
     await sleep(Math.max(0, g.startAt - g.now) + 40);
-    await err(a.req({ t: 'answer', id: g.id, i: 2, a: right(g.qa[2]) }), 'ORDER');
+    await okr(a.req({ t: 'answer', id: g.id, i: 2, a: right(g.qa[2]) })); // первый и второй пропущены — к ним можно вернуться
+    let st = await a.req({ t: 'sync' });
+    assert.deepEqual(st.qs.ans.map(x => (x ? x.ok : null)), [null, null, true], 'после перезагрузки видно, какие ещё без ответа');
+    await err(a.req({ t: 'answer', id: g.id, i: 2, a: right(g.qa[2]) }), 'ANSWERED');
+    for (const i of [-1, 4, 1.5, '1', null]) await err(a.req({ t: 'answer', id: g.id, i, a: right(g.qa[0]) }), 'ORDER');
     await okr(a.req({ t: 'answer', id: g.id, i: 0, a: right(g.qa[0]) }));
-    const r = await a.req({ t: 'answer', id: g.id, i: 0, a: right(g.qa[0]) });
-    assert.equal(r.code, 'ORDER'); assert.equal(r.at, 1, 'сервер подсказывает, с какого вопроса продолжать');
+    await err(a.req({ t: 'answer', id: g.id, i: 0, a: {} }), 'ANSWERED');
     await err(c.req({ t: 'answer', id: g.id, i: 0, a: {} }), 'NO_DUEL');
     await okr(a.req({ t: 'answer', id: g.id, i: 1, a: right(g.qa[1]), ok: false, uid: B, time: 1 })); // лишние поля ничего не меняют
+    st = await a.req({ t: 'sync' });
+    assert.deepEqual(st.qs.ans.map(x => x.ok), [true, true, true]);
+    const pv = await b.duel(x => x.players[A].done === 3, 3000);
+    assert.equal(pv.players[A].fin, null, 'три из четырёх — ещё не закончила');
   });
   await step('прогресс соперника приходит вживую; кто больше верных — победил; разбор с ключами', async () => {
     const v = await b.duel(x => x.players[A].done >= 1, 3000).catch(() => null);
     assert.ok(v, 'Боб видит, что Алиса ответила');
-    // Алиса доотвечает верно (вопрос 1 уже принят выше), Боб — неверно
-    const st = await a.req({ t: 'sync' });
-    const at = st.qs.ans.length;
-    for (let i = at; i < 4; i++) await okr(a.req({ t: 'answer', id: g.id, i, a: right(g.qa[i]) }));
+    // Алиса доотвечает верно (три вопроса уже приняты выше), Боб — неверно
+    await okr(a.req({ t: 'answer', id: g.id, i: 3, a: right(g.qa[3]) }));
     const mid = await b.duel(x => x.players[A].done === 4 && x.players[A].fin != null);
     assert.equal(mid.status, 'play', 'игра идёт, пока не закончит второй');
     assert.equal(mid.players[A].ok, 4);

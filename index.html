@@ -5445,7 +5445,7 @@ const Duel = {
   ws: null, conn: 'off', err: '', connecting: false, tries: 0, retryT: 0, idleT: 0, pingT: 0, tickT: 0, advT: 0, lastMsg: 0,
   off: 0, seq: 0, rids: new Map(),
   me: null, invIn: [], invOuts: [], d: null, qs: null, review: null,
-  recs: {}, qmap: new Map(), at: 0, pend: null, flashI: null, done: new Set(),
+  recs: {}, qmap: new Map(), at: 0, pend: null, flashI: null, later: new Set(), done: new Set(),
   open: false, el: null, shown: '', qKey: '', search: { q: '', list: null, busy: false }, searchSeq: 0, searchT: 0, searchAt: 0,
   pendFile: '', pendCat: '', nDrag: 0, nSendT: 0, autoFile: '', menuSig: '', banSig: '', roomKey: '', roomAdd: false,
   now() { return Date.now() + this.off; },
@@ -5627,8 +5627,8 @@ const Duel = {
         this.flashI = m.i;
         if (m.ok) haptic();
         clearTimeout(this.advT);
-        this.advT = setTimeout(() => { this.flashI = null; this.at = Math.max(this.at, m.i + 1); this.paint(); }, 750);
-      } else this.at = Math.max(this.at, s.ans.length);
+        this.advT = setTimeout(() => { this.flashI = null; this.at = this.nextOpen(m.i); this.paint(); }, 750);
+      }
       this.changed();
     },
     review(m) { if (this.d && m.id === this.d.id) { this.review = m; this.changed(); } },
@@ -5644,7 +5644,7 @@ const Duel = {
       if (!fresh && !hello && (this.active() || (cur.endAt || 0) > (v.endAt || 0))) return;
     }
     if (isNew) {
-      this.qs = null; this.review = null; this.recs = {}; this.qmap = new Map(); this.at = 0; this.pend = null; this.flashI = null;
+      this.qs = null; this.review = null; this.recs = {}; this.qmap = new Map(); this.at = 0; this.pend = null; this.flashI = null; this.later = new Set();
       clearTimeout(this.advT); this.qKey = ''; this.autoFile = '';
     }
     const was = cur && cur.id === v.id ? cur.status : '';
@@ -5666,7 +5666,23 @@ const Duel = {
       const n = q.kind === 'dropdown' ? q.choices.length : q.options ? q.options.length : 0;
       this.recs[q.id] = { sel: null, multi: [], dd: {}, order: q.kind === 'sortable' ? range(q.order.length) : null, text: '', shuf: range(n), checked: false, reveal: false };
     }
-    this.at = ans.length; this.pend = null; this.flashI = null; clearTimeout(this.advT);
+    // back after a reload: the first question still without an answer
+    const open = ans.findIndex(x => !x);
+    this.at = open < 0 ? ans.length : open; this.pend = null; this.flashI = null; clearTimeout(this.advT);
+  },
+  // how many questions have an answer (they can be answered out of order: a gap is one put off)
+  doneN() { return this.qs ? this.qs.ans.filter(Boolean).length : 0; },
+  // the next question after i still without an answer, going round; none left — past the end
+  nextOpen(i) {
+    const s = this.qs, n = s.list.length;
+    for (let k = 1; k < n; k++) { const j = (i + k) % n; if (!s.ans[j]) return j; }
+    return n;
+  },
+  goQ(i) { clearTimeout(this.advT); this.flashI = null; this.at = i; this.paint(); },
+  // ‹ : the question before; one already answered is shown with its verdict, one put off can be answered now
+  prevQ() {
+    const cur = this.flashI != null ? this.flashI : this.at;
+    if (this.qs && cur > 0) this.goQ(cur - 1);
   },
   frozen(qid) {
     const s = this.qs;
@@ -5684,7 +5700,7 @@ const Duel = {
       const p = d.players[me];
       if (p && p.left) return 'wait';
       if (!this.qs || this.qs.id !== d.id || this.now() < d.startAt) return 'count';
-      if (this.qs.ans.length >= this.qs.list.length && this.flashI == null) return 'wait';
+      if (this.doneN() >= this.qs.list.length && this.flashI == null) return 'wait';
       return 'play';
     }
     if (this.done.has(d.id) || (d.closed || []).includes(me)) return 'lobby';
@@ -5977,7 +5993,7 @@ const Duel = {
   },
   raceHTML() {
     const d = this.d, n = d.n, me = this.mine(), others = this.others();
-    const mineDone = this.qs ? this.qs.ans.length : me.done, mineOk = this.qs ? this.qs.ans.filter(x => x && x.ok).length : me.ok;
+    const mineDone = this.qs ? this.doneN() : me.done, mineOk = this.qs ? this.qs.ans.filter(x => x && x.ok).length : me.ok;
     const lane = (c, mine, done, ok) => {
       let st = '';
       if (!mine) {
@@ -5995,7 +6011,7 @@ const Duel = {
     const d = this.d;
     put(strip, this.raceHTML());
     this.setSub(`${T('Вопрос {0} из {1}', Math.min((this.flashI != null ? this.flashI : this.at) + 1, d.n), d.n)} · <span data-since="${d.startAt}"></span>`);
-    if (fresh) put(foot, `<button type="button" class="btn fin" data-d="surrender" aria-label="${T('Сдаться')}" title="${T('Сдаться')}">${I.flag}<span class="lbl">${T('Сдаться')}</span></button><div class="ft-mid"><div class="ft-info" id="dLeft"></div></div><button type="button" class="btn nx" data-d="answer" id="dGo"><span class="lbl"></span>${I.chevR}</button>`);
+    if (fresh) put(foot, `<button type="button" class="btn fin" data-d="surrender" aria-label="${T('Сдаться')}" title="${T('Сдаться')}">${I.flag}<span class="lbl">${T('Сдаться')}</span></button><div class="ft-mid"><div class="ft-info" id="dLeft"></div></div><button type="button" class="btn ib" data-d="prev" id="dPrev" aria-label="${T('Предыдущий вопрос')}" title="${T('Назад')}">${I.chevL}</button><button type="button" class="btn nx" data-d="answer" id="dGo"><span class="lbl"></span>${I.chevR}</button>`);
     const q = this.curQ();
     if (fresh || (q && this.qSig !== this.sigOf(q))) { if (!drag) this.paintQ(); }
     else this.paintLeft();
@@ -6027,25 +6043,32 @@ const Duel = {
     body.querySelectorAll('.choice[data-act]').forEach((b, k) => { if (k < 9) b.dataset.key = String(k + 1); });
     if (key !== this.qKey) { this.qKey = key; $('#dScroller').scrollTop = 0; body.classList.remove('enter'); void body.offsetWidth; body.classList.add('enter'); }
     else $('#dScroller').scrollTop = top;
-    const go = $('#dGo');
+    const go = $('#dGo'), prev = $('#dPrev');
     if (go) {
-      const has = answered(q);
-      go.querySelector('.lbl').textContent = has ? T('Ответить') : T('Пропустить');
-      go.disabled = this.frozen(q.id) || this.conn !== 'on';
+      // an answered question opened with ‹ : only «Далее»; otherwise «Ответить», or «Пропустить» with nothing chosen
+      const look = !!g && this.flashI == null, has = !look && answered(q);
+      go.querySelector('.lbl').textContent = look ? T('Далее') : has ? T('Ответить') : T('Пропустить');
+      go.disabled = look ? false : this.frozen(q.id) || this.conn !== 'on';
       go.classList.toggle('main', has);
     }
+    if (prev) prev.disabled = i <= 0;
     this.paintLeft();
     this.times();
   },
   submit() {
     const q = this.curQ();
-    if (!q || this.frozen(q.id) || this.conn !== 'on') return;
+    if (!q || this.flashI != null) return;
     const i = this.at;
+    if (this.qs.ans[i]) return this.goQ(this.nextOpen(i)); // looking back: on to the next open question
+    if (this.frozen(q.id) || this.conn !== 'on') return;
+    // «Пропустить» the first time: the question waits until the rest are done; the second time — it counts as skipped
+    const nx = this.nextOpen(i);
+    if (!answered(q) && !this.later.has(i) && nx < this.qs.list.length) { this.later.add(i); return this.goQ(nx); }
     this.pend = i; this.paintQ();
     this.req({ t: 'answer', id: this.d.id, i, a: duelAnswer(q) }).catch(e => {
       if (this.pend !== i) return;
       this.pend = null;
-      if (/^(ORDER|DONE|STATE|NO_DUEL|EARLY)$/.test(e.message)) this.send({ t: 'sync' }); // the server knows better: take its state
+      if (/^(ORDER|ANSWERED|DONE|STATE|NO_DUEL|EARLY)$/.test(e.message)) this.send({ t: 'sync' }); // the server knows better: take its state
       else toast(dErr(e.message));
       this.paintQ();
     });
@@ -6190,6 +6213,7 @@ const Duel = {
     if (a === 'leave') return this.leave();
     if (a === 'surrender') return this.surrender();
     if (a === 'answer') return this.submit();
+    if (a === 'prev') return this.prevQ();
     if (a === 'hide') { this.tucked = d && d.id; return this.hide(); } // tucked away while waiting: a reconnect doesn't pop it up again
     // offering (nobody has yet): «Ждём…» at once, without waiting for the server's reply
     if (a === 'rematch') { b.disabled = true; if (!d.rematch) b.innerHTML = I.duel + T('Ждём…'); this.ask({ t: 'rematch', id: d.id }).catch(() => {}).finally(() => this.paint()); return; }
@@ -6250,6 +6274,7 @@ const Duel = {
     if (this.shown !== 'play') return;
     const press = sel => { const b = this.el && this.el.querySelector(sel); if (b && !b.disabled) { e.preventDefault(); b.click(); } };
     if (/^[1-9]$/.test(e.key)) press(`#dBody .choice[data-key="${e.key}"]`);
+    else if (e.key === (isRtl() ? 'ArrowRight' : 'ArrowLeft')) press('#dPrev');
     else if (e.key === 'Enter') { const t = e.target.closest && e.target.closest('button, a, summary, [role="button"]'); if (!t || t.classList.contains('choice')) press('#dGo'); }
   },
 

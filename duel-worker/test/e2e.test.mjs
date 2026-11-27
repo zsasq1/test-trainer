@@ -260,12 +260,18 @@ try {
   ok(/Верный ответ/.test(await graded(A1, 0)), 'Алиса ответила верно — «Верный ответ», затем следующий вопрос');
   await B1.page.waitForFunction(() => /✓ 1 · 1\/3/.test(document.querySelector('.d-race .d-lane:not(.me) .d-sc').textContent), null, { timeout: 4000 });
   ok(true, 'у Бориса полоска Алисы сдвинулась: ✓ 1 · 1/3');
-  // Борис: первый — пропускает, второй — наугад
+  // Борис: первый откладывает, второй — наугад, потом ‹ назад к первому и пропускает его насовсем
+  const at = (p, t) => p.page.waitForFunction(t => document.getElementById('dLeft').textContent.trim() === t, t, { timeout: 4000 }).then(() => true, () => false);
   ok(en((await text(B1, '#dGo')).includes('Skip')), 'у Бориса без выбора кнопка — «Skip»');
+  ok(await B1.page.$eval('#dPrev', b => b.disabled && b.offsetWidth === b.offsetHeight), 'рядом маленькая квадратная ‹ — на первом вопросе недоступна');
   await press(B1);
-  ok(en(/Question skipped/.test(await graded(B1, 0))), 'пропуск засчитан как «Question skipped»');
+  ok(await at(B1, '2 / 3') && await B1.page.$('#dBody .verdict') == null, '«Skip» откладывает вопрос: Борис на втором, первый не засчитан');
+  await sleep(300);
+  ok(/0\/3/.test(await text(A1, '.d-race .d-lane:not(.me) .d-sc')), 'у Алисы у Бориса по-прежнему 0/3');
   const v1 = qb.qs[1];
-  if (v1.kind === 'single' || v1.kind === 'multiple') {
+  const choice1 = v1.kind === 'single' || v1.kind === 'multiple';
+  if (!choice1) await answerRight(B1, v1);
+  else {
     const right = solve(pool, v1), pickI = v1.kind === 'single' ? (right.sel === 0 ? 1 : 0) : null;
     if (pickI != null) await B1.page.click(`#dBody .choice[data-i="${pickI}"]`);
     else {
@@ -277,6 +283,16 @@ try {
   }
   await press(B1);
   await graded(B1, 1);
+  ok(await at(B1, '3 / 3'), 'после ответа — третий вопрос');
+  await B1.page.click('#dPrev');
+  ok(await at(B1, '2 / 3') && await B1.page.$('#dBody .verdict') != null && await B1.page.$eval('#dGo', b => !b.disabled), '‹ — второй вопрос с его оценкой, ответ уже не изменить');
+  ok(en((await text(B1, '#dGo')).includes('Next')), 'на отвеченном кнопка — «Next»');
+  await B1.page.click('#dPrev');
+  ok(await at(B1, '1 / 3') && await B1.page.$eval('#dPrev', b => b.disabled), 'ещё ‹ — отложенный первый, дальше назад некуда');
+  await shot(B1, '05-back-B');
+  await press(B1);
+  ok(en(/Question skipped/.test(await graded(B1, 0))), 'второй «Skip» на том же вопросе — засчитан как «Question skipped»');
+  ok(await at(B1, '3 / 3'), 'и снова к третьему — единственному без ответа');
   await answerRight(A1, qa.qs[1]); await press(A1); await graded(A1, 1);
 
   console.log('\n6. Перезагрузка посреди игры: связь пропала и вернулась — игра продолжается');
@@ -306,9 +322,8 @@ try {
   ok(tab[0][0] === 'Верно' && tab[0][1] === '3', 'Верно: у Алисы 3');
   ok(tab.some(r => r[0] === 'Точность' && r[1] === '100%'), 'точность Алисы 100%');
   ok(tab.some(r => r[0] === 'Время' && /^\d+:\d\d$/.test(r[1]) && /^\d+:\d\d$/.test(r[2])), 'время обоих');
-  // Борис: первый и третий пропущены, второй — неверный (если это выбор варианта) или тоже пропущен
-  const choice1 = qb.qs[1].kind === 'single' || qb.qs[1].kind === 'multiple';
-  ok(tab.some(r => r[0] === 'Пропущено' && r[2] === String(choice1 ? 2 : 3)) && tab.some(r => r[0] === 'Неверно' && r[2] === String(choice1 ? 1 : 0)), `у Бориса пропущено ${choice1 ? 2 : 3}, неверно ${choice1 ? 1 : 0} — как он отвечал`);
+  // Борис: первый и третий пропущены, второй — неверный (если это выбор варианта) или верный
+  ok(tab.some(r => r[0] === 'Пропущено' && r[2] === '2') && tab.some(r => r[0] === 'Неверно' && r[2] === String(choice1 ? 1 : 0)), `у Бориса пропущено 2, неверно ${choice1 ? 1 : 0} — как он отвечал`);
   await A1.page.waitForSelector('.d-rv', { timeout: 5000 });
   ok((await A1.page.$$('.d-rv.ok')).length === 3, 'разбор: три вопроса, все верные');
   await B1.page.waitForSelector('.d-rv', { timeout: 5000 });

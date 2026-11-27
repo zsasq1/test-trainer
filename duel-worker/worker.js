@@ -18,7 +18,7 @@
 // INVITE_TTL_MS, GRACE_MS, COUNTDOWN_MS, PER_Q_MS, SETUP_MAX_MS, KEEP_MS — сроки покороче.
 
 import { DurableObject } from 'cloudflare:workers';
-import { MAX_N, MAX_PLAYERS, CATS, byCat, catCounts, parsePool, deal, view, grade, decide, review } from './game.js';
+import { MAX_N, MAX_PLAYERS, CATS, byCat, catCounts, parsePool, deal, view, grade, decide, review, doneOf } from './game.js';
 
 const enc = new TextEncoder();
 const JWKS_URL = 'https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com';
@@ -364,7 +364,7 @@ export class Arena extends DurableObject {
   view(d) {
     const P = uid => {
       const p = d.p[uid], w = d.who[uid];
-      return { uid, name: w.name, fac: w.fac, course: w.course, on: this.online(uid), back: p.away ? p.away + this.cfg.grace : null, done: p.ans.length, ok: p.ok, fin: p.fin != null && d.startAt ? p.fin - d.startAt : null, left: p.left };
+      return { uid, name: w.name, fac: w.fac, course: w.course, on: this.online(uid), back: p.away ? p.away + this.cfg.grace : null, done: doneOf(p), ok: p.ok, fin: p.fin != null && d.startAt ? p.fin - d.startAt : null, left: p.left };
     };
     const players = {};
     for (const u of d.ids) players[u] = P(u);
@@ -380,7 +380,7 @@ export class Arena extends DurableObject {
     };
   }
   push(d) { const m = { t: 'duel', duel: this.view(d) }; for (const u of d.ids) this.tell(u, m); }
-  myQs(d, uid) { const p = d.p[uid]; return { id: d.id, qs: this.getQs(d.id, uid).map(view), ans: p.ans.map(x => ({ ok: x.ok, empty: x.empty })) }; }
+  myQs(d, uid) { const p = d.p[uid]; return { id: d.id, qs: this.getQs(d.id, uid).map(view), ans: Array.from(p.ans, x => (x ? { ok: x.ok, empty: x.empty } : null)) }; }
   // игра кончается, когда все ответили или вышли — или когда в игре остался один (остальные сдались или пропали)
   ended(d) { return d.ids.every(u => d.p[u].fin != null || d.p[u].left) || d.ids.filter(u => !d.p[u].left).length <= 1; }
   cancel(d, why, by) {
@@ -636,13 +636,15 @@ const H = {
     if (p.fin != null || p.left) no('DONE');
     const now = Date.now();
     if (now < d.startAt - 250) no('EARLY');
-    if (m.i !== p.ans.length) no('ORDER', { at: p.ans.length });
-    const q = this.getQs(d.id, uid)[m.i];
-    if (!q) no('ORDER', { at: p.ans.length });
+    // вопросы — в любом порядке (пропущенный можно открыть позже), но каждый — один раз
+    const q = Number.isInteger(m.i) && m.i >= 0 && m.i < d.n ? this.getQs(d.id, uid)[m.i] : null;
+    if (!q) no('ORDER');
+    if (p.ans[m.i]) no('ANSWERED');
     const g = grade(q, m.a);
-    p.ans.push({ ok: g.ok, empty: g.empty, a: g.a, at: now });
+    while (p.ans.length < m.i) p.ans.push(null);
+    p.ans[m.i] = { ok: g.ok, empty: g.empty, a: g.a, at: now };
     if (g.ok) p.ok++;
-    if (p.ans.length >= d.n) p.fin = now;
+    if (doneOf(p) >= d.n) p.fin = now;
     this.putDuel(d);
     this.tell(uid, { t: 'graded', id: d.id, i: m.i, ok: g.ok, empty: g.empty });
     if (this.ended(d)) this.finish(d); else this.push(d);

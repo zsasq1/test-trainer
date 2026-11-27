@@ -140,10 +140,12 @@ export function grade(q, raw) {
 }
 
 // Итог одного игрока. time — от старта до последнего ответа (или до момента, когда игра для него кончилась).
+// p.ans[i] — ответ на i-й вопрос; null — на него ещё не ответили (вопросы можно отвечать не по порядку)
+export const doneOf = p => p.ans.filter(Boolean).length;
 export function stats(p, n, startAt) {
-  const answered = p.ans.length;
-  const ok = p.ans.filter(x => x.ok).length;
-  const skipped = p.ans.filter(x => x.empty).length;
+  const answered = doneOf(p);
+  const ok = p.ans.filter(x => x && x.ok).length;
+  const skipped = p.ans.filter(x => x && x.empty).length;
   const end = p.fin != null ? p.fin : p.stop != null ? p.stop : null;
   return {
     ok,
