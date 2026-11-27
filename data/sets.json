@@ -142,5 +142,11 @@
     "title": "Иностранный язык (английский)",
     "course": 1,
     "fac": "lech"
+  },
+  {
+    "file": "1/inostrannyy-yazyk-francuzskiy.json",
+    "title": "Иностранный язык (французский)",
+    "course": 1,
+    "fac": "lech"
   }
 ]
