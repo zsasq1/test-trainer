@@ -172,5 +172,11 @@
     "title": "История России",
     "course": 1,
     "fac": "lech"
+  },
+  {
+    "file": "1/latinskiy-yazyk.json",
+    "title": "Латинский язык",
+    "course": 1,
+    "fac": "lech"
   }
 ]
