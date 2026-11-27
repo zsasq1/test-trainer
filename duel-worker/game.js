@@ -1,10 +1,20 @@
-// Правила дуэли без ввода-вывода: разбор файла вопросов, раздача, проверка ответа, итог.
+// Правила дуэли без ввода-вывода: разбор файла вопросов, раздача, проверка ответа, итог (места всех игроков).
 // Используется сервером (worker.js) и тестами (test/game.test.mjs).
 //
 // Ответы на вопросы знает только сервер: игроку уходит «вид» вопроса без ключа (view),
 // ответ игрока проверяет grade(), а победителя называет decide(). Клиент ничего не решает сам.
 
 export const MAX_N = 100;
+export const MAX_PLAYERS = 8; // в одной дуэли, вместе с тем, кто позвал
+// Категории — те же, что в тренажёре: вид вопроса, а вопросы кейсов (с текстом задачи) — отдельно. «all» — все вместе.
+export const CATS = ['all', 'single', 'multiple', 'dropdown', 'sortable', 'caseStudy'];
+export const catOf = q => (q.context ? 'caseStudy' : q.kind);
+export const byCat = (pool, cat) => (!cat || cat === 'all' ? pool : pool.filter(q => catOf(q) === cat));
+export function catCounts(pool) {
+  const c = Object.fromEntries(CATS.map(k => [k, 0]));
+  for (const q of pool) { c.all++; c[catOf(q)]++; }
+  return c;
+}
 // Вопросы, которые сервер проверяет однозначно. Свободный текст и кейсы целиком в дуэль не берутся,
 // а вопросы кейса приходят по одному — с текстом задачи над вопросом (context).
 export const KINDS = ['single', 'multiple', 'dropdown', 'sortable'];
@@ -148,17 +158,30 @@ export function stats(p, n, startAt) {
   };
 }
 
-// Кто победил. Больше верных — победа; поровну — быстрее закончивший; совсем поровну — ничья.
-// Сдавшийся или пропавший со связи проигрывает, если второй остался в игре.
+// Места и победитель. Кто остался в игре — выше сдавшихся и пропавших; дальше больше верных, при равенстве — быстрее.
+// Победитель — первый, если делить первое место не с кем; поровну и по верным, и по времени — ничья.
+// Если все остальные сдались или пропали, побеждает оставшийся. Все ушли — без победителя.
+// d.ids — игроки (старые дуэли на двоих хранили их как d.a и d.b).
 export function decide(d) {
-  const A = d.p[d.a], B = d.p[d.b];
-  const sa = stats(A, d.n, d.startAt), sb = stats(B, d.n, d.startAt);
-  const out = (winner, reason) => ({ winner, reason, stats: { [d.a]: sa, [d.b]: sb } });
-  if (A.left && B.left) return out(null, 'abandoned');
-  if (A.left) return out(d.b, A.dropped ? 'dropped' : 'left');
-  if (B.left) return out(d.a, B.dropped ? 'dropped' : 'left');
-  if (sa.ok !== sb.ok) return out(sa.ok > sb.ok ? d.a : d.b, 'score');
-  if (sa.time != null && sb.time != null && sa.time !== sb.time) return out(sa.time < sb.time ? d.a : d.b, 'time');
+  const ids = Array.isArray(d.ids) ? d.ids : [d.a, d.b];
+  const st = {};
+  for (const u of ids) st[u] = stats(d.p[u], d.n, d.startAt);
+  const t = s => (s.time == null ? Infinity : s.time);
+  const cmp = (x, y) => {
+    const a = st[x], b = st[y];
+    if (a.left !== b.left) return a.left ? 1 : -1;
+    if (a.ok !== b.ok) return b.ok - a.ok;
+    return t(a) === t(b) ? 0 : t(a) < t(b) ? -1 : 1;
+  };
+  const rank = ids.slice().sort(cmp);
+  const place = {};
+  rank.forEach((u, i) => { place[u] = i > 0 && cmp(rank[i - 1], u) === 0 ? place[rank[i - 1]] : i + 1; });
+  const out = (winner, reason) => ({ winner, reason, stats: st, rank, place, top: rank.filter(u => place[u] === 1) });
+  if (ids.every(u => st[u].left)) return out(null, 'abandoned');
+  const [w, r2] = rank;
+  if (st[r2].left) return out(w, ids.every(u => u === w || st[u].dropped) ? 'dropped' : 'left');
+  if (st[w].ok !== st[r2].ok) return out(w, 'score');
+  if (t(st[w]) !== t(st[r2])) return out(w, 'time');
   return out(null, 'draw');
 }
 

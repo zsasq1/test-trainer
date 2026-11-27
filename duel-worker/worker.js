@@ -1,8 +1,8 @@
 // Дуэли для тренажёра (Cloudflare Worker + Durable Object «Arena»).
 //
-// Сервер — судья. Клиент только показывает вопросы и присылает выбор игрока; всё остальное решает здесь:
+// Игроков в дуэли — от двоих до восьми. Сервер — судья. Клиент только показывает вопросы и присылает выбор игрока; всё остальное решает здесь:
 //   • кто подключился — по токену Firebase (подпись Google + чтение users/<uid> этим же токеном);
-//   • какие вопросы достанутся — случайно из файла курса, у каждого игрока свои;
+//   • какие вопросы достанутся — случайно из файла курса и выбранной категории, у каждого игрока свои;
 //   • верен ли ответ — ключ лежит только здесь, игроку уходит вопрос без ключа;
 //   • сколько длилась игра — по часам сервера;
 //   • кто победил — больше верных, при равенстве — быстрее.
@@ -18,7 +18,7 @@
 // INVITE_TTL_MS, GRACE_MS, COUNTDOWN_MS, PER_Q_MS, SETUP_MAX_MS, KEEP_MS — сроки покороче.
 
 import { DurableObject } from 'cloudflare:workers';
-import { MAX_N, parsePool, deal, view, grade, decide, review } from './game.js';
+import { MAX_N, MAX_PLAYERS, CATS, byCat, catCounts, parsePool, deal, view, grade, decide, review } from './game.js';
 
 const enc = new TextEncoder();
 const JWKS_URL = 'https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com';
@@ -140,13 +140,23 @@ export default {
   }
 };
 
+
 /* =========================================================
-   Арена: справочник игроков, приглашения, дуэли
+   Арена: справочник игроков, приглашения, дуэли (от двоих до MAX_PLAYERS человек)
    ========================================================= */
 class Refuse extends Error { constructor(code, extra) { super(code); this.code = code; this.extra = extra || {}; } }
 const no = (code, extra) => { throw new Refuse(code, extra); };
 const OPEN = 1;
 const MAX_SOCKS = 6; // вкладок у одного человека
+// дуэли, сохранённые до игры на нескольких (a и b вместо списка игроков), читаются по-новому
+function upgrade(d) {
+  if (!Array.isArray(d.ids)) { d.ids = [d.a, d.b].filter(Boolean); d.host = d.a; }
+  delete d.a; delete d.b;
+  if (!d.cat) d.cat = 'all';
+  if (d.want == null) d.want = d.n;
+  if (d.rematch && !Array.isArray(d.rematch.yes)) d.rematch = { by: d.rematch.by, at: d.rematch.at, yes: [d.rematch.by], no: [] };
+  return d;
+}
 
 export class Arena extends DurableObject {
   constructor(ctx, env) {
@@ -155,7 +165,7 @@ export class Arena extends DurableObject {
     this.sql = ctx.storage.sql;
     this.tickets = new Map(); // пропуск → { uid, exp }
     this.buckets = new Map(); // uid → { tokens, at } — не больше ~15 сообщений в секунду
-    this.inviteLog = new Map(); // uid → [время приглашений] — не больше 10 в минуту
+    this.inviteLog = new Map(); // uid → [время приглашений] — не больше 20 в минуту
     this.qcache = new Map(); // дуэль → { uid: вопросы с ключами }
     this.pools = new Map(); // файл → { pool, at }
     this.setsCache = null;
@@ -174,7 +184,7 @@ export class Arena extends DurableObject {
     x.exec('CREATE TABLE IF NOT EXISTS duels(id TEXT PRIMARY KEY, status TEXT NOT NULL, updated INTEGER NOT NULL, data TEXT NOT NULL)');
     x.exec('CREATE TABLE IF NOT EXISTS duel_qs(duel TEXT NOT NULL, uid TEXT NOT NULL, data TEXT NOT NULL, PRIMARY KEY(duel, uid))');
     for (const r of x.exec('SELECT data FROM invites')) { const v = JSON.parse(r.data); this.invites.set(v.id, v); }
-    for (const r of x.exec('SELECT data FROM duels')) { const d = JSON.parse(r.data); this.duels.set(d.id, d); }
+    for (const r of x.exec('SELECT data FROM duels')) { const d = upgrade(JSON.parse(r.data)); this.duels.set(d.id, d); }
   }
 
   /* ---------- хранение ---------- */
@@ -256,9 +266,9 @@ export class Arena extends DurableObject {
   hello(uid, r) {
     const now = Date.now();
     const invIn = [...this.invites.values()].filter(v => v.to === uid && v.exp > now).map(v => this.invView(v));
-    const out = [...this.invites.values()].find(v => v.from === uid && v.exp > now);
+    const outs = this.outOf(uid).map(v => this.invView(v));
     const d = this.currentOf(uid);
-    const m = { t: 'hello', rid: r, now, me: this.card(uid), invIn, invOut: out ? this.invView(out) : null, duel: d ? this.view(d) : null };
+    const m = { t: 'hello', rid: r, now, me: this.card(uid), invIn, invOuts: outs, invOut: outs[outs.length - 1] || null, duel: d ? this.view(d) : null };
     if (d && d.status === 'play') m.qs = this.myQs(d, uid);
     if (d && d.status === 'over') m.review = { id: d.id, items: review(this.getQs(d.id, uid), d.p[uid]) };
     return m;
@@ -273,7 +283,7 @@ export class Arena extends DurableObject {
     if (!m || typeof m !== 'object' || typeof m.t !== 'string') return;
     const r = okRid(m.rid);
     if (!this.allow(uid)) { this.send(ws, { t: 'error', rid: r, code: 'RATE' }); return; }
-    const h = H[m.t];
+    const h = Object.hasOwn(H, m.t) ? H[m.t] : null;
     if (!h) { this.send(ws, { t: 'error', rid: r, code: 'UNKNOWN' }); return; }
     try {
       const res = await h.call(this, ws, uid, m, r);
@@ -301,17 +311,23 @@ export class Arena extends DurableObject {
   }
 
   /* ---------- приглашения ---------- */
-  invView(v) { return { id: v.id, from: this.card(v.from), to: this.card(v.to), exp: v.exp, now: Date.now() }; }
+  // в какую комнату зовут: комната настройки, где хозяин — пригласивший
+  hosting(uid) { const d = this.activeOf(uid); return d && d.status === 'setup' && d.host === uid ? d : null; }
+  outOf(uid) { const now = Date.now(); return [...this.invites.values()].filter(v => v.from === uid && v.exp > now); }
+  invView(v) { const d = this.hosting(v.from); return { id: v.id, from: this.card(v.from), to: this.card(v.to), exp: v.exp, now: Date.now(), room: d ? d.ids.length : 0 }; }
+  tellOut(uid) { const all = this.outOf(uid).map(v => this.invView(v)); this.tell(uid, { t: 'invite-out', inv: all[all.length - 1] || null, all }); }
   dropInvite(v, why) {
     this.delInvite(v);
     const m = { t: 'invite-gone', id: v.id, why };
     this.tell(v.from, m); this.tell(v.to, m);
+    const d = this.hosting(v.from);
+    if (d) this.push(d); // в комнате видно, кого ещё ждут
   }
+  // приглашения этих людей (от них и к ним) больше не в силе
   dropInvitesOf(uids, why) { for (const v of [...this.invites.values()]) if (uids.includes(v.from) || uids.includes(v.to)) this.dropInvite(v, why); }
 
   /* ---------- дуэли ---------- */
-  inDuel(d, uid) { return d.a === uid || d.b === uid; }
-  other(d, uid) { return d.a === uid ? d.b : d.a; }
+  inDuel(d, uid) { return d.ids.includes(uid); }
   activeOf(uid) { for (const d of this.duels.values()) if ((d.status === 'setup' || d.status === 'play') && this.inDuel(d, uid)) return d; return null; }
   currentOf(uid) {
     const act = this.activeOf(uid);
@@ -324,58 +340,111 @@ export class Arena extends DurableObject {
     return best;
   }
   duel(id, uid) { const d = this.duels.get(String(id || '')); if (!d || !this.inDuel(d, uid)) no('NO_DUEL'); return d; }
-  newDuel(a, b, extra = {}) {
-    const now = Date.now(), who = {};
-    for (const u of [a, b]) { const c = this.card(u); who[u] = { name: c.name, fac: c.fac, course: c.course }; }
-    const pl = u => ({ ans: [], ok: 0, fin: null, stop: null, left: false, dropped: false, away: this.online(u) ? null : now });
-    return { id: rid(16), status: 'setup', a, b, who, created: now, file: null, title: '', n: 10, max: 0, startAt: null, deadline: null, endAt: null, p: { [a]: pl(a), [b]: pl(b) }, result: null, rematch: null, rematchNo: null, closed: {}, next: null, why: null, by: null, ...extra };
+  join(d, u, now = Date.now()) {
+    if (!d.ids.includes(u)) d.ids.push(u);
+    const c = this.card(u);
+    d.who[u] = { name: c.name, fac: c.fac, course: c.course };
+    d.p[u] = { ans: [], ok: 0, fin: null, stop: null, left: false, dropped: false, away: this.online(u) ? null : now };
+  }
+  newDuel(host, ids, extra = {}) {
+    const now = Date.now();
+    const d = { id: rid(16), status: 'setup', host, ids: [], who: {}, p: {}, created: now, file: null, title: '', cat: 'all', counts: null, n: 10, want: 10, max: 0, startAt: null, deadline: null, endAt: null, result: null, rematch: null, rematchNo: null, closed: {}, next: null, why: null, by: null, ...extra };
+    for (const u of ids) this.join(d, u, now);
+    return d;
+  }
+  // гость уходит из комнаты (сам или пропал со связи); комната остаётся у хозяина и остальных
+  remove(d, u, why) {
+    const name = (d.who[u] || {}).name || '?';
+    d.ids = d.ids.filter(x => x !== u);
+    delete d.p[u]; delete d.who[u];
+    this.putDuel(d); this.push(d);
+    this.tell(u, { t: 'left', id: d.id, why });
+    for (const x of d.ids) this.tell(x, { t: 'gone', id: d.id, uid: u, name, why });
   }
   view(d) {
     const P = uid => {
       const p = d.p[uid], w = d.who[uid];
       return { uid, name: w.name, fac: w.fac, course: w.course, on: this.online(uid), back: p.away ? p.away + this.cfg.grace : null, done: p.ans.length, ok: p.ok, fin: p.fin != null && d.startAt ? p.fin - d.startAt : null, left: p.left };
     };
+    const players = {};
+    for (const u of d.ids) players[u] = P(u);
+    const rm = d.rematch;
     return {
-      id: d.id, status: d.status, a: d.a, b: d.b, players: { [d.a]: P(d.a), [d.b]: P(d.b) },
-      file: d.file, title: d.title, n: d.n, max: d.max, startAt: d.startAt, deadline: d.deadline, endAt: d.endAt,
-      result: d.result, rematch: d.rematch ? d.rematch.by : null, rematchNo: d.rematchNo, closed: Object.keys(d.closed),
-      next: d.next, why: d.why, by: d.by, now: Date.now()
+      id: d.id, status: d.status, host: d.host, ids: d.ids.slice(), players,
+      // для вкладок прежней версии (дуэль на двоих): a — хозяин, b — второй
+      a: d.host, b: d.ids.find(u => u !== d.host) || null,
+      pend: d.status === 'setup' ? this.outOf(d.host).map(v => ({ uid: v.to, name: this.card(v.to).name, exp: v.exp })) : [],
+      file: d.file, title: d.title, cat: d.cat, counts: d.counts, n: d.n, max: d.max, startAt: d.startAt, deadline: d.deadline, endAt: d.endAt,
+      result: d.result, rematch: rm ? rm.by : null, yes: rm ? rm.yes.slice() : [], no: rm ? rm.no.slice() : [], rematchNo: d.rematchNo,
+      closed: Object.keys(d.closed), next: d.next, why: d.why, by: d.by, now: Date.now()
     };
   }
-  push(d) { const m = { t: 'duel', duel: this.view(d) }; this.tell(d.a, m); this.tell(d.b, m); }
+  push(d) { const m = { t: 'duel', duel: this.view(d) }; for (const u of d.ids) this.tell(u, m); }
   myQs(d, uid) { const p = d.p[uid]; return { id: d.id, qs: this.getQs(d.id, uid).map(view), ans: p.ans.map(x => ({ ok: x.ok, empty: x.empty })) }; }
-  allDone(d) { return [d.a, d.b].every(u => d.p[u].fin != null || d.p[u].left); }
+  // игра кончается, когда все ответили или вышли — или когда в игре остался один (остальные сдались или пропали)
+  ended(d) { return d.ids.every(u => d.p[u].fin != null || d.p[u].left) || d.ids.filter(u => !d.p[u].left).length <= 1; }
   cancel(d, why, by) {
     d.status = 'cancelled'; d.why = why; d.by = by || null; d.endAt = Date.now();
     this.putDuel(d); this.push(d);
+    this.dropInvitesOf([d.host], 'cancelled'); // кого ещё звали в эту комнату
   }
-  // старт: каждому — своя случайная раздача из одного файла; 3-2-1 идёт по часам сервера
-  launch(d, pool) {
+  // старт: каждому — своя случайная раздача из одного файла и одной категории; 3-2-1 идёт по часам сервера
+  launch(d, full) {
+    const pool = byCat(full, d.cat);
     const now = Date.now(), n = Math.max(1, Math.min(d.n | 0, pool.length, MAX_N));
     d.n = n; d.max = Math.min(MAX_N, pool.length); d.status = 'play'; d.startAt = now + this.cfg.countdown; d.deadline = d.startAt + n * this.cfg.perQ;
     const m = {};
-    for (const u of [d.a, d.b]) {
+    for (const u of d.ids) {
       m[u] = deal(pool, n);
       this.sql.exec('INSERT OR REPLACE INTO duel_qs(duel, uid, data) VALUES (?, ?, ?)', d.id, u, JSON.stringify(m[u]));
     }
     this.qcache.set(d.id, m);
-    this.putDuel(d); this.push(d);
-    for (const u of [d.a, d.b]) this.tell(u, { t: 'qs', ...this.myQs(d, u) });
+    this.putDuel(d);
+    this.dropInvitesOf(d.ids, 'started'); // игра началась: ни звать, ни отвечать на приглашения им некогда
+    this.push(d);
+    for (const u of d.ids) this.tell(u, { t: 'qs', ...this.myQs(d, u) });
   }
   finish(d) {
     if (d.status !== 'play') return;
     const now = Date.now();
     d.status = 'over'; d.endAt = now;
-    for (const u of [d.a, d.b]) { const p = d.p[u]; if (p.fin == null && p.stop == null) p.stop = Math.min(now, d.deadline || now); p.away = null; }
+    for (const u of d.ids) { const p = d.p[u]; if (p.fin == null && p.stop == null) p.stop = Math.min(now, d.deadline || now); p.away = null; }
     d.result = decide(d);
     if (d.result.reason !== 'abandoned') {
-      for (const u of [d.a, d.b]) {
-        const col = d.result.winner == null ? 'draws' : d.result.winner === u ? 'wins' : 'losses';
+      // победа — одному; делившие первое место — ничья; остальным — поражение
+      for (const u of d.ids) {
+        const col = d.result.winner === u ? 'wins' : d.result.winner == null && d.result.top.includes(u) ? 'draws' : 'losses';
         this.sql.exec(`UPDATE users SET ${col} = ${col} + 1 WHERE uid = ?`, u);
       }
     }
     this.putDuel(d); this.push(d);
-    for (const u of [d.a, d.b]) this.tell(u, { t: 'review', id: d.id, items: review(this.getQs(d.id, u), d.p[u]) });
+    for (const u of d.ids) this.tell(u, { t: 'review', id: d.id, items: review(this.getQs(d.id, u), d.p[u]) });
+  }
+  /* реванш: согласные (не меньше двоих) играют снова — тот же файл, та же категория, столько же вопросов, новые вопросы.
+     Начинается сам, когда ответили все, кто ещё может ответить; согласившиеся могут не ждать остальных (force). */
+  rematchState(d) {
+    const rm = d.rematch;
+    const yes = rm.yes.filter(u => !d.closed[u] && !this.activeOf(u));
+    const waiting = d.ids.filter(u => !rm.yes.includes(u) && !rm.no.includes(u) && !d.closed[u] && this.online(u) && !this.activeOf(u));
+    return { yes, waiting };
+  }
+  async settleRematch(d, force) {
+    const rm = d.rematch;
+    if (rm && !d.next && d.status === 'over') {
+      const { yes, waiting } = this.rematchState(d);
+      if (yes.length >= 2 && (force || !waiting.length)) {
+        const pool = await this.pool(d.file);
+        if (d.rematch === rm && !d.next && !yes.some(u => this.activeOf(u))) {
+          const host = yes.includes(rm.by) ? rm.by : yes[0];
+          const nd = this.newDuel(host, [host].concat(d.ids.filter(u => u !== host && yes.includes(u))), { file: d.file, title: d.title, cat: d.cat, counts: d.counts, n: d.n, want: d.want, max: d.max });
+          d.next = nd.id; d.rematch = null;
+          this.putDuel(d); this.push(d);
+          this.launch(nd, pool);
+          return;
+        }
+      } else if (yes.length < 2 && !waiting.length) d.rematch = null; // соглашаться больше некому
+    }
+    this.putDuel(d); this.push(d);
   }
 
   /* ---------- файлы курсов (те же, что у сайта) ---------- */
@@ -408,10 +477,10 @@ export class Arena extends DurableObject {
     for (const d of this.duels.values()) {
       if (d.status === 'setup') {
         t = Math.min(t, d.created + c.setupMax);
-        for (const u of [d.a, d.b]) if (d.p[u].away) t = Math.min(t, d.p[u].away + c.grace);
+        for (const u of d.ids) if (d.p[u].away) t = Math.min(t, d.p[u].away + c.grace);
       } else if (d.status === 'play') {
         t = Math.min(t, d.deadline);
-        for (const u of [d.a, d.b]) { const p = d.p[u]; if (p.away && p.fin == null && !p.left) t = Math.min(t, p.away + c.grace); }
+        for (const u of d.ids) { const p = d.p[u]; if (p.away && p.fin == null && !p.left) t = Math.min(t, p.away + c.grace); }
       } else t = Math.min(t, (d.endAt || d.updated) + c.keep);
     }
     return t === Infinity ? null : Math.max(t, Date.now() + 20);
@@ -427,17 +496,20 @@ export class Arena extends DurableObject {
     for (const v of [...this.invites.values()]) if (v.exp <= now) this.dropInvite(v, 'expired');
     for (const d of [...this.duels.values()]) {
       if (d.status === 'setup') {
-        const gone = [d.a, d.b].find(u => d.p[u].away && now - d.p[u].away >= c.grace);
-        if (gone) this.cancel(d, 'gone', gone);
+        const gone = d.ids.filter(u => d.p[u].away && now - d.p[u].away >= c.grace);
+        // пропал хозяин — комната закрывается; пропал гость — он больше не в комнате
+        if (gone.includes(d.host)) this.cancel(d, 'gone', d.host);
         else if (now - d.created >= c.setupMax) this.cancel(d, 'timeout');
+        else for (const u of gone) this.remove(d, u, 'gone');
       } else if (d.status === 'play') {
         let changed = false;
-        for (const u of [d.a, d.b]) {
+        for (const u of d.ids) {
           const p = d.p[u];
           if (p.away && p.fin == null && !p.left && now - p.away >= c.grace) { p.left = true; p.dropped = true; p.stop = p.away; changed = true; }
         }
-        // пропавший надолго проигрывает сразу, как и сдавшийся: второму незачем доигрывать
-        if (changed || now >= d.deadline || this.allDone(d)) this.finish(d);
+        // пропавший надолго выбывает, как сдавшийся; остался один — игра окончена
+        if (now >= d.deadline || this.ended(d)) this.finish(d);
+        else if (changed) { this.putDuel(d); this.push(d); }
       } else if (now - (d.endAt || d.updated) >= c.keep) this.delDuel(d);
     }
     await this.plan();
@@ -465,70 +537,96 @@ const H = {
     return false;
   },
 
+  // позвать: из поиска (комнаты ещё нет — она откроется, когда кто-то согласится) или из своей комнаты;
+  // можно звать нескольких сразу, всего в дуэли — до MAX_PLAYERS человек
   invite(ws, uid, m) {
     const to = typeof m.to === 'string' ? m.to : '';
     if (!to || to === uid) no('SELF');
     if (!this.user(to)) no('NO_USER');
     if (!this.online(to)) no('OFFLINE');
-    if (this.activeOf(uid)) no('BUSY_ME');
+    const mine = this.activeOf(uid);
+    if (mine && mine.status !== 'setup') no('BUSY_ME');
+    if (mine && mine.host !== uid) no('NOT_HOST');
+    if (mine && mine.ids.includes(to)) no('IN_ROOM');
     if (this.activeOf(to)) no('BUSY');
-    // встречное приглашение: человек уже позвал меня — это и есть согласие
-    const cross = [...this.invites.values()].find(v => v.from === to && v.to === uid && v.exp > Date.now());
+    const now = Date.now();
+    // встречное приглашение, пока своей комнаты нет: человек уже позвал меня — это и есть согласие
+    const cross = !mine && [...this.invites.values()].find(v => v.from === to && v.to === uid && v.exp > now);
     if (cross) return H.reply.call(this, ws, uid, { id: cross.id, ok: true });
-    const now = Date.now(), log = (this.inviteLog.get(uid) || []).filter(x => now - x < 60000);
-    if (log.length >= 10) no('RATE');
+    if ((mine ? mine.ids.length : 1) + this.outOf(uid).filter(v => v.to !== to).length >= MAX_PLAYERS) no('FULL', { max: MAX_PLAYERS });
+    const log = (this.inviteLog.get(uid) || []).filter(x => now - x < 60000);
+    if (log.length >= 20) no('RATE'); // хозяин зовёт до семи человек — с запасом на повторы
     log.push(now); this.inviteLog.set(uid, log);
-    for (const v of [...this.invites.values()]) if (v.from === uid) this.dropInvite(v, 'replaced'); // одно приглашение за раз
+    for (const v of [...this.invites.values()]) if (v.from === uid && v.to === to) this.dropInvite(v, 'replaced');
     const v = { id: rid(12), from: uid, to, at: now, exp: now + this.cfg.inviteTtl };
     this.putInvite(v);
-    const iv = this.invView(v);
-    this.tell(to, { t: 'invite-in', inv: iv });
-    this.tell(uid, { t: 'invite-out', inv: iv });
+    this.tell(to, { t: 'invite-in', inv: this.invView(v) });
+    this.tellOut(uid);
+    if (mine) this.push(mine);
   },
   cancel(ws, uid, m) {
     const v = this.invites.get(String(m.id || ''));
     if (v && v.from === uid) this.dropInvite(v, 'cancelled');
   },
+  // согласие: в комнату пригласившего (если её ещё нет — открывается на двоих)
   reply(ws, uid, m) {
     const v = this.invites.get(String(m.id || ''));
     if (!v || v.to !== uid || v.exp <= Date.now()) no('GONE');
     if (m.ok !== true) { this.dropInvite(v, 'declined'); return; }
     if (!this.online(v.from)) { this.dropInvite(v, 'offline'); no('OFFLINE'); }
-    if (this.activeOf(uid) || this.activeOf(v.from)) { this.dropInvite(v, 'busy'); no('BUSY'); }
+    let d = this.activeOf(v.from);
+    if (this.activeOf(uid) || (d && (d.status !== 'setup' || d.host !== v.from))) { this.dropInvite(v, 'busy'); no('BUSY'); }
+    if (d && d.ids.length >= MAX_PLAYERS) { this.dropInvite(v, 'full'); no('FULL', { max: MAX_PLAYERS }); }
     this.dropInvite(v, 'accepted');
-    this.dropInvitesOf([v.from, uid], 'busy'); // остальные приглашения этих двоих больше не в силе
-    const d = this.newDuel(v.from, uid);
-    this.putDuel(d); this.push(d);
+    if (d) this.join(d, uid);
+    else d = this.newDuel(v.from, [v.from, uid]);
+    this.putDuel(d);
+    // у вошедшего другие приглашения больше не в силе; тех, кого хозяин ещё ждёт, — в силе: они придут в эту же комнату
+    this.dropInvitesOf([uid], 'busy');
+    for (const x of [...this.invites.values()]) if (x.to === v.from) this.dropInvite(x, 'busy');
+    this.push(d);
   },
 
-  // настройки — только у того, кто позвал: файл курса и число вопросов (1–100, не больше, чем есть в файле)
+  // настройки — только у хозяина: файл курса, категория вопросов и их число (1–100, не больше, чем есть)
   async setup(ws, uid, m) {
     const d = this.duel(m.id, uid);
     if (d.status !== 'setup') no('STATE');
-    if (d.a !== uid) no('NOT_HOST');
-    let file = d.file, title = d.title, max = d.max;
+    if (d.host !== uid) no('NOT_HOST');
+    if (m.cat !== undefined && !CATS.includes(m.cat)) no('BAD_CAT');
+    if (m.n !== undefined && (!Number.isInteger(m.n) || m.n < 1 || m.n > MAX_N)) no('BAD_N');
+    let file = d.file, title = d.title, counts = d.counts;
     if (typeof m.file === 'string' && m.file !== d.file) {
       const e = (await this.setsList()).find(x => x.file === m.file);
       if (!e) no('NO_FILE');
       const pool = await this.pool(e.file);
       if (!pool.length) no('EMPTY');
-      file = e.file; title = e.title; max = Math.min(MAX_N, pool.length);
+      file = e.file; title = e.title; counts = catCounts(pool);
     }
     if (this.duels.get(d.id) !== d || d.status !== 'setup') no('STATE'); // пока качался файл, всё могло измениться
-    d.file = file; d.title = title; d.max = max;
-    if (m.n !== undefined) { const n = Number(m.n); if (!Number.isInteger(n) || n < 1 || n > MAX_N) no('BAD_N'); d.n = n; }
-    if (d.max) d.n = Math.min(d.n, d.max);
+    let cat = m.cat !== undefined ? m.cat : d.cat;
+    if (counts && !counts[cat]) { if (m.cat !== undefined) no('EMPTY_CAT'); cat = 'all'; } // в новом файле такой категории нет
+    d.file = file; d.title = title; d.counts = counts; d.cat = cat;
+    d.max = counts ? Math.min(MAX_N, counts[cat]) : 0;
+    if (m.n !== undefined) d.want = m.n;
+    // число на ползунке помнится: в категории поменьше оно урезается, в большой — возвращается
+    d.n = d.max ? Math.min(d.want, d.max) : d.want;
     this.putDuel(d); this.push(d);
   },
   async start(ws, uid, m) {
     const d = this.duel(m.id, uid);
     if (d.status !== 'setup') no('STATE');
-    if (d.a !== uid) no('NOT_HOST');
+    if (d.host !== uid) no('NOT_HOST');
     if (!d.file) no('NO_FILE');
-    if (!this.online(d.b) || d.p[d.b].away) no('PEER_OFFLINE');
+    if (d.ids.length < 2) no('ALONE');
+    const here = () => d.ids.filter(u => u === d.host || (this.online(u) && !d.p[u].away));
+    if (here().length < 2) no('PEER_OFFLINE');
     const pool = await this.pool(d.file);
     if (this.duels.get(d.id) !== d || d.status !== 'setup') no('STATE');
-    if (!pool.length) no('EMPTY');
+    if (!byCat(pool, d.cat).length) no('EMPTY_CAT');
+    const now = here();
+    if (now.length < 2) no('PEER_OFFLINE');
+    // кто сейчас не на связи, в игру не попадает
+    for (const u of d.ids.filter(x => !now.includes(x))) this.remove(d, u, 'gone');
     this.launch(d, pool);
   },
   answer(ws, uid, m) {
@@ -547,50 +645,63 @@ const H = {
     if (p.ans.length >= d.n) p.fin = now;
     this.putDuel(d);
     this.tell(uid, { t: 'graded', id: d.id, i: m.i, ok: g.ok, empty: g.empty });
-    if (this.allDone(d)) this.finish(d); else this.push(d);
+    if (this.ended(d)) this.finish(d); else this.push(d);
   },
-  // выход: в комнате — дуэль отменяется; в игре — поражение (второй побеждает)
+  // выход: хозяин из комнаты — дуэль отменяется для всех, гость — просто уходит;
+  // в игре — сдался: выбывает, остальные играют дальше (остался один — он и победил)
   leave(ws, uid, m) {
     const d = this.duel(m.id, uid);
-    if (d.status === 'setup') { this.cancel(d, 'left', uid); return; }
+    if (d.status === 'setup') { if (d.host === uid) this.cancel(d, 'left', uid); else this.remove(d, uid, 'left'); return; }
     if (d.status !== 'play') no('STATE');
     const p = d.p[uid];
     if (p.left) return;
     if (p.fin != null) no('DONE');
     p.left = true; p.stop = Date.now();
-    this.finish(d);
+    if (this.ended(d)) this.finish(d); else { this.putDuel(d); this.push(d); }
   },
-  // реванш: тот же файл и столько же вопросов, новые случайные вопросы; начинается сразу, когда согласны оба
+  // реванш: предложить или согласиться
   async rematch(ws, uid, m) {
     const d = this.duel(m.id, uid);
     if (d.status !== 'over' || d.next) no('STATE');
-    const o = this.other(d, uid);
-    if (d.closed[o]) no('PEER_LEFT');
-    if (this.activeOf(uid) || this.activeOf(o)) no('BUSY');
-    if (!this.online(o)) no('PEER_OFFLINE');
-    if (d.rematch && d.rematch.by === o) {
-      const pool = await this.pool(d.file);
-      if (d.status !== 'over' || d.next || !d.rematch || this.activeOf(uid) || this.activeOf(o)) no('STATE');
-      const nd = this.newDuel(o, uid, { file: d.file, title: d.title, n: d.n });
-      d.next = nd.id; d.rematch = null;
-      this.putDuel(d); this.push(d);
-      this.dropInvitesOf([uid, o], 'busy');
-      this.launch(nd, pool);
-      return;
-    }
-    d.rematch = { by: uid, at: Date.now() }; d.rematchNo = null;
-    this.putDuel(d); this.push(d);
+    const others = d.ids.filter(u => u !== uid && !d.closed[u]);
+    if (!others.length) no('PEER_LEFT');
+    if (this.activeOf(uid)) no('BUSY');
+    const rm = d.rematch;
+    if (!rm) {
+      const free = others.filter(u => this.online(u));
+      if (!free.length) no('PEER_OFFLINE');
+      if (free.every(u => this.activeOf(u))) no('BUSY');
+      d.rematch = { by: uid, at: Date.now(), yes: [uid], no: [] }; d.rematchNo = null;
+    } else if (!rm.yes.includes(uid)) { rm.yes.push(uid); rm.no = rm.no.filter(x => x !== uid); }
+    await this.settleRematch(d);
   },
-  'rematch-no'(ws, uid, m) {
+  'rematch-no': async function (ws, uid, m) {
     const d = this.duel(m.id, uid);
-    if (d.status === 'over' && d.rematch && d.rematch.by !== uid) { d.rematch = null; d.rematchNo = uid; this.putDuel(d); this.push(d); }
+    const rm = d.rematch;
+    if (d.status !== 'over' || !rm || rm.by === uid) return;
+    rm.yes = rm.yes.filter(x => x !== uid);
+    if (!rm.no.includes(uid)) rm.no.push(uid);
+    d.rematchNo = uid;
+    await this.settleRematch(d);
   },
-  // экран итогов закрыт: реванша с этим человеком уже не будет
-  close(ws, uid, m) {
+  // согласившиеся начинают, не дожидаясь остальных
+  async 'rematch-go'(ws, uid, m) {
+    const d = this.duel(m.id, uid);
+    if (d.status !== 'over' || !d.rematch || d.next || !d.rematch.yes.includes(uid)) no('STATE');
+    if (this.rematchState(d).yes.length < 2) no('ALONE');
+    await this.settleRematch(d, true);
+  },
+  // экран итогов закрыт: в реванше этого человека уже не будет
+  async close(ws, uid, m) {
     const d = this.duels.get(String(m.id || ''));
     if (!d || !this.inDuel(d, uid) || (d.status !== 'over' && d.status !== 'cancelled')) return;
     d.closed[uid] = true;
-    if (d.rematch) d.rematch = null;
-    this.putDuel(d); this.push(d);
+    const rm = d.rematch;
+    if (rm) {
+      rm.yes = rm.yes.filter(x => x !== uid); rm.no = rm.no.filter(x => x !== uid);
+      if (rm.by === uid) rm.by = rm.yes[0] || null;
+      if (!rm.by) d.rematch = null;
+    }
+    await this.settleRematch(d);
   }
 };

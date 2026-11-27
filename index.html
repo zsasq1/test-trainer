@@ -1059,6 +1059,44 @@ a.tg-btn{text-decoration:none}
 .d-q .q.done .choice,.d-q .q.done .sbox,.d-q .q.done .dd-btn{opacity:.75}
 .d-q .verdict{font-weight:700}
 .d-q .verdict.flash{animation:d-rise .2s var(--ease-out)}
+/* three and more players: a row of chips that scrolls sideways; those still invited are paler */
+.d-roster{display:flex;gap:4px;max-width:838px;margin:0 auto;padding:5px;border:1px solid var(--line);border-radius:5px;background:var(--surface);overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none}
+.d-roster::-webkit-scrollbar{display:none}
+.d-chip{flex:1 1 0;display:flex;align-items:center;gap:7px;min-width:108px;max-width:168px;padding:4px 6px 4px 4px;border-radius:5px}
+.d-chip.me{background:var(--soft-accent)}
+.d-chip.wait{opacity:.55}
+.d-chip .d-ava{width:34px;height:34px;font-size:15px}
+.d-chip .mtxt{min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.d-chip b{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.d-chip small{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-variant-numeric:tabular-nums}
+.d-chip small.off{color:var(--red)}
+.d-add{width:100%}
+/* the type of questions: one choice, with how many there are in the file */
+.d-cats{display:flex;flex-wrap:wrap;gap:6px}
+.d-cat{display:inline-flex;align-items:baseline;gap:6px;min-height:40px;padding:9px 12px;border:1px solid var(--btn-line);border-radius:5px;background:var(--btn);color:var(--btn-fg);font-size:14.5px;font-weight:600;line-height:1.2;transition:background-color .15s ease,border-color .15s ease,color .15s ease}
+.d-cat small{font-size:12.5px;font-weight:500;opacity:.75;font-variant-numeric:tabular-nums}
+.d-cat[aria-checked="true"]{background:var(--btn-on);border-color:var(--btn-on-line);color:var(--on-accent)}
+.d-cat:disabled{opacity:.4}
+.d-kv+.d-kv{margin-top:-4px}
+/* many lanes: a tighter race */
+.d-race.many{gap:3px;padding:5px 10px}
+.d-race.many .d-lane{font-size:12.5px}
+.d-race.many .d-track{height:6px}
+/* places: #, player, right, wrong, accuracy, time */
+.d-tab.d-rank{font-size:14px}
+.d-tab.d-rank th{font-size:11px;padding:7px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.d-tab.d-rank td{padding:9px 3px}
+.d-tab.d-rank th:first-child,.d-tab.d-rank td:first-child{width:28px;text-align:center;color:var(--muted);font-weight:700}
+.d-tab.d-rank th:nth-child(2),.d-tab.d-rank td:nth-child(2){width:auto;text-align:start;padding-inline-start:6px}
+.d-tab.d-rank th:nth-child(3),.d-tab.d-rank td:nth-child(3){width:50px}
+.d-tab.d-rank th:nth-child(4),.d-tab.d-rank td:nth-child(4){display:none}
+.d-tab.d-rank th:nth-child(5),.d-tab.d-rank td:nth-child(5){width:68px}
+.d-tab.d-rank th:last-child,.d-tab.d-rank td:last-child{width:52px}
+.d-tab.d-rank td.nm{font-weight:600;color:var(--ink);overflow-wrap:break-word}
+.d-tab.d-rank td.nm small{display:block;font-size:11.5px;font-weight:500;color:var(--red)}
+.d-tab.d-rank tr.me td{background:var(--soft-accent)}
+.d-tab.d-rank td.p1{color:var(--star)}
+@container app (min-width:560px){.d-tab.d-rank{font-size:15px}.d-tab.d-rank th{font-size:13px;padding:8px}.d-tab.d-rank td{padding:9px 8px}.d-tab.d-rank th:first-child,.d-tab.d-rank td:first-child{width:40px}.d-tab.d-rank th:nth-child(n+3),.d-tab.d-rank td:nth-child(n+3){display:table-cell;width:92px}.d-chip{max-width:180px}}
 /* results */
 .d-hero{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px 6px;text-align:center;animation:d-hero .34s var(--ease-out)}
 @keyframes d-hero{from{opacity:0;transform:scale(.96)}}
@@ -1689,7 +1727,6 @@ const TR = {
   "Файл с вопросами": ["Question file", "ملف الأسئلة"],
   "{0}: у каждого игрока будут свои случайные вопросы из этого файла": ["{0}: each player gets their own random questions from this file", "{0}: لكل لاعب أسئلته العشوائية الخاصة من هذا الملف"],
   "Без курса": ["No year", "بدون سنة"],
-  "{0} выбирает файл и число вопросов. Дуэль начнётся у вас обоих одновременно.": ["{0} is choosing the file and the number of questions. The duel starts for both of you at the same moment.", "{0} يختار الملف وعدد الأسئلة. ستبدأ المبارزة لديكما في اللحظة نفسها."],
   "Файл": ["File", "الملف"],
   "Вопросов": ["Questions", "الأسئلة"],
   "из {0}": ["of {0}", "من {0}"],
@@ -1748,6 +1785,52 @@ const TR = {
   "Играть дальше": ["Keep playing", "متابعة اللعب"],
   "Дуэль идёт": ["A duel is on", "المبارزة جارية"],
   "с соперником: {0}": ["against {0}", "ضد {0}"],
+  "В одной дуэли — не больше 8 человек": ["A duel can have at most 8 people", "يمكن أن يشارك في المبارزة 8 أشخاص على الأكثر"],
+  "Этот игрок уже в комнате": ["This player is already in the room", "هذا اللاعب موجود في الغرفة بالفعل"],
+  "Позовите хотя бы одного соперника": ["Invite at least one opponent", "ادعُ منافسًا واحدًا على الأقل"],
+  "В этом файле нет вопросов такого типа": ["This file has no questions of this type", "لا توجد في هذا الملف أسئلة من هذا النوع"],
+  "Все типы": ["All types", "كل الأنواع"],
+  "{0}: в комнате уже нет мест": ["{0}: the room is already full", "{0}: الغرفة ممتلئة بالفعل"],
+  "Связь пропала — вы больше не в комнате": ["Connection lost — you are no longer in the room", "انقطع الاتصال — لم تعد في الغرفة"],
+  "{0} потерял(а) связь и больше не в комнате": ["{0} lost connection and is no longer in the room", "فقد {0} الاتصال ولم يعد في الغرفة"],
+  "Позвать можно сразу нескольких — до {0} человек в одной дуэли": ["You can invite several people at once — up to {0} in one duel", "يمكنك دعوة عدة أشخاص معًا — حتى {0} في مبارزة واحدة"],
+  "игроков: {0}": ["players: {0}", "اللاعبون: {0}"],
+  "организатор": ["host", "المنظِّم"],
+  "Игроки": ["Players", "اللاعبون"],
+  "ждём ответа": ["waiting for an answer", "بانتظار الرد"],
+  "Вы одни в комнате. Позовите хотя бы одного соперника.": ["You are alone in the room. Invite at least one opponent.", "أنت وحدك في الغرفة. ادعُ منافسًا واحدًا على الأقل."],
+  "{0} выбирает файл, тип и число вопросов. Дуэль начнётся у всех одновременно.": ["{0} picks the file, the type and the number of questions. The duel starts for everyone at the same time.", "يختار {0} الملف ونوع الأسئلة وعددها. تبدأ المبارزة للجميع في الوقت نفسه."],
+  "{0} выбирает файл, тип и число вопросов. Дуэль начнётся у вас обоих одновременно.": ["{0} picks the file, the type and the number of questions. The duel starts for both of you at the same time.", "يختار {0} الملف ونوع الأسئلة وعددها. تبدأ المبارزة لكليكما في الوقت نفسه."],
+  "Позвать ещё": ["Invite more", "ادعُ المزيد"],
+  "В одной дуэли — до {0} человек": ["Up to {0} people in one duel", "حتى {0} أشخاص في مبارزة واحدة"],
+  "Имя игрока": ["Player's name", "اسم اللاعب"],
+  "Найти игрока по имени": ["Find a player by name", "ابحث عن لاعب بالاسم"],
+  "Позвать ещё игроков": ["Invite more players", "ادعُ لاعبين آخرين"],
+  "Больше никого нет в сети. Найдите друга по имени.": ["Nobody else is online. Find a friend by name.", "لا أحد غيرك متصل. ابحث عن صديق بالاسم."],
+  "Тип вопросов": ["Question type", "نوع الأسئلة"],
+  "Все играют в одном типе — или во всех сразу": ["Everyone plays one type — or all of them at once", "يلعب الجميع نوعًا واحدًا — أو كل الأنواع معًا"],
+  "Ждём соперников": ["Waiting for opponents", "بانتظار المنافسين"],
+  "Ждём, пока закончат: {0}. Итоги появятся сами.": ["Waiting for {0} to finish. The results will appear by themselves.", "بانتظار أن ينهي {0}. ستظهر النتائج تلقائيًا."],
+  "Подводим итоги…": ["Counting the results…", "جارٍ احتساب النتائج…"],
+  "{0}-е место из {1}": ["Place {0} of {1}", "المركز {0} من {1}"],
+  "Все игроки вышли из дуэли": ["All players left the duel", "غادر جميع اللاعبين المبارزة"],
+  "Первое место поровну: {0}": ["First place is shared: {0}", "المركز الأول مشترك: {0}"],
+  "Больше всех верных ответов": ["The most correct answers", "أكثر الإجابات الصحيحة"],
+  "Все соперники вышли из дуэли": ["All opponents left the duel", "غادر جميع المنافسين المبارزة"],
+  "Победитель: {0}": ["Winner: {0}", "الفائز: {0}"],
+  "Игрок": ["Player", "اللاعب"],
+  "сдался(лась)": ["gave up", "استسلم"],
+  "Остальные начали реванш без вас": ["The others started a rematch without you", "بدأ الآخرون مباراة ثأرية بدونك"],
+  "Согласны: {0}": ["Agreed: {0}", "وافق: {0}"],
+  "Начинаем…": ["Starting…", "نبدأ…"],
+  "Начать без остальных": ["Start without the others", "ابدأ بدون الآخرين"],
+  "Вы отказались от реванша": ["You declined the rematch", "رفضتَ المباراة الثأرية"],
+  "Все соперники закрыли итоги — реванш уже не начать": ["All opponents closed the results — a rematch is no longer possible", "أغلق جميع المنافسين النتائج — لم تعد المباراة الثأرية ممكنة"],
+  "Остальные останутся в комнате и смогут позвать кого-то ещё.": ["The others will stay in the room and can invite someone else.", "سيبقى الآخرون في الغرفة ويمكنهم دعوة شخص آخر."],
+  "Дуэль отменится для всех игроков.": ["The duel will be cancelled for all players.", "ستُلغى المبارزة لجميع اللاعبين."],
+  "Вы выбываете, остальные доиграют без вас. Вернуться в эту дуэль будет нельзя.": ["You drop out and the others finish without you. You won't be able to return to this duel.", "ستخرج من المبارزة وسيكملها الآخرون بدونك. لن تتمكن من العودة إليها."],
+  "соперники: {0}": ["opponents: {0}", "المنافسون: {0}"],
+  "Вы одни в комнате": ["You are alone in the room", "أنت وحدك في الغرفة"],
   "Вернуться": ["Return", "عودة"],
   "{0} предлагает реванш": ["{0} offers a rematch", "{0} يعرض مباراة ثأرية"],
   "Дуэль окончена": ["The duel is over", "انتهت المبارزة"],
@@ -5291,7 +5374,8 @@ function normalizeState(st) {
   S.checks = Math.max(0, Math.floor(+S.checks || 0));
 }
 /* =========================================================
-   Дуэль: two players, one course file, each their own random questions, live progress, a winner.
+   Дуэль: two to eight players, one course file and one type of questions, each their own random questions,
+   live progress of everyone, places and a winner.
    The server (duel-worker/) is the judge: it deals the questions, keeps the keys, grades every answer
    by its own clock and names the winner. This page only shows what it is sent and passes on what was chosen,
    so nothing changed in the browser can turn into a win.
@@ -5327,7 +5411,9 @@ function dErr(code) {
     RATE: 'Слишком часто — подождите немного', NO_USER: 'Игрок не найден', GONE: 'Приглашение уже не действует',
     PEER_OFFLINE: 'Соперник сейчас не в сети', PEER_LEFT: 'Соперник уже вышел', NO_FILE: 'Сначала выберите файл',
     EMPTY: 'В этом файле нет вопросов для дуэли', FILE: 'Файл не открылся — попробуйте другой', SETS: 'Файл не открылся — попробуйте другой',
-    NOT_HOST: 'Настраивает тот, кто пригласил', NETWORK: 'Нет связи с сервером дуэлей', TIMEOUT: 'Сервер дуэлей не отвечает'
+    NOT_HOST: 'Настраивает тот, кто пригласил', NETWORK: 'Нет связи с сервером дуэлей', TIMEOUT: 'Сервер дуэлей не отвечает',
+    FULL: 'В одной дуэли — не больше 8 человек', IN_ROOM: 'Этот игрок уже в комнате', ALONE: 'Позовите хотя бы одного соперника',
+    EMPTY_CAT: 'В этом файле нет вопросов такого типа'
   };
   return T(M[code] || 'Не получилось — попробуйте ещё раз');
 }
@@ -5349,22 +5435,32 @@ function duelAnswer(q) {
   return {};
 }
 
+const MAX_DUEL_PLAYERS = 8;
+// the trainer's categories that a duel can be played in; «all» — every type at once
+const DUEL_CATS = ['all', 'single', 'multiple', 'dropdown', 'sortable', 'caseStudy'];
+const dCatName = k => (!k || k === 'all' ? T('Все типы') : CAT_TITLE[k]);
+const dNames = list => list.map(p => p.name).join(', ');
+
 const Duel = {
   ws: null, conn: 'off', err: '', connecting: false, tries: 0, retryT: 0, idleT: 0, pingT: 0, tickT: 0, advT: 0, lastMsg: 0,
   off: 0, seq: 0, rids: new Map(),
-  me: null, invIn: [], invOut: null, d: null, qs: null, review: null,
+  me: null, invIn: [], invOuts: [], d: null, qs: null, review: null,
   recs: {}, qmap: new Map(), at: 0, pend: null, flashI: null, done: new Set(),
   open: false, el: null, shown: '', qKey: '', search: { q: '', list: null, busy: false }, searchSeq: 0, searchT: 0, searchAt: 0,
-  pendFile: '', nDrag: 0, nSendT: 0, autoFile: '', menuSig: '', banSig: '',
+  pendFile: '', pendCat: '', nDrag: 0, nSendT: 0, autoFile: '', menuSig: '', banSig: '', roomKey: '', roomAdd: false,
   now() { return Date.now() + this.off; },
   uid() { return Account.user ? Account.user.uid : ''; },
   want() { return !!(Account.ready() && Account.user && !Account.blocked()); },
   active() { const d = this.d; return !!d && (d.status === 'setup' || d.status === 'play'); },
-  peer() { const d = this.d; return d ? d.players[d.a === this.uid() ? d.b : d.a] : null; },
+  ids() { const d = this.d; return d ? (Array.isArray(d.ids) ? d.ids : [d.a, d.b].filter(Boolean)) : []; },
+  // everyone else in the duel, in the order they came; peer() — the only one in a duel of two
+  others() { const d = this.d, me = this.uid(); return this.ids().filter(u => u !== me && d.players[u]).map(u => d.players[u]); },
+  peer() { return this.others()[0] || null; },
   mine() { const d = this.d; return d ? d.players[this.uid()] : null; },
-  host() { return !!this.d && this.d.a === this.uid(); },
+  hostId() { const d = this.d; return d ? d.host || d.a : ''; },
+  host() { return !!this.d && this.hostId() === this.uid(); },
   // the service worker reloads into a new version only when no duel would be cut short
-  busy() { return this.active() || !!this.invOut; },
+  busy() { return this.active() || this.invOuts.length > 0; },
 
   /* ---------- connection: ticket by the Firebase token, then one WebSocket ---------- */
   sync() {
@@ -5373,7 +5469,7 @@ const Duel = {
   },
   reset() { // signed out or blocked: nothing of that person stays on the page
     this.hang(); clearTimeout(this.retryT); this.retryT = 0; this.tries = 0;
-    this.me = null; this.invIn = []; this.invOut = null; this.d = null; this.qs = null; this.review = null; this.recs = {}; this.qmap = new Map();
+    this.me = null; this.invIn = []; this.invOuts = []; this.d = null; this.qs = null; this.review = null; this.recs = {}; this.qmap = new Map();
     if (this.open) this.hide(true);
     this.changed();
   },
@@ -5480,7 +5576,7 @@ const Duel = {
       if (Number.isFinite(m.now)) this.off = m.now - Date.now();
       this.me = m.me || this.me;
       this.invIn = Array.isArray(m.invIn) ? m.invIn : [];
-      this.invOut = m.invOut || null;
+      this.invOuts = Array.isArray(m.invOuts) ? m.invOuts : m.invOut ? [m.invOut] : [];
       this.setDuel(m.duel || null, true);
       if (m.qs) this.setQs(m.qs);
       if (m.review && this.d && m.review.id === this.d.id) this.review = m.review;
@@ -5494,17 +5590,30 @@ const Duel = {
       haptic();
       this.changed();
     },
-    'invite-out'(m) { this.invOut = m.inv || null; this.changed(); },
+    'invite-out'(m) { this.invOuts = Array.isArray(m.all) ? m.all : m.inv ? [m.inv] : []; this.changed(); },
     'invite-gone'(m) {
-      const inn = this.invIn.find(v => v.id === m.id);
+      const inn = this.invIn.find(v => v.id === m.id), out = this.invOuts.find(v => v.id === m.id);
       this.invIn = this.invIn.filter(v => v.id !== m.id);
-      if (this.invOut && this.invOut.id === m.id) {
-        const n = this.invOut.to.name;
-        this.invOut = null;
-        const say = { declined: T('{0}: приглашение отклонено', n), expired: T('{0} не ответил(а) на приглашение', n), offline: T('{0} сейчас не в сети', n), busy: T('{0} уже в другой дуэли', n) }[m.why];
-        if (say && !this.active()) toast(say);
+      if (out) {
+        const n = out.to.name;
+        this.invOuts = this.invOuts.filter(v => v.id !== m.id);
+        const say = { declined: T('{0}: приглашение отклонено', n), expired: T('{0} не ответил(а) на приглашение', n), offline: T('{0} сейчас не в сети', n), busy: T('{0} уже в другой дуэли', n), full: T('{0}: в комнате уже нет мест', n) }[m.why];
+        const ph = this.phase();
+        if (say && ph !== 'play' && ph !== 'count') toast(say); // in the room too: the host sees who said no
       } else if (inn && m.why === 'cancelled') toast(T('{0} отменяет приглашение', inn.from.name));
       this.changed();
+    },
+    // out of a room: left it, or dropped from it while away
+    left(m) {
+      if (!this.d || this.d.id !== m.id) return;
+      this.d = null; this.qs = null; this.review = null; this.recs = {}; this.qmap = new Map();
+      if (m.why === 'gone') toast(T('Связь пропала — вы больше не в комнате'));
+      this.changed();
+    },
+    // someone else left the room
+    gone(m) {
+      if (!this.d || this.d.id !== m.id) return;
+      toast(m.why === 'gone' ? T('{0} потерял(а) связь и больше не в комнате', m.name) : T('{0} выходит из комнаты', m.name));
     },
     duel(m) { this.setDuel(m.duel); this.changed(); },
     qs(m) { this.setQs(m); this.changed(); },
@@ -5624,7 +5733,7 @@ const Duel = {
     this.banner();
     const sig = this.menuState().sig;
     if (sig !== this.menuSig) { this.menuSig = sig; if (drawerOpen || sidebarShown()) renderMenuBody(); }
-    const need = this.open || !!this.invOut || this.invIn.length > 0;
+    const need = this.open || this.invOuts.length > 0 || this.invIn.length > 0;
     if (need && !this.tickT) this.tickT = setInterval(() => this.tick(), 250);
     else if (!need && this.tickT) { clearInterval(this.tickT); this.tickT = 0; }
   },
@@ -5688,42 +5797,46 @@ const Duel = {
     put($('#dLNote'), h);
     h = '';
     for (const v of this.invIn) h += this.inCard(v);
-    if (this.invOut) {
-      const v = this.invOut;
-      h += `<div class="d-card out">${dAva(v.to, false, true)}<span class="mtxt">${T('Ждём ответа: {0}', esc(v.to.name))}<small>${T('Приглашение действует ещё')} <span data-until="${v.exp}"></span></small></span><button type="button" class="act" data-d="cancel" data-id="${esc(v.id)}">${T('Отменить')}</button><span class="d-left" aria-hidden="true"><span data-bar="${v.now || v.exp - 60000}-${v.exp}"></span></span></div>`;
-    }
+    for (const v of this.invOuts) h += this.outCard(v);
     put($('#dLInv'), h);
     const s = this.search;
     put($('#dLLabel'), `<span>${s.q ? T('Найдено') : T('Сейчас в сети')}</span>${s.busy ? '<span class="spinner" style="width:14px;height:14px;border-width:2px"></span>' : ''}`);
     h = '';
     if (s.list && s.list.length) {
-      h += '<div class="d-list">' + s.list.map(u => {
-        const out = this.invOut && this.invOut.to.uid === u.uid;
-        const can = u.on && !u.busy && !out && this.conn === 'on';
-        const why = u.busy ? `<span class="d-tag">${T('в дуэли')}</span>` : '';
-        const rec = u.wins || u.losses || u.draws ? ' · ' + T('{0} поб. / {1} пор.', u.wins, u.losses) : '';
-        return `<div class="d-pl">${dAva(u, false, !!u.on)}<span class="mtxt">${esc(u.name)}${why}<small>${esc(dWho(u))}${rec}${u.on ? '' : ' · ' + T('не в сети')}</small></span><button type="button" class="act${can ? ' main' : ''}" data-d="invite" data-uid="${esc(u.uid)}"${can ? '' : ' disabled'}>${out ? T('Ждём…') : T('Позвать')}</button></div>`;
-      }).join('') + '</div>';
+      const full = this.invOuts.length >= MAX_DUEL_PLAYERS - 1;
+      h += '<div class="d-list">' + s.list.map(u => this.plRow(u, full)).join('') + '</div>';
     } else if (s.list) {
       h += `<div class="d-empty">${s.q ? T('Никого не нашли. Имя ищется с начала любого слова: «Ив» найдёт «Иван Петров» и «Анна Иванова».') : T('Сейчас никого нет в сети. Найдите друга по имени — позвать можно того, у кого открыт тренажёр.')}</div>`;
     }
     put($('#dLList'), h);
-    put($('#dLMe'), this.me ? T('Ваши дуэли: побед {0}, поражений {1}, ничьих {2}', this.me.wins || 0, this.me.losses || 0, this.me.draws || 0) : '');
+    put($('#dLMe'), (this.me ? esc(T('Ваши дуэли: побед {0}, поражений {1}, ничьих {2}', this.me.wins || 0, this.me.losses || 0, this.me.draws || 0)) + '<br>' : '') + esc(T('Позвать можно сразу нескольких — до {0} человек в одной дуэли', MAX_DUEL_PLAYERS)));
     this.times();
   },
+  // a person in the search: online or not, busy or free, «Позвать»
+  plRow(u, full) {
+    const out = this.invOuts.some(v => v.to.uid === u.uid);
+    const can = u.on && !u.busy && !out && !full && this.conn === 'on';
+    const why = u.busy ? `<span class="d-tag">${T('в дуэли')}</span>` : '';
+    const rec = u.wins || u.losses || u.draws ? ' · ' + T('{0} поб. / {1} пор.', u.wins, u.losses) : '';
+    return `<div class="d-pl">${dAva(u, false, !!u.on)}<span class="mtxt">${esc(u.name)}${why}<small>${esc(dWho(u))}${rec}${u.on ? '' : ' · ' + T('не в сети')}</small></span><button type="button" class="act${can ? ' main' : ''}" data-d="invite" data-uid="${esc(u.uid)}"${can ? '' : ' disabled'}>${out ? T('Ждём…') : T('Позвать')}</button></div>`;
+  },
+  // an invitation waiting for an answer, with a bar running out
+  outCard(v) {
+    return `<div class="d-card out">${dAva(v.to, false, true)}<span class="mtxt">${T('Ждём ответа: {0}', esc(v.to.name))}<small>${T('Приглашение действует ещё')} <span data-until="${v.exp}"></span></small></span><button type="button" class="act" data-d="cancel" data-id="${esc(v.id)}">${T('Отменить')}</button><span class="d-left" aria-hidden="true"><span data-bar="${v.now || v.exp - 60000}-${v.exp}"></span></span></div>`;
+  },
   inCard(v) {
-    return `<div class="d-card in">${dAva(v.from, false, true)}<span class="mtxt">${T('{0} зовёт на дуэль', esc(v.from.name))}<small>${esc(dWho(v.from))} · <span data-until="${v.exp}"></span></small></span><div class="d-row2"><button type="button" class="act" data-d="no" data-id="${esc(v.id)}">${T('Отклонить')}</button><button type="button" class="act main" data-d="yes" data-id="${esc(v.id)}">${T('Принять')}</button></div></div>`;
+    return `<div class="d-card in">${dAva(v.from, false, true)}<span class="mtxt">${T('{0} зовёт на дуэль', esc(v.from.name))}<small>${esc(dWho(v.from))}${v.room > 1 ? ' · ' + T('игроков: {0}', v.room) : ''} · <span data-until="${v.exp}"></span></small></span><div class="d-row2"><button type="button" class="act" data-d="no" data-id="${esc(v.id)}">${T('Отклонить')}</button><button type="button" class="act main" data-d="yes" data-id="${esc(v.id)}">${T('Принять')}</button></div></div>`;
   },
   find(now) {
     clearTimeout(this.searchT);
     const go = async () => {
-      const inp = $('#dQ'), q = inp ? inp.value.trim() : this.search.q;
-      const seq = ++this.searchSeq;
+      const inp = $('#dQ') || $('#dRQ'), q = inp ? inp.value.trim() : this.search.q;
+      const seq = ++this.searchSeq, here = () => this.shown === 'lobby' || this.shown === 'room';
       this.search.q = q; this.search.busy = true; this.searchAt = Date.now();
-      if (this.shown === 'lobby') this.paint();
+      if (here()) this.paint();
       try { const r = await this.req({ t: 'search', q }); if (seq === this.searchSeq) this.search = { q, list: Array.isArray(r.list) ? r.list : [], busy: false }; }
       catch (e) { if (seq === this.searchSeq) this.search.busy = false; }
-      if (seq === this.searchSeq && this.shown === 'lobby') this.paint();
+      if (seq === this.searchSeq && here()) this.paint();
     };
     if (this.conn !== 'on') return;
     if (now) go(); else this.searchT = setTimeout(go, 230);
@@ -5732,26 +5845,73 @@ const Duel = {
     const d = this.d, me = this.mine(), p = this.peer();
     const side = (c, mine) => {
       const away = !c.on && c.back;
-      const st = mine ? (d.a === c.uid ? T('Вы · пригласили') : T('Вы')) : c.left ? T('вышел(а)') : away ? `${T('нет связи')} · <span data-until="${c.back}"></span>` : c.on ? T('в сети') : T('не в сети');
+      const st = mine ? (this.hostId() === c.uid ? T('Вы · пригласили') : T('Вы')) : c.left ? T('вышел(а)') : away ? `${T('нет связи')} · <span data-until="${c.back}"></span>` : c.on ? T('в сети') : T('не в сети');
       return `<div class="d-side">${dAva(c, mine, !!c.on)}<b>${esc(c.name)}</b><small${!mine && !c.on ? ' class="off"' : ''}>${st}</small></div>`;
     };
     return `<div class="d-vs">${side(me, true)}<span class="d-x">VS</span>${side(p, false)}</div>`;
   },
-  /* the room: the one who invited picks a file and the number of questions; the other sees it live */
+  // three and more (or one, waiting for company): a row of players, those still invited — paler
+  rosterHTML() {
+    const d = this.d, me = this.uid(), pend = d.status === 'setup' ? d.pend || [] : [];
+    const chip = c => {
+      const mine = c.uid === me, away = !c.on && c.back;
+      const st = c.left ? T('вышел(а)') : away ? `${T('нет связи')} · <span data-until="${c.back}"></span>` : c.uid === this.hostId() ? T('организатор') : c.on ? T('в сети') : T('не в сети');
+      return `<div class="d-chip${mine ? ' me' : ''}">${dAva(c, mine, !!c.on)}<span class="mtxt"><b>${mine ? T('Вы') : esc(c.name)}</b><small${away || c.left ? ' class="off"' : ''}>${st}</small></span></div>`;
+    };
+    const list = [this.mine()].concat(this.others()).filter(Boolean);
+    return `<div class="d-roster" role="list" aria-label="${T('Игроки')}">${list.map(chip).join('')}${pend.map(x => `<div class="d-chip wait">${dAva(x, false)}<span class="mtxt"><b>${esc(x.name)}</b><small>${T('ждём ответа')}</small></span></div>`).join('')}</div>`;
+  },
+  whoHTML() {
+    const d = this.d;
+    return this.ids().length === 2 && !(d.status === 'setup' && (d.pend || []).length) && this.peer() ? this.vsHTML() : this.rosterHTML();
+  },
+  /* the room: the one who invited picks a file, a type of questions and their number, and may call more people;
+     the others see it all live */
   p_room(fresh, body, strip, foot) {
-    const d = this.d, host = this.host(), p = this.peer();
-    this.setSub(esc(d.file ? T('Файл: {0}', d.title) : T('Настройка дуэли')));
-    put(strip, this.vsHTML());
+    const d = this.d, host = this.host(), ids = this.ids(), others = this.others();
+    this.setSub(esc([d.file ? T('Файл: {0}', d.title) : T('Настройка дуэли'), ids.length > 2 ? T('игроков: {0}', ids.length) : ''].filter(Boolean).join(' · ')));
+    put(strip, this.whoHTML());
     if (host && !d.file && this.autoFile !== d.id) {
       // the file open in the trainer is the natural first choice
       this.autoFile = d.id;
       const s = curSet(), b = s && s.bundled && BUNDLED.find(x => x.id === s.id);
       if (b) this.pickFile(b.file);
     }
-    let h = '<div class="d-wrap">';
+    // the parts are laid out once per room: the search field keeps its focus while the rest changes
+    const key = d.id + (host ? ':h' : ':g');
+    if (fresh || this.roomKey !== key) {
+      this.roomKey = key; this.roomAdd = false;
+      put(body, `<div class="d-wrap"><div class="d-part" id="dRNote"></div>${host ? '<div class="d-part" id="dRInv"></div><div class="d-part" id="dRAdd"></div><div class="d-part" id="dRList"></div>' : ''}<div class="d-part" id="dRCat"></div><div class="d-part" id="dRFile"></div></div>`);
+    }
+    const hostName = (d.players[this.hostId()] || {}).name || '';
+    let h = '';
+    if (!others.length) h = `<div class="d-note">${T('Вы одни в комнате. Позовите хотя бы одного соперника.')}</div>`;
+    else if (!host) h = `<div class="d-note">${T(ids.length > 2 ? '{0} выбирает файл, тип и число вопросов. Дуэль начнётся у всех одновременно.' : '{0} выбирает файл, тип и число вопросов. Дуэль начнётся у вас обоих одновременно.', esc(hostName))}</div>`;
+    put($('#dRNote'), h);
+    const cur = this.pendCat || d.cat || 'all', cnt = d.counts;
     if (host) {
+      // invitations still waiting, then «Позвать ещё»: by name, or whoever is online
+      put($('#dRInv'), this.invOuts.map(v => this.outCard(v)).join(''));
+      const full = ids.length + this.invOuts.length >= MAX_DUEL_PLAYERS;
+      const add = $('#dRAdd');
+      if (this.roomAdd) {
+        const box = `<div class="d-h">${T('Позвать ещё')}<small>${T('В одной дуэли — до {0} человек', MAX_DUEL_PLAYERS)}</small></div><label class="searchbox" for="dRQ">${I.search}<input id="dRQ" type="search" placeholder="${T('Имя игрока')}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" aria-label="${T('Найти игрока по имени')}"></label>`;
+        if (add._h !== box) { put(add, box); $('#dRQ').value = this.search.q; }
+      } else put(add, `<button type="button" class="act d-add" data-d="radd"${full || this.conn !== 'on' ? ' disabled' : ''}>${I.plus}${T('Позвать ещё игроков')}</button>`);
+      let l = '';
+      if (this.roomAdd) {
+        const s = this.search, skip = new Set(ids.concat(this.invOuts.map(v => v.to.uid)));
+        const rows = (s.list || []).filter(u => !skip.has(u.uid)).slice(0, 8);
+        if (rows.length) l = '<div class="d-list">' + rows.map(u => this.plRow(u, full)).join('') + '</div>';
+        else if (s.list && !s.busy) l = `<div class="d-empty">${s.q ? T('Никого не нашли. Имя ищется с начала любого слова: «Ив» найдёт «Иван Петров» и «Анна Иванова».') : T('Больше никого нет в сети. Найдите друга по имени.')}</div>`;
+      }
+      put($('#dRList'), l);
+      put($('#dRCat'), `<div class="d-h">${T('Тип вопросов')}<small>${T('Все играют в одном типе — или во всех сразу')}</small></div><div class="d-cats" role="radiogroup" aria-label="${T('Тип вопросов')}">` + DUEL_CATS.map(k => {
+        const n = cnt ? cnt[k] || 0 : null, on = cur === k;
+        return `<button type="button" class="d-cat" role="radio" aria-checked="${on}" data-d="cat" data-cat="${k}"${n === 0 ? ' disabled' : ''}><span>${esc(dCatName(k))}</span>${n != null ? `<small>${n}</small>` : ''}</button>`;
+      }).join('') + '</div>');
       const fac = curFac(), files = BUNDLED.filter(b => b.fac === fac.id).sort((x, y) => (x.course - y.course) || x.title.localeCompare(y.title, 'ru'));
-      h += `<div class="d-h">${T('Файл с вопросами')}<small>${T('{0}: у каждого игрока будут свои случайные вопросы из этого файла', esc(fac.name))}</small></div><div class="d-files" role="radiogroup">`;
+      h = `<div class="d-h">${T('Файл с вопросами')}<small>${T('{0}: у каждого игрока будут свои случайные вопросы из этого файла', esc(fac.name))}</small></div><div class="d-files" role="radiogroup">`;
       let c = -1;
       for (const b of files) {
         if (b.course !== c) { c = b.course; h += `<div class="d-course">${c ? T('{0} курс', c) : T('Без курса')}</div>`; }
@@ -5759,12 +5919,11 @@ const Duel = {
         h += `<button type="button" class="pick${on ? ' on' : ''}" role="radio" aria-checked="${on}" data-d="file" data-file="${esc(b.file)}"><span>${esc(b.title)}</span>${wait ? '<span class="spinner"></span>' : on ? I.check : ''}</button>`;
       }
       if (!files.length) h += `<div class="d-empty">${T('Для {0} тестов пока нет', esc(fac.gen))}</div>`;
-      h += '</div>';
+      put($('#dRFile'), h + '</div>');
     } else {
-      h += `<div class="d-note">${T('{0} выбирает файл и число вопросов. Дуэль начнётся у вас обоих одновременно.', esc(p.name))}</div>`;
-      h += `<div class="d-kv"><span>${T('Файл')}</span><b>${d.file ? esc(d.title) : '—'}</b></div>`;
+      put($('#dRCat'), `<div class="d-kv"><span>${T('Файл')}</span><b>${d.file ? esc(d.title) : '—'}</b></div><div class="d-kv"><span>${T('Тип вопросов')}</span><b>${esc(dCatName(d.cat))}</b></div>`);
+      put($('#dRFile'), '');
     }
-    put(body, h + '</div>');
     // the slider stays put while it is being dragged; the server's number follows when the finger is up
     const max = d.max || MAX_DUEL_N, dragging = Date.now() - this.nDrag < 600;
     let r = $('#dN');
@@ -5778,7 +5937,12 @@ const Duel = {
     $('#dNmax').textContent = d.file ? T('из {0}', max) : '';
     const st = $('#dStart');
     st.hidden = !host;
-    st.disabled = !d.file || !p.on || !!this.pendFile || this.conn !== 'on';
+    st.disabled = !d.file || !others.some(p => p.on) || !!this.pendFile || !!this.pendCat || this.conn !== 'on';
+  },
+  pickCat(cat) {
+    if (!this.d || this.pendCat || this.d.cat === cat) return;
+    this.pendCat = cat; this.paint();
+    this.ask({ t: 'setup', id: this.d.id, cat }).catch(() => {}).finally(() => { this.pendCat = ''; this.paint(); });
   },
   pickFile(file) {
     if (!this.d || this.pendFile) return;
@@ -5795,9 +5959,9 @@ const Duel = {
   p_count(fresh, body, strip, foot) {
     const d = this.d;
     this.setSub(esc(T('Приготовьтесь')));
-    put(strip, this.vsHTML());
+    put(strip, this.whoHTML());
     if (fresh) {
-      put(body, `<div class="d-count"><div class="d-num" id="dNum" aria-live="assertive"></div><p>${esc(d.title)} · ${d.n} ${plural(d.n, 'вопрос', 'вопроса', 'вопросов')}</p><p id="dCountNote"></p></div>`);
+      put(body, `<div class="d-count"><div class="d-num" id="dNum" aria-live="assertive"></div><p>${esc([d.title, d.cat && d.cat !== 'all' ? dCatName(d.cat) : ''].filter(Boolean).join(' · '))} · ${d.n} ${plural(d.n, 'вопрос', 'вопроса', 'вопросов')}</p><p id="dCountNote"></p></div>`);
       put(foot, `<div class="d-row2" style="flex:1"><button type="button" class="act" data-d="surrender">${I.flag}${T('Сдаться')}</button></div>`);
     }
     this.countTick();
@@ -5812,7 +5976,7 @@ const Duel = {
     if (el.textContent !== txt) { el.textContent = txt; el.classList.remove('go'); void el.offsetWidth; if (txt) el.classList.add('go'); }
   },
   raceHTML() {
-    const d = this.d, n = d.n, me = this.mine(), p = this.peer();
+    const d = this.d, n = d.n, me = this.mine(), others = this.others();
     const mineDone = this.qs ? this.qs.ans.length : me.done, mineOk = this.qs ? this.qs.ans.filter(x => x && x.ok).length : me.ok;
     const lane = (c, mine, done, ok) => {
       let st = '';
@@ -5823,7 +5987,7 @@ const Duel = {
       }
       return `<div class="d-lane${mine ? ' me' : ''}"><span class="nm">${mine ? T('Вы') : esc(c.name)}</span><span class="d-track"><span class="d-fill" style="transform:scaleX(${(n ? done / n : 0).toFixed(3)})"></span></span><span class="d-sc" dir="ltr"><b>✓ ${ok}</b> · ${done}/${n}</span>${st}</div>`;
     };
-    return `<div class="d-race" aria-label="${T('Прогресс игроков')}">${lane(me, true, mineDone, mineOk)}${lane(p, false, p.done, p.ok)}</div>`;
+    return `<div class="d-race${others.length > 2 ? ' many' : ''}" aria-label="${T('Прогресс игроков')}">${lane(me, true, mineDone, mineOk)}${others.map(p => lane(p, false, p.done, p.ok)).join('')}</div>`;
   },
   curQ() { return this.qs && this.qs.list[this.flashI != null ? this.flashI : this.at] || null; },
   /* the game: the trainer's own question drawing, answered one by one */
@@ -5888,17 +6052,19 @@ const Duel = {
   },
   /* all answered: the other one is still playing */
   p_wait(fresh, body, strip, foot) {
-    const d = this.d, me = this.mine(), p = this.peer();
+    const d = this.d, me = this.mine(), still = this.others().filter(p => !p.left && p.fin == null);
     put(strip, this.raceHTML());
-    this.setSub(esc(T('Ждём соперника')));
+    this.setSub(esc(still.length > 1 ? T('Ждём соперников') : T('Ждём соперника')));
     const ok = this.qs ? this.qs.ans.filter(x => x && x.ok).length : me.ok;
-    put(body, `<div class="state"><div class="big" style="color:var(--green)">${I.ok}</div><h2>${me.left ? T('Вы вышли из дуэли') : T('Вы ответили на все вопросы')}</h2><p>${T('Верно {0} из {1}', ok, d.n)}${me.fin != null ? ' · ' + T('время {0}', fmtT(me.fin)) : ''}</p><p>${T('Ждём, пока {0} закончит. Итоги появятся сами.', esc(p.name))}</p></div>`);
+    const wait = still.length === 1 ? T('Ждём, пока {0} закончит. Итоги появятся сами.', esc(still[0].name)) : still.length ? T('Ждём, пока закончат: {0}. Итоги появятся сами.', esc(dNames(still))) : T('Подводим итоги…');
+    put(body, `<div class="state"><div class="big" style="color:var(--green)">${I.ok}</div><h2>${me.left ? T('Вы вышли из дуэли') : T('Вы ответили на все вопросы')}</h2><p>${T('Верно {0} из {1}', ok, d.n)}${me.fin != null ? ' · ' + T('время {0}', fmtT(me.fin)) : ''}</p><p>${wait}</p></div>`);
     if (fresh) put(foot, `<button type="button" class="act" data-d="hide">${T('Свернуть — итоги придут сюда')}</button>`);
   },
   /* the end: who won, how, and every answer */
   p_over(fresh, body, strip, foot) {
+    if (this.ids().length > 2) return this.p_overMany(fresh, body, strip, foot);
     const d = this.d, me = this.uid(), r = d.result || { winner: null, reason: 'draw', stats: {} };
-    const o = d.a === me ? d.b : d.a, pn = esc(d.players[o].name);
+    const o = (this.peer() || {}).uid, pn = esc((this.peer() || {}).name || '');
     const S1 = r.stats[me] || {}, S2 = r.stats[o] || {};
     const res = r.reason === 'abandoned' ? 'none' : r.winner == null ? 'draw' : r.winner === me ? 'win' : 'lose';
     const won = res === 'win';
@@ -5946,8 +6112,58 @@ const Duel = {
     else f = `<button type="button" class="act" data-d="done">${T('Готово')}</button><button type="button" class="act main" data-d="rematch"${d.rematch === me || peerGone || !d.players[o].on ? ' disabled' : ''}>${I.duel}${d.rematch === me ? T('Ждём…') : T('Реванш')}</button>`;
     put(foot, f);
   },
+  /* the end of a game of three and more: places, everyone's numbers, a rematch for those who want it */
+  p_overMany(fresh, body, strip, foot) {
+    const d = this.d, me = this.uid(), ids = this.ids(), N = ids.length;
+    const r = d.result || { winner: null, reason: 'draw', stats: {}, rank: ids, place: {}, top: [] };
+    const P = u => d.players[u] || { name: '?' }, names = us => esc(us.map(u => P(u).name).join(', '));
+    const top = r.top || [], place = (r.place || {})[me] || N;
+    const res = r.reason === 'abandoned' ? 'none' : r.winner === me ? 'win' : r.winner == null && top.includes(me) ? 'draw' : 'lose';
+    this.setSub(esc(T('Итоги · {0}', d.title)));
+    const title = { win: T('Победа!'), draw: T('Ничья'), none: T('Без победителя'), lose: T('{0}-е место из {1}', place, N) }[res];
+    const why = res === 'none' ? T('Все игроки вышли из дуэли')
+      : r.winner == null ? T('Первое место поровну: {0}', names(top))
+        : res === 'win' ? (r.reason === 'time' ? T('Верных поровну, но вы закончили быстрее') : r.reason === 'score' ? T('Больше всех верных ответов') : T('Все соперники вышли из дуэли'))
+          : T('Победитель: {0}', names([r.winner]));
+    let h = `<div class="d-wrap ${res}"><div class="d-hero"><span class="d-cup">${res === 'win' ? I.trophy : res === 'lose' ? I.flag : I.duel}</span><h2>${title}</h2><p>${why}</p></div>`;
+    h += `<table class="d-tab d-rank"><thead><tr><th>#</th><th>${T('Игрок')}</th><th>${T('Верно')}</th><th>${T('Неверно')}</th><th>${T('Точность')}</th><th>${T('Время')}</th></tr></thead><tbody>`;
+    (r.rank || ids).forEach((u, k) => {
+      const s = (r.stats || {})[u] || {}, pl = (r.place || {})[u] || k + 1;
+      const tag = s.left ? `<small>${s.dropped ? T('нет связи') : T('сдался(лась)')}</small>` : '';
+      h += `<tr class="${u === me ? 'me' : ''}" style="animation-delay:${k * 40}ms"><td${pl === 1 && res !== 'none' ? ' class="p1"' : ''}>${pl}</td><td class="nm">${u === me ? T('Вы') : esc(P(u).name)}${tag}</td><td${pl === 1 && res !== 'none' ? ' class="best"' : ''}>${s.ok || 0}</td><td>${(s.wrong || 0) - (s.skipped || 0)}</td><td>${s.acc || 0}%</td><td>${s.time == null ? '—' : fmtT(s.time)}</td></tr>`;
+    });
+    h += '</tbody></table>';
+    // a rematch: whoever wants it plays again; it starts once all who can still answer have
+    const rm = d.rematch, yes = d.yes || [], no = d.no || [], closed = d.closed || [];
+    const open = this.others().filter(p => !closed.includes(p.uid)), waiting = open.filter(p => p.on && !yes.includes(p.uid) && !no.includes(p.uid));
+    const done = main => `<button type="button" class="act${main ? ' main' : ''}" data-d="done">${T('Готово')}</button>`;
+    let note = '', f = '';
+    if (d.next) { note = T('Остальные начали реванш без вас'); f = done(true); }
+    else if (rm && !yes.includes(me) && !no.includes(me)) {
+      note = T('{0} предлагает реванш: тот же файл, {1} новых вопросов', esc(P(rm).name), d.n) + (yes.length > 1 ? '<br>' + T('Согласны: {0}', names(yes)) : '');
+      f = `<button type="button" class="act" data-d="rematch-no">${T('Отказаться')}</button><button type="button" class="act main" data-d="rematch">${I.duel}${T('Принять реванш')}</button>`;
+    } else if (rm && yes.includes(me)) {
+      note = (yes.length > 1 ? T('Согласны: {0}', names(yes)) + '<br>' : '') + (waiting.length ? T('Ждём ответа: {0}', esc(dNames(waiting))) : T('Начинаем…'));
+      f = done() + (yes.length >= 2 && waiting.length ? `<button type="button" class="act main" data-d="rematch-go">${I.play}${T('Начать без остальных')}</button>` : `<button type="button" class="act main" data-d="rematch" disabled>${I.duel}${T('Ждём…')}</button>`);
+    } else {
+      if (rm && no.includes(me)) note = T('Вы отказались от реванша');
+      else if (d.rematchNo && d.rematchNo !== me && d.players[d.rematchNo]) note = T('{0} отказывается от реванша', esc(P(d.rematchNo).name));
+      else if (!open.length) note = T('Все соперники закрыли итоги — реванш уже не начать');
+      f = done() + `<button type="button" class="act main" data-d="rematch"${open.some(p => p.on) ? '' : ' disabled'}>${I.duel}${rm ? T('Принять реванш') : T('Реванш')}</button>`;
+    }
+    if (note) h += `<div class="d-note">${note}</div>`;
+    h += `<div class="d-h">${T('Разбор ваших ответов')}</div>`;
+    if (this.review && this.review.id === d.id) {
+      const opened = new Set([...body.querySelectorAll('details[open]')].map(x => x.dataset.i));
+      h += '<div class="d-rvs">' + this.review.items.map((x, i) => rvHTML(x, i, opened.has(String(i)))).join('') + '</div>';
+    } else h += '<div class="d-empty"><span class="spinner" style="display:inline-block"></span></div>';
+    const top0 = $('#dScroller').scrollTop;
+    put(body, h + '</div>');
+    $('#dScroller').scrollTop = top0;
+    put(foot, f);
+  },
   p_cancelled(fresh, body, strip, foot) {
-    const d = this.d, mine = d.by === this.uid(), pn = esc(this.peer().name);
+    const d = this.d, mine = d.by === this.uid(), pn = esc(((d.by && d.players[d.by]) || this.peer() || {}).name || '');
     this.setSub(esc(T('Дуэль отменена')));
     const why = d.why === 'left' ? (mine ? T('Вы вышли из комнаты') : T('{0} выходит из комнаты', pn))
       : d.why === 'gone' ? (mine ? T('Связь пропала, пока шла настройка') : T('{0} потерял(а) связь', pn))
@@ -5967,6 +6183,9 @@ const Duel = {
     if (a === 'cancel') { this.ask({ t: 'cancel', id }).catch(() => {}); return; }
     if (a === 'yes' || a === 'no') return this.reply(id, a === 'yes');
     if (a === 'file') { if (this.host() && d.file !== b.dataset.file) this.pickFile(b.dataset.file); return; }
+    if (a === 'cat') { if (this.host()) this.pickCat(b.dataset.cat); return; }
+    if (a === 'radd') { this.roomAdd = true; this.search = { q: '', list: this.search.list, busy: false }; this.paint(); const q = $('#dRQ'); if (q) q.focus({ preventScroll: false }); this.find(true); return; }
+    if (a === 'rematch-go') { b.disabled = true; this.ask({ t: 'rematch-go', id: d.id }).catch(() => {}).finally(() => this.paint()); return; }
     if (a === 'start') { b.disabled = true; this.ask({ t: 'start', id: d.id }).catch(() => {}).finally(() => this.paint()); return; }
     if (a === 'leave') return this.leave();
     if (a === 'surrender') return this.surrender();
@@ -5978,7 +6197,7 @@ const Duel = {
     if (a === 'done') return this.finishUp();
   },
   input(e, final) {
-    if (e.target.id === 'dQ' && !final) { this.find(false); return; }
+    if ((e.target.id === 'dQ' || e.target.id === 'dRQ') && !final) { this.find(false); return; }
     if (e.target.id === 'dN' && this.host()) {
       const n = clamp(Math.round(+e.target.value) || 1, 1, MAX_DUEL_N);
       this.nDrag = final ? Date.now() - 300 : Date.now();
@@ -6003,14 +6222,16 @@ const Duel = {
   async leave() {
     const d = this.d;
     if (!d || d.status !== 'setup') return;
-    const r = await dialog({ title: T('Выйти из комнаты?'), message: T('Дуэль отменится для обоих игроков.'), buttons: [{ id: 'cancel', label: T('Остаться') }, { id: 'ok', label: T('Покинуть'), kind: 'danger' }] });
+    const msg = !this.host() ? T('Остальные останутся в комнате и смогут позвать кого-то ещё.') : this.ids().length > 2 ? T('Дуэль отменится для всех игроков.') : T('Дуэль отменится для обоих игроков.');
+    const r = await dialog({ title: T('Выйти из комнаты?'), message: msg, buttons: [{ id: 'cancel', label: T('Остаться') }, { id: 'ok', label: T('Покинуть'), kind: 'danger' }] });
     if (r.id !== 'ok' || this.d !== d && (!this.d || this.d.id !== d.id)) return;
     this.ask({ t: 'leave', id: d.id }).catch(() => {});
   },
   async surrender() {
     const d = this.d;
     if (!d || d.status !== 'play') return;
-    const r = await dialog({ title: T('Сдаться?'), message: T('Победа достанется сопернику. Вернуться в эту дуэль будет нельзя.'), buttons: [{ id: 'cancel', label: T('Играть дальше') }, { id: 'ok', label: T('Сдаться'), kind: 'danger' }] });
+    const msg = this.others().filter(p => !p.left).length > 1 ? T('Вы выбываете, остальные доиграют без вас. Вернуться в эту дуэль будет нельзя.') : T('Победа достанется сопернику. Вернуться в эту дуэль будет нельзя.');
+    const r = await dialog({ title: T('Сдаться?'), message: msg, buttons: [{ id: 'cancel', label: T('Играть дальше') }, { id: 'ok', label: T('Сдаться'), kind: 'danger' }] });
     if (r.id !== 'ok' || !this.d || this.d.id !== d.id || this.d.status !== 'play') return;
     this.ask({ t: 'leave', id: d.id }).catch(() => {});
   },
@@ -6040,15 +6261,15 @@ const Duel = {
     if (this.want()) {
       const v = this.invIn[this.invIn.length - 1];
       // an invitation shows over anything but the search screen, where it is listed (e.g. over the results of the last duel)
-      if (v && (!this.open || this.shown !== 'lobby')) { sig = 'in' + v.id; h = `${dAva(v.from, false, true)}<span class="mtxt">${T('{0} зовёт на дуэль', esc(v.from.name))}<small>${esc(dWho(v.from))} · <span data-until="${v.exp}"></span></small></span><div class="d-row2"><button type="button" class="act" data-b="no" data-id="${esc(v.id)}">${T('Отклонить')}</button><button type="button" class="act main" data-b="yes" data-id="${esc(v.id)}">${T('Принять')}</button></div>`; }
+      if (v && (!this.open || this.shown !== 'lobby')) { sig = 'in' + v.id; h = `${dAva(v.from, false, true)}<span class="mtxt">${T('{0} зовёт на дуэль', esc(v.from.name))}<small>${esc(dWho(v.from))}${v.room > 1 ? ' · ' + T('игроков: {0}', v.room) : ''} · <span data-until="${v.exp}"></span></small></span><div class="d-row2"><button type="button" class="act" data-b="no" data-id="${esc(v.id)}">${T('Отклонить')}</button><button type="button" class="act main" data-b="yes" data-id="${esc(v.id)}">${T('Принять')}</button></div>`; }
       else if (this.open) { /* the duel screen is up: nothing to remind of */ }
-      else if (d && this.active()) { sig = 'act' + d.id; h = `<span class="d-cup" style="width:38px;height:38px;font-size:19px">${I.duel}</span><span class="mtxt">${T('Дуэль идёт')}<small>${esc(T('с соперником: {0}', this.peer().name))}</small></span><button type="button" class="act main" data-b="open">${T('Вернуться')}</button>`; }
+      else if (d && this.active()) { const os = this.others(); sig = 'act' + d.id + os.length; h = `<span class="d-cup" style="width:38px;height:38px;font-size:19px">${I.duel}</span><span class="mtxt">${T('Дуэль идёт')}<small>${esc(os.length > 1 ? T('соперники: {0}', dNames(os)) : os.length ? T('с соперником: {0}', os[0].name) : T('Вы одни в комнате'))}</small></span><button type="button" class="act main" data-b="open">${T('Вернуться')}</button>`; }
       else if (d && d.status === 'over' && this.phase() === 'over') {
-        const o = this.peer();
+        const by = d.rematch && d.rematch !== me && !(d.yes || []).includes(me) ? d.players[d.rematch] : null;
         sig = 'over' + d.id + (d.rematch || '');
-        h = d.rematch === o.uid
-          ? `<span class="d-cup" style="width:38px;height:38px;font-size:19px">${I.duel}</span><span class="mtxt">${T('{0} предлагает реванш', esc(o.name))}<small>${esc(d.title)}</small></span><button type="button" class="act main" data-b="open">${T('Открыть')}</button>`
-          : `<span class="d-cup" style="width:38px;height:38px;font-size:19px">${I.trophy}</span><span class="mtxt">${T('Дуэль окончена')}<small>${d.result && d.result.winner === me ? T('Победа!') : d.result && d.result.winner ? T('Поражение') : T('Ничья')}</small></span><button type="button" class="act main" data-b="open">${T('Итоги')}</button>`;
+        h = by
+          ? `<span class="d-cup" style="width:38px;height:38px;font-size:19px">${I.duel}</span><span class="mtxt">${T('{0} предлагает реванш', esc(by.name))}<small>${esc(d.title)}</small></span><button type="button" class="act main" data-b="open">${T('Открыть')}</button>`
+          : `<span class="d-cup" style="width:38px;height:38px;font-size:19px">${I.trophy}</span><span class="mtxt">${T('Дуэль окончена')}<small>${this.resWord(d)}</small></span><button type="button" class="act main" data-b="open">${T('Итоги')}</button>`;
       }
     }
     if (!h) { if (el) { el.classList.remove('on'); el.inert = true; } this.banSig = ''; return; }
@@ -6067,6 +6288,15 @@ const Duel = {
     if (sig !== this.banSig) { el.innerHTML = h; this.banSig = sig; this.times(); }
     el.inert = false;
     el.classList.add('on');
+  },
+  // the result in two words: for the banner over the trainer
+  resWord(d) {
+    const r = d.result, me = this.uid(), n = this.ids().length;
+    if (!r || r.reason === 'abandoned') return T('Без победителя');
+    if (r.winner === me) return T('Победа!');
+    if (r.winner == null && (!r.top || r.top.includes(me))) return T('Ничья');
+    if (n > 2 && r.place && r.place[me]) return T('{0}-е место из {1}', r.place[me], n);
+    return r.winner ? T('Поражение') : T('Ничья');
   },
   // the menu row: an invitation waiting, a duel going on, or the way in
   menuState() {

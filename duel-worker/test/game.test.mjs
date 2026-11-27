@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { parsePool, deal, view, grade, decide, stats, review, shuffle, randInt, isPerm, MAX_N } from '../game.js';
+import { parsePool, deal, view, grade, decide, stats, review, shuffle, randInt, isPerm, MAX_N, MAX_PLAYERS, CATS, catOf, byCat, catCounts } from '../game.js';
 
 const raw = JSON.parse(readFileSync(new URL('../../data/3/topka.json', import.meta.url), 'utf8'));
 const pool = parsePool(raw);
@@ -119,6 +119,56 @@ test('сдавшийся и пропавший со связи проигрыв�
   assert.equal(g.winner, 'A'); assert.equal(g.reason, 'dropped');
   const both = duelOf(r(), r(), { aLeft: true, bLeft: true });
   assert.equal(decide(both).reason, 'abandoned');
+});
+
+test('категории: как в тренажёре — вид вопроса, кейсы отдельно; «все» — весь файл', () => {
+  const c = catCounts(pool);
+  assert.deepEqual(Object.keys(c), CATS);
+  assert.equal(c.all, pool.length);
+  assert.equal(c.single + c.multiple + c.dropdown + c.sortable + c.caseStudy, c.all);
+  for (const k of CATS.slice(1)) {
+    assert.ok(c[k] > 0, 'в «Топке» есть ' + k);
+    const part = byCat(pool, k);
+    assert.equal(part.length, c[k]);
+    assert.ok(part.every(q => catOf(q) === k));
+  }
+  assert.ok(byCat(pool, 'caseStudy').every(q => q.context), 'кейсы — с текстом задачи');
+  assert.ok(byCat(pool, 'single').every(q => q.kind === 'single' && !q.context));
+  assert.equal(byCat(pool, 'all'), pool);
+  for (const q of deal(byCat(pool, 'sortable'), 50)) assert.equal(q.kind, 'sortable');
+  assert.equal(MAX_PLAYERS, 8);
+});
+
+function group(spec) {
+  // spec: { uid: { ok: число верных из 3, fin: мс, left, dropped } }
+  const d = { ids: Object.keys(spec), n: 3, startAt: T0, p: {} };
+  for (const [u, x] of Object.entries(spec)) {
+    const ans = [0, 1, 2].map(i => ({ ok: i < x.ok, empty: false }));
+    d.p[u] = { ans, ok: x.ok, fin: x.fin != null ? T0 + x.fin : null, stop: x.left ? T0 + 1000 : null, left: !!x.left, dropped: !!x.dropped };
+  }
+  return d;
+}
+test('несколько игроков: места по верным, затем по времени; поровну — одно место на двоих', () => {
+  const r = decide(group({ A: { ok: 2, fin: 30000 }, B: { ok: 3, fin: 90000 }, C: { ok: 2, fin: 20000 }, D: { ok: 0, fin: 5000 } }));
+  assert.deepEqual(r.rank, ['B', 'C', 'A', 'D']);
+  assert.deepEqual(r.place, { B: 1, C: 2, A: 3, D: 4 });
+  assert.equal(r.winner, 'B'); assert.equal(r.reason, 'score');
+  const t = decide(group({ A: { ok: 2, fin: 30000 }, B: { ok: 2, fin: 30000 }, C: { ok: 1, fin: 10000 } }));
+  assert.equal(t.winner, null); assert.equal(t.reason, 'draw');
+  assert.deepEqual(t.top.sort(), ['A', 'B']);
+  assert.equal(t.place.A, 1); assert.equal(t.place.B, 1); assert.equal(t.place.C, 3);
+  const q = decide(group({ A: { ok: 2, fin: 30000 }, B: { ok: 2, fin: 25000 }, C: { ok: 2, fin: 40000 } }));
+  assert.equal(q.winner, 'B'); assert.equal(q.reason, 'time');
+});
+test('несколько игроков: сдавшиеся ниже оставшихся; остался один — он победил', () => {
+  const r = decide(group({ A: { ok: 3, left: true }, B: { ok: 1, fin: 50000 }, C: { ok: 2, fin: 60000 } }));
+  assert.deepEqual(r.rank, ['C', 'B', 'A'], 'сдавшийся последний, даже с большим числом верных');
+  assert.equal(r.winner, 'C'); assert.equal(r.reason, 'score');
+  const l = decide(group({ A: { ok: 0, left: true, dropped: true }, B: { ok: 1, fin: 50000 }, C: { ok: 2, left: true } }));
+  assert.equal(l.winner, 'B'); assert.equal(l.reason, 'left');
+  const g = decide(group({ A: { ok: 0, left: true, dropped: true }, B: { ok: 1 }, C: { ok: 2, left: true, dropped: true } }));
+  assert.equal(g.reason, 'dropped');
+  assert.equal(decide(group({ A: { ok: 1, left: true }, B: { ok: 1, left: true }, C: { ok: 0, left: true } })).reason, 'abandoned');
 });
 
 test('итоги игрока: верно, неверно, пропущено, не отвечено, точность, время', () => {
