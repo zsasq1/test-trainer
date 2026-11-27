@@ -118,5 +118,11 @@
     "title": "Биология",
     "course": 1,
     "fac": "lech"
+  },
+  {
+    "file": "1/istoriya-mediciny.json",
+    "title": "История медицины",
+    "course": 1,
+    "fac": "lech"
   }
 ]
