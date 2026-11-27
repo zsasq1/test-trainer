@@ -166,5 +166,11 @@
     "title": "Биоэтика",
     "course": 1,
     "fac": "lech"
+  },
+  {
+    "file": "1/istoriya-rossii.json",
+    "title": "История России",
+    "course": 1,
+    "fac": "lech"
   }
 ]
