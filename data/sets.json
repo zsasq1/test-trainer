@@ -154,5 +154,11 @@
     "title": "Анатомия",
     "course": 1,
     "fac": "lech"
+  },
+  {
+    "file": "1/inostrannyy-yazyk-nem.json",
+    "title": "Иностранный язык (нем)",
+    "course": 1,
+    "fac": "lech"
   }
 ]
