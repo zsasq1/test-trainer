@@ -148,5 +148,11 @@
     "title": "Иностранный язык (французский)",
     "course": 1,
     "fac": "lech"
+  },
+  {
+    "file": "1/anatomiya.json",
+    "title": "Анатомия",
+    "course": 1,
+    "fac": "lech"
   }
 ]
