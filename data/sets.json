@@ -202,5 +202,11 @@
     "title": "Неврология, нейрохирургия",
     "course": 4,
     "fac": "lech"
+  },
+  {
+    "file": "4/fakultetskaya-terapiya-professionalnye-bolezni.json",
+    "title": "Факультетская терапия, профессиональные болезни",
+    "course": 4,
+    "fac": "lech"
   }
 ]
