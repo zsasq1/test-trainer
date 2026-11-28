@@ -184,5 +184,11 @@
     "title": "Психиатрия, медицинская психология",
     "course": 5,
     "fac": "lech"
+  },
+  {
+    "file": "5/gospitalnaya-terapiya-endokrinologiya-modul-endokrinologiya.json",
+    "title": "Госпитальная терапия, эндокринология. Модуль Эндокринология",
+    "course": 5,
+    "fac": "lech"
   }
 ]
