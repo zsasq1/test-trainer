@@ -226,5 +226,11 @@
     "title": "Офтальмология",
     "course": 4,
     "fac": "lech"
+  },
+  {
+    "file": "ped/5/psihiatriya-medicinskaya-psihologiya.json",
+    "title": "Психиатрия, медицинская психология",
+    "course": 5,
+    "fac": "ped"
   }
 ]
