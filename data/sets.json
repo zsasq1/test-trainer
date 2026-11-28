@@ -220,5 +220,11 @@
     "title": "Факультетская хирургия, урология",
     "course": 4,
     "fac": "lech"
+  },
+  {
+    "file": "4/oftalmologiya.json",
+    "title": "Офтальмология",
+    "course": 4,
+    "fac": "lech"
   }
 ]
