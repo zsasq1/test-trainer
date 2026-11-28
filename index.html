@@ -350,7 +350,7 @@ button:disabled{cursor:default}
 .cred.pre .note{opacity:0}
 .cred.drop .note{animation:cred-note .9s var(--ease-out) 1.12s both}
 @keyframes cred-note{from{opacity:0}}
-/* @ziplogo: a faint blue outline around the letters; now and then a soft light slowly passes along the word */
+/* @forttoi: a faint blue outline around the letters; now and then a soft light slowly passes along the word */
 .cred .zl{position:relative;z-index:0;display:inline-block}
 .cred .zl::before,.cred .zl::after{content:attr(data-t);position:absolute;left:0;top:0;color:transparent;-webkit-text-fill-color:transparent;-webkit-background-clip:text;background-clip:text;background-size:300% 100%;background-position:100% 0;animation:zl-glint 5.5s var(--ease-in-out) 1.6s infinite;pointer-events:none}
 .cred .zl::before{z-index:-1;-webkit-text-stroke:2.6px transparent;background-image:linear-gradient(100deg,rgba(42,171,238,.2) 40%,rgba(42,171,238,.5) 50%,rgba(42,171,238,.2) 60%)}
@@ -1027,7 +1027,7 @@ a.tg-btn{text-decoration:none}
 .d-files{display:flex;flex-direction:column;gap:6px}
 .d-files .d-course{margin:8px 2px 0;font-size:12.5px;font-weight:600;color:var(--muted)}
 .d-files .pick{min-height:44px;padding:9px 12px;font-size:15.5px}
-.d-files .pick .spinner{width:18px;height:18px;border-width:2px}
+.d-files .pick .spinner{flex:none;width:18px;height:18px;border-width:2px}
 .d-kv{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:5px;background:var(--surface);font-size:15px}
 .d-kv span{color:var(--muted)}
 .d-kv b{text-align:end;overflow-wrap:anywhere}
@@ -1131,8 +1131,11 @@ a.tg-btn{text-decoration:none}
 .d-rv .choice.right .ctext{color:var(--green);font-weight:700}
 .d-rv .choice.wrong .ctext{color:var(--wrong);text-decoration:line-through}
 .d-rv .choice .i{color:var(--green);margin-inline-start:6px}
-.d-rv td.wrong{color:var(--wrong);text-decoration:line-through}
-.d-rv td.right{color:var(--green);font-weight:700}
+.d-rv td.ans>*{display:block}
+.d-rv td.ans>*+*{margin-top:3px}
+.d-rv td.ans .wrong{color:var(--wrong)}
+.d-rv td.ans .right{color:var(--green);font-weight:700}
+.d-rv td.ans .none{color:var(--muted);font-style:italic}
 .d-rv .sub{margin:8px 0 4px;font-size:12.5px;font-weight:600;color:var(--muted)}
 /* an invitation over whatever is open */
 .d-ban{position:fixed;left:50%;top:calc(8px + env(safe-area-inset-top,0px));z-index:70;width:min(520px,calc(100% - 16px));display:flex;flex-wrap:wrap;align-items:center;gap:10px 11px;padding:11px 12px 13px;border:1px solid var(--accent-line);border-radius:6px;background:var(--surface);box-shadow:0 10px 30px var(--shadow);overflow:hidden;transform:translate(-50%,calc(-100% - 20px));opacity:0;visibility:hidden;transition:transform .3s var(--ease-out),opacity .2s,visibility 0s .3s}
@@ -1373,7 +1376,7 @@ const TR = {
   "В избранном": ["In favorites", "في المفضلة"],
   "<span class=\"sres-now\">открыт</span>": ["<span class=\"sres-now\">open</span>", "<span class=\"sres-now\">مفتوح</span>"],
   "Показаны первые {0}. Уточните запрос — добавьте ещё слово.": ["Showing the first {0}. Narrow it down — add another word.", "تُعرض أول {0} نتيجة. حدّد البحث أكثر — أضف كلمة أخرى."],
-  "Жалобы и предложения — Made by TG @ziplogo": ["Feedback and suggestions — Made by TG @ziplogo", "الشكاوى والاقتراحات — Made by TG @ziplogo"],
+  "Жалобы и предложения — Made by TG @forttoi": ["Feedback and suggestions — Made by TG @forttoi", "الشكاوى والاقتراحات — Made by TG @forttoi"],
   "Жалобы и предложения": ["Feedback and suggestions", "الشكاوى والاقتراحات"],
   "Категории": ["Categories", "الفئات"],
   "Файл «{0}» — к списку файлов": ["File “{0}” — go to the file list", "الملف «{0}» — إلى قائمة الملفات"],
@@ -1609,7 +1612,7 @@ const TR = {
   "Вход через Telegram…": ["Signing in with Telegram…", "جارٍ تسجيل الدخول عبر Telegram…"],
   "Доступ закрыт": ["Access closed", "تم إغلاق الوصول"],
   "Автор сайта закрыл доступ для аккаунта «{0}».": ["The site's author closed access for the account “{0}”.", "أغلق صاحب الموقع الوصول للحساب «{0}»."],
-  "Если это ошибка, напишите: tg @ziplogo": ["If this is a mistake, write to tg @ziplogo", "إذا كان هذا خطأ، راسل: tg @ziplogo"],
+  "Если это ошибка, напишите: tg @forttoi": ["If this is a mistake, write to tg @forttoi", "إذا كان هذا خطأ، راسل: tg @forttoi"],
   "Все функции откроются сразу после входа.": ["Everything unlocks right after you sign in.", "ستُفتح جميع الميزات فور تسجيل الدخول."],
   "Быстрее всего": ["Fastest", "الأسرع"],
   "Другие способы входа": ["Other ways to sign in", "طرق أخرى لتسجيل الدخول"],
@@ -1634,7 +1637,7 @@ const TR = {
   "При входе через Google автор видит вашу почту, через Telegram — ваш @username.": ["With Google the author sees your email, with Telegram — your @username.", "عند الدخول عبر Google يرى صاحب الموقع بريدك الإلكتروني، وعبر Telegram — اسمك @username."],
   "При входе через Google автор видит вашу почту.": ["With Google the author sees your email.", "عند الدخول عبر Google يرى صاحب الموقع بريدك الإلكتروني."],
   "При входе через Telegram автор видит ваш @username.": ["With Telegram the author sees your @username.", "عند الدخول عبر Telegram يرى صاحب الموقع اسمك @username."],
-  "Забыли пароль? Напишите автору сайта: tg @ziplogo": ["Forgot the password? Write to the site's author: tg @ziplogo", "نسيت كلمة المرور؟ راسل صاحب الموقع: tg @ziplogo"],
+  "Забыли пароль? Напишите автору сайта: tg @forttoi": ["Forgot the password? Write to the site's author: tg @forttoi", "نسيت كلمة المرور؟ راسل صاحب الموقع: tg @forttoi"],
   "Минимум 6 символов": ["At least 6 characters", "6 أحرف على الأقل"],
   "Это имя уже занято": ["This name is taken", "هذا الاسم مستخدم"],
   "Имя свободно": ["The name is free", "الاسم متاح"],
@@ -1840,6 +1843,7 @@ const TR = {
   "Вас зовёт: {0}": ["Invited by {0}", "يدعوك: {0}"],
   "Побед {0} · поражений {1}": ["{0} won · {1} lost", "{0} فوز · {1} خسارة"],
   "Дуэль с другом": ["Duel with a friend", "مبارزة مع صديق"],
+  "Нет ответа": ["No answer", "لا توجد إجابة"],
   "Не успели ответить": ["Not reached", "لم يُجب عنه"],
   "Ваш порядок": ["Your order", "ترتيبك"],
   "Игрок сейчас не в сети": ["This player is offline now", "هذا اللاعب غير متصل الآن"],
@@ -3186,10 +3190,10 @@ function menuHTML() {
   h += duelMenuHTML() + menuFilesHTML() + menuSettingsHTML();
   return tgPromoHTML() + h + creditHTML();
 }
-// «Made by TG @ziplogo»: its words fall once each time the menu is opened, when they come into view,
+// «Made by TG @forttoi»: its words fall once each time the menu is opened, when they come into view,
 // and stay lying where they fell. r = angle, y = how deep it sank (px).
 let creditDone = false, creditIO = null;
-const CRED_WORDS = [{ pl: true, r: -14, y: 2 }, { t: 'Made', r: -6, y: 3 }, { t: 'by', r: 8, y: -1 }, { t: 'TG', r: -3, y: 4 }, { t: '@ziplogo', b: true, r: 4, y: 1 }];
+const CRED_WORDS = [{ pl: true, r: -14, y: 2 }, { t: 'Made', r: -6, y: 3 }, { t: 'by', r: 8, y: -1 }, { t: 'TG', r: -3, y: 4 }, { t: '@forttoi', b: true, r: 4, y: 1 }];
 const CRED_STEP = 150, CRED_BASE = 120, CRED_FALL = 320; // ms: between words, before the first, the fall itself
 const CRED_BITS = [[-22, -14], [-13, -20], [14, -18], [24, -11]]; // chips of stone flying out: x, peak y (px)
 // The rip under each word shows a few real lines of this page's own code, lightly highlighted.
@@ -3238,7 +3242,7 @@ function creditHTML() {
     const bits = fall ? CRED_BITS.map(([x, y], k) => `<i class="bit" style="--px:${x + (i % 2 ? 3 : -3) * (k % 2)}px;--py:${y}px"></i>`).join('') : '';
     return w.pl ? `<span class="w pl" ${st}>${TG_LOGO}${tearHTML(i)}${bits}</span>` : `<${w.b ? 'b' : 'span'} class="w" aria-hidden="true" ${st}>${w.b ? `<span class="zl" data-t="${esc(w.t)}">${esc(w.t)}</span>` : esc(w.t)}${tearHTML(i)}${bits}</${w.b ? 'b' : 'span'}>`;
   }).join('');
-  return `<div class="d-foot" dir="ltr"><a class="cred${fall ? ' pre' : ''}" href="https://t.me/ziplogo" target="_blank" rel="noopener" aria-label="${T('Жалобы и предложения — Made by TG @ziplogo')}"><span class="note" aria-hidden="true">${T('Жалобы и предложения')}</span>${words}</a></div>`;
+  return `<div class="d-foot" dir="ltr"><a class="cred${fall ? ' pre' : ''}" href="https://t.me/forttoi" target="_blank" rel="noopener" aria-label="${T('Жалобы и предложения — Made by TG @forttoi')}"><span class="note" aria-hidden="true">${T('Жалобы и предложения')}</span>${words}</a></div>`;
 }
 // The words fall only when the whole line is on screen, the scrolling has stopped and the menu has finished
 // sliding in — so the person is actually looking at it.
@@ -5000,7 +5004,7 @@ function applyBlock() {
   el = document.createElement('div');
   el.className = 'blocked'; el.id = 'blockScreen';
   el.setAttribute('role', 'alertdialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'blkT');
-  el.innerHTML = `<div class="blk-card"><div class="blk-ico">${I.lock}</div><h2 id="blkT">${T('Доступ закрыт')}</h2><p>${T('Автор сайта закрыл доступ для аккаунта «{0}».', esc(Account.user.name))}</p><p class="blk-note">${T('Если это ошибка, напишите: tg @ziplogo')}</p></div>`;
+  el.innerHTML = `<div class="blk-card"><div class="blk-ico">${I.lock}</div><h2 id="blkT">${T('Доступ закрыт')}</h2><p>${T('Автор сайта закрыл доступ для аккаунта «{0}».', esc(Account.user.name))}</p><p class="blk-note">${T('Если это ошибка, напишите: tg @forttoi')}</p></div>`;
   document.body.appendChild(el);
   Presence.off();
 }
@@ -5089,7 +5093,7 @@ ${(tOn && !hero) || gOn ? `<div class="su-ext su-x" id="suExt">${tOn && !hero ? 
     $p('#suNote').textContent = fold ? T('Автор сайта увидит только ваш @username в Telegram.')
       : gm ? T('Сменить имя потом можно один раз — в настройках.')
       : m === 'up' ? T('Пароль хранится у Google — даже автор сайта его не видит.') + (gOn ? ' ' + (tOn ? T('При входе через Google автор видит вашу почту, через Telegram — ваш @username.') : T('При входе через Google автор видит вашу почту.')) : tOn ? ' ' + T('При входе через Telegram автор видит ваш @username.') : '')
-      : T('Забыли пароль? Напишите автору сайта: tg @ziplogo');
+      : T('Забыли пароль? Напишите автору сайта: tg @forttoi');
     hint($p('#suPassHint'), m === 'up' ? T('Минимум 6 символов') : '');
     err.textContent = '';
     nameInp.classList.remove('bad'); passInp.classList.remove('bad');
@@ -6355,8 +6359,10 @@ function rvHTML(x, i, open) {
   } else if (x.kind === 'dropdown') {
     const mine = Array.isArray(a.dd) ? a.dd : [];
     b += `<table class="selt"><tbody>` + (x.rows || []).map((l, k) => {
+      // two cells in every row: the label, then the answer — a wrong one crossed out with the right one under it
       const v = mine[k] || '', ok = v === x.key[k];
-      return `<tr><td class="l">${esc(l)}</td><td class="l${v ? (ok ? ' right' : ' wrong') : ''}">${v ? esc(v) : '—'}</td>${ok ? '' : `<td class="l right">${esc(x.key[k])}</td>`}</tr>`;
+      const cell = ok ? `<span class="right">${esc(v)}</span>` : (v ? `<s class="wrong">${esc(v)}</s>` : `<span class="none">${T('Нет ответа')}</span>`) + `<span class="right">${esc(x.key[k])}</span>`;
+      return `<tr><td class="l">${esc(l)}</td><td class="l ans">${cell}</td></tr>`;
     }).join('') + '</tbody></table>';
   } else if (x.kind === 'sortable') {
     const items = x.items || [];

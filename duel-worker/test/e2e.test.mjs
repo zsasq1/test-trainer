@@ -464,7 +464,63 @@ try {
   const missC = await C1.page.evaluate(() => [...window.__trMiss]);
   await C1.ctx.close();
 
-  console.log('\n13. Гость без аккаунта: дуэль просит войти');
+  console.log('\n13. Выпадающие списки: ошибка в разборе — зачёркнута, верный ответ под ней');
+  await A1.page.click('[data-act="m-duel"]');
+  await ph(A1, 'lobby');
+  await A1.page.fill('#dQ', 'Иван');
+  await A1.page.waitForSelector('#dBody .d-pl [data-d="invite"]:not([disabled])', { timeout: 6000 });
+  await A1.page.click('#dBody .d-pl [data-d="invite"]');
+  await B1.page.waitForSelector('#duelBan.on', { timeout: 5000 });
+  await B1.page.click('#duelBan [data-b="yes"]');
+  await Promise.all([ph(A1, 'room'), ph(B1, 'room')]);
+  await A1.page.waitForSelector('#dBody .d-files .pick');
+  const spin = await A1.page.evaluate(() => {
+    // the same circle the list shows while a file is being opened
+    const p = document.querySelector('#dBody .d-files .pick'), sp = document.createElement('span');
+    sp.className = 'spinner'; p.appendChild(sp);
+    const r = sp.getBoundingClientRect(); sp.remove();
+    return [Math.round(r.width), Math.round(r.height)];
+  });
+  ok(spin[0] === spin[1] && spin[0] <= 20, `кружок загрузки у файла — ровный круг ${spin[0]}×${spin[1]}, а не растянутая клякса`);
+  await A1.page.waitForSelector('#dBody .d-cat[data-cat="dropdown"]:not([disabled])', { timeout: 5000 });
+  await A1.page.click('#dBody .d-cat[data-cat="dropdown"]');
+  await A1.page.waitForSelector('#dBody .d-cat[data-cat="dropdown"][aria-checked="true"]', { timeout: 5000 });
+  await A1.page.$eval('#dN', r => { r.value = '1'; r.dispatchEvent(new Event('input', { bubbles: true })); r.dispatchEvent(new Event('change', { bubbles: true })); });
+  await B1.page.waitForFunction(() => document.getElementById('dNv').textContent === '1', null, { timeout: 4000 });
+  await A1.page.waitForSelector('#dStart:not([disabled])', { timeout: 4000 });
+  await A1.page.click('#dStart');
+  await Promise.all([ph(A1, 'play', 10000), ph(B1, 'play', 10000)]);
+  const qd = lastQs(B1).qs[0], keyD = solve(pool, qd).dd;
+  ok(qd.kind === 'dropdown', 'вопрос — выпадающие списки');
+  // Борис: в первой строке ошибается, остальные — верно
+  for (const [row, val] of Object.entries(keyD)) {
+    const pickV = +row === 0 ? qd.choices.find(c => c !== val) : val;
+    await B1.page.click(`#dBody .dd-btn[data-row="${row}"]`);
+    await B1.page.waitForSelector('.sheet .pick[data-ci]');
+    await B1.page.click(`.sheet .pick[data-ci="${qd.choices.indexOf(pickV)}"]`);
+    await B1.page.waitForSelector('.sheet-wrap', { state: 'detached' });
+  }
+  await press(B1);
+  await answerRight(A1, lastQs(A1).qs[0]); await press(A1);
+  await Promise.all([ph(A1, 'over', 8000), ph(B1, 'over', 8000)]);
+  await B1.page.waitForSelector('.d-rv', { timeout: 5000 });
+  await B1.page.click('.d-rv summary');
+  const ddv = await B1.page.$eval('.d-rv[open] table.selt', t => ({
+    cells: [...t.rows].map(r => r.cells.length),
+    wrong: [...t.querySelectorAll('s.wrong')].map(x => x.textContent),
+    right: [...t.querySelectorAll('.right')].map(x => x.textContent),
+    fits: t.getBoundingClientRect().right <= t.parentElement.getBoundingClientRect().right + 1 && t.getBoundingClientRect().left >= t.parentElement.getBoundingClientRect().left - 1
+  }));
+  console.log('    ', JSON.stringify(ddv));
+  const rows = Object.keys(keyD).length;
+  ok(ddv.cells.length === rows && ddv.cells.every(n => n === 2), `в разборе у каждой из ${rows} строк две ячейки — ничего не съезжает`);
+  ok(ddv.wrong.length === 1 && ddv.wrong[0] === qd.choices.find(c => c !== keyD[0]), 'неверный выбор в первой строке зачёркнут');
+  ok(ddv.right.length === rows && Object.values(keyD).every((v, i) => ddv.right[i] === v), 'верный ответ виден в каждой строке');
+  ok(ddv.fits, 'таблица не вылезает за рамку разбора');
+  await shot(B1, '13-dd-review-B');
+  for (const p of [A1, B1]) { await p.page.click('#dFoot [data-d="done"]'); await p.page.waitForSelector('#duel', { state: 'detached', timeout: 3000 }); }
+
+  console.log('\n14. Гость без аккаунта: дуэль просит войти');
   const G = await person('', { lang: 'ru', phone: true });
   await G.page.click('#menuBtn');
   await G.page.waitForSelector('[data-act="m-duel"]');
@@ -475,7 +531,7 @@ try {
   ok(!G.frames.length, 'гость не открывал соединение с сервером дуэлей');
   await G.ctx.close();
 
-  console.log('\n14. Без ошибок и без непереведённых строк');
+  console.log('\n15. Без ошибок и без непереведённых строк');
   const miss = await B1.page.evaluate(() => [...window.__trMiss]);
   ok(miss.length === 0, (BL === 'en' ? 'английский' : BL) + ': все строки переведены' + (miss.length ? ': ' + JSON.stringify(miss) : ''));
   ok(errors.length === 0, 'ошибок JavaScript нет' + (errors.length ? ': ' + JSON.stringify(errors) : ''));
@@ -484,7 +540,7 @@ try {
   console.log('    перехвачено и не отправлено:', outHosts.join(', ') || '—');
 
   if (LIVE) {
-    console.log('\n15. Боевой сервер тестовым ключам не верит');
+    console.log('\n16. Боевой сервер тестовым ключам не верит');
     const r = await fetch(PROD + '/duel/ticket', { method: 'POST', headers: { Authorization: 'Bearer ' + token(A), Origin: SITE_ORIGIN } });
     const body = await r.json().catch(() => ({}));
     ok(r.status === 401 && body.error === 'BAD_TOKEN', `${PROD.replace('https://', '')}: тот же «токен» — ${r.status} ${body.error}`);
