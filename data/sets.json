@@ -178,5 +178,11 @@
     "title": "Латинский язык",
     "course": 1,
     "fac": "lech"
+  },
+  {
+    "file": "5/psihiatriya-medicinskaya-psihologiya.json",
+    "title": "Психиатрия, медицинская психология",
+    "course": 5,
+    "fac": "lech"
   }
 ]
