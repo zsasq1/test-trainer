@@ -196,5 +196,11 @@
     "title": "Менеджмент в здравоохранении",
     "course": 4,
     "fac": "lech"
+  },
+  {
+    "file": "4/nevrologiya-neyrohirurgiya.json",
+    "title": "Неврология, нейрохирургия",
+    "course": 4,
+    "fac": "lech"
   }
 ]
