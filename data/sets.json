@@ -208,5 +208,11 @@
     "title": "Факультетская терапия, профессиональные болезни",
     "course": 4,
     "fac": "lech"
+  },
+  {
+    "file": "4/otorinolaringologiya.json",
+    "title": "Оториноларингология",
+    "course": 4,
+    "fac": "lech"
   }
 ]
