@@ -190,5 +190,11 @@
     "title": "Госпитальная терапия, эндокринология. Модуль Эндокринология",
     "course": 5,
     "fac": "lech"
+  },
+  {
+    "file": "4/menedzhment-v-zdravoohranenii.json",
+    "title": "Менеджмент в здравоохранении",
+    "course": 4,
+    "fac": "lech"
   }
 ]
