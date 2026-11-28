@@ -214,5 +214,11 @@
     "title": "Оториноларингология",
     "course": 4,
     "fac": "lech"
+  },
+  {
+    "file": "4/fakultetskaya-hirurgiya-urologiya.json",
+    "title": "Факультетская хирургия, урология",
+    "course": 4,
+    "fac": "lech"
   }
 ]
