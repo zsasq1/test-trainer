@@ -3,7 +3,39 @@
     "file": "3/topka.json",
     "title": "Топка",
     "course": 3,
-    "fac": "lech"
+    "fac": "lech",
+    "test": {
+      "title": "Тест по предмету",
+      "parts": [
+        {
+          "cat": "multiple",
+          "count": 6,
+          "points": 1
+        },
+        {
+          "cat": "single",
+          "count": 20,
+          "points": 1
+        },
+        {
+          "cat": "dropdown",
+          "count": 14,
+          "points": 2
+        },
+        {
+          "cat": "sortable",
+          "count": 3,
+          "points": 2
+        },
+        {
+          "cat": "caseStudy",
+          "count": 5,
+          "points": 8
+        }
+      ],
+      "same": false,
+      "at": 1795861740624
+    }
   },
   {
     "file": "2/normalnaya-fiziologiya.json",
