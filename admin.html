@@ -201,14 +201,89 @@ details.how a{color:var(--accent)}
 .busy div{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:5px;background:var(--surface);border:1px solid var(--line);font-weight:700;color:var(--ink);box-shadow:0 8px 30px var(--shadow)}
 .spin{width:20px;height:20px;border-radius:50%;border:2.5px solid var(--line);border-top-color:var(--accent);animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+.btn.pri{background:var(--btn-on);border-color:var(--btn-on-line);color:var(--on-accent)}
+
+/* «Тест» in a file row: pressed in (bright blue, «Тест ✓») when the subject already has a test */
+#list .row{gap:8px}
+.tchip{height:38px;flex:none;display:inline-flex;align-items:center;padding:0 10px;border-radius:4px;background:var(--btn);border:1px solid var(--btn-line);color:var(--btn-fg);font-size:13.5px;font-weight:700;white-space:nowrap;box-shadow:var(--btn-shadow);transition:background-color .15s ease-out,border-color .15s ease-out,color .15s ease-out}
+.tchip.on,.tchip:active{background:var(--btn-on);border-color:var(--btn-on-line);color:var(--on-accent)}
+
+/* «Тест по предмету»: a sheet from the bottom on the phone, a window in the middle on a wide screen —
+   the dialog's pale-blue title bar, the page's lavender inside with white panels, the summary and buttons at the bottom */
+html.lock{overflow:hidden}
+.wrap.sh{z-index:15;align-items:flex-end;padding:calc(12px + env(safe-area-inset-top,0px)) 0 0}
+.sheet{width:100%;max-width:600px;max-height:100%;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-bottom:0;border-radius:6px 6px 0 0;overflow:hidden;box-shadow:0 -8px 30px var(--shadow);transform:translateY(28px);transition:transform .28s var(--ease-out)}
+.sheet:focus{outline:none}
+.wrap.on .sheet{transform:none}
+@media (min-width:600px) and (min-height:520px){
+  .wrap.sh{align-items:center;padding:24px}
+  .sheet{max-height:min(880px,100%);border-bottom:1px solid var(--line);border-radius:6px;box-shadow:0 8px 30px var(--shadow);transform:scale(.97)}
+}
+.sh-head{flex:none;display:flex;align-items:center;gap:10px;min-height:56px;padding:8px 8px 8px 16px;background:var(--head);border-bottom:1px solid var(--line)}
+.sh-head h2{flex:1;min-width:0;margin:0;font-size:16px;font-weight:700;line-height:1.3;color:var(--ink)}
+.sh-head h2 small{display:block;font-size:13px;font-weight:400;color:var(--muted);overflow-wrap:anywhere}
+.sh-body{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;display:flex;flex-direction:column;gap:18px;padding:14px 12px 20px;background:var(--frame)}
+@media (min-width:480px){ .sh-body{padding:16px 16px 22px} }
+.sh-body .label{margin-bottom:6px}
+.sh-body .field{margin:0}
+.sh-foot{flex:none;display:flex;flex-direction:column;gap:8px;padding:10px 12px calc(12px + env(safe-area-inset-bottom,0px));background:var(--surface);border-top:1px solid var(--line)}
+@media (min-width:480px){ .sh-foot{padding-left:16px;padding-right:16px} }
+.tsum{text-align:center;font-size:14px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.twhy{margin:-4px 0 0;text-align:center;font-size:13px;color:var(--red)}
+.sh-btns{display:flex;gap:8px}
+.tload{display:flex;align-items:center;justify-content:center;gap:12px;min-height:120px;font-weight:700;color:var(--ink)}
+.tfail .err{margin:0 0 12px}
+/* a category: the checkbox and the name, then «how many × how many points»; side by side when there is room */
+.tlist{background:var(--field);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.trow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 10px 10px 12px}
+.trow+.trow{border-top:1px solid var(--line-soft)}
+.tpick{flex:1 1 170px;min-width:0;min-height:38px;display:flex;align-items:center;gap:11px;cursor:pointer}
+.tbox{appearance:none;-webkit-appearance:none;width:24px;height:24px;flex:none;margin:0;display:grid;place-content:center;border-radius:4px;border:2px solid var(--line);background:var(--field);cursor:pointer;transition:background-color .15s ease-out,border-color .15s ease-out}
+.tbox::after{content:'';width:11px;height:6px;margin-top:-3px;border:solid var(--on-accent);border-width:0 0 2.5px 2.5px;transform:rotate(-45deg) scale(0);transition:transform .15s var(--ease-out)}
+.tbox:checked{background:var(--btn-on);border-color:var(--btn-on-line)}
+.tbox:checked::after{transform:rotate(-45deg)}
+.tname{min-width:0;font-size:15px;font-weight:700;line-height:1.25;color:var(--ink);overflow-wrap:anywhere}
+.tname small{display:block;margin-top:1px;font-size:12.5px;font-weight:400;color:var(--muted)}
+.trow.off .tname{color:var(--muted)}
+.tctl{flex:none;display:flex;align-items:center;gap:5px;margin-left:35px}
+.tctl .ib{width:36px;height:38px}
+.tctl .ib .i{width:16px;height:16px}
+.tctl .ib:disabled{box-shadow:none}
+.tnum{width:50px;height:38px;flex:none;padding:0;text-align:center;border-radius:3px;border:1px solid var(--tline);background:var(--field);font-size:16px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.tnum:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 1px var(--focus)}
+.tnum.bad{border-color:var(--red);box-shadow:0 0 0 1px var(--red)}
+.tnum:disabled{opacity:.45}
+.tx{padding:0 2px;font-size:15px;font-weight:700;color:var(--muted)}
+.tb{min-width:48px;font-size:13px;color:var(--muted)}
+.trow.off .tx,.trow.off .tb{opacity:.45}
+.tcap{flex-basis:100%;margin:0 0 0 35px;padding:6px 10px;border-radius:4px;background:var(--soft-star);border:1px solid var(--line-soft);font-size:12.5px;line-height:1.4;color:var(--text)}
+.tgone{margin:8px 4px 0;font-size:12.5px;line-height:1.4;color:var(--muted)}
+/* narrow phones: the controls go under the name without the indent; wide: they sit right of the name */
+@media (max-width:374px){ .tctl{margin-left:0;gap:4px}.tctl .ib{width:34px}.tnum{width:44px}.tcap{margin-left:0} }
+@media (min-width:600px){ .tctl{margin-left:0} }
+/* «Одинаковые вопросы у всех»: a switch like the trainer's */
+.tsw{display:flex;align-items:center;gap:12px;min-height:56px;padding:9px 12px;background:var(--field);border:1px solid var(--line);border-radius:5px 5px 0 0;cursor:pointer}
+.tsw.alone{border-radius:5px}
+.tsw-t{flex:1;min-width:0;font-size:15px;font-weight:700;line-height:1.3;color:var(--ink)}
+.tsw-t small{display:block;margin-top:1px;font-size:12.5px;font-weight:400;color:var(--muted)}
+.sw{appearance:none;-webkit-appearance:none;position:relative;width:42px;height:24px;flex:none;margin:0;border-radius:999px;background:var(--switch-off);cursor:pointer;transition:background-color .2s ease-out}
+.sw::before{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:var(--knob);box-shadow:0 1px 2px rgba(17,33,40,.3);transition:transform .2s var(--ease-out)}
+.sw:checked{background:var(--btn-on)}
+.sw:checked::before{transform:translateX(18px)}
+.tseed{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 12px;background:var(--field);border:1px solid var(--line);border-top:0;border-radius:0 0 5px 5px}
+.tseed .btn{width:auto;min-height:38px;font-size:14.5px;padding:0 12px}
+.tseed .btn .i{width:16px;height:16px}
+.tseed .note{flex:1 1 180px;font-size:12.5px}
+.tseed .note.new{color:var(--accent);font-weight:700}
 @media (hover:hover) and (pointer:fine){
-  .btn:hover:not(:disabled):not(:active),.ib:hover:not(:active),.back:hover:not(:active),.course:not(.on):hover,.fac:not(.on):hover,.seg button:not([aria-checked="true"]):hover{background:var(--btn-h);border-color:var(--btn-h-line);color:var(--btn-h-fg)}
+  .btn:hover:not(:disabled):not(:active),.ib:hover:not(:active):not(:disabled),.back:hover:not(:active),.course:not(.on):hover,.fac:not(.on):hover,.seg button:not([aria-checked="true"]):hover,.tchip:not(.on):hover:not(:active){background:var(--btn-h);border-color:var(--btn-h-line);color:var(--btn-h-fg)}
   .btn.red:hover:not(:disabled):not(:active),.ib.del:hover:not(:active){color:var(--red)}
+  .btn.pri:hover:not(:disabled):not(:active),.tchip.on:hover{background:var(--btn-on);border-color:var(--btn-h-line);color:var(--on-accent);filter:brightness(1.07)}
   details.how summary:hover,details.how a:hover{color:var(--btn-h-fg)}
 }
 @media (prefers-reduced-motion: reduce){
   .dot.on{animation:none}
-  .dlg,.wrap.on .dlg{transform:none}
+  .dlg,.wrap.on .dlg,.sheet,.wrap.on .sheet{transform:none}
 }
 </style>
 </head>
@@ -316,7 +391,11 @@ const ICON = {
   edit: '<svg class="i" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16Z"/></svg>',
   trash: '<svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M9 7V4.5h6V7M6 7l1 13h10l1-13"/></svg>',
   lock: '<svg class="i" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10.5" rx="2.5"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg>',
-  unlock: '<svg class="i" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10.5" rx="2.5"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 6.9-.9"/></svg>'
+  unlock: '<svg class="i" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10.5" rx="2.5"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 6.9-.9"/></svg>',
+  x: '<svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  minus: '<svg class="i" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>',
+  plus: '<svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+  dice: '<svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8M4 4v4h4M4 13a8 8 0 0 0 14.3 4.9L20 16M20 20v-4h-4"/></svg>'
 };
 
 /* ---------- theme: as on the device, light or dark — shared with the trainer ---------- */
@@ -342,7 +421,7 @@ let course = +ls.get('TestTrainer.adminCourse') || 3;
 // Стоматология has 5 courses: a remembered 6 (or anything odd) falls back to the 1st.
 const fitCourse = () => { if (!(course >= 1 && course <= FAC[fac].courses && course % 1 === 0)) course = 1; };
 fitCourse();
-let repo = null; // { head, tree, sets, sizes }
+let repo = null; // { head, tree, sets, sizes, shas }
 
 /* ---------- small UI helpers ---------- */
 let toastT = 0;
@@ -388,16 +467,17 @@ async function loadRepo() {
   const ref = await gh('/git/ref/heads/' + BRANCH);
   const commit = await gh('/git/commits/' + ref.object.sha);
   const tree = await gh('/git/trees/' + commit.tree.sha + '?recursive=1');
-  const sizes = {};
+  const sizes = {}, shas = {};
   let setsSha = null;
   for (const t of tree.tree) {
     if (t.type !== 'blob' || !t.path.startsWith('data/')) continue;
     sizes[t.path.slice(5)] = t.size;
+    shas[t.path.slice(5)] = t.sha;
     if (t.path === 'data/sets.json') setsSha = t.sha;
   }
   let sets = [];
   if (setsSha) { try { sets = JSON.parse(fromB64((await gh('/git/blobs/' + setsSha)).content)); } catch (e) { sets = []; } }
-  return { head: ref.object.sha, tree: commit.tree.sha, sets: Array.isArray(sets) ? sets : [], sizes };
+  return { head: ref.object.sha, tree: commit.tree.sha, sets: Array.isArray(sets) ? sets : [], sizes, shas };
 }
 // One commit: new/removed files plus the updated list. Retried once if the branch moved meanwhile.
 async function publish(message, files, edit) {
@@ -436,7 +516,7 @@ function renderFiles() {
   const has = new Set(repo.sets.filter(mine).map(courseOf));
   $('#courses').innerHTML = Array.from({ length: F.courses }, (_, i) => i + 1).map(n => `<button type="button" class="course${n === course ? ' on' : ''}${has.has(n) ? '' : ' empty'}" role="radio" aria-checked="${n === course}" data-c="${n}" aria-label="${n} курс">${n}</button>`).join('');
   const list = repo.sets.filter(s => mine(s) && courseOf(s) === course);
-  $('#list').innerHTML = list.length ? list.map(s => `<div class="row"><div class="t"><b>${esc(s.title || s.file)}</b><small>${esc(kb(repo.sizes[s.file] || 0))}</small></div><button type="button" class="ib" data-edit="${esc(s.file)}" aria-label="Переименовать «${esc(s.title)}»">${ICON.edit}</button><button type="button" class="ib del" data-del="${esc(s.file)}" aria-label="Удалить «${esc(s.title)}»">${ICON.trash}</button></div>`).join('')
+  $('#list').innerHTML = list.length ? list.map(s => `<div class="row"><div class="t"><b>${esc(s.title || s.file)}</b><small>${esc(kb(repo.sizes[s.file] || 0))}</small></div><button type="button" class="tchip${hasTest(s) ? ' on' : ''}" data-test="${esc(s.file)}" aria-label="Тест для «${esc(s.title)}»">${hasTest(s) ? 'Тест ✓' : 'Тест'}</button><button type="button" class="ib" data-edit="${esc(s.file)}" aria-label="Переименовать «${esc(s.title)}»">${ICON.edit}</button><button type="button" class="ib del" data-del="${esc(s.file)}" aria-label="Удалить «${esc(s.title)}»">${ICON.trash}</button></div>`).join('')
     : `<div class="empty-row">В ${course} курсе ${esc(F.gen)} пока нет файлов.</div>`;
   $('#addLbl').innerHTML = 'Добавить файл в ' + course + ' курс<small>' + esc(F.name) + '</small>';
   $('#addBtn').setAttribute('aria-label', 'Добавить файл в ' + course + ' курс · ' + F.name);
@@ -503,6 +583,317 @@ async function renameFile(file) {
   } catch (e) { toast(e.message); }
   b.done();
   await refreshFiles();
+}
+
+/* ---------- «Тест по предмету»: a ready test for a subject ----------
+   Saved on its entry in sets.json as `test`: { title, parts: [{ cat, count, points }], same, seed?, at }.
+   The trainer offers it in «Сделать тест» → «Пройти тест»; parts go in this order; same = everyone gets the same
+   questions (picked with `seed`), otherwise each student gets their own random ones. No `test` = no ready test. */
+// The trainer's categories in its order, with its own names (CATS and CAT_TITLE_RU in app.html).
+const CATS = ['multiple', 'single', 'dropdown', 'sortable', 'text', 'caseStudy'];
+const CAT_RU = { multiple: 'Несколько ответов', single: 'Один ответ', dropdown: 'Выпадающий список', sortable: 'Правильный порядок', text: 'Текстовый ответ', caseStudy: 'Кейсы' };
+const TEST_TITLE = 'Тест по предмету', SEED_MAX = 2147483647;
+const hasTest = s => !!(s && s.test && typeof s.test === 'object' && Array.isArray(s.test.parts) && s.test.parts.length);
+// How many questions of each category the trainer gets from a file: the counting part of buildBank() in app.html,
+// with the same checks. A question with a non-empty main_text belongs to a case (one case per text, whatever the
+// kinds inside); the others count in their own category.
+function countCats(raw) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw new Error('Ожидался объект вида {"Текст вопроса": {"type": "single", …}}.');
+  const n = { multiple: 0, single: 0, dropdown: 0, sortable: 0, text: 0, caseStudy: 0 }, cases = new Set();
+  for (const key of Object.keys(raw)) {
+    const r = raw[key];
+    if (!r || typeof r !== 'object' || Array.isArray(r)) continue;
+    const opts = Array.isArray(r.all_options) ? r.all_options.filter(o => o && typeof o === 'object') : [];
+    let cat = null;
+    switch (r.type) {
+      case 'single': case 'multiple': if (opts.some(o => typeof o.text === 'string' && o.text !== '')) cat = r.type; break;
+      case 'dropdown': if (opts.some(o => typeof o.left === 'string' && o.left && typeof o.correct_value === 'string' && o.correct_value)) cat = 'dropdown'; break;
+      case 'sortable': if (opts.some(o => Number.isFinite(o.position) && typeof o.text === 'string' && o.text)) cat = 'sortable'; break;
+      case 'drag_and_drop': case 'text_input': cat = 'text'; break;
+    }
+    if (!cat) continue;
+    const ctx = typeof r.main_text === 'string' && r.main_text.trim() ? r.main_text : null;
+    if (ctx) cases.add(ctx); else n[cat]++;
+  }
+  n.caseStudy = cases.size;
+  return n;
+}
+const newSeed = () => { try { return crypto.getRandomValues(new Uint32Array(1))[0] % SEED_MAX + 1; } catch (e) { return 1 + Math.floor(Math.random() * SEED_MAX); } };
+const okSeed = v => Number.isInteger(v) && v >= 1 && v <= SEED_MAX;
+// File → its counts, read from the repository itself (so a file uploaded a minute ago works). Kept by blob sha:
+// the sha is the content, so a replaced file is counted afresh and an unchanged one is never downloaded twice.
+const counted = new Map();
+function fileCounts(file) {
+  const sha = repo && repo.shas && repo.shas[file];
+  if (!sha) return Promise.reject(new Error('Файла «' + file + '» нет в репозитории.'));
+  if (!counted.has(sha)) {
+    counted.set(sha, gh('/git/blobs/' + sha).then(b => {
+      const text = (b.encoding === 'base64' ? fromB64(b.content) : String(b.content || '')).replace(/^﻿/, '');
+      let raw;
+      try { raw = JSON.parse(text); } catch (e) { throw new Error('Файл не читается как JSON: ' + e.message); }
+      return countCats(raw);
+    }).catch(e => { counted.delete(sha); throw e; }));
+  }
+  return counted.get(sha);
+}
+const qw = n => n + ' ' + plural(n, 'вопрос', 'вопроса', 'вопросов');
+const pw = n => n + ' ' + plural(n, 'балл', 'балла', 'баллов');
+const intOf = v => /^\d{1,6}$/.test(String(v).trim()) ? +String(v).trim() : NaN;
+
+let ed = null; // the open editor: { file, title, old, el, avail, st, base, saving }
+const E = s => ed && ed.el.querySelector(s); // inside the open editor only (a closing one may still be fading out)
+function openTest(file) {
+  const s = repo && repo.sets.find(x => x && x.file === file);
+  if (!s) return;
+  if (ed) closeTest(true);
+  const title = s.title || s.file, old = hasTest(s) ? s.test : null;
+  const w = document.createElement('div');
+  w.className = 'wrap sh'; w.id = 'testEd';
+  w.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="tHead" tabindex="-1">`
+    + `<div class="sh-head"><h2 id="tHead">Тест по предмету<small>${esc(title)}</small></h2><button type="button" class="ib" id="tClose" aria-label="Закрыть">${ICON.x}</button></div>`
+    + `<div class="sh-body" id="tBody"></div>`
+    + `<div class="sh-foot"><div class="tsum" id="tSum" role="status">&nbsp;</div><p class="twhy" id="tWhy" hidden></p>`
+    + `<div class="sh-btns">${old ? '<button type="button" class="btn red" id="tDel">Убрать тест</button>' : ''}<button type="button" class="btn pri" id="tSave" disabled>Сохранить</button></div></div></div>`;
+  document.body.appendChild(w);
+  document.documentElement.classList.add('lock');
+  requestAnimationFrame(() => w.classList.add('on'));
+  ed = { file, title, old, el: w, avail: null, st: null, base: '', saving: false };
+  w.querySelector('.sheet').focus({ preventScroll: true });
+  w.addEventListener('click', edClick);
+  w.addEventListener('input', edInput);
+  w.addEventListener('change', edChange);
+  document.addEventListener('keydown', edKey);
+  edLoad();
+}
+function edLoad() {
+  const me = ed;
+  E('#tBody').innerHTML = '<div class="tload"><span class="spin"></span><span>Считаю вопросы файла…</span></div>';
+  edFoot();
+  fileCounts(me.file).then(avail => {
+    if (ed !== me) return;
+    me.avail = avail;
+    me.st = edState(me.old, avail);
+    me.base = JSON.stringify(edTest(false));
+    edRender();
+  }, e => {
+    if (ed !== me) return;
+    E('#tBody').innerHTML = `<div class="card tfail"><p class="err">Не удалось открыть «${esc(me.title)}»: ${esc(e.message)}</p><button type="button" class="btn" data-tretry>Повторить</button></div>`;
+    if (e.status === 401) { closeTest(true); logout(e.message); }
+  });
+}
+// The form's starting values: from the saved test (a category it doesn't have = unchecked, more than the file now
+// has = cut down, and said so), or a new test with every category of the file.
+function edState(old, avail) {
+  const kinds = CATS.filter(c => avail[c] > 0);
+  const parts = old ? Object.fromEntries(old.parts.filter(p => p && CATS.includes(p.cat)).map(p => [p.cat, p])) : null;
+  const st = {
+    title: old && typeof old.title === 'string' && old.title.trim() ? old.title.trim().slice(0, 80) : TEST_TITLE,
+    same: old ? old.same === true : true,
+    seed: old && okSeed(old.seed) ? old.seed : newSeed(), reseeded: false,
+    on: {}, count: {}, pts: {}, was: {},
+    gone: parts ? Object.keys(parts).filter(c => !(avail[c] > 0)) : []
+  };
+  for (const c of kinds) {
+    const p = parts && parts[c], want = p ? Math.max(1, Math.floor(+p.count) || 1) : Math.min(c === 'caseStudy' ? 3 : 10, avail[c]);
+    st.on[c] = parts ? !!p : true;
+    st.count[c] = Math.min(want, avail[c]);
+    if (want > avail[c]) st.was[c] = want;
+    st.pts[c] = p && Number.isInteger(p.points) && p.points >= 0 && p.points <= 100 ? p.points : 1;
+  }
+  return st;
+}
+const edKinds = () => CATS.filter(c => ed.avail[c] > 0);
+const edParts = () => edKinds().filter(c => ed.st.on[c]);
+// What would be saved. `at` only when it is really saved (so «changed?» compares the rest).
+function edTest(stamp) {
+  const st = ed.st;
+  const t = { title: st.title.trim().slice(0, 80), parts: edParts().map(c => ({ cat: c, count: st.count[c], points: st.pts[c] })), same: st.same };
+  if (st.same) t.seed = st.seed;
+  if (stamp) t.at = Date.now();
+  return t;
+}
+function edProblem() {
+  const st = ed.st, parts = edParts();
+  if (!edKinds().length) return 'В файле нет вопросов — тест не собрать.';
+  if (!st.title.trim()) return 'Впишите название теста.';
+  if (!parts.length) return 'Отметьте хотя бы один вид вопросов.';
+  const bad = parts.find(c => !(st.count[c] >= 1 && st.count[c] <= ed.avail[c]));
+  if (bad) return CAT_RU[bad] + ': от 1 до ' + ed.avail[bad] + ' ' + plural(ed.avail[bad], 'вопроса', 'вопросов', 'вопросов') + '.';
+  const badP = parts.find(c => !(st.pts[c] >= 0 && st.pts[c] <= 100));
+  if (badP) return CAT_RU[badP] + ': баллов от 0 до 100.';
+  return '';
+}
+function edFoot() {
+  const ready = !!(ed && ed.st), why = ready ? edProblem() : '';
+  let sum = '&nbsp;';
+  if (ready) {
+    const parts = edParts().filter(c => ed.st.count[c] >= 1 && ed.st.pts[c] >= 0);
+    const n = parts.reduce((a, c) => a + ed.st.count[c], 0), m = parts.reduce((a, c) => a + ed.st.count[c] * ed.st.pts[c], 0);
+    sum = 'Всего: ' + qw(n) + ' · ' + pw(m);
+  }
+  E('#tSum').innerHTML = sum;
+  E('#tWhy').textContent = why; E('#tWhy').hidden = !why;
+  E('#tSave').disabled = !ready || !!why || ed.saving;
+  if (E('#tDel')) E('#tDel').disabled = ed.saving;
+  E('#tClose').disabled = ed.saving;
+}
+function edRowCtl(c) {
+  const st = ed.st, on = st.on[c], n = ed.avail[c], v = st.count[c];
+  const row = ed.el.querySelector(`[data-tcat="${c}"]`);
+  row.classList.toggle('off', !on);
+  row.querySelectorAll('.tctl input').forEach(i => { i.disabled = !on; });
+  row.querySelector('[data-tstep="-1"]').disabled = !on || !(v > 1);
+  row.querySelector('[data-tstep="1"]').disabled = !on || v >= n;
+  row.querySelector('[data-tcount]').classList.toggle('bad', on && !(v >= 1 && v <= n));
+  row.querySelector('[data-tpts]').classList.toggle('bad', on && !(st.pts[c] >= 0 && st.pts[c] <= 100));
+  row.querySelector('.tb').textContent = plural(st.pts[c] >= 0 ? st.pts[c] : 0, 'балл', 'балла', 'баллов');
+}
+function edRender() {
+  const st = ed.st, kinds = edKinds(), when = ed.old && +ed.old.at ? new Date(+ed.old.at) : null;
+  let h = `<p class="note">${when ? 'Сохранён ' + esc(when.toLocaleDateString('ru', { day: 'numeric', month: 'long' }) + ' в ' + when.toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' })) + '. ' : ''}Студенты увидят его в «Сделать тест» → <b>«Пройти тест»</b>. Свой тест у них тоже останется.</p>`;
+  h += `<div><label class="label" for="tTitle">Название</label><input class="field" id="tTitle" maxlength="80" autocomplete="off" value="${esc(st.title)}" placeholder="${esc(TEST_TITLE)}"></div>`;
+  if (!kinds.length) h += '<div class="card"><p class="note">В файле нет вопросов, которые тренажёр умеет показывать.</p></div>';
+  else {
+    h += '<div><div class="label">Сколько вопросов × баллов за каждый</div><div class="tlist">';
+    for (const c of kinds) {
+      const nm = CAT_RU[c];
+      h += `<div class="trow" data-tcat="${c}"><label class="tpick"><input type="checkbox" class="tbox" data-tpick="${c}"${st.on[c] ? ' checked' : ''} aria-label="${nm}: включить в тест"><span class="tname">${nm}<small>в файле ${ed.avail[c]}</small></span></label>`
+        + `<div class="tctl"><button type="button" class="ib" data-tstep="-1" data-cat="${c}" aria-label="${nm}: меньше">${ICON.minus}</button>`
+        + `<input class="tnum" data-tcount="${c}" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" value="${st.count[c]}" aria-label="${nm}: сколько вопросов (в файле ${ed.avail[c]})">`
+        + `<button type="button" class="ib" data-tstep="1" data-cat="${c}" aria-label="${nm}: больше">${ICON.plus}</button>`
+        + `<span class="tx" aria-hidden="true">×</span><input class="tnum" data-tpts="${c}" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" value="${st.pts[c]}" aria-label="${nm}: баллов за вопрос"><span class="tb"></span></div>`
+        + (st.was[c] ? `<p class="tcap">В тесте было ${esc(qw(st.was[c]))}, а в файле теперь только ${ed.avail[c]} — поставлено ${ed.avail[c]}. Сохраните, чтобы закрепить.</p>` : '')
+        + '</div>';
+    }
+    h += '</div>';
+    if (st.gone.length) h += `<p class="tgone">Из файла пропали: ${esc(st.gone.map(c => CAT_RU[c]).join(', '))} — в тесте их больше не будет.</p>`;
+    h += '</div>';
+  }
+  h += `<div><div class="label">Кому какие вопросы</div><label class="tsw"><span class="tsw-t">Одинаковые вопросы у всех<small>иначе у каждого свои случайные</small></span><input type="checkbox" class="sw" id="tSame" role="switch"${st.same ? ' checked' : ''}></label>`
+    + `<div class="tseed" id="tSeedRow"${st.same ? '' : ' hidden'}><button type="button" class="btn gray" id="tSeed">${ICON.dice}Другие вопросы</button><p class="note" id="tSeedNote"></p></div></div>`;
+  E('#tBody').innerHTML = h;
+  kinds.forEach(edRowCtl);
+  edSeedNote();
+  edFoot();
+}
+function edSeedNote() {
+  const n = E('#tSeedNote');
+  if (!n) return;
+  n.classList.toggle('new', ed.st.reseeded);
+  n.textContent = ed.st.reseeded ? 'Выбран другой набор — у студентов он появится после «Сохранить».' : 'Набор вопросов один на всех. Кнопка выберет другой — после сохранения.';
+  E('#tSame').closest('.tsw').classList.toggle('alone', !ed.st.same);
+}
+function edClick(e) {
+  if (!ed) return;
+  if (e.target === ed.el) return closeTest();
+  const b = e.target.closest('button');
+  if (!b || b.disabled) return;
+  if (b.id === 'tClose') return closeTest();
+  if (b.id === 'tSave') return saveTest();
+  if (b.id === 'tDel') return dropTest();
+  if (b.hasAttribute('data-tretry')) return edLoad();
+  if (!ed.st) return;
+  if (b.id === 'tSeed') { ed.st.seed = newSeed(); ed.st.reseeded = true; edSeedNote(); return; }
+  if (b.dataset.tstep) {
+    const c = b.dataset.cat, v = ed.st.count[c] >= 1 ? ed.st.count[c] : 0;
+    ed.st.count[c] = Math.min(Math.max(v + +b.dataset.tstep, 1), ed.avail[c]);
+    ed.el.querySelector(`[data-tcount="${c}"]`).value = ed.st.count[c];
+    edRowCtl(c); edFoot();
+  }
+}
+function edInput(e) {
+  if (!ed || !ed.st) return;
+  const t = e.target, st = ed.st;
+  if (t.id === 'tTitle') st.title = t.value;
+  else if (t.dataset.tcount) {
+    const c = t.dataset.tcount;
+    let v = intOf(t.value);
+    if (v > ed.avail[c]) { v = ed.avail[c]; t.value = v; } // more than the file has: straight down to all of them
+    st.count[c] = v;
+    edRowCtl(c);
+  } else if (t.dataset.tpts) {
+    const c = t.dataset.tpts;
+    let v = intOf(t.value);
+    if (v > 100) { v = 100; t.value = v; }
+    st.pts[c] = v;
+    edRowCtl(c);
+  } else return;
+  edFoot();
+}
+function edChange(e) {
+  if (!ed || !ed.st) return;
+  const t = e.target, st = ed.st;
+  if (t.dataset.tpick) { st.on[t.dataset.tpick] = t.checked; edRowCtl(t.dataset.tpick); }
+  else if (t.id === 'tSame') {
+    st.same = t.checked;
+    E('#tSeedRow').hidden = !st.same;
+    edSeedNote();
+  } else if (t.dataset.tcount) { // left empty or 0: back to 1
+    const c = t.dataset.tcount;
+    if (!(st.count[c] >= 1)) st.count[c] = 1;
+    t.value = st.count[c]; edRowCtl(c);
+  } else if (t.dataset.tpts) {
+    const c = t.dataset.tpts;
+    if (!(st.pts[c] >= 0)) st.pts[c] = 1;
+    t.value = st.pts[c]; edRowCtl(c);
+  } else if (t.id === 'tTitle') { st.title = t.value.trim(); t.value = st.title; }
+  else return;
+  edFoot();
+}
+function edKey(e) {
+  // Escape closes the editor — unless a dialog over it (or the «Сохраняю…» screen) is the one being closed
+  if (e.key !== 'Escape' || !ed || document.querySelector('.wrap:not(.sh), .busy')) return;
+  closeTest();
+}
+async function closeTest(force) {
+  if (!ed || (ed.saving && !force)) return;
+  if (!force && ed.st && JSON.stringify(edTest(false)) !== ed.base) {
+    const me = ed;
+    const r = await dialog({ title: 'Закрыть без сохранения?', text: 'Изменения в тесте «' + me.title + '» пропадут.', ok: 'Не сохранять', danger: true });
+    if (!r.ok || ed !== me) return;
+  }
+  const { el, file } = ed;
+  ed = null;
+  document.removeEventListener('keydown', edKey);
+  document.documentElement.classList.remove('lock');
+  el.removeAttribute('id'); el.querySelectorAll('[id]').forEach(x => x.removeAttribute('id'));
+  el.style.pointerEvents = 'none'; el.classList.remove('on');
+  setTimeout(() => el.remove(), 250);
+  const b = [...document.querySelectorAll('#list [data-test]')].find(x => x.dataset.test === file);
+  if (b) b.focus({ preventScroll: true });
+}
+// One commit to sets.json with the test put on (or taken off) this subject's entry; the rest of the list as it is.
+async function edPublish(message, entry, wait, done) {
+  const { file, title } = ed;
+  ed.saving = true; edFoot();
+  const b = busy(wait);
+  let ok = false;
+  const edit = sets => {
+    if (!sets.some(x => x && x.file === file)) throw new Error('«' + title + '» уже нет в списке файлов.');
+    return sets.map(x => x && x.file === file ? entry(x) : x);
+  };
+  try {
+    await publish(message, [], edit);
+    ok = true;
+    repo.sets = edit(repo.sets); renderFiles(); // the chip changes now; the list from GitHub follows
+    toast(done);
+  } catch (e) { toast(e.message); }
+  b.done();
+  if (ed) { ed.saving = false; edFoot(); }
+  if (ok) closeTest(true);
+  await refreshFiles();
+}
+function saveTest() {
+  if (!ed || !ed.st || ed.saving || edProblem()) return;
+  const test = edTest(true);
+  edPublish('Админка: тест для «' + ed.title + '»', x => ({ ...x, test }), 'Сохраняю тест…', 'Тест для «' + ed.title + '» сохранён. У студентов появится через 1–2 минуты.');
+}
+async function dropTest() {
+  if (!ed || !ed.old || ed.saving) return;
+  const me = ed;
+  const r = await dialog({ title: 'Убрать тест «' + me.title + '»?', text: 'У студентов пропадёт «Пройти тест» по этому предмету. Свой тест («Сделать самому») останется.', ok: 'Убрать', danger: true });
+  if (!r.ok || ed !== me) return;
+  edPublish('Админка: убран тест для «' + me.title + '»', x => { const y = { ...x }; delete y.test; return y; }, 'Убираю тест…', 'Тест убран. У студентов пропадёт через 1–2 минуты.');
 }
 
 /* ---------- online: Firebase Realtime Database over REST ---------- */
@@ -688,6 +1079,7 @@ function show(signedIn) {
   if (signedIn) { watchOnline(); refreshFiles(); } else clearInterval(onlineT);
 }
 function logout(msg) {
+  closeTest(true);
   token = ''; ls.set(ADMIN_KEY, null); ls.set(FB_REFRESH, null); fbId = { token: '', exp: 0 }; users = null; repo = null;
   show(false);
   if (msg) { $('#loginErr').textContent = msg; $('#loginErr').hidden = false; }
@@ -718,8 +1110,8 @@ $('#facs').addEventListener('click', e => {
 });
 $('#courses').addEventListener('click', e => { const b = e.target.closest('[data-c]'); if (!b) return; course = +b.dataset.c; ls.set('TestTrainer.adminCourse', String(course)); renderFiles(); });
 $('#list').addEventListener('click', e => {
-  const d = e.target.closest('[data-del]'), r = e.target.closest('[data-edit]');
-  if (d) removeFile(d.dataset.del); else if (r) renameFile(r.dataset.edit);
+  const d = e.target.closest('[data-del]'), r = e.target.closest('[data-edit]'), t = e.target.closest('[data-test]');
+  if (d) removeFile(d.dataset.del); else if (r) renameFile(r.dataset.edit); else if (t) openTest(t.dataset.test);
 });
 $('#addBtn').addEventListener('click', () => $('#pick').click());
 $('#themeSeg').addEventListener('click', e => {

@@ -145,13 +145,15 @@ def build_sets():
 
     found.sort(key=lambda n: (order.index(n) if n in order else len(order), n))
     courses = {x.get("file"): x.get("course") for x in old if isinstance(x, dict)}
+    # всё остальное, что админка записала у файла (например, «test» — тест по предмету), сохраняется как есть
+    extra = {x.get("file"): {k: v for k, v in x.items() if k not in ("file", "title", "course", "fac")} for x in old if isinstance(x, dict)}
     sets = []
     for n in found:
         parts = n.split("/")
         fac = parts[0] if parts[0] in FAC_DIRS else "lech"  # the faculty is the folder; everything else is Лечебное дело
         folder = parts[1] if fac != "lech" else (parts[0] if len(parts) > 1 else "")
         course = int(folder) if folder.isdigit() else (courses.get(n) or 0)
-        sets.append({"file": n, "title": titles.get(n) or KNOWN_TITLES.get(pathlib.Path(n).stem) or pathlib.Path(n).stem, "course": course, "fac": fac})
+        sets.append({"file": n, "title": titles.get(n) or KNOWN_TITLES.get(pathlib.Path(n).stem) or pathlib.Path(n).stem, "course": course, "fac": fac, **extra.get(n, {})})
     sets_path.write_text(json.dumps(sets, ensure_ascii=False, indent=2) + "\n", "utf-8")
     return sets
 
